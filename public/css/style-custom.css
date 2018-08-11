@@ -1,0 +1,123 @@
+/***************** Custom CSS ***************/
+.btn.btn-success {
+  color: #fff;
+  background: #0b3c5d;
+  border-color: #0b3c5d;
+}
+
+.btn.btn-success.active,
+.btn.btn-success:active,
+.btn.btn-success:focus,
+.btn.btn-success:hover,
+.open .dropdown-toggle.btn-success {
+  background: #1367a0;
+  border-color: #1367a0;
+}
+
+.btn-group .btn.btn-success:not(.active) + .btn.btn-success,
+.input-group-btn .btn.btn-success:not(.active) + .btn.btn-success {
+  border-left-color: #0b3c5d;
+}
+
+.navbar.navbar-inverse .navbar-brand,
+.sidebar .nav > li.active > a,
+.sidebar .nav > li.active > a:focus,
+.sidebar .nav > li.active > a:hover,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:focus > a,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active:hover > a,
+.page-sidebar-minified .sidebar .nav > li.has-sub.active > a,
+.label.label-theme,
+.btn.btn-scroll-to-top {
+  background: #0b3c5d;
+}
+
+.page-with-light-sidebar .sidebar .nav > li .sidebar-minify-btn,
+.page-with-light-sidebar .sidebar .nav > li .sidebar-minify-btn:focus,
+.page-with-light-sidebar .sidebar .nav > li .sidebar-minify-btn:hover,
+.page-with-light-sidebar .sidebar .nav > li.active.expand > a,
+.page-with-light-sidebar .sidebar .nav > li.active > a,
+.page-with-light-sidebar .sidebar .nav > li.active > a:focus,
+.page-with-light-sidebar .sidebar .nav > li.active > a:hover,
+.page-with-light-sidebar.page-sidebar-minified
+  .sidebar
+  .nav
+  > li.active:focus
+  > a,
+.page-with-light-sidebar.page-sidebar-minified
+  .sidebar
+  .nav
+  > li.active:hover
+  > a,
+.page-with-light-sidebar.page-sidebar-minified .sidebar .nav > li.active > a {
+  color: #fff;
+  background: #0b3c5d;
+}
+
+.page-with-light-sidebar .sidebar .nav > li.active > a > i {
+  color: #328cc1;
+}
+
+.flat-black .page-with-light-sidebar .sidebar .nav > li > a,
+.page-with-light-sidebar .sidebar .nav > li > a {
+  color: #1d2731;
+}
+
+.sidebar .sub-menu > li > a {
+  color: #889097;
+}
+
+.page-with-light-sidebar .sidebar .nav > li .sub-menu > li > a::before {
+  color: #b1b9c0;
+}
+
+.panel-prussian > .panel-heading {
+  background: #0b3c5d;
+  color: #fff;
+}
+
+.pace-progress {
+  background: #0b3c5d;
+}
+.pace .pace-activity {
+  border-top-color: #0b3c5d;
+  border-left-color: #0b3c5d;
+}
+
+.nav-profile-image img {
+  width: 70px;
+}
+
+.navbar-brand {
+  width: 263px;
+  font-size: 14px;
+}
+
+@media (max-width: 767px) {
+  .page-header-fixed {
+    padding-top: 50px;
+  }
+  .pace-progress {
+    top: 55px;
+  }
+  .pace .pace-activity {
+    top: 61px;
+  }
+  .breadcrumb {
+    display: none;
+  }
+}
+
+@media (max-width: 320px) {
+  .navbar-brand {
+    display: none;
+  }
+}
+
+.datepicker-range {
+  display: table; 
+  margin:auto;
+}
+
+.sidebar .nav>li.nav-profile {
+  padding: 10px;
+}

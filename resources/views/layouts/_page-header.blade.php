@@ -1,0 +1,1 @@
+<h1 class="page-header">Page with Light Sidebar</h1>
