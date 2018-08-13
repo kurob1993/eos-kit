@@ -62,7 +62,7 @@ class AbsenceObserver
       // mencari sequence pertama dari flow_id diatas
       // mengembalikan flowstage dan mengakses stage_id
       $flow_id  = config('emss.flows.absences');
-      $stage_id = FlowStage::firstSequence($flow_id)->stage_id;
+      $stage_id = FlowStage::firstSequence($flow_id)->first()->stage_id;
 
       $absence->absence_type_id = $absence_type_id;
       $absence->stage_id = $stage_id;

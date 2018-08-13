@@ -107,7 +107,7 @@ class HomeController extends Controller
         // tampilkan pesan bahwa telah berhasil menyetujui
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Berhasil menyetujui " . Status::rejectStatus()->id,
+            "message" => "Berhasil menyetujui cuti."
         ]);
 
         // kembali lagi ke dashboard employee
@@ -128,7 +128,7 @@ class HomeController extends Controller
         // tampilkan pesan bahwa telah berhasil menolak
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Berhasil menolak " . Status::rejectStatus()->id,
+            "message" => "Berhasil menolak cuti" 
         ]);
 
         // kembali lagi ke dashboard employee

@@ -14,7 +14,7 @@ class FlowStage extends Pivot
     // ( SELECT MIN(sequence) FROM stages )
     return $query->whereIn('sequence', function ($query) use ($t) {
       $query->from($t)->selectRaw('min(sequence)');
-    })->first();
+    });
   }
 
   public function scopeNextSequence($query, $c)

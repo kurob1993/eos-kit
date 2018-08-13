@@ -3,12 +3,12 @@
 @section('content')
 
 <!-- begin #page-container -->
-@component('layouts.employee._page-container')
+@component('layouts.employee._page-container', ['page_header' => 'Pengajuan Cuti'])
 <div class="row">
   <div class="col-lg-12 col-xl-9">
     <div class="panel panel-prussian">
       <div class="panel-heading">
-        <h4 class="panel-title">Panel Title here</h4>
+        <h4 class="panel-title">Mengajukan Cuti</h4>
       </div>
       @include('layouts._flash')
       <div class="alert alert-success fade in">
@@ -34,7 +34,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-12 col-xl-3">
+  {{-- <div class="col-lg-12 col-xl-3">
     <div class="panel">
       <div class="panel-heading">
         heading
@@ -43,7 +43,7 @@
         body
       </div>
     </div>
-  </div>
+  </div> --}}
 </div>
 </div>
 @endcomponent
