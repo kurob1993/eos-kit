@@ -26,6 +26,8 @@ Route::group([
     'prefix' => 'personnel_service', 
     'middleware' => ['auth', 'role:personnel_service']], function (){
         Route::get('', 'HomeController@personnelServiceDashboard')->name('dashboards.personnel_service');
+        Route::resource('all_leaves', 'AllLeaveController', ['except' => [
+            'destroy', 'show', 'update', 'edit' ]]);
 });
 
 Route::group([

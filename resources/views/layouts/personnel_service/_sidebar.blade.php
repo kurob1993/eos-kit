@@ -6,7 +6,7 @@
     
             <!-- begin sidebar nav -->
             <ul class="nav">
-                <li class="nav-header">Navigation</li>
+                <li class="nav-header">Personnel Service</li>
     
                 @role('personnel_service')
                 <li class="has-sub">
@@ -16,7 +16,7 @@
                             <span>Time Management</span>
                         </a>
                     <ul class="sub-menu">
-                        <li> <a href="#">Absences</a> </li>
+                        <li> <a href="{{ route('all_leaves.index') }}">Cuti</a> </li>
                     </ul>
                 </li>
                 @endrole 
