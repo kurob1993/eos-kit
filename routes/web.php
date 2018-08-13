@@ -20,14 +20,16 @@ Route::post('logout', [
     'as' => 'logout', 
     'uses' => 'Auth\LoginController@logout']);
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('dashboards.employee');
 
 Route::group([
     'prefix' => 'personnel_service', 
     'middleware' => ['auth', 'role:personnel_service']], function (){
         Route::get('', 'HomeController@personnelServiceDashboard')->name('dashboards.personnel_service');
         Route::resource('all_leaves', 'AllLeaveController', ['except' => [
-            'destroy', 'show', 'update', 'edit' ]]);
+            'destroy', 'show', 'update', 'edit', 'create' ]]);
+        Route::resource('all_absence_quotas', 'AllAbsenceQuotaController', ['except' => [
+            'destroy', 'show', 'update', 'edit', 'create' ]]);
 });
 
 Route::group([
@@ -43,4 +45,6 @@ Route::group([
         Route::get('debug', 'DebugController@debug');
         Route::resource('leaves', 'LeaveController', ['except' => [ 
             'destroy', 'show', 'update', 'edit' ]]);
+        Route::post('approve/{id}','HomeController@approve')->name('dashboards.approve');
+        Route::post('reject/{id}','HomeController@reject')->name('dashboards.reject');
 });

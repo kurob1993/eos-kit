@@ -17,6 +17,7 @@
                         </a>
                     <ul class="sub-menu">
                         <li> <a href="{{ route('all_leaves.index') }}">Cuti</a> </li>
+                        <li> <a href="{{ route('all_absence_quotas.index') }}">Kuota Cuti</a> </li>
                     </ul>
                 </li>
                 @endrole 

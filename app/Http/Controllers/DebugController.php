@@ -33,20 +33,20 @@ class DebugController extends Controller
 
         // $absences = Auth::user()->absences()->with(['absenceType', 'stage']);
         // dd($absences->get()->toArray());
-        // $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
-        //     ->with(['absenceType', 'stage'])->get();
+        // $absences = Absence::where('personnel_no', Auth::user()->personnel_no)->with(['absenceType', 'stage'])->get();
+        // $absences = Absence::where('personnel_no', Auth::user()->personnel_no)->with('absenceType:id,text')->get();
         // dd($absences->toArray());
 
         // // mengecek kuota absence pada hari ini
         // try { var_dump(Auth::user()->activeAbsenceQuotaType()); } 
         // catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) { var_dump($e->getMessage()); }
         
-        try {
-            var_dump( 
-                \App\Models\AbsenceQuota::activeAbsenceQuota(11725)->with('absenceType:id,text')->firstOrFail()->toArray()
-            ); 
-        }
-        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) { var_dump($e->getMessage()); }
+        // try {
+        //     var_dump( 
+        //         \App\Models\AbsenceQuota::activeAbsenceQuota(11725)->with('absenceType:id,text')->firstOrFail()->toArray()
+        //     ); 
+        // }
+        // catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) { var_dump($e->getMessage()); }
 
         // // mencari atasan-atasan dari personnel_no
         // $bosses = \App\Models\StructDisp::BossesOf('11725');
@@ -62,9 +62,9 @@ class DebugController extends Controller
         // // mencari semua absences dengan global scope
         // var_dump(\App\Models\Absence::get()->toArray());
 
-        // // // mencari atasan satu tingkat di atas
+        // // mencari atasan satu tingkat di atas
         // $e = Auth::user()->employee()->first();
-        // var_dump($e->closestBoss()->toArray());
+        // dd($e->closestBoss()->toArray());
         
         // // // mencari atasan-atasan
         // $e = Auth::user()->employee()->first();
@@ -76,5 +76,21 @@ class DebugController extends Controller
 
         // // apakah boleh melakukan pelimpahan wewenang?
         // var_dump(Auth::user()->employee()->first()->hasSubordinate());
+
+        //Melihat return firstStatus pada model status
+        // $status = \App\Models\Status::firstStatus()->id;
+        // var_dump($status);
+
+        // // mencoba reject dan approve status
+        // $status = \App\Models\Status::approveStatus()->id;
+        // var_dump($status);
+        // $status = \App\Models\Status::rejectStatus()->id;
+        // var_dump($status);
+
+        // nested relationship eager loading
+        $absenceApprovals = \App\Models\AbsenceApproval::where('regno', Auth::user()->personnel_no)
+        ->with(['status:id,description', 'absence.user.employee']);
+        
+        var_dump($absenceApprovals->first()->toArray());
     }
 }

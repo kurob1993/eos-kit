@@ -8,6 +8,8 @@ use App\Models\Absence;
 use App\Models\AbsenceQuota;
 use App\Models\Stage;
 use App\Models\FlowStage;
+use App\Models\AbsenceApproval;
+use App\Models\Status;
 use App\User;
 use Session;
 
@@ -59,12 +61,21 @@ class AbsenceObserver
       // mendapatkan flow_id untuk absences dari file config
       // mencari sequence pertama dari flow_id diatas
       // mengembalikan flowstage dan mengakses stage_id
-      $flow_id = config('emss.flows.absences');
+      $flow_id  = config('emss.flows.absences');
       $stage_id = FlowStage::firstSequence($flow_id)->stage_id;
 
       $absence->absence_type_id = $absence_type_id;
       $absence->stage_id = $stage_id;
       $absence->save();
+
+      $absence_approval = new AbsenceApproval();
+      $absence_approval->absence_id = $absence->id;
+      $absence_approval->regno = Auth::user()->employee()->first()->closestBoss()->personnel_no;
+      $absence_approval->sequence = 1;
+      $absence_approval->status_id = Status::firstStatus()->id;
+      $absence_approval->save();
+
+
 
     }
 
