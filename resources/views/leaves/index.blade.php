@@ -2,10 +2,10 @@
 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.employee._page-container')
+@component('layouts.employee._page-container', ['page_header' => 'Pengajuan Cuti'])
 <div class="panel panel-prussian">
   <div class="panel-heading">
-    <h4 class="panel-title">Panel Title here</h4>
+    <h4 class="panel-title">Daftar Cuti Saya</h4>
   </div>
   @include('layouts._flash')
   <div class="panel-body">

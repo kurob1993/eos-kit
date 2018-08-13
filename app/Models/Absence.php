@@ -3,12 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 
 class Absence extends Model
 {
-    public $fillable = [ 'personnel_no', 'start_date', 'end_date', 'note', 'address' ];
+    public $fillable = ['personnel_no', 'start_date', 'end_date', 'note', 'address'];
 
     protected $casts = [
         'id' => 'integer',
@@ -18,7 +16,7 @@ class Absence extends Model
         'absence_type_id' => 'integer',
         'stage_id' => 'integer',
         'note' => 'string',
-        'address' => 'string'
+        'address' => 'string',
     ];
 
     protected $dateFormat = 'Y-m-d H:i:s';
@@ -36,7 +34,7 @@ class Absence extends Model
     public function user()
     {
         // many-to-one relationship dengan User
-      return $this->belongsTo('App\User', 'personnel_no', 'personnel_no');
+        return $this->belongsTo('App\User', 'personnel_no', 'personnel_no');
     }
 
     public function absenceType()
@@ -60,6 +58,6 @@ class Absence extends Model
     public function getDeductionAttribute()
     {
         // Jumlah pengajuan cuti dalam hari
-      return $this->end_date->diffInDays($this->start_date) + 1;
+        return $this->end_date->diffInDays($this->start_date) + 1;
     }
 }

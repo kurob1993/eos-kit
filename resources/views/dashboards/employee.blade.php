@@ -2,10 +2,10 @@
 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.employee._page-container')
+@component('layouts.employee._page-container', ['page_header' => 'Employee Dashboard'])
 <div class="panel panel-prussian">
   <div class="panel-heading">
-    <h4 class="panel-title">Employee Dashboard</h4>
+    <h4 class="panel-title">Kotak Masuk Persetujuan</h4>
   </div>
   @include('layouts._flash')
   <div class="panel-body">

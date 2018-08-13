@@ -16,6 +16,9 @@ class ComposerServiceProvider extends ServiceProvider
     {
         // view composer untuk sidebar-user
         View::composer('layouts._sidebar-user', 'App\Http\ViewComposers\SidebarUserComposer');
+
+        // view composer untuk employee-sidebar
+        View::composer('layouts.employee._sidebar', 'App\Http\ViewComposers\EmployeeSidebarComposer');
         
         // view composer / view creator tidak dapat menangkap exception
         // sehingga dipindahkan ke controller saja T_T

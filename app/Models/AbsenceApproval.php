@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Eloquent as Model;
-
+use App\Models\Status;
 class AbsenceApproval extends Model
 {
 
-    public $fillable = [ 'absence_id', 'regno', 'sequence', 'status_id', 'approved', 'text' ];
+    public $fillable = [ 'absence_id', 'regno', 'sequence', 'status_id', 'text' ];
 
     protected $casts = [
         'id' => 'integer',
@@ -15,11 +15,16 @@ class AbsenceApproval extends Model
         'regno' => 'integer',
         'sequence' => 'integer',
         'status_id' => 'integer',
-        'approved' => 'date',
         'text' => 'string'
     ];
 
     public static $rules = [ ];
+
+    public function user()
+    {
+        // many-to-one relationship dengan User
+        return $this->belongsTo('App\User', 'personnel_no', 'personnel_no');
+    }
 
     public function absence()
     {
@@ -30,4 +35,17 @@ class AbsenceApproval extends Model
     {
         return $this->belongsTo(\App\Models\Status::class);
     }
+
+    public function getIsNotWaitingAttribute()
+    {
+        // apakah absence approval sudah disetujui atau ditolak
+        return ($this->status_id <> Status::firstStatus()->id) ?
+            true : false;
+    }
+
+    public function scopeWaitedForApproval($query)
+    {
+        return $query->where('status_id', Status::firstStatus()->id);
+    }
+    
 }

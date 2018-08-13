@@ -1,3 +1,4 @@
+{{--
 <ol class="breadcrumb pull-right">
     <li>
         <a href="javascript:;">Home</a>
@@ -7,3 +8,4 @@
     </li>
     <li class="active">Page with Light Sidebar</li>
 </ol>
+ --}}

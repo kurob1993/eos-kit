@@ -87,10 +87,15 @@ class DebugController extends Controller
         // $status = \App\Models\Status::rejectStatus()->id;
         // var_dump($status);
 
-        // nested relationship eager loading
-        $absenceApprovals = \App\Models\AbsenceApproval::where('regno', Auth::user()->personnel_no)
-        ->with(['status:id,description', 'absence.user.employee']);
+        // // nested relationship eager loading
+        // $absenceApprovals = \App\Models\AbsenceApproval::where('regno', Auth::user()->personnel_no)
+        // ->with(['status:id,description', 'absence.user.employee']);
         
-        var_dump($absenceApprovals->first()->toArray());
+        // var_dump($absenceApprovals->first()->toArray());
+
+        // mencari  absence approval dari user yang belum disetujui
+        $needApprovals = \App\Models\AbsenceApproval::where('regno', Auth::user()->personnel_no)
+            ->waitedForApproval()->get();
+        var_dump($needApprovals->toArray());
     }
 }
