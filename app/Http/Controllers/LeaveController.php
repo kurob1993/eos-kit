@@ -84,6 +84,19 @@ class LeaveController extends Controller
             return redirect()->route('leaves.index');
         }
 
+        // apakah ada yang belum selesai pengajuan cutinya?
+        $incompleted = Absence::where('personnel_no', Auth::user()->personnel_no)
+            ->incompleted()->get();
+        if (sizeof($incompleted) > 0) {
+            Session::flash("flash_notification", [
+                "level"   =>  "danger",
+                "message"=>"Data pengajuan cuti sudah ada dan harus diselesaikan prosesnya " . 
+                "sebelum mengajukan cuti kembali."
+            ]);
+            // batalkan view create dan kembali ke parent
+            return redirect()->route('leaves.index');       
+        }        
+
         // tampilkan view create
         return view('leaves.create', [
             'can_delegate' => $canDelegate,

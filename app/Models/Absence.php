@@ -55,6 +55,14 @@ class Absence extends Model
         return $this->hasMany('App\Models\AbsenceApproval');
     }
 
+    public function scopeIncompleted($query)
+    {
+        // apakah sudah selesai? (finished, failed, denied)
+        return $query->whereIn('stage_id', [
+            Stage::waitingApprovalStage()->id,
+            Stage::sendToSapStage()->id ]);
+    }
+
     public function getDeductionAttribute()
     {
         // Jumlah pengajuan cuti dalam hari

@@ -38,37 +38,39 @@ class HomeController extends Controller
 
             // ambil data persetujuan absence, WARNING nested relationship eager loading
             $absenceApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
-                ->with(['status:id,description', 'absence.user.employee']);
+                ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType']);
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
             return Datatables::of($absenceApprovals)
-                ->editColumn('absence_id', function (AbsenceApproval $absenceApproval) {
+                ->editColumn('absence_id', function (AbsenceApproval $aa) {
                     return '<address>' .'<strong>'. 
-                    $absenceApproval->absence->deduction . ' hari cuti</strong><br>' .
-                    $absenceApproval->absence->start_date->format(config('emss.date_format')) . ' - ' . 
-                    $absenceApproval->absence->end_date->format(config('emss.date_format')) . '<br>' .
+                    $aa->absence->deduction . ' hari cuti</strong><br>' .
+                    $aa->absence->absenceType->text . '<br>' .
+                    $aa->absence->start_date->format(config('emss.date_format')) . ' - ' . 
+                    $aa->absence->end_date->format(config('emss.date_format')) . '<br>' .
                     '</address>';
                 })
-                ->editColumn('absence.user.personnel_no', function (AbsenceApproval $absenceApproval) {
-                    return $absenceApproval->absence->personnel_no . ' - ' . 
-                    $absenceApproval->absence->user->name . '<br>' . 
-                    $absenceApproval->absence->user->employee->position_name;
+                ->editColumn('absence.user.personnel_no', function (AbsenceApproval $aa) {
+                    return $aa->absence->personnel_no . ' - ' . 
+                    $aa->absence->user->name . '<br>' . 
+                    $aa->absence->user->employee->position_name;
                 })
-                ->editColumn('action', function (AbsenceApproval $absenceApproval) {
-                    if ($absenceApproval->isNotWaiting) {
-                        return '<span class="label label-primary">' .
-                        $absenceApproval->status->description . '</span>' . '<br>' .
-                        '<small>' . $absenceApproval->updated_at->format(config('emss.date_format')) . 
-                        '</small><br><small>' . $absenceApproval->text . '</small>';
+                ->editColumn('action', function (AbsenceApproval $aa) {
+                    if ($aa->isNotWaiting) {
+                        return '<span class="label '. (($aa->isApproved) ? 'label-primary' : 'label-danger') . '">' .
+                        $aa->status->description . '</span>' . '<br>' .
+                        '<small>' . $aa->updated_at->format(config('emss.datetime_format')) . 
+                        '</small><br><small>' . $aa->text . '</small>';
                     } else {
                         return view('dashboards._action', [
-                            'model' => $absenceApproval,
-                            'approve_url' => route('dashboards.approve', $absenceApproval->id),
-                            'reject_url' => route('dashboards.reject', $absenceApproval->id),
+                            'model' => $aa,
+                            'approve_url' => route('dashboards.approve', $aa->id),
+                            'reject_url' => route('dashboards.reject', $aa->id),
                             'confirm_message' => "Yakin melakukan ",
                         ]);
                     }
                 })
+                ->orderColumn('id', '-id $1')
                 ->escapeColumns([2])
                 ->make(true);
         }
@@ -76,12 +78,9 @@ class HomeController extends Controller
         // html builder untuk menampilkan kolom di datatables
         $html = $htmlBuilder
             ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
-            ->addColumn(['data' => 'absence_id', 'name' => 'absence_id', 
-            'title' => 'Pengajuan'])
-            ->addColumn(['data' => 'absence.user.personnel_no', 
-            'name' => 'absence.user.personnel_no', 'title' => 'Karyawan'])
-            ->addColumn(['data' => 'action', 'name' => 'action', 
-                'title' => 'Status', 'searchable' => false]);
+            ->addColumn(['data' => 'absence_id', 'name' => 'absence_id', 'title' => 'Pengajuan', 'orderable' => false])
+            ->addColumn(['data' => 'absence.user.personnel_no', 'name' => 'absence.user.personnel_no', 'title' => 'Karyawan', 'orderable' => false,])
+            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Status', 'searchable' => false, 'orderable' => false]);
 
 
         // tampilkan view index dengan tambahan script html DataTables

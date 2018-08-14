@@ -2,14 +2,13 @@
 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.personnel_service._page-container')
+@component('layouts.personnel_service._page-container', ['page_header' => 'Cuti Karyawan'])
 <div class="panel panel-prussian">
   <div class="panel-heading">
     <h4 class="panel-title">Panel Title here</h4>
   </div>
   @include('layouts._flash')
   <div class="panel-body">
-    <p> <a class="btn btn-primary" href="{{ route('leaves.create') }}">Tambah</a> </p>
     <div class="table-responsive">
       {!! $html->table(['class'=>'table table-striped']) !!}
     </div>

@@ -27,16 +27,19 @@ class Status extends Model
 
     public function scopeFirstStatus($query)
     {
+        // NEED TO IMPLEMENT CONFIGURATION
         return $query->find(1);
     }
 
     public function scopeApproveStatus($query)
     {
+        // NEED TO IMPLEMENT CONFIGURATION
         return $query->find(2);
     }
 
     public function scopeRejectStatus($query)
     {
+        // NEED TO IMPLEMENT CONFIGURATION
         return $query->find(3);
     }
 }
