@@ -11,7 +11,7 @@
         "laravel/tinker": "~1.0",
         "anhskohbo/no-captcha": "^3.0",
         "barryvdh/laravel-dompdf": "^0.8.2",
-        "doctrine/dbal": "^2.7",
+        "doctrine/dbal": "2.5.*",
         "guzzlehttp/guzzle": "^6.3",
         "laravelcollective/html": "^5.4.0",
         "maatwebsite/excel": "^3.0",

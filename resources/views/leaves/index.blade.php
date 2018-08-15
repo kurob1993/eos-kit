@@ -21,19 +21,19 @@
 
 @push('styles')
     <!-- DataTables -->
-    <link href="/plugins/DataTables/css/data-table.css" rel="stylesheet" />
+    <link href={{ url("/plugins/DataTables/css/data-table.css") }} rel="stylesheet" />
     <!-- Selectize -->
-    <link href="/plugins/selectize/selectize.css" rel="stylesheet">
-    <link href="/plugins/selectize/selectize.bootstrap3.css" rel="stylesheet">
+    <link href={{ url("/plugins/selectize/selectize.css") }} rel="stylesheet">
+    <link href={{ url("/plugins/selectize/selectize.bootstrap3.css") }} rel="stylesheet">
     <!-- Pace -->    
-    <script src="/plugins/pace/pace.min.js"></script>
+    <script src={{ url("/plugins/pace/pace.min.js") }}></script>
 @endpush
 
 @push('plugin-scripts')
 <!-- Selectize -->
-<script src="/plugins/selectize/selectize.min.js"></script>
+<script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
 <!-- DataTables -->
-<script src="/plugins/DataTables/js/jquery.dataTables.js"></script>
+<script src={{ url("/plugins/DataTables/js/jquery.dataTables.js") }}></script>
 <!-- Generated scripts from DataTables -->
 {!! $html->scripts() !!}
 @endpush

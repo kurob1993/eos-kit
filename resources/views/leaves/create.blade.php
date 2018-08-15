@@ -52,21 +52,21 @@
 @endsection
 
 @push('styles')
-<link href="/plugins/bootstrap-datepicker/css/datepicker.css" rel="stylesheet" />
-<link href="/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" />
-<link href="/plugins/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
-<link href="/plugins/selectize/selectize.css" rel="stylesheet">
-<link href="/plugins/selectize/selectize.bootstrap3.css" rel="stylesheet"> 
-<link href="/plugins/parsley/src/parsley.css" rel="stylesheet" />
+<link href={{ url("/plugins/bootstrap-datepicker/css/datepicker.css") }} rel="stylesheet" />
+<link href={{ url("/plugins/bootstrap-datepicker/css/datepicker3.css") }} rel="stylesheet" />
+<link href={{ url("/plugins/bootstrap-select/bootstrap-select.min.css") }} rel="stylesheet" />
+<link href={{ url("/plugins/selectize/selectize.css") }} rel="stylesheet">
+<link href={{ url("/plugins/selectize/selectize.bootstrap3.css") }} rel="stylesheet"> 
+<link href={{ url("/plugins/parsley/src/parsley.css") }} rel="stylesheet" />
 <!-- Pace -->    
-<script src="/plugins/pace/pace.min.js"></script>
+<script src={{ url("/plugins/pace/pace.min.js") }}></script>
 @endpush
 
 @push('plugin-scripts')
-<script src="/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-<script src="/plugins/bootstrap-select/bootstrap-select.min.js"></script>
-<script src="/plugins/selectize/selectize.min.js"></script>
-<script src="/plugins/parsley/dist/parsley.js"></script>
+<script src={{ url("/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js") }}></script>
+<script src={{ url("/plugins/bootstrap-select/bootstrap-select.min.js") }}></script>
+<script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
+<script src={{ url("/plugins/parsley/dist/parsley.js") }}></script>
 @endpush 
 
 @push('custom-scripts')
