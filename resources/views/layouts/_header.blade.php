@@ -5,7 +5,7 @@
             <div class="navbar-header navbar-header-without-bg">
                 <a href="index.html" class="navbar-brand">
                         <span>
-                            <img width="26px" src={{ url("/images", ['/krakatausteel-logo.png'])  }}>
+                            <img width="26px" src={{ url("/images", ['krakatausteel-logo.png'])  }}>
                         </span>
                         <span>&nbsp; Human Capital Information</span>
                     </a>
