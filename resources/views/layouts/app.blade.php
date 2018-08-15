@@ -14,20 +14,20 @@
 	<title>{{ config('app.name') }}</title>
 
 	<!-- jQueryUI -->
-	<link href={{ url("/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css" rel="stylesheet" />
+	<link href={{ url("/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css") }} rel="stylesheet" />
 	<!-- Bootstrap 3.3.4 -->
-	<link href={{ url("/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-	<link href={{ url("/plugins/bootstrap/css/BootstrapXL.css" rel="stylesheet" />
+	<link href={{ url("/plugins/bootstrap/css/bootstrap.min.css") }} rel="stylesheet" />
+	<link href={{ url("/plugins/bootstrap/css/BootstrapXL.css") }} rel="stylesheet" />
 	<!-- FontAwesome -->
-	<link href={{ url("/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+	<link href={{ url("/plugins/font-awesome/css/font-awesome.min.css") }} rel="stylesheet" />
 	<!-- Simple line icons -->
-	<link href={{ url("/plugins/simple-line-icons/simple-line-icons.css" rel="stylesheet">
+	<link href={{ url("/plugins/simple-line-icons/simple-line-icons.css") }} rel="stylesheet">
 	<!-- Base Styles -->
-	<link href={{ url("/css/animate.min.css" rel="stylesheet" />
-	<link href={{ url("/css/style.css" rel="stylesheet" />
-	<link href={{ url("/css/style-responsive.css" rel="stylesheet" />
-	<link href={{ url("/css/theme/default.css" rel="stylesheet" id="theme" />
-	<link href={{ url("/css/style-custom.css" rel="stylesheet" /> 
+	<link href={{ url("/css/animate.min.css") }} rel="stylesheet" />
+	<link href={{ url("/css/style.css") }} rel="stylesheet" />
+	<link href={{ url("/css/style-responsive.css") }} rel="stylesheet" />
+	<link href={{ url("/css/theme/default.css") }} rel="stylesheet" id="theme" />
+	<link href={{ url("/css/style-custom.css") }} rel="stylesheet" /> 
 	
 	@stack('styles')
 
@@ -48,21 +48,21 @@
 	@yield('content')
 
 	<!-- jQuery -->
-	<script src={{ url("/plugins/jquery/jquery-1.9.1.min.js"></script>
-	<script src={{ url("/plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
-	<script src={{ url("/plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+	<script src={{ url("/plugins/jquery/jquery-1.9.1.min.js") }}></script>
+	<script src={{ url("/plugins/jquery/jquery-migrate-1.1.0.min.js") }}></script>
+	<script src={{ url("/plugins/jquery-ui/ui/minified/jquery-ui.min.js") }}></script>
 	<!-- Bootstrap -->
-	<script src={{ url("/plugins/bootstrap/js/bootstrap.min.js"></script>
+	<script src={{ url("/plugins/bootstrap/js/bootstrap.min.js") }}></script>
 	<!-- slimscroll -->
-	<script src={{ url("/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src={{ url("/plugins/slimscroll/jquery.slimscroll.min.js") }}></script>
 	<!-- cookie -->
-	<script src={{ url("/plugins/jquery-cookie/jquery.cookie.js"></script>
+	<script src={{ url("/plugins/jquery-cookie/jquery.cookie.js") }}></script>
 
 	@stack('plugin-scripts')
 	@stack('custom-scripts')
 	
 	<!-- Base JS -->
-	<script src={{ url("/js/apps.js"></script>
+	<script src={{ url("/js/apps.js") }}></script>
 
 	<script>
 		$(document).ready(function() {
