@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Config;
+use App\Models\Stage;
 
 class Absence extends Model
 {
@@ -60,7 +62,38 @@ class Absence extends Model
         // apakah sudah selesai? (finished, failed, denied)
         return $query->whereIn('stage_id', [
             Stage::waitingApprovalStage()->id,
-            Stage::sendToSapStage()->id ]);
+            Stage::sentToSapStage()->id ]);
+    }
+
+    public function scopeIntersectWith($query, $s, $e)
+    {
+        /*
+        // apakah ada data absence yang beririsan (intersection)
+        // SELECT id, personnel_no, start_date, end_date FROM venus.absences
+        // WHERE (start_date <= $s AND end_date >= $s) 
+        // OR (start_date <= $e AND end_date >= $e)
+        */
+        return $query->where(function ($query) use($s){ 
+            $query->where('start_date', '<=', $s)->where('end_date', '>=', $s);
+        })
+        ->orWhere(function ($query) use($e){ 
+            $query->where('start_date', '<=', $e)->where('end_date', '>=', $e); 
+        }); 
+    }
+
+    public function getFormattedStartDateAttribute()
+    {
+        return $this->start_date->format(config('emss.date_format'));
+    }
+
+    public function getFormattedEndDateAttribute()
+    {
+        return $this->end_date->format(config('emss.date_format'));
+    }
+
+    public function getFormattedPeriodAttribute()
+    {
+        return $this->formattedStartDate . '-' . $this->formattedEndDate;
     }
 
     public function getDeductionAttribute()
@@ -68,4 +101,32 @@ class Absence extends Model
         // Jumlah pengajuan cuti dalam hari
         return $this->end_date->diffInDays($this->start_date) + 1;
     }
+
+    public function getIsFinishedAttribute()
+    {
+        // apakah absence ini tahapnya sudah finished
+        return ($this->stage_id == Stage::finishedStage()->id) ?
+            true : false;
+    }
+
+    public function getIsSentToSapAttribute()
+    {
+        // apakah absence ini tahapnya sent to SAP
+        return ($this->stage_id == Stage::sentToSapStage()->id) ?
+            true : false;
+    }
+
+    public function getIsFailedAttribute()
+    {
+        // apakah absence ini tahapnya failed
+        return ($this->stage_id == Stage::FailedStage()->id) ?
+            true : false;
+    }    
+
+    public function getIsDeniedAttribute()
+    {
+        // apakah absence ini tahapnya failed
+        return ($this->stage_id == Stage::FailedStage()->id) ?
+            true : false;
+    }    
 }

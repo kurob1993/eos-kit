@@ -10,6 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
  */
+
+// route untuk login
 Route::get('login', [
     'as' => 'login', 
     'uses' => 'Auth\LoginController@showLoginForm']);
@@ -20,18 +22,32 @@ Route::post('logout', [
     'as' => 'logout', 
     'uses' => 'Auth\LoginController@logout']);
 
+// route untuk default home --> dashboard
 Route::get('/', 'HomeController@index')->name('dashboards.employee');
 
+// route untuk role personnel_service
 Route::group([
     'prefix' => 'personnel_service', 
     'middleware' => ['auth', 'role:personnel_service']], function (){
-        Route::get('', 'HomeController@personnelServiceDashboard')->name('dashboards.personnel_service');
+        
+        // route default home role personnel service
+        Route::get('', 'HomeController@personnelServiceDashboard')
+            ->name('dashboards.personnel_service');
+        
+        // route untuk manage daftar semua cuti
         Route::resource('all_leaves', 'AllLeaveController', ['except' => [
             'destroy', 'show', 'update', 'edit', 'create' ]]);
+            Route::post('integrate/{id}','AllLeaveController@integrate')
+            ->name('all_leaves.integrate');
+            Route::post('confirm/{id}','AllLeaveController@confirm')
+            ->name('all_leaves.confirm');
+
+        // route untuk manage daftar semua kuota cuti
         Route::resource('all_absence_quotas', 'AllAbsenceQuotaController', ['except' => [
             'destroy', 'show', 'update', 'edit', 'create' ]]);
-});
+        });
 
+// route untuk role basis
 Route::group([
     'prefix' => 'basis', 
     'middleware' => ['auth', 'role:basis']], function () {
@@ -40,6 +56,7 @@ Route::group([
         Route::post('settings', 'SettingController@store')->name('settings.store');    
 });
 
+// route untuk role employee
 Route::group([
     'middleware' => ['auth', 'role:employee']], function () {
         Route::get('debug', 'DebugController@debug');

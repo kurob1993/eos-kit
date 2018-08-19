@@ -32,6 +32,18 @@ class AbsenceObserver
             ]);
             return false;
         }
+
+        // apakah tanggal cuti sudah pernah dilakukan sebelumnya (intersection)
+        $intersected = Absence::intersectWith($absence->start_date, $absence->end_date)->first();
+        if (sizeof($intersected) > 0) {
+            Session::flash("flash_notification", [
+                "level" => "danger",
+                "message" => "Tidak dapat mengajukan cuti karena tanggal pengajuan "
+                    . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": " 
+                    . $intersected->formattedPeriod . ")."
+            ]);
+            return false;            
+        }
     }
 
     public function created(Absence $absence)
@@ -61,10 +73,32 @@ class AbsenceObserver
         // buat record untuk absence approval
         $absence_approval = new AbsenceApproval();
         $absence_approval->absence_id = $absence->id;
-        $absence_approval->regno = Auth::user()->employee()->first()->closestBoss()->personnel_no;
+        $absence_approval->regno = Auth::user()
+            ->employee()
+            ->first()
+            ->closestBoss()
+            ->personnel_no;
         // NEED TO IMPLEMENT FLOW STAGE
         $absence_approval->sequence = 1;
         $absence_approval->status_id = Status::firstStatus()->id;
         $absence_approval->save();
+    }
+    
+    public function updated(Absence $absence)
+    {
+        // apakah sudah selesai
+        if ($absence->isFinished) {
+            // mencari data kuota cuti yang dipakai
+            $absenceQuota = AbsenceQuota::activeAbsenceQuota($absence->personnel_no)
+                ->first();
+            
+            // menambah pemakaian cuti pada periode tersebut
+            // seharusnya ada tabel history (many to many)
+            // pemakaian cuti berkorelasi dengan absence quota
+            $absenceQuota->deduction += $absence->deduction;
+
+            // simpan data kuota cuti
+            $absenceQuota->save();
+        }
     }
 }

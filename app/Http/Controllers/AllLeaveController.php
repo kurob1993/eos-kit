@@ -11,7 +11,7 @@ use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Http\Requests\StoreAbsenceRequest;
 use App\Models\Absence;
-use App\Models\AbsenceQuota;
+use App\Models\Stage;
 
 class AllLeaveController extends Controller
 {
@@ -20,7 +20,7 @@ class AllLeaveController extends Controller
         // response untuk datatables absences
         if ($request->ajax()) {
 
-            // ambil data cuti untuk user tersebut
+            // ambil semua data cuti user
             $absences = Absence::with(['absenceType', 'stage']);
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
@@ -32,6 +32,23 @@ class AllLeaveController extends Controller
                     return $absence->start_date->format(config('emss.date_format'));})
                 ->editColumn('end_date', function (Absence $absence) {
                     return $absence->end_date->format(config('emss.date_format'));})
+                ->editColumn('action', function (Absence $absence) {
+                    // apakah stage-nya finished OR denied kemudian biarkanlah
+                    if ($absence->isFinished || $absence->isDenied) {
+                        return '<span class="label label-primary">Finished or denied</span>';
+                    // apakah stage-nya: sent to sap kemudian coba kirim manual
+                    // atau dikirim secara otomatis (belum diakomodasi)
+                    } else if ($absence->isSentToSap) {
+                        return view('all_leaves._action', [
+                            'model' => $absence,
+                            'integrate_url' => route('all_leaves.integrate', $absence->id),
+                            'confirm_url' => route('all_leaves.confirm', $absence->id)
+                        ]);
+                    // apakah stage-nya: failed
+                    } else if ($absence->isFailed) {
+                        return '<span class="label label-primary">Failed</span>';
+                    }
+                })                    
                 ->escapeColumns([4])
                 ->make(true);
         }
@@ -42,10 +59,8 @@ class AllLeaveController extends Controller
             ->addColumn(['data' => 'personnel_no', 'name' => 'personnel_no', 'title' => 'NIK'])
             ->addColumn(['data' => 'start_date', 'name' => 'start_date', 'title' => 'Mulai'])
             ->addColumn(['data' => 'end_date', 'name' => 'end_date', 'title' => 'Berakhir'])
-            ->addColumn(['data' => 'absence_type.text', 'name' => 'absence_type.text', 
-                'title' => 'Jenis', 'searchable' => false])
-            ->addColumn(['data' => 'stage.description', 'name' => 'stage.description', 
-                'title' => 'Tahap', 'searchable' => false]);
+            ->addColumn(['data' => 'absence_type.text', 'name' => 'absence_type.text', 'title' => 'Jenis', 'searchable' => false]) ->addColumn(['data' => 'stage.description', 'name' => 'stage.description', 'title' => 'Tahap', 'searchable' => false])
+            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'searchable' => false, 'orderable' => false]);
 
         // tampilkan view index dengan tambahan script html DataTables
         return view('all_leaves.index')->with(compact('html'));
@@ -80,4 +95,38 @@ class AllLeaveController extends Controller
     {
         //
     }
+
+    public function integrate(Request $request, $id)
+    {
+
+        // tampilkan pesan bahwa telah berhasil 
+        Session::flash("flash_notification", [
+            "level" => "success",
+            "message" => "Integrasi masuk belum diimplementasi."
+        ]);
+
+        // kembali lagi ke index
+        return redirect()->route('all_leaves.index');
+    }
+
+    public function confirm(Request $request, $id)
+    {
+        // cari berdasarkan id kemudian update berdasarkan request + status reject
+        $absence = Absence::find($id);
+        $absence->stage_id = Stage::finishedStage()->id;
+        
+        if (!$absence->save()) {
+            // kembali lagi jika gagal
+            return redirect()->back();
+        }
+
+        // tampilkan pesan bahwa telah berhasil menolak
+        Session::flash("flash_notification", [
+            "level" => "success",
+            "message" => "Data cuti berhasil dikonfirmasi masuk ke SAP." . Stage::finishedStage()->id 
+        ]);
+
+        // kembali lagi ke dashboard employee
+        return redirect()->route('all_leaves.index');
+    }    
 }

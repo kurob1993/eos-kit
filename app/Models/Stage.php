@@ -60,7 +60,7 @@ class Stage extends Model
         return $query->find(1);
     }
 
-    public function scopeSendToSapStage($query)
+    public function scopeSentToSapStage($query)
     {
         // NEED TO IMPLEMENT CONFIGURATION
         return $query->find(2);

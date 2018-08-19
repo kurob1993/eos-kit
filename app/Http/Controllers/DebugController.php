@@ -94,8 +94,15 @@ class DebugController extends Controller
         // var_dump($absenceApprovals->first()->toArray());
 
         // mencari  absence approval dari user yang belum disetujui
-        $needApprovals = \App\Models\AbsenceApproval::where('regno', Auth::user()->personnel_no)
-            ->waitedForApproval()->get();
-        var_dump($needApprovals->toArray());
+        // $needApprovals = \App\Models\AbsenceApproval::where('regno', Auth::user()->personnel_no)
+        //     ->waitedForApproval()->get();
+        // var_dump($needApprovals->toArray());
+
+        // mengecek apakah ada data cuti yang beririsan
+        $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
+            ->intersectWith('2018-08-08', '2018-08-10')->first();
+        // var_dump($intersected->toArray());
+
+        var_dump($intersected->formattedPeriod);
     }
 }
