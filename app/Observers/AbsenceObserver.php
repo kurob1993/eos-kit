@@ -8,6 +8,7 @@ use App\Models\AbsenceQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
 use App\User;
+use App\Notifications\LeaveSentToSapMessage;
 use Illuminate\Support\Facades\Auth;
 use Session;
 
@@ -99,6 +100,12 @@ class AbsenceObserver
 
             // simpan data kuota cuti
             $absenceQuota->save();
+
+            // to adalah karyawan yang mengajukan
+            $to = $absence->user()->first();    
+
+            // sistem mengirim email notifikasi
+            $to->notify(new LeaveSentToSapMessage($absence));            
         }
     }
 }

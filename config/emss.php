@@ -14,4 +14,17 @@ return [
 
   // format tanggal dan jam
   'datetime_format' => 'd.m.Y H:i:s',
+
+  // modules yang ada di emss
+  'modules' => [
+    'leaves' => [
+      'text' => 'Cuti',      
+    ],
+    'permits' => [
+      'text' => 'Izin',      
+    ],
+    'overtimes' => [
+      'text' => 'Lembur',      
+    ],
+  ],
 ];

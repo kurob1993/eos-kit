@@ -23,17 +23,19 @@ class AbsenceApproval extends Model
     public function user()
     {
         // many-to-one relationship dengan User
-        return $this->belongsTo('App\User', 'personnel_no', 'personnel_no');
+        return $this->belongsTo('App\User', 'regno', 'personnel_no');
     }
 
     public function absence()
     {
-        return $this->belongsTo(\App\Models\Absence::class);
+        // many-to-one relationship dengan absence
+        return $this->belongsTo('\App\Models\Absence');
     }
 
     public function status()
     {
-        return $this->belongsTo(\App\Models\Status::class);
+        // one-to-one relationship dengan status
+        return $this->belongsTo('\App\Models\Status');
     }
 
     public function getIsNotWaitingAttribute()

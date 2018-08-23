@@ -98,11 +98,19 @@ class DebugController extends Controller
         //     ->waitedForApproval()->get();
         // var_dump($needApprovals->toArray());
 
-        // mengecek apakah ada data cuti yang beririsan
-        $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
-            ->intersectWith('2018-08-08', '2018-08-10')->first();
-        // var_dump($intersected->toArray());
+        // // mengecek apakah ada data cuti yang beririsan
+        // $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
+        //     ->intersectWith('2018-08-08', '2018-08-10')->first();
+        // // var_dump($intersected->toArray());
 
-        var_dump($intersected->formattedPeriod);
+        // var_dump($intersected->formattedPeriod);
+
+        // // mencoba eager loading relationship
+        // $with = \App\Models\AbsenceApproval::find(16);
+        // $stage = $with->with('absence.stage')->first();
+        // var_dump($stage->absence->stage->description);
+
+        // now menggunakan carbon
+        var_dump(\Carbon\Carbon::now()->toDateTimeString());
     }
 }

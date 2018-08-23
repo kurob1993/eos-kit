@@ -100,7 +100,7 @@ class LeaveController extends Controller
         // tampilkan view create
         return view('leaves.create', [
             'can_delegate' => $canDelegate,
-            'absence_quota' => $absenceQuota->toArray()
+            'absence_quota' => $absenceQuota
             ]
         );
     }

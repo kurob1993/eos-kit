@@ -25,6 +25,8 @@ Route::post('logout', [
 // route untuk default home --> dashboard
 Route::get('/', 'HomeController@index')->name('dashboards.employee');
 
+Route::get('/soap', 'SoapController@show');
+
 // route untuk role personnel_service
 Route::group([
     'prefix' => 'personnel_service', 

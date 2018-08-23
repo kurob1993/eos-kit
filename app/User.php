@@ -58,6 +58,12 @@ class User extends Authenticatable
   public function activeAbsenceQuota()
   {
     // mencari absence quota pada hari ini untuk user
-    AbsenceQuota::activeAbsenceQuota($this->personnel_no);
+    return AbsenceQuota::activeAbsenceQuota($this->personnel_no);
+  }
+
+  public function getPersonnelNoWithNameAttribute()
+  {
+    // menggabungkan personnel_no dan nama
+    return $this->personnel_no . ' - ' . $this->name;
   }
 }

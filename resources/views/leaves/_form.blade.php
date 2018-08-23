@@ -51,7 +51,7 @@
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
             <input type="text" class="form-control" id="absence_type" 
-            placeholder="Jenis Cuti" value="{{ $absence_quota['absence_type']['text'] }}" readonly>
+            placeholder="Jenis Cuti" value="{{ $absence_quota->absenceType->text }}" readonly>
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
             <input type="text" class="form-control" id="number" 
-              placeholder="Durasi" value="12 " readonly>
+              placeholder="Durasi" value="{{ $absence_quota->balance }}" readonly>
           </div>
         </div>
       </div>
