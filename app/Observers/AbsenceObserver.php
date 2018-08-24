@@ -2,15 +2,16 @@
 
 namespace App\Observers;
 
+use Illuminate\Support\Facades\Auth;
+use Session;
 use App\Models\Absence;
 use App\Models\AbsenceApproval;
 use App\Models\AbsenceQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
-use App\User;
 use App\Notifications\LeaveSentToSapMessage;
-use Illuminate\Support\Facades\Auth;
-use Session;
+use App\User;
+use App\Role;
 
 class AbsenceObserver
 {
@@ -35,7 +36,9 @@ class AbsenceObserver
         }
 
         // apakah tanggal cuti sudah pernah dilakukan sebelumnya (intersection)
-        $intersected = Absence::intersectWith($absence->start_date, $absence->end_date)->first();
+        $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
+            ->intersectWith($absence->start_date, $absence->end_date)
+            ->first();
         if (sizeof($intersected) > 0) {
             Session::flash("flash_notification", [
                 "level" => "danger",
@@ -49,6 +52,9 @@ class AbsenceObserver
 
     public function created(Absence $absence)
     {
+        // karyawan yang membuat absence
+        $employee = Auth::user()->employee()->first();
+
         // mendapatkan absence_type_id dari kuota cuti yang digunakan
         $absence_type_id = AbsenceQuota::activeAbsenceQuotaOf(
             Auth::user()
@@ -70,19 +76,53 @@ class AbsenceObserver
 
         // simpan perubahan
         $absence->save();
+        
+        // mencari atasan dari karyawan yang mengajukan absences
+        $closestBoss = $employee->closestBoss();
+
+        // mencari direktur dari karyawan yang mengajukan absence
+        $director = $employee->director();
 
         // buat record untuk absence approval
         $absence_approval = new AbsenceApproval();
+
+        // foreign key pada absence approval
         $absence_approval->absence_id = $absence->id;
-        $absence_approval->regno = Auth::user()
-            ->employee()
-            ->first()
-            ->closestBoss()
-            ->personnel_no;
+
         // NEED TO IMPLEMENT FLOW STAGE
+        // mengambil status dari firststatus
         $absence_approval->sequence = 1;
         $absence_approval->status_id = Status::firstStatus()->id;
-        $absence_approval->save();
+                
+        // JIKA karyawan tersebut mempunyai atasan langsung
+        // maka simpan data atasan sebagai absence approval
+        // JIKA TIDAK mempunyai atasan langsung
+        // maka absence approval dibuat seolah-olah sudah disetujui 
+        // contoh: karyawan yang atasannya langsung direktur
+        // atau deputi (UTOMO NUGROHO) 
+        if ($closestBoss) {
+            // menyimpan personnel_no dari closest boss
+            $absence_approval->regno = $closestBoss->personnel_no;
+
+            // menyimpan data persetujuan
+            $absence_approval->save();
+
+        } else {
+            // bypass regno menggunakan admin  dan sequence
+            $admin = Role::retrieveAdmin();
+            $absence_approval->regno = $admin->personnel_no;
+            $absence_approval->sequence = 1;
+            
+            // menyimpan data persetujuan
+            $absence_approval->save();
+
+            // mengubah status menjadi approved
+            $absence_approval->status_id = Status::ApproveStatus()->id;
+            $absence_approval->text = 'Disetujui oleh Admin';
+
+            // menyimpan perubahan agar mentrigger observer
+            $absence_approval->save();
+        }
     }
     
     public function updated(Absence $absence)

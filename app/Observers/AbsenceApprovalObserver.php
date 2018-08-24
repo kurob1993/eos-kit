@@ -57,7 +57,6 @@ class AbsenceApprovalObserver
 
       // sistem mengirim email notifikasi dari atasan ke
       // karyawan yang mengajukan         
-      $to->notify(new LeaveApprovalMessage($absenceApproval->isApproved, 
-        $from, $absenceApproval));
+      $to->notify(new LeaveApprovalMessage($from, $absenceApproval));
     }
 }

@@ -34,8 +34,10 @@ class AllLeaveController extends Controller
                     return $absence->end_date->format(config('emss.date_format'));})
                 ->editColumn('action', function (Absence $absence) {
                     // apakah stage-nya finished OR denied kemudian biarkanlah
-                    if ($absence->isFinished || $absence->isDenied) {
-                        return '<span class="label label-primary">Finished or denied</span>';
+                    if ($absence->isFinished) {
+                        return '<span class="label label-primary">Finished</span>';
+                    } else if ($absence->isDenied) {
+                        return '<span class="label label-primary">Denied</span>';
                     // apakah stage-nya: sent to sap kemudian coba kirim manual
                     // atau dikirim secara otomatis (belum diakomodasi)
                     } else if ($absence->isSentToSap) {
@@ -123,10 +125,10 @@ class AllLeaveController extends Controller
         // tampilkan pesan bahwa telah berhasil menolak
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Data cuti berhasil dikonfirmasi masuk ke SAP." . Stage::finishedStage()->id 
+            "message" => "Data cuti berhasil dikonfirmasi masuk ke SAP."
         ]);
 
-        // kembali lagi ke dashboard employee
+        // kembali lagi ke all leaves
         return redirect()->route('all_leaves.index');
     }    
 }

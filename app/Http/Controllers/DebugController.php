@@ -48,6 +48,25 @@ class DebugController extends Controller
         // }
         // catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) { var_dump($e->getMessage()); }
 
+        // mencari direktur
+        // var_dump(Auth::user()->employee()->first()->director()->toArray());
+        // var_dump(\App\Models\Employee::where('personnel_no', 10233)
+        //     ->first()
+        //     ->director()
+        //     ->toArray());
+        // var_dump(\App\Models\Employee::where('personnel_no', 10291)->first());
+
+        // // mencari atasan dari personnel_no
+        // $bosses = \App\Models\StructDisp::closestBossOf('10112');
+        // dd($bosses->first()->toArray());
+
+        // // mencari atasan dari GM
+        // $bosses = \App\Models\StructDisp::closestBossOf('10233');
+        // dd($bosses->first());
+        var_dump(\App\Models\Employee::where('personnel_no', 10233)
+            ->first()
+            ->closestBoss());        
+
         // // mencari atasan-atasan dari personnel_no
         // $bosses = \App\Models\StructDisp::BossesOf('11725');
         // var_dump($bosses->toArray());
@@ -110,7 +129,7 @@ class DebugController extends Controller
         // $stage = $with->with('absence.stage')->first();
         // var_dump($stage->absence->stage->description);
 
-        // now menggunakan carbon
-        var_dump(\Carbon\Carbon::now()->toDateTimeString());
+        // // now menggunakan carbon
+        // var_dump(\Carbon\Carbon::now()->toDateTimeString());
     }
 }

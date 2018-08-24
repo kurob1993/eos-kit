@@ -29,13 +29,28 @@ class Employee extends Model
         ? true : false;
     }
 
+    public function director()
+    {
+        // mencari record structdisp untuk employee ini
+        $s = $this->structDisp()->selfStruct()->first();
+
+        // substr pada angka paling depan
+        $oShort = substr($s->emp_hrp1000_o_short, 0, 1);
+        $sShort = substr($s->emp_hrp1000_s_short, 0, 1);
+
+        // mengembalikan StructDir untuk employee ini
+        return \App\Models\StructDir::whereRaw('SUBSTR(emp_hrp1000_s_short, 1, 1) = ?', [$oShort])
+            ->whereRaw('SUBSTR(emp_hrp1000_o_short, 1, 1) = ?', [$sShort])
+            ->first();
+    }
+
     public function closestBoss()
     {
         // mencari atasan satu tingkat
         $s = $this->structDisp()->closestBossOf($this->personnel_no)->first();
 
-        // mengembalikan User model
-        return \App\Models\Employee::where('personnel_no', $s->dirnik)->first();
+        // mengembalikan Employee model
+        return (is_null($s)) ? false : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
     }
 
     public function bosses()
@@ -45,11 +60,11 @@ class Employee extends Model
 
         // mengiterasi atasan-atasan dan membuat collection baru
         $bosses = $structs->map(function ($item, $key) {
-            // membuat & mengembalikan User masing-masing atasan
+            // membuat & mengembalikan Employee masing-masing atasan
             return \App\Models\Employee::where('personnel_no', $item->dirnik)->first();
         });
 
-        // mengembalikan collection of User
+        // mengembalikan collection of Employee
         return $bosses;
     }
 
@@ -60,11 +75,11 @@ class Employee extends Model
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
-            // membuat & mengembalikan User masing-masing bawahan
+            // membuat & mengembalikan Employee masing-masing bawahan
             return \App\Models\Employee::where('personnel_no', $item->empnik)->first();
         });
 
-        // mengembalikan collection of User
+        // mengembalikan collection of Employee
         return $subordinates;
     }
 }

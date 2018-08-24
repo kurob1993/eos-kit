@@ -16,11 +16,12 @@ class LeaveApprovalMessage extends Notification
     public $fromUser;
     public $absenceApproval;
 
-    public function __construct($approved = false, User $user, AbsenceApproval $absenceApproval)
+    public function __construct(User $user, AbsenceApproval $absenceApproval)
     {
-        $this->approved = $approved;
         $this->fromUser = $user;
-        $this->absenceApproval = $absenceApproval;
+        $this->approved = $absenceApproval->isApproved;
+        // lazy eager loading
+        $this->absenceApproval = $absenceApproval->load('absence.stage');
     }
 
     public function via($notifiable)
@@ -45,9 +46,8 @@ class LeaveApprovalMessage extends Notification
             $this->absenceApproval->text);
 
         // catatan tahapan persetujuan
-        $currentStage = $this->absenceApproval->with('absence.stage')->first(); 
         $currentStageText = sprintf('Tahapan pengajuan: %s',
-            $currentStage->absence->stage->description);
+            $this->absenceApproval->absence->stage->description);
 
         // link untuk melihat cuti
         $url = route('leaves.index');

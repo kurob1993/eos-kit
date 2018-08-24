@@ -31,6 +31,12 @@ class StructDisp extends Model
       return $query->where('empnik', $p);
     }
 
+    public function scopeSelfStruct($query)
+    {
+      // struct untuk personnel_no
+      return $query->where('no', 1);
+    }
+
     public function scopeBossesOf($query, $p)
     {
       // struct atasan-atasan
