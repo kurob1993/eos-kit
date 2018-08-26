@@ -27,11 +27,14 @@ class AllLeaveController extends Controller
             return Datatables::of($absences)
                 ->editColumn('stage.description', function (Absence $absence) {
                     return '<span class="label label-default">' 
-                    . $absence->stage->description . '</span>';})
+                    . $absence->stage->description . '</span>';
+                })
                 ->editColumn('start_date', function (Absence $absence) {
-                    return $absence->start_date->format(config('emss.date_format'));})
+                    return $absence->start_date->format(config('emss.date_format'));
+                })
                 ->editColumn('end_date', function (Absence $absence) {
-                    return $absence->end_date->format(config('emss.date_format'));})
+                    return $absence->end_date->format(config('emss.date_format'));
+                })
                 ->editColumn('action', function (Absence $absence) {
                     // apakah stage-nya finished OR denied kemudian biarkanlah
                     if ($absence->isFinished) {
@@ -57,12 +60,45 @@ class AllLeaveController extends Controller
 
         // html builder untuk menampilkan kolom di datatables
         $html = $htmlBuilder
-            ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
-            ->addColumn(['data' => 'personnel_no', 'name' => 'personnel_no', 'title' => 'NIK'])
-            ->addColumn(['data' => 'start_date', 'name' => 'start_date', 'title' => 'Mulai'])
-            ->addColumn(['data' => 'end_date', 'name' => 'end_date', 'title' => 'Berakhir'])
-            ->addColumn(['data' => 'absence_type.text', 'name' => 'absence_type.text', 'title' => 'Jenis', 'searchable' => false]) ->addColumn(['data' => 'stage.description', 'name' => 'stage.description', 'title' => 'Tahap', 'searchable' => false])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => '', 'searchable' => false, 'orderable' => false]);
+            ->addColumn([
+                'data' => 'id',
+                'name' => 'id',
+                'title' => 'ID'
+                ])
+            ->addColumn([
+                'data' => 'personnel_no', 
+                'name' => 'personnel_no', 
+                'title' => 'NIK'
+                ])
+            ->addColumn([
+                'data' => 'start_date', 
+                'name' => 'start_date', 
+                'title' => 'Mulai'
+                ])
+            ->addColumn([
+                'data' => 'end_date',
+                'name' => 'end_date',
+                'title' => 'Berakhir'
+                ])
+            ->addColumn([
+                'data' => 'absence_type.text',
+                'name' => 'absence_type.text',
+                'title' => 'Jenis',
+                'searchable' => false
+                ])
+            ->addColumn([
+                'data' => 'stage.description', 
+                'name' => 'stage.description', 
+                'title' => 'Tahap', 
+                'searchable' => false
+                ])
+            ->addColumn([
+                'data' => 'action',
+                'name' => 'action',
+                'title' => '',
+               'searchable' => false,
+                'orderable' => false
+            ]);
 
         // tampilkan view index dengan tambahan script html DataTables
         return view('all_leaves.index')->with(compact('html'));

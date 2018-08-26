@@ -36,7 +36,7 @@ class Stage extends Model
       return $this->belongsToMany('App\Models\Flow')->withPivot('sequence');
     }
 
-    public function scopeFinishedStage($query)
+    public function scopeSuccessStage($query)
     {
         // NEED TO IMPLEMENT CONFIGURATION
         return $query->find(3);        

@@ -128,7 +128,7 @@ class AbsenceObserver
     public function updated(Absence $absence)
     {
         // apakah sudah selesai
-        if ($absence->isFinished) {
+        if ($absence->isSuccess) {
             // mencari data kuota cuti yang dipakai
             $absenceQuota = AbsenceQuota::activeAbsenceQuota($absence->personnel_no)
                 ->first();
@@ -142,10 +142,14 @@ class AbsenceObserver
             $absenceQuota->save();
 
             // to adalah karyawan yang mengajukan
-            $to = $absence->user()->first();    
+            $to = $absence->user()->first();
 
             // sistem mengirim email notifikasi
             $to->notify(new LeaveSentToSapMessage($absence));            
+
+        } else if ($absence->isSentToSap) {
+            
+            event(new LeaveSentToSap($absence));
         }
     }
 }

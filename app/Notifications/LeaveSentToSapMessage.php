@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Models\Absence;
 
-class LeaveSentToSapMessage extends Notification
+class LeaveSentToSapMessage extends Notification implements ShouldQueue
 {
     use Queueable;
     public $absence;
@@ -29,6 +29,7 @@ class LeaveSentToSapMessage extends Notification
         // judul email
         $subject = sprintf('%s: Pengajuan cuti Anda telah berhasil masuk ke SAP',
             config('emss.modules.leaves.text') );
+            
         // kalimat pembuka
         $greeting = sprintf('Selamat %s!', $notifiable->name);
 

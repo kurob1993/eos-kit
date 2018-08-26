@@ -102,10 +102,10 @@ class Absence extends Model
         return $this->end_date->diffInDays($this->start_date) + 1;
     }
 
-    public function getIsFinishedAttribute()
+    public function getIsSuccessAttribute()
     {
-        // apakah absence ini tahapnya sudah finished
-        return ($this->stage_id == Stage::finishedStage()->id) ?
+        // apakah absence ini tahapnya sudah success
+        return ($this->stage_id == Stage::successStage()->id) ?
             true : false;
     }
 

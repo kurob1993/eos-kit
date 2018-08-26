@@ -97,8 +97,8 @@
     </div>
     <!-- end approver field -->
 
+    {{-- Apakah memiliki bawahan? TO BE DECIDED WHETHER IMPLEMENTED
     <!-- begin delegation field -->
-    {{-- Apakah memiliki bawahan? --}}
     @if ($can_delegate)
     <div class="form-group">
       {!! Form::label('delegation', 'Penerima Limpahan Wewenang') !!}
@@ -109,6 +109,7 @@
     </div>
     @endif
     <!-- end delegation field -->
+    Apakah memiliki bawahan? --}}
 
     <!-- begin note field -->
     <div class="form-group{{ $errors->has('note') ? ' has-error' : '' }}">
