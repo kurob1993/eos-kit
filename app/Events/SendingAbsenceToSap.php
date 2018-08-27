@@ -11,26 +11,17 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Models\Absence;
 
-class LeaveSentToSap
+class SendingAbsenceToSap
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    
     protected $absence;
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
+
     public function __construct(Absence $absence)
     {
         $this->absence = $absence;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
     public function broadcastOn()
     {
         return new PrivateChannel('channel-name');

@@ -11,26 +11,18 @@ class SendingToSapMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public $demo;
+ 
+    public function __construct($demo)
     {
-        //
+        $this->demo = $demo;
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
         return $this->from('sender@example.com')
-                    ->view('mails.demo')
-                    ->text('mails.demo_plain')
+                    ->view('emails.demo')
+                    ->text('emails.demo_plain')
                     ->with(
                       [
                             'testVarOne' => '1',

@@ -69,7 +69,7 @@ class Absence extends Model
     {
         /*
         // apakah ada data absence yang beririsan (intersection)
-        // SELECT id, personnel_no, start_date, end_date FROM venus.absences
+        // SELECT id, personnel_no, start_date, end_date FROM absences
         // WHERE (start_date <= $s AND end_date >= $s) 
         // OR (start_date <= $e AND end_date >= $e)
         */

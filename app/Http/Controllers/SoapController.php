@@ -51,7 +51,7 @@ class SoapController extends Controller
 
     // With classmap
     $response = $this->soapWrapper->call('Currency.GetConversionAmount', [
-      new GetConversionAmount('USD', 'EUR', '2014-06-05', '1000')
+      new GetConversionAmount('USD', 'IDR', '2018-08-26', '1')
     ]);
 
     var_dump($response);

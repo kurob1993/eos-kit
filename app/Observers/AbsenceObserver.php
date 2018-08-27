@@ -2,16 +2,16 @@
 
 namespace App\Observers;
 
-use Illuminate\Support\Facades\Auth;
-use Session;
 use App\Models\Absence;
 use App\Models\AbsenceApproval;
 use App\Models\AbsenceQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
 use App\Notifications\LeaveSentToSapMessage;
-use App\User;
 use App\Role;
+use App\User;
+use Illuminate\Support\Facades\Auth;
+use Session;
 
 class AbsenceObserver
 {
@@ -36,17 +36,19 @@ class AbsenceObserver
         }
 
         // apakah tanggal cuti sudah pernah dilakukan sebelumnya (intersection)
+        // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
+        // JIKA DENIED tidak termasuk intersected
         $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
             ->intersectWith($absence->start_date, $absence->end_date)
-            ->first();
+            ->get();
         if (sizeof($intersected) > 0) {
             Session::flash("flash_notification", [
                 "level" => "danger",
                 "message" => "Tidak dapat mengajukan cuti karena tanggal pengajuan "
-                    . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": " 
-                    . $intersected->formattedPeriod . ")."
+                . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
+                . $intersected->formattedPeriod . ").",
             ]);
-            return false;            
+            return false;
         }
     }
 
@@ -76,7 +78,7 @@ class AbsenceObserver
 
         // simpan perubahan
         $absence->save();
-        
+
         // mencari atasan dari karyawan yang mengajukan absences
         $closestBoss = $employee->closestBoss();
 
@@ -93,13 +95,13 @@ class AbsenceObserver
         // mengambil status dari firststatus
         $absence_approval->sequence = 1;
         $absence_approval->status_id = Status::firstStatus()->id;
-                
+
         // JIKA karyawan tersebut mempunyai atasan langsung
         // maka simpan data atasan sebagai absence approval
         // JIKA TIDAK mempunyai atasan langsung
-        // maka absence approval dibuat seolah-olah sudah disetujui 
+        // maka absence approval dibuat seolah-olah sudah disetujui
         // contoh: karyawan yang atasannya langsung direktur
-        // atau deputi (UTOMO NUGROHO) 
+        // atau deputi (UTOMO NUGROHO)
         if ($closestBoss) {
             // menyimpan personnel_no dari closest boss
             $absence_approval->regno = $closestBoss->personnel_no;
@@ -112,7 +114,7 @@ class AbsenceObserver
             $admin = Role::retrieveAdmin();
             $absence_approval->regno = $admin->personnel_no;
             $absence_approval->sequence = 1;
-            
+
             // menyimpan data persetujuan
             $absence_approval->save();
 
@@ -124,7 +126,7 @@ class AbsenceObserver
             $absence_approval->save();
         }
     }
-    
+
     public function updated(Absence $absence)
     {
         // apakah sudah selesai
@@ -132,7 +134,7 @@ class AbsenceObserver
             // mencari data kuota cuti yang dipakai
             $absenceQuota = AbsenceQuota::activeAbsenceQuota($absence->personnel_no)
                 ->first();
-            
+
             // menambah pemakaian cuti pada periode tersebut
             // seharusnya ada tabel history (many to many)
             // pemakaian cuti berkorelasi dengan absence quota
@@ -145,11 +147,7 @@ class AbsenceObserver
             $to = $absence->user()->first();
 
             // sistem mengirim email notifikasi
-            $to->notify(new LeaveSentToSapMessage($absence));            
-
-        } else if ($absence->isSentToSap) {
-            
-            event(new LeaveSentToSap($absence));
+            $to->notify(new LeaveSentToSapMessage($absence));
         }
     }
 }

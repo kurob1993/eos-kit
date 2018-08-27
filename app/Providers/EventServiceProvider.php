@@ -13,12 +13,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\LeaveSentToSap' => [
-            'App\Listeners\SendLeaveToSap',
-        ],
-        'Illuminate\Auth\Events\Authenticated' => [
-            'App\Listeners\LogAuthenticated',
-        ],
+        'App\Events\SendingAbsenceToSap' => [
+            'App\Listeners\ConsumeAbsenceWebService'
+        ]
     ];
 
     /**

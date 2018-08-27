@@ -12,6 +12,7 @@ use Yajra\DataTables\Html\Builder;
 use App\Http\Requests\StoreAbsenceRequest;
 use App\Models\Absence;
 use App\Models\Stage;
+use App\Events\SendingAbsenceToSap;
 
 class AllLeaveController extends Controller
 {
@@ -136,11 +137,16 @@ class AllLeaveController extends Controller
 
     public function integrate(Request $request, $id)
     {
-
+        // cari berdasarkan id kemudian update berdasarkan request + status reject
+        $absence = Absence::find($id);
+        
+        // dispatch event agar dapat dimasukkan ke dalam job
+        event(new SendingAbsenceToSap($absence));
+        
         // tampilkan pesan bahwa telah berhasil 
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Integrasi masuk belum diimplementasi."
+            "message" => "Integrasi sedang dilakukan. Silahkan cek email."
         ]);
 
         // kembali lagi ke index
@@ -151,7 +157,7 @@ class AllLeaveController extends Controller
     {
         // cari berdasarkan id kemudian update berdasarkan request + status reject
         $absence = Absence::find($id);
-        $absence->stage_id = Stage::finishedStage()->id;
+        $absence->stage_id = Stage::successStage()->id;
         
         if (!$absence->save()) {
             // kembali lagi jika gagal
