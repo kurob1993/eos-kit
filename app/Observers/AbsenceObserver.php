@@ -39,8 +39,9 @@ class AbsenceObserver
         // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
         // JIKA DENIED tidak termasuk intersected
         $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
+            ->leavesOnly()
             ->intersectWith($absence->start_date, $absence->end_date)
-            ->get();
+            ->first();
         if (sizeof($intersected) > 0) {
             Session::flash("flash_notification", [
                 "level" => "danger",

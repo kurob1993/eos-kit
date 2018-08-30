@@ -9,24 +9,30 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Session;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
-use App\Http\Requests\StoreAbsenceRequest;
+use App\Models\Attendance;
 use App\Models\Absence;
-use App\Models\AbsenceQuota;
 
-class LeaveController extends Controller
+class PermitController extends Controller
 {
+
     public function index(Request $request, Builder $htmlBuilder)
     {
-        // response untuk datatables absences
+        // response untuk datatables attendances
         if ($request->ajax()) {
 
-            // ambil data cuti untuk user tersebut
-            $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
-                ->LeavesOnly()
-                ->with(['absenceType', 'stage']);
+            // ambil data izin dari attendances untuk user tersebut
+            $attendances = Attendance::where('personnel_no', Auth::user()->personnel_no)
+                ->with(['attendanceType', 'stage'])
+                ->get();
+
+            // ambil data izin dari absences (kecuali 0100 & 0200) untuk user tersebut
+            $attendances = Absence::where('personnel_no', Auth::user()->personnel_no)
+                ->excludeLeaves()
+                ->with(['absenceType', 'stage'])
+                ->get();
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
-            return Datatables::of($absences)
+            return Datatables::of($attendances)
                 ->editColumn('stage.description', function (Absence $absence) {
                     return '<span class="label label-default">' 
                     . $absence->stage->description . '</span>';})
@@ -69,7 +75,7 @@ class LeaveController extends Controller
                 ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('leaves.index')->with(compact('html'));
+        return view('permits.index')->with(compact('html'));
     }
 
     public function create()
@@ -86,59 +92,35 @@ class LeaveController extends Controller
                 "message"=>"Tidak ditemukan data karyawan. Silahkan hubungi Divisi HCI&A."
             ]);
             // batalkan view create dan kembali ke parent
-            return redirect()->route('leaves.index');
-        }
-
-        try {
-             // mendapatkan absence quota berdasarkan user
-            $absenceQuota = AbsenceQuota::activeAbsenceQuota(Auth::user()->personnel_no)
-            ->with('absenceType:id,text')->firstOrFail();
-
-        } catch(ModelNotFoundException $e) {
-            // tampilkan pesan bahwa tidak ada absence quota
-            Session::flash("flash_notification", [
-                "level"=>"danger",
-                "message"=>"Belum ada kuota cuti untuk periode saat ini. " . 
-                    "Silahkan hubungi Divisi HCI&A."
-            ]);
-            // batalkan view create dan kembali ke parent
-            return redirect()->route('leaves.index');
+            return redirect()->route('permits.index');
         }
 
         // apakah ada yang belum selesai pengajuan cutinya?
-        $incompleted = Absence::where('personnel_no', Auth::user()->personnel_no)
+        $incompletedAbsence = Absence::where('personnel_no', Auth::user()->personnel_no)
             ->incompleted()->get();
-        if (sizeof($incompleted) > 0) {
+        $incompletedAttendance = Attendance::where('personnel_no', Auth::user()->personnel_no)
+            ->incompleted()->get();
+        if (sizeof($incompletedAbsence) > 0 || sizeof($incompletedAttendance > 0)) {
             Session::flash("flash_notification", [
                 "level"   =>  "danger",
-                "message"=>"Data pengajuan cuti/izin sudah ada dan harus diselesaikan prosesnya " . 
+                "message"=>"Data pengajuan cuti sudah ada dan harus diselesaikan prosesnya " . 
                 "sebelum mengajukan cuti kembali."
             ]);
             // batalkan view create dan kembali ke parent
-            return redirect()->route('leaves.index');       
+            return redirect()->route('permits.index');       
         }        
 
         // tampilkan view create
-        return view('leaves.create', [
+        return view('permits.create', [
             'can_delegate' => $canDelegate,
             'absence_quota' => $absenceQuota
             ]
         );
     }
 
-    public function store(StoreAbsenceRequest $request)
+    public function store(Request $request)
     {
-        // tampilkan pesan bahwa telah berhasil mengajukan cuti
-        Session::flash("flash_notification", [
-            "level" => "success",
-            "message" => "Berhasil menyimpan pengajuan cuti.",
-        ]);
-
-        // membuat pengajuan cuti dengan menambahkan data personnel_no
-        $absence = Absence::create($request->all()
-             + ['personnel_no' => Auth::user()->personnel_no]);
-
-        return redirect()->route('leaves.index');
+        //
     }
 
     public function show($id)

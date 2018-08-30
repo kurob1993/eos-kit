@@ -31,6 +31,20 @@ class DebugController extends Controller
         //   ->first()->absenceType()->first()->toArray();
         // dd($absence_type_id);
 
+        // melakukan querying relationship existence
+        // SELECT *.a, *.b, *.c  
+        // FROM absences a, absence_types b, stages c
+        // WHERE a.personnel_no = $logged_user
+        // AND a.absence_type_id = b.id
+        // AND b.subtype = '0100'
+        // $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
+        //     ->LeavesOnly()->with(['absenceType', 'stage'])->get();
+
+        $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
+            ->excludeLeaves()->with(['absenceType', 'stage'])->get();
+            
+        dd($absences->toArray());
+
         // $absences = Auth::user()->absences()->with(['absenceType', 'stage']);
         // dd($absences->get()->toArray());
         // $absences = Absence::where('personnel_no', Auth::user()->personnel_no)->with(['absenceType', 'stage'])->get();
@@ -63,9 +77,9 @@ class DebugController extends Controller
         // // mencari atasan dari GM
         // $bosses = \App\Models\StructDisp::closestBossOf('10233');
         // dd($bosses->first());
-        var_dump(\App\Models\Employee::where('personnel_no', 10233)
-            ->first()
-            ->closestBoss());        
+        // var_dump(\App\Models\Employee::where('personnel_no', 10233)
+        //     ->first()
+        //     ->closestBoss());        
 
         // // mencari atasan-atasan dari personnel_no
         // $bosses = \App\Models\StructDisp::BossesOf('11725');

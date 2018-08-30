@@ -5,9 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Config;
 use App\Models\Stage;
+use App\Traits\FormatDates;
+use App\Traits\PeriodDates;
+use App\Traits\ReceiveStage;
 
 class Absence extends Model
 {
+    use FormatDates, PeriodDates, ReceiveStage;
+
     public $fillable = ['personnel_no', 'start_date', 'end_date', 'note', 'address'];
 
     protected $casts = [
@@ -20,8 +25,6 @@ class Absence extends Model
         'note' => 'string',
         'address' => 'string',
     ];
-
-    protected $dateFormat = 'Y-m-d H:i:s';
 
     protected static function boot()
     {
@@ -57,6 +60,24 @@ class Absence extends Model
         return $this->hasMany('App\Models\AbsenceApproval');
     }
 
+    public function scopeLeavesOnly($query)
+    {
+        // Querying Relationship Existence
+        return $query->whereHas('absenceType', function ($query){
+            $query->where('subtype', '0100')
+                ->orWhere('subtype', '0200');
+        });
+    }
+
+    public function scopeExcludeLeaves($query)
+    {
+        // Querying Relationship Absence
+        return $query->whereDoesntHave('absenceType', function ($query){
+            $query->where('subtype', '0100')
+                ->orWhere('subtype', '0200');
+        });
+    }
+
     public function scopeIncompleted($query)
     {
         // apakah sudah selesai? (finished, failed, denied)
@@ -81,52 +102,9 @@ class Absence extends Model
         }); 
     }
 
-    public function getFormattedStartDateAttribute()
-    {
-        return $this->start_date->format(config('emss.date_format'));
-    }
-
-    public function getFormattedEndDateAttribute()
-    {
-        return $this->end_date->format(config('emss.date_format'));
-    }
-
-    public function getFormattedPeriodAttribute()
-    {
-        return $this->formattedStartDate . '-' . $this->formattedEndDate;
-    }
-
     public function getDeductionAttribute()
     {
         // Jumlah pengajuan cuti dalam hari
         return $this->end_date->diffInDays($this->start_date) + 1;
-    }
-
-    public function getIsSuccessAttribute()
-    {
-        // apakah absence ini tahapnya sudah success
-        return ($this->stage_id == Stage::successStage()->id) ?
-            true : false;
-    }
-
-    public function getIsSentToSapAttribute()
-    {
-        // apakah absence ini tahapnya sent to SAP
-        return ($this->stage_id == Stage::sentToSapStage()->id) ?
-            true : false;
-    }
-
-    public function getIsFailedAttribute()
-    {
-        // apakah absence ini tahapnya failed
-        return ($this->stage_id == Stage::FailedStage()->id) ?
-            true : false;
-    }    
-
-    public function getIsDeniedAttribute()
-    {
-        // apakah absence ini tahapnya failed
-        return ($this->stage_id == Stage::FailedStage()->id) ?
-            true : false;
-    }    
+    } 
 }

@@ -1,7 +1,7 @@
 
   <!-- begin datepicker range -->
   <div id="datepicker-range" data-date-format="yyyy-mm-dd" 
-  data-date-start-date="-29d" data-date-end-date="+6d">
+  data-date-start-date="-15d" data-date-end-date="+15d">
     <div class=" col-lg-4">
       <h5 class="text-center">Pilih tanggal mulai</h5>
       <div id="datepicker-range-start" class="datepicker-range"></div>

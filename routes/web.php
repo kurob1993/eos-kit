@@ -25,7 +25,23 @@ Route::post('logout', [
 // route untuk default home --> dashboard
 Route::get('/', 'HomeController@index')->name('dashboards.employee');
 
-Route::get('/soap', 'SoapController@show');
+// route untuk role employee
+Route::group([
+    'middleware' => ['auth', 'role:employee']], function () {
+        Route::get('debug', 'DebugController@debug');
+
+        // route untuk persetujuan di dashboard
+        Route::post('approve/{id}','HomeController@approve')->name('dashboards.approve');
+        Route::post('reject/{id}','HomeController@reject')->name('dashboards.reject');
+        
+        // route untuk leave
+        Route::resource('leaves', 'LeaveController', ['except' => [ 
+            'destroy', 'show', 'update', 'edit' ]]);
+        
+        // route untuk permit
+        Route::resource('permits', 'PermitController', ['except' => [ 
+            'destroy', 'show', 'update', 'edit' ]]);
+});
 
 // route untuk role personnel_service
 Route::group([
@@ -58,12 +74,4 @@ Route::group([
         Route::post('settings', 'SettingController@store')->name('settings.store');    
 });
 
-// route untuk role employee
-Route::group([
-    'middleware' => ['auth', 'role:employee']], function () {
-        Route::get('debug', 'DebugController@debug');
-        Route::resource('leaves', 'LeaveController', ['except' => [ 
-            'destroy', 'show', 'update', 'edit' ]]);
-        Route::post('approve/{id}','HomeController@approve')->name('dashboards.approve');
-        Route::post('reject/{id}','HomeController@reject')->name('dashboards.reject');
-});
+Route::get('/soap', 'SoapController@show');

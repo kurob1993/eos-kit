@@ -33,7 +33,10 @@
                     <li> <a href="#">Tugas Pokok Fungsi</a> </li>
                 </ul>
             </li>
-            <li class="has-sub {{ Request::segment(1)=='leaves' ? 'active' : '' }}">
+            <li class="has-sub {{ 
+            ( (Request::segment(1) == 'leaves') || (Request::segment(1) == 'permits') )
+                ? 'active' : '' 
+            }}">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>
                         <i class="fa fa-inbox"></i>
@@ -43,7 +46,9 @@
                     <li class="{{ Request::segment(1)=='leaves' ? 'active' : '' }}">
                         <a href="{{ url('leaves') }}">Cuti</a>
                     </li>
-                    <li> <a href="#">Izin</a> </li>
+                    <li class="{{ Request::segment(1)=='permits' ? 'active' : '' }}">
+                        <a href="{{ url('permits') }}">Izin</a>
+                    </li>
                     <li> <a href="#">Lembur</a> </li>
                     <li> <a href="#">Waktu Kerja</a> </li>
                     <li> <a href="#">Laporan Aktivitas</a> </li>

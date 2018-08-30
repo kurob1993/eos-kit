@@ -22,7 +22,7 @@ class AllLeaveController extends Controller
         if ($request->ajax()) {
 
             // ambil semua data cuti user
-            $absences = Absence::with(['absenceType', 'stage']);
+            $absences = Absence::leavesOnly()->with(['absenceType', 'stage']);
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
             return Datatables::of($absences)
