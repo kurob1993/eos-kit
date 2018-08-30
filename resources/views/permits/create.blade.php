@@ -29,7 +29,7 @@
             'data-parsley-validate' => 'true'
             ])
         !!}
-        @include('leaves._form')
+        @include('permits._form')
         {!! Form::close() !!}
       </div>
     </div>

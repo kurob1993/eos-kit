@@ -17,39 +17,43 @@ class AbsenceObserver
 {
     public function creating(Absence $absence)
     {
-        // ambil kuota cuti berdasarkan tanggal mulai & berakhir cuti
-        $absence_quota = AbsenceQuota::activeAbsenceQuotaOf(
-            Auth::user()->personnel_no, $absence->start_date, $absence->end_date)
-            ->first();
-
-        // apakah sisa cuti (balance)  kurang dari pengajuan (deduction)?
-        if ($absence_quota->balance < $absence->deduction) {
-            Session::flash("flash_notification", [
-                "level" => "danger",
-                "message" => "Tidak dapat mengajukan cuti karena jumlah pengajuan cuti "
-                . "melebihi sisa cuti periode saat ini "
-                . "(Sisa Cuti =" . $absence_quota->balance . " < pengajuan cuti="
-                . $absence->deduction . "). Silahkan ajukan cuti dengan jumlah "
-                . "kurang dari/sama dengan sisa cuti.",
-            ]);
-            return false;
-        }
-
-        // apakah tanggal cuti sudah pernah dilakukan sebelumnya (intersection)
-        // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
-        // JIKA DENIED tidak termasuk intersected
-        $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
-            ->leavesOnly()
-            ->intersectWith($absence->start_date, $absence->end_date)
-            ->first();
-        if (sizeof($intersected) > 0) {
-            Session::flash("flash_notification", [
-                "level" => "danger",
-                "message" => "Tidak dapat mengajukan cuti karena tanggal pengajuan "
-                . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
-                . $intersected->formattedPeriod . ").",
-            ]);
-            return false;
+        // jika absence adalah cuti tahunan / cuti besar (leaves)
+        if ($absence->isALeave) {
+            // ambil kuota cuti berdasarkan tanggal mulai & berakhir cuti
+            $absence_quota = AbsenceQuota::activeAbsenceQuotaOf(
+                Auth::user()->personnel_no, $absence->start_date, $absence->end_date)
+                ->first();
+    
+            // apakah sisa cuti (balance)  kurang dari pengajuan (deduction)?
+            if ($absence_quota->balance < $absence->deduction) {
+                Session::flash("flash_notification", [
+                    "level" => "danger",
+                    "message" => "Tidak dapat mengajukan cuti karena jumlah pengajuan cuti "
+                    . "melebihi sisa cuti periode saat ini "
+                    . "(Sisa Cuti =" . $absence_quota->balance . " < pengajuan cuti="
+                    . $absence->deduction . "). Silahkan ajukan cuti dengan jumlah "
+                    . "kurang dari/sama dengan sisa cuti.",
+                ]);
+                return false;
+            }
+            // apakah tanggal cuti sudah pernah dilakukan sebelumnya (intersection)
+            // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
+            // JIKA DENIED tidak termasuk intersected
+            $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
+                ->leavesOnly()
+                ->intersectWith($absence->start_date, $absence->end_date)
+                ->first();
+            if (sizeof($intersected) > 0) {
+                Session::flash("flash_notification", [
+                    "level" => "danger",
+                    "message" => "Tidak dapat mengajukan cuti karena tanggal pengajuan "
+                    . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
+                    . $intersected->formattedPeriod . ").",
+                ]);
+                return false;
+            } else {
+                // jika tidak, absence adalah izin (permits)
+            }
         }
     }
 

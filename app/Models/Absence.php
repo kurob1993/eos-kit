@@ -88,12 +88,10 @@ class Absence extends Model
 
     public function scopeIntersectWith($query, $s, $e)
     {
-        /*
         // apakah ada data absence yang beririsan (intersection)
         // SELECT id, personnel_no, start_date, end_date FROM absences
         // WHERE (start_date <= $s AND end_date >= $s) 
         // OR (start_date <= $e AND end_date >= $e)
-        */
         return $query->where(function ($query) use($s){ 
             $query->where('start_date', '<=', $s)->where('end_date', '>=', $s);
         })
@@ -106,5 +104,12 @@ class Absence extends Model
     {
         // Jumlah pengajuan cuti dalam hari
         return $this->end_date->diffInDays($this->start_date) + 1;
-    } 
+    }
+
+    public function getIsALeaveAttribute()
+    {
+        // jika absence adalah cuti tahunan / cuti besar
+        return ($this->absenceType->subtype == '0100' 
+            || $this->absenceType->subtype == '0200') ? true : false;
+    }
 }

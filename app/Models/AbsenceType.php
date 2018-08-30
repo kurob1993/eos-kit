@@ -16,4 +16,10 @@ class AbsenceType extends Model
         // one-to-many relationship dengan Absence
         return $this->hasMany(\App\Models\Absence::class);
     }
+
+    public function scopeExcludeLeaves($query)
+    {
+        return $query->where('subtype', '<>', '0100')
+            ->where('subtype', '<>', '0200');
+    }    
 }

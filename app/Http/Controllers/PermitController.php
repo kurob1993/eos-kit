@@ -10,7 +10,9 @@ use Session;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\Attendance;
+use App\Models\AttendanceType;
 use App\Models\Absence;
+use App\Models\AbsenceType;
 
 class PermitController extends Controller
 {
@@ -95,27 +97,45 @@ class PermitController extends Controller
             return redirect()->route('permits.index');
         }
 
-        // apakah ada yang belum selesai pengajuan cutinya?
+        // apakah ada yang belum selesai pengajuan cuti/izinnya??
         $incompletedAbsence = Absence::where('personnel_no', Auth::user()->personnel_no)
             ->incompleted()->get();
         $incompletedAttendance = Attendance::where('personnel_no', Auth::user()->personnel_no)
             ->incompleted()->get();
-        if (sizeof($incompletedAbsence) > 0 || sizeof($incompletedAttendance > 0)) {
+        if (sizeof($incompletedAbsence) > 0 || sizeof($incompletedAttendance) > 0) {
             Session::flash("flash_notification", [
                 "level"   =>  "danger",
-                "message"=>"Data pengajuan cuti sudah ada dan harus diselesaikan prosesnya " . 
+                "message"=>"Data pengajuan cuti/izin sudah ada dan harus diselesaikan prosesnya " . 
                 "sebelum mengajukan cuti kembali."
             ]);
             // batalkan view create dan kembali ke parent
             return redirect()->route('permits.index');       
-        }        
+        }
+
+        // $data = array_map(function($obj){
+        //     return (array) $obj;
+        // }, $ref);
+
+        $absenceType = AbsenceType::excludeLeaves()
+            ->get(['subtype', 'text'])
+            ->mapWithKeys(function ($item) {
+                return [$item['subtype'] => $item['text']];
+            })
+            ->all();
+
+        $attendanceType = AttendanceType::all('subtype', 'text')
+            ->mapWithKeys(function ($item) {
+                return [$item['subtype'] => $item['text']];
+            })
+            ->all();
+
+        $permitTypes = array_merge($absenceType, $attendanceType );
 
         // tampilkan view create
-        return view('permits.create', [
-            'can_delegate' => $canDelegate,
-            'absence_quota' => $absenceQuota
-            ]
-        );
+        return view('permits.create', [ 
+            'can_delegate' => $canDelegate, 
+            'permit_types' => $permitTypes,
+        ]);
     }
 
     public function store(Request $request)

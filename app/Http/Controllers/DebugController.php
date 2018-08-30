@@ -40,10 +40,14 @@ class DebugController extends Controller
         // $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
         //     ->LeavesOnly()->with(['absenceType', 'stage'])->get();
 
-        $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
-            ->excludeLeaves()->with(['absenceType', 'stage'])->get();
+        // $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
+        //     ->excludeLeaves()->with(['absenceType', 'stage'])->get();
             
-        dd($absences->toArray());
+        // dd($absences->toArray());
+
+        // apakah absence merupakan cuti tahunan / cuti besar
+        $absence = Absence::find(43);
+        dd($absence->isALeave);
 
         // $absences = Auth::user()->absences()->with(['absenceType', 'stage']);
         // dd($absences->get()->toArray());
