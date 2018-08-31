@@ -2,7 +2,19 @@
   <!-- begin datepicker range -->
   <div id="datepicker-range" data-date-format="yyyy-mm-dd" 
   data-date-start-date="-10d" data-date-end-date="+15d">
-    <div class=" col-lg-4">
+    <div class="col-lg-4">
+      <div class="alert alert-success fade in">
+        <i class="fa fa-calendar pull-left"></i>
+        <p>Silahkan pilih tanggal mulai izin dengan memilih kalender di sebelah kiri.</p>
+        <br />
+        <i class="fa fa-calendar pull-left"></i>
+        <p>Silahkan pilih tanggal berakhir izin dengan memilih kalender di sebelah kanan.</p>
+        <br />
+        <i class="fa fa-paper-plane pull-left"></i>
+        <p>Pastikan bahwa tanggal yang dipilih tidak terdapat hari libur kerja/nasional di dalam jadwal kerja Anda.</p>
+      </div>      
+    </div>
+    <div class="col-lg-4">
       <h5 class="text-center">Pilih tanggal berakhir</h5>
       <div id="datepicker-range-end" class="datepicker-range"></div>
     </div>
@@ -61,24 +73,12 @@
       <div class="col-xs-12">
         <div class="form-group">
           {!! Form::label('absence_type', 'Jenis Izin') !!}
-            {!! Form::select('permit_type', $permit_types, null, ['class'=>'form-control',
+            {!! Form::select('permit_type', [], null, ['class'=>'form-control',
              'id'=>'permit_type', 'data-parsley-required' => 'true',  
              'placeholder' => 'Silahkan pilih']); !!}
         </div>
       </div>
       <!-- end absence_type field -->
-
-      <!-- begin attachment field -->
-      <div class="col-xs-12">
-          <div class="form-group">
-              {!! Form::label('attachment', 'Lampiran') !!}
-              <div class="input-group">
-                {!! Form::file('attachment', [ 'data-parsley-required' => 'true', 
-                'accept' => 'image/*']); !!}
-              </div>
-            </div>
-      </div>
-      <!-- end attachment field -->
     </div>
 
     <!-- begin approver field -->
