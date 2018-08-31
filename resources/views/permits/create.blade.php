@@ -6,33 +6,53 @@
 @component('layouts.employee._page-container', ['page_header' => 'Pengajuan Izin'])
 <div class="row">
   <div class="col-lg-12 col-xl-9">
-    <div class="panel panel-prussian">
-      <div class="panel-heading">
-        <h4 class="panel-title">Mengajukan Izin</h4>
-      </div>
-      @include('layouts._flash')
-      <div class="alert alert-success fade in">
-          <i class="fa fa-calendar pull-left"></i>
-          <p>Silahkan pilih tanggal mulai izin dengan memilih kalender di sebelah kiri.</p>
-          <br />
-          <i class="fa fa-calendar pull-left"></i>
-          <p>Silahkan pilih tanggal berakhir izin dengan memilih kalendear di sebelah kanan.</p>
-          <br />
-          <i class="fa fa-paper-plane pull-left"></i>
-          <p>Pastikan bahwa tanggal yang dipilih tidak terdapat hari libur kerja/nasional di dalam jadwal kerja Anda.</p>
-      </div>
-      <div class="panel-body">
-        {!! Form::open([
-            'url' => route('permits.store'), 
-            'method' => 'post', 
-            'class'=>'form-horizontal', 
-            'data-parsley-validate' => 'true'
-            ])
-        !!}
-        @include('permits._form')
-        {!! Form::close() !!}
-      </div>
-    </div>
+      <ul class="nav nav-tabs">
+          <li class="active"><a href="#default-tab-1" data-toggle="tab" aria-expanded="true">Izin</a></li>
+          <li class=""><a href="#default-tab-2" data-toggle="tab" aria-expanded="false">Tidak Slash Badge</a></li>
+      </ul>
+      <div class="tab-content">
+          <div class="tab-pane fade active in" id="default-tab-1">
+            @include('layouts._flash')
+            <div class="alert alert-success fade in">
+                <i class="fa fa-calendar pull-left"></i>
+                <p>Silahkan pilih tanggal mulai izin dengan memilih kalender di sebelah kiri.</p>
+                <br />
+                <i class="fa fa-calendar pull-left"></i>
+                <p>Silahkan pilih tanggal berakhir izin dengan memilih kalender di sebelah kanan.</p>
+                <br />
+                <i class="fa fa-paper-plane pull-left"></i>
+                <p>Pastikan bahwa tanggal yang dipilih tidak terdapat hari libur kerja/nasional di dalam jadwal kerja Anda.</p>
+            </div>
+            <div class="panel-body">
+                {!! Form::open([
+                    'url' => route('permits.store'), 
+                    'method' => 'post', 
+                    'class'=>'form-horizontal', 
+                    'data-parsley-validate' => 'true',
+                    'files' => 'true'
+                    ])
+                !!}
+                @include('permits._form-permit')
+                {!! Form::close() !!}
+              </div>            
+          </div>
+          <div class="tab-pane fade" id="default-tab-2">
+              @include('layouts._flash')
+
+              <div class="panel-body">
+                  {!! Form::open([
+                      'url' => route('permits.store'), 
+                      'method' => 'post', 
+                      'class'=>'form-horizontal', 
+                      'data-parsley-validate' => 'true'
+                      ])
+                  !!}
+                  @include('permits._form-badge')
+                  {!! Form::close() !!}
+                </div>              
+          </div>
+        </div>    
+
   </div>
   {{-- <div class="col-lg-12 col-xl-3">
     <div class="panel">

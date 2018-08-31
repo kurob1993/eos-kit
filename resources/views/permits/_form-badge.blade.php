@@ -1,11 +1,7 @@
 
   <!-- begin datepicker range -->
   <div id="datepicker-range" data-date-format="yyyy-mm-dd" 
-  data-date-start-date="-15d" data-date-end-date="+15d">
-    <div class=" col-lg-4">
-      <h5 class="text-center">Pilih tanggal mulai</h5>
-      <div id="datepicker-range-start" class="datepicker-range"></div>
-    </div>
+  data-date-start-date="-10d" data-date-end-date="+15d">
     <div class=" col-lg-4">
       <h5 class="text-center">Pilih tanggal berakhir</h5>
       <div id="datepicker-range-end" class="datepicker-range"></div>
@@ -62,18 +58,27 @@
 
     <div class="row">
       <!-- begin absence_type field -->
-      <!-- This field is not sent via form -->
       <div class="col-xs-12">
         <div class="form-group">
           {!! Form::label('absence_type', 'Jenis Izin') !!}
-          <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
             {!! Form::select('permit_type', $permit_types, null, ['class'=>'form-control',
-             'id'=>'permit_type']); !!}
-          </div>
+             'id'=>'permit_type', 'data-parsley-required' => 'true',  
+             'placeholder' => 'Silahkan pilih']); !!}
         </div>
       </div>
       <!-- end absence_type field -->
+
+      <!-- begin attachment field -->
+      <div class="col-xs-12">
+          <div class="form-group">
+              {!! Form::label('attachment', 'Lampiran') !!}
+              <div class="input-group">
+                {!! Form::file('attachment', [ 'data-parsley-required' => 'true', 
+                'accept' => 'image/*']); !!}
+              </div>
+            </div>
+      </div>
+      <!-- end attachment field -->
     </div>
 
     <!-- begin approver field -->
@@ -100,27 +105,17 @@
 
     <!-- begin note field -->
     <div class="form-group{{ $errors->has('note') ? ' has-error' : '' }}">
-      {!! Form::label('note', 'Keterangan Cuti') !!} 
+      {!! Form::label('note', 'Keterangan Izin') !!} 
       {!! Form::text('note', null, ['class'=>'form-control', 'placeholder'=>'Tulis
-      Keterangan Cuti', 'id'=>'note', 'data-parsley-required' => 'true']) !!}
+      Keterangan Izin', 'id'=>'note', 'data-parsley-required' => 'true']) !!}
       {!! $errors->first('note', '
       <p class="help-block">:message</p>') !!}
     </div>
     <!-- end note field -->
 
-    <!-- begin address field -->
-    <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
-      {!! Form::label('address', 'Alamat Selama Cuti') !!} 
-      {!! Form::text('address', null, ['class'=>'form-control', 'placeholder'=>'Masukkan
-      alamat selama cuti', 'id'=>'address', 'data-parsley-required' => 'true']) !!}
-      {!! $errors->first('address', '
-      <p class="help-block">:message</p>') !!}
-    </div>
-    <!-- end address field -->
-
     <!-- begin submit button -->
     <div class="form-group pull-right">
-      {!! Form::submit('Kirim Pengajuan Cuti', ['class'=>'btn btn-primary']) !!}
+      {!! Form::submit('Kirim Pengajuan Izin', ['class'=>'btn btn-primary']) !!}
     </div>
     <!-- end submit button -->
   </div>

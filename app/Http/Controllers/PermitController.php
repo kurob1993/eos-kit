@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Session;
+use Validator;
 use Illuminate\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Session;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\Attendance;
@@ -140,7 +141,25 @@ class PermitController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'personnel_no' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'deduction' => 'required',
+            'attachment' => 'required',
+            'note' => 'required',
+        ]);
+        // tampilkan pesan bahwa telah berhasil mengajukan cuti
+        Session::flash("flash_notification", [
+            "level" => "success",
+            "message" => "Berhasil menyimpan pengajuan cuti.",
+        ]);
+
+        // membuat pengajuan cuti dengan menambahkan data personnel_no
+        $absence = Absence::create($request->all()
+             + ['personnel_no' => Auth::user()->personnel_no]);
+
+        return redirect()->route('leaves.index');
     }
 
     public function show($id)
