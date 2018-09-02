@@ -25,6 +25,27 @@ class AppServiceProvider extends ServiceProvider
 
         // Observer untuk model AbsenceApproval
         AbsenceApproval::observe(AbsenceApprovalObserver::class);
+
+
+        \Form::macro('labelRadio', function ($name, $value, $label,
+            $labelAttributes = [], $radioAttributes = [])
+        {
+            $labelData = $radioData = '';
+
+            foreach ($labelAttributes as $a => $b) {
+                $labelData .= $a . "='" . $b . "' ";
+            }
+        
+            foreach ($radioAttributes as $a => $b) {
+                $radioData .= $a . "='" . $b . "' ";
+            }
+        
+            $html = "<label $labelData>
+                        <input name='$name' type='radio' value='$value' $radioData /> $label
+                    </label>";
+        
+            return $html;
+        });        
     }
 
     /**

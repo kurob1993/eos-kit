@@ -87,30 +87,6 @@
       <!-- end deduction field -->
     </div>
 
-    <!-- begin approver field -->
-    <!-- This field is not sent via form -->
-    <div class="form-group{{ $errors->has('approver') ? ' has-error' : '' }}">
-      {!! Form::label('approver', 'Atasan') !!}
-      <select class="form-control boss-selectize">
-          <option value="" selected>Piilh Atasan</option>
-        </select>
-    </div>
-    <!-- end approver field -->
-
-    {{-- Apakah memiliki bawahan? TO BE DECIDED WHETHER IMPLEMENTED
-    <!-- begin delegation field -->
-    @if ($can_delegate)
-    <div class="form-group">
-      {!! Form::label('delegation', 'Penerima Limpahan Wewenang') !!}
-      {!! Form::select('delegation', [], null,
-        [ 'placeholder' => 'Pilih karyawan', 
-          'class' => 'form-control sub-selectize',
-          'data-parsley-required' => 'true'] ) !!}
-    </div>
-    @endif
-    <!-- end delegation field -->
-    Apakah memiliki bawahan? --}}
-
     <!-- begin note field -->
     <div class="form-group{{ $errors->has('note') ? ' has-error' : '' }}">
       {!! Form::label('note', 'Keterangan Cuti') !!} 
@@ -130,6 +106,28 @@
       <p class="help-block">:message</p>') !!}
     </div>
     <!-- end address field -->
+
+    <!-- begin approver field -->
+    <!-- This field is not sent via form -->
+    <div class="form-group{{ $errors->has('approver') ? ' has-error' : '' }}">
+        {!! Form::label('approver', 'Atasan') !!}
+        <select class="form-control boss-selectize">
+            <option value="" selected>Piilh Atasan</option>
+          </select>
+      </div>
+      <!-- end approver field -->
+  
+      <!-- begin delegation field -->
+      @if ($can_delegate)
+      <div class="form-group">
+        {!! Form::label('delegation', 'Penerima Limpahan Wewenang') !!}
+        {!! Form::select('delegation', [], null,
+          [ 'placeholder' => 'Pilih karyawan', 
+            'class' => 'form-control sub-selectize',
+            'data-parsley-required' => 'true'] ) !!}
+      </div>
+      @endif
+      <!-- end delegation field -->
 
     <!-- begin submit button -->
     <div class="form-group pull-right">

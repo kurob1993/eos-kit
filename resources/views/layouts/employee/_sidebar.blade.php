@@ -49,7 +49,12 @@
                     <li class="{{ Request::segment(1)=='permits' ? 'active' : '' }}">
                         <a href="{{ url('permits') }}">Izin</a>
                     </li>
-                    <li> <a href="#">Lembur</a> </li>
+                    <li class="{{ Request::segment(1)=='time_events' ? 'active' : '' }}">
+                        <a href="{{ url('time_events') }}">Tidak Slash</a>
+                    </li>
+                    <li class="{{ Request::segment(1)=='overtimes' ? 'active' : '' }}">
+                        <a href="{{ url('overtimes') }}">Lembur</a>
+                    </li>
                     <li> <a href="#">Waktu Kerja</a> </li>
                     <li> <a href="#">Laporan Aktivitas</a> </li>
                 </ul>

@@ -39,7 +39,11 @@ Route::group([
             'destroy', 'show', 'update', 'edit' ]]);
         
         // route untuk permit
-        Route::resource('permits', 'PermitController', ['except' => [ 
+        Route::resource('permits', 'PermitController',  ['except' => [ 
+            'destroy', 'show', 'update', 'edit' ]]);
+            
+        // route untuk  time event
+        Route::resource('time_events', 'TimeEventController',  ['except' => [ 
             'destroy', 'show', 'update', 'edit' ]]);
 });
 

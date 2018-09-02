@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Session;
 use Validator;
-use Illuminate\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -15,7 +14,7 @@ use App\Models\AttendanceType;
 use App\Models\Absence;
 use App\Models\AbsenceType;
 
-class PermitController extends Controller
+class PTEController extends Controller
 {
 
     public function index(Request $request, Builder $htmlBuilder)
@@ -78,7 +77,7 @@ class PermitController extends Controller
                 ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('permits.index')->with(compact('html'));
+        return view('ptes.index')->with(compact('html'));
     }
 
     public function create()
@@ -95,7 +94,7 @@ class PermitController extends Controller
                 "message"=>"Tidak ditemukan data karyawan. Silahkan hubungi Divisi HCI&A."
             ]);
             // batalkan view create dan kembali ke parent
-            return redirect()->route('permits.index');
+            return redirect()->route('ptes.index');
         }
 
         // mencari data pengajuan absence yang masih belum selesai
@@ -114,17 +113,15 @@ class PermitController extends Controller
                 "sebelum mengajukan cuti kembali."
             ]);
             // batalkan view create dan kembali ke parent
-            return redirect()->route('permits.index');       
+            return redirect()->route('ptes.index');       
         }
 
         // transform array to key value pairs. For alternative:
         // $data = array_map(function($obj){ return (array) $obj; }, $ref);
         $absenceType = AbsenceType::excludeLeaves()
-            ->get(['subtype', 'text', 'max_duration'])
+            ->get(['subtype', 'text'])
             ->mapWithKeys(function ($item) {
-                $maxDuration = (!is_null($item['max_duration'])) ? 
-                ' (' . $item['max_duration'] . ' hari)' : '';
-                return [$item['subtype'] => $item['text'] . $maxDuration];
+                return [$item['subtype'] => $item['text']];
             })
             ->all();
         $attendanceType = AttendanceType::all('subtype', 'text')
@@ -137,7 +134,7 @@ class PermitController extends Controller
         $permitTypes = array_merge($absenceType, $attendanceType);
 
         // tampilkan view create
-        return view('permits.create', [ 
+        return view('ptes.create', [ 
             'can_delegate' => $canDelegate, 
             'permit_types' => $permitTypes,
         ]);
@@ -157,7 +154,7 @@ class PermitController extends Controller
                 "message"=>"Tidak ditemukan data karyawan. Silahkan hubungi Divisi HCI&A."
             ]);
             // batalkan view create dan kembali ke parent
-            return redirect()->route('permits.create');
+            return redirect()->route('ptes.create');
         }
 
         // permits form elements
@@ -183,25 +180,5 @@ class PermitController extends Controller
              + ['personnel_no' => Auth::user()->personnel_no]);
 
         return redirect()->route('leaves.index');
-    }
-
-    public function show($id)
-    {
-        //
-    }
-
-    public function edit($id)
-    {
-        //
-    }
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    public function destroy($id)
-    {
-        //
     }
 }

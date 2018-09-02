@@ -3,18 +3,22 @@
 @section('content')
 <!-- begin #page-container -->
 @component('layouts.employee._page-container', ['page_header' => 'Pengajuan Cuti'])
-<div class="panel panel-prussian">
-  <div class="panel-heading">
-    <h4 class="panel-title">Daftar Cuti Saya</h4>
-  </div>
-  @include('layouts._flash')
-  <div class="panel-body">
-    <p> <a class="btn btn-primary" href="{{ route('leaves.create') }}">Tambah</a> </p>
-    <div class="table-responsive">
-      {!! $html->table(['class'=>'table table-striped']) !!}
+<div class="row">
+    <div class="col-lg-12 col-xl-9">
+      <div class="panel panel-prussian">
+        <div class="panel-heading">
+          <h4 class="panel-title">Daftar Cuti Saya</h4>
+        </div>
+        @include('layouts._flash')
+        <div class="panel-body">
+          <p> <a class="btn btn-primary" href="{{ route('leaves.create') }}">Tambah</a> </p>
+          <div class="table-responsive">
+            {!! $html->table(['class'=>'table table-striped']) !!}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 @endcomponent
 <!-- end page container -->
 @endsection

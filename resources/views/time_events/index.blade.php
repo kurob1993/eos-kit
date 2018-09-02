@@ -2,13 +2,14 @@
 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.employee._page-container', ['page_header' => 'Pengajuan Izin'])
+@component('layouts.employee._page-container', ['page_header' => 'Pengajuan Tidak Slash'])
 <div class="panel panel-prussian">
   <div class="panel-heading">
-    <h4 class="panel-title">Daftar Izin Saya</h4>
+    <h4 class="panel-title">Daftar Tidak Slash Saya</h4>
   </div>
+  @include('layouts._flash')
   <div class="panel-body">
-    <p> <a class="btn btn-primary" href="{{ route('permits.create') }}">Tambah</a> </p>
+    <p> <a class="btn btn-primary" href="{{ route('time_events.create') }}">Tambah</a> </p>
     <div class="table-responsive">
       {!! $html->table(['class'=>'table table-striped']) !!}
     </div>

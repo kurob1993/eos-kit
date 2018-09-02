@@ -1,36 +1,36 @@
 @extends('layouts.app') 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.employee._page-container', ['page_header' => 'Pengajuan Izin'])
+@component('layouts.employee._page-container', ['page_header' => 'Pengajuan Tidak Slash'])
 <div class="row">
   <div class="col-lg-12 col-xl-9">
     <div class="panel panel-prussian">
       <div class="panel-heading">
-        <h4 class="panel-title">Mengajukan Izin</h4>
+        <h4 class="panel-title">Mengajukan Tidak Slash</h4>
       </div>
       @include('layouts._flash')
       <div class="alert alert-success fade in">
-        <i class="fa fa-paper-plane pull-left"></i>
-        <p>Pastikan bahwa tanggal yang dipilih tidak terdapat hari libur kerja/nasional di dalam jadwal kerja Anda.</p>
-        <br />
-        <i class="fa fa-calendar pull-left"></i>
-        <p>Silahkan pilih tanggal mulai & berakhir izin dengan memilih kalender.</p>
-        <br />
-        <i class="fa fa-sliders pull-left"></i>
-        <p>Silahkan isi jenis izin yang akan Anda ajukan.</p>
-        <br />
-        <i class="fa fa-upload pull-left"></i>
-        <p>Silahkan unggah berkas lampiran yang bersesuaian dengan izin Anda (hanya gambar yang diperboleh untuk diunggah).</p>
-        <br />
-        <i class="fa fa-book pull-left"></i>
-        <p>Silahkan isi keterangan izin Anda.</p>
-        <br />
-      </div>
-      <div class="panel-body">
-        {!! Form::open([ 'url' => route('permits.store'), 'method' => 'post', 
+          <i class="fa fa-paper-plane pull-left"></i>
+          <p>Pastikan bahwa tanggal yang dipilih tidak terdapat hari libur kerja/nasional di dalam jadwal kerja Anda.</p>
+          <br />
+          <i class="fa fa-calendar pull-left"></i>
+          <p>Silahkan isi tanggal pengajuan izin tidak slash badge Anda dengan memilih tanggal pada kalender.</p>
+          <br />
+          <i class="fa fa-clock-o pull-left"></i>
+          <p>Silahkan isi jam izin tidak slash badge Anda dengan memilih jam pada icon <i class="fa fa-clock-o"></i>.</p>
+          <br />
+          <i class="fa fa-sliders pull-left"></i>
+          <p>Silahkan isi jenis pencatatan waktu kerja, apakah masuk kerja (Check-in) atau pulang kerja (Check-out).</p>
+          <br />
+          <i class="fa fa-book pull-left"></i>
+          <p>Silahkan isi keterangan izin tidak slash badge Anda.</p>
+          <br />
+      </div> 
+        <div class="panel-body">
+        {!! Form::open([ 'url' => route('time_events.store'), 'method' => 'post', 
         'class'=>'form-horizontal', 'data-parsley-validate'=> 'true', 
         'files' => 'true' ]) !!}
-        @include('permits._form') {!! Form::close() !!}
+        @include('time_events._form') {!! Form::close() !!}
       </div>
     </div>
   </div>

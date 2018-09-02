@@ -10,39 +10,32 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
-use App\Models\Attendance;
-use App\Models\AttendanceType;
-use App\Models\Absence;
-use App\Models\AbsenceType;
+use App\Models\TimeEvent;
+use App\Models\TimeEventType;
 
-class PermitController extends Controller
+
+class TimeEventController extends Controller
 {
 
     public function index(Request $request, Builder $htmlBuilder)
     {
-        // response untuk datatables attendances
+        // response untuk datatables timeEvents
         if ($request->ajax()) {
 
-            // ambil data izin dari attendances untuk user tersebut
-            $attendances = Attendance::where('personnel_no', Auth::user()->personnel_no)
-                ->with(['attendanceType', 'stage'])
-                ->get();
-
-            // ambil data izin dari absences (kecuali 0100 & 0200) untuk user tersebut
-            $attendances = Absence::where('personnel_no', Auth::user()->personnel_no)
-                ->excludeLeaves()
-                ->with(['absenceType', 'stage'])
+            // ambil data izin dari timeEvents untuk user tersebut
+            $timeEvents = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
+                ->with(['timeEventType', 'stage'])
                 ->get();
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
-            return Datatables::of($attendances)
-                ->editColumn('stage.description', function (Absence $absence) {
+            return Datatables::of($timeEvents)
+                ->editColumn('stage.description', function (TimeEvent $timeEvent) {
                     return '<span class="label label-default">' 
-                    . $absence->stage->description . '</span>';})
-                ->editColumn('start_date', function (Absence $absence) {
-                    return $absence->start_date->format(config('emss.date_format'));})
-                ->editColumn('end_date', function (Absence $absence) {
-                    return $absence->end_date->format(config('emss.date_format'));})
+                    . $timeEvent->stage->description . '</span>'; })
+                ->editColumn('check_date', function (TimeEvent $timeEvent) {
+                    return $timeEvent->check_date->format(config('emss.date_format')); })
+                ->editColumn('check_time', function (TimeEvent $timeEvent) {
+                    return $timeEvent->check_time; })
                 ->escapeColumns([4])
                 ->make(true);
         }
@@ -55,18 +48,18 @@ class PermitController extends Controller
                 'title' => 'ID'
                 ])
             ->addColumn([
-                'data' => 'start_date', 
-                'name' => 'start_date', 
-                'title' => 'Mulai'
+                'data' => 'check_date', 
+                'name' => 'check_date', 
+                'title' => 'Tanggal'
                 ])
             ->addColumn([
-                'data' => 'end_date', 
-                'name' => 'end_date', 
-                'title' => 'Berakhir'
+                'data' => 'check_time', 
+                'name' => 'check_time', 
+                'title' => 'Jam'
                 ])
             ->addColumn([
-                'data' => 'absence_type.text', 
-                'name' => 'absence_type.text', 
+                'data' => 'time_event_type.description', 
+                'name' => 'time_event_type.description', 
                 'title' => 'Jenis', 
                 'searchable' => false
                 ])
@@ -78,7 +71,7 @@ class PermitController extends Controller
                 ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('permits.index')->with(compact('html'));
+        return view('time_events.index')->with(compact('html'));
     }
 
     public function create()
@@ -95,51 +88,36 @@ class PermitController extends Controller
                 "message"=>"Tidak ditemukan data karyawan. Silahkan hubungi Divisi HCI&A."
             ]);
             // batalkan view create dan kembali ke parent
-            return redirect()->route('permits.index');
+            return redirect()->route('time_events.index');
         }
-
-        // mencari data pengajuan absence yang masih belum selesai
-        $incompletedAbsence = Absence::where('personnel_no', Auth::user()->personnel_no)
-            ->incompleted()->get();
         
         // mencari data pengajuan attendance yang masih belum selesai
-        $incompletedAttendance = Attendance::where('personnel_no', Auth::user()->personnel_no)
+        $incompletedTimeEvent = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
             ->incompleted()->get();
                 
         // apakah ada yang belum selesai pengajuan cuti/izinnya??
-        if (sizeof($incompletedAbsence) > 0 || sizeof($incompletedAttendance) > 0) {
+        if ( sizeof($incompletedTimeEvent) > 0 ) {
             Session::flash("flash_notification", [
                 "level"   =>  "danger",
                 "message"=>"Data pengajuan cuti/izin sudah ada dan harus diselesaikan prosesnya " . 
                 "sebelum mengajukan cuti kembali."
             ]);
             // batalkan view create dan kembali ke parent
-            return redirect()->route('permits.index');       
+            return redirect()->route('time_events.index');       
         }
 
         // transform array to key value pairs. For alternative:
         // $data = array_map(function($obj){ return (array) $obj; }, $ref);
-        $absenceType = AbsenceType::excludeLeaves()
-            ->get(['subtype', 'text', 'max_duration'])
+        $timeEventType = TimeEventType::all('tet', 'description')
             ->mapWithKeys(function ($item) {
-                $maxDuration = (!is_null($item['max_duration'])) ? 
-                ' (' . $item['max_duration'] . ' hari)' : '';
-                return [$item['subtype'] => $item['text'] . $maxDuration];
+                return [$item['tet'] => $item['description']];
             })
             ->all();
-        $attendanceType = AttendanceType::all('subtype', 'text')
-            ->mapWithKeys(function ($item) {
-                return [$item['subtype'] => $item['text']];
-            })
-            ->all();
-        
-        // merge absence_types & attendance_types
-        $permitTypes = array_merge($absenceType, $attendanceType);
 
         // tampilkan view create
-        return view('permits.create', [ 
+        return view('time_events.create', [ 
             'can_delegate' => $canDelegate, 
-            'permit_types' => $permitTypes,
+            'permit_types' => $timeEventType,
         ]);
     }
 
@@ -157,16 +135,16 @@ class PermitController extends Controller
                 "message"=>"Tidak ditemukan data karyawan. Silahkan hubungi Divisi HCI&A."
             ]);
             // batalkan view create dan kembali ke parent
-            return redirect()->route('permits.create');
+            return redirect()->route('time_events.create');
         }
 
-        // permits form elements
-        // personnel_no, start_date, end_date, deduction,
+        // time_events form elements
+        // personnel_no, check_date, check_time, deduction,
         // permit_type, attachment, note, delegation (if have subordinates)
         $validator = Validator::make($request->all(), [
             'personnel_no' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
+            'check_date' => 'required',
+            'check_time' => 'required',
             'deduction' => 'required',
             'permit_type' => 'required',
             'attachment' => 'required',
@@ -179,7 +157,7 @@ class PermitController extends Controller
         ]);
 
         // membuat pengajuan cuti dengan menambahkan data personnel_no
-        $absence = Absence::create($request->all()
+        $timeEvent = TimeEvent::create($request->all()
              + ['personnel_no' => Auth::user()->personnel_no]);
 
         return redirect()->route('leaves.index');
