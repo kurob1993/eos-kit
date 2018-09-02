@@ -121,7 +121,7 @@ class TimeEventController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreAbsenceRequest $request)
     {
         try {
             // mendapatkan data employee dari user

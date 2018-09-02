@@ -45,6 +45,10 @@ Route::group([
         // route untuk  time event
         Route::resource('time_events', 'TimeEventController',  ['except' => [ 
             'destroy', 'show', 'update', 'edit' ]]);
+
+        // route untuk  overtime
+        Route::resource('overtimes', 'OvertimeController',  ['except' => [ 
+            'destroy', 'show', 'update', 'edit' ]]);
 });
 
 // route untuk role personnel_service

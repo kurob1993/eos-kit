@@ -2,81 +2,110 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Config;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Session;
+use Yajra\DataTables\Datatables;
+use Yajra\DataTables\Html\Builder;
+use App\Models\AttendanceQuota;
+use App\Models\AttendanceQuotaType;
 
 class OvertimeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request, Builder $htmlBuilder)
     {
-        //
+        // response untuk datatables absences
+        if ($request->ajax()) {
+
+            // ambil data cuti untuk user tersebut
+            $attendanceQuotas = AttendanceQuota::where('personnel_no', Auth::user()->personnel_no)
+                ->with(['overtimeReason', 'stage']);
+
+            // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
+            return Datatables::of($attendanceQuotas)
+                ->editColumn('stage.description', function (AttendanceQuota $attendanceQuota) {
+                    return '<span class="label label-default">' 
+                    . $attendanceQuota->stage->description . '</span>';})
+                ->editColumn('start_date', function (AttendanceQuota $attendanceQuota) {
+                    return $attendanceQuota->start_date->format(config('emss.date_format'));})
+                ->editColumn('end_date', function (AttendanceQuota $attendanceQuota) {
+                    return $attendanceQuota->end_date->format(config('emss.date_format'));})
+                ->escapeColumns([4])
+                ->make(true);
+        }
+
+        // html builder untuk menampilkan kolom di datatables
+        $html = $htmlBuilder
+            ->addColumn([
+                'data' => 'id',
+                'name' => 'id', 
+                'title' => 'ID'
+                ])
+            ->addColumn([
+                'data' => 'start_date', 
+                'name' => 'start_date', 
+                'title' => 'Mulai'
+                ])
+            ->addColumn([
+                'data' => 'end_date', 
+                'name' => 'end_date', 
+                'title' => 'Berakhir'
+                ])
+            ->addColumn([
+                'data' => 'overtimeReason.text', 
+                'name' => 'overtimeReason.text', 
+                'title' => 'Jenis', 
+                'searchable' => false
+                ])
+            ->addColumn([
+                'data' => 'stage.description', 
+                'name' => 'stage.description', 
+                'title' => 'Tahap', 
+                'searchable' => false
+                ]);
+
+        // tampilkan view index dengan tambahan script html DataTables
+        return view('overtimes.index')->with(compact('html'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        // tampilkan view create
+        return view('overtimes.create', [ ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreAttendanceQuotaRequest $request)
     {
-        //
+        // tampilkan pesan bahwa telah berhasil mengajukan cuti
+        Session::flash("flash_notification", [
+            "level" => "success",
+            "message" => "Berhasil menyimpan pengajuan cuti.",
+        ]);
+
+        // membuat pengajuan lembur dengan menambahkan data personnel_no
+        $absence = AttendanceQuota::create($request->all()
+             + ['personnel_no' => Auth::user()->personnel_no]);
+
+        return redirect()->route('overtimes.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
