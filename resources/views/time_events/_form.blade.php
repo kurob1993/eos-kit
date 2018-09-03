@@ -92,7 +92,7 @@
         {!! Form::label('note', 'Keterangan Izin') !!} 
         {!! Form::text('note', null, ['class'=>'form-control', 'placeholder'=>'Tulis
         Keterangan Izin', 'id'=>'note', 'data-parsley-required' => 'true']) !!}
-        {!! $errors->first('stage_id', '<p class="help-block">:message</p>') !!}
+        {!! $errors->first('note', '<p class="help-block">:message</p>') !!}
       </div>
       <!-- end note field -->
 

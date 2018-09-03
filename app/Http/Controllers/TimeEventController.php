@@ -58,8 +58,8 @@ class TimeEventController extends Controller
                 'title' => 'Jam'
                 ])
             ->addColumn([
-                'data' => 'timeEventType.description', 
-                'name' => 'timeEventType.description', 
+                'data' => 'time_event_type.description', 
+                'name' => 'time_event_type.description', 
                 'title' => 'Jenis', 
                 'searchable' => false
                 ])
@@ -91,26 +91,11 @@ class TimeEventController extends Controller
             return redirect()->route('time_events.index');
         }
         
-        // mencari data pengajuan time_event yang masih belum selesai
-        $incompletedTimeEvent = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
-            ->incompleted()->get();
-                
-        // apakah ada yang belum selesai pengajuan tidak slash/tidak slashnya??
-        if ( sizeof($incompletedTimeEvent) > 0 ) {
-            Session::flash("flash_notification", [
-                "level"   =>  "danger",
-                "message"=>"Data pengajuan tidak slash/tidak slash sudah ada dan harus diselesaikan prosesnya " . 
-                "sebelum mengajukan tidak slash kembali."
-            ]);
-            // batalkan view create dan kembali ke parent
-            return redirect()->route('time_events.index');       
-        }
-
         // transform array to key value pairs. For alternative:
         // $data = array_map(function($obj){ return (array) $obj; }, $ref);
-        $timeEventType = TimeEventType::all('tet', 'description')
+        $timeEventType = TimeEventType::all('id', 'description')
             ->mapWithKeys(function ($item) {
-                return [$item['tet'] => $item['description']];
+                return [$item['id'] => $item['description']];
             })
             ->all();
 
@@ -133,7 +118,7 @@ class TimeEventController extends Controller
         $timeEvent = TimeEvent::create($request->all()
              + ['personnel_no' => Auth::user()->personnel_no]);
 
-        return redirect()->url('time_events.index');
+        return redirect()->route('time_events.index');
     }
 
     public function show($id)

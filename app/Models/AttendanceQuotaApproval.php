@@ -3,29 +3,25 @@
 namespace App\Models;
 
 use Eloquent as Model;
+use App\Models\Status;
+use App\Traits\FormatDates;
 
-class AttendanceApproval extends Model
+class AttendanceQuotaApproval extends Model
 {
-    public $fillable = [
-        'attendance_id',
-        'regno',
-        'sequence',
-        'status_id',
-        'text'
-    ];
+    use FormatDates;
+
+    public $fillable = [ 'attendance_quota_id', 'regno', 'sequence', 'status_id', 'text' ];
 
     protected $casts = [
         'id' => 'integer',
-        'attendance_id' => 'integer',
+        'attendance_quota_id' => 'integer',
         'regno' => 'integer',
         'sequence' => 'integer',
         'status_id' => 'integer',
         'text' => 'string'
     ];
 
-    public static $rules = [
-
-    ];
+    public static $rules = [ ];
 
     public function user()
     {
@@ -33,10 +29,10 @@ class AttendanceApproval extends Model
         return $this->belongsTo('App\User', 'regno', 'personnel_no');
     }
 
-    public function attendance()
+    public function attendanceQuota()
     {
-        // many-to-one relationship dengan attendance
-        return $this->belongsTo('\App\Models\Attendance');
+        // many-to-one relationship dengan attendanceQuota
+        return $this->belongsTo('\App\Models\AttendanceQuota');
     }
 
     public function status()
@@ -65,4 +61,5 @@ class AttendanceApproval extends Model
     {
         return $query->where('status_id', Status::firstStatus()->id);
     }
+    
 }

@@ -47,7 +47,8 @@ class DebugController extends Controller
 
         // apakah absence merupakan cuti tahunan / cuti besar
         $absence = Absence::find(43);
-        dd($absence->isALeave);
+        // dd($absence->isALeave);
+        dd($absence->updated_at);
 
         // $absences = Auth::user()->absences()->with(['absenceType', 'stage']);
         // dd($absences->get()->toArray());
@@ -149,5 +150,11 @@ class DebugController extends Controller
 
         // // now menggunakan carbon
         // var_dump(\Carbon\Carbon::now()->toDateTimeString());
+
+        // $intersected = \App\Models\TimeEvent::where('personnel_no', Auth::user()->personnel_no)
+        // ->where('check_date', '2018-09-12')
+        // ->first();
+        
+        // dd($intersected);
     }
 }

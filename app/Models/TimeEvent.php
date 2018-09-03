@@ -34,6 +34,12 @@ class TimeEvent extends Model
         
     ];
 
+    public function user()
+    {
+        // many-to-one relationship dengan User
+        return $this->belongsTo('App\User', 'personnel_no', 'personnel_no');
+    }
+
     public function timeEventType()
     {
         // many-to-one relationship dengan TimeEventType

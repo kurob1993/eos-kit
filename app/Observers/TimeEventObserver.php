@@ -21,7 +21,7 @@ class TimeEventObserver
         // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
         // JIKA DENIED tidak termasuk intersected
         $intersected = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
-            ->where('check_date', '<>', $timeEvent->check_date)
+            ->where('check_date', $timeEvent->check_date)
             ->first();
         if (sizeof($intersected) > 0) {
             Session::flash("flash_notification", [

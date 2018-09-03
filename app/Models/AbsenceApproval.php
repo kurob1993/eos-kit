@@ -4,8 +4,11 @@ namespace App\Models;
 
 use Eloquent as Model;
 use App\Models\Status;
+use App\Traits\FormatDates;
+
 class AbsenceApproval extends Model
 {
+    use FormatDates;
 
     public $fillable = [ 'absence_id', 'regno', 'sequence', 'status_id', 'text' ];
 

@@ -4,16 +4,16 @@ namespace App\Traits;
 
 trait PeriodDates
 {
-    protected $newDateFormat = 'd.m.Y H:i';
+    protected $periodDateFormat = 'd.m.Y';
 
     public function getFormattedStartDateAttribute()
     {
-        return $this->start_date->format($this->newDateFormat);
+        return $this->start_date->format($this->periodDateFormat);
     }
 
     public function getFormattedEndDateAttribute()
     {
-        return $this->end_date->format($this->newDateFormat);
+        return $this->end_date->format($this->periodDateFormat);
     }
 
     public function getFormattedPeriodAttribute()
