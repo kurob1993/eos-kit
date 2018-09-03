@@ -2,22 +2,22 @@
 
 namespace App\Observers;
 
-use App\Notifications\LeaveApprovalMessage;
-use App\Models\AbsenceApproval;
+use App\Notifications\PermitApprovalMessage;
+use App\Models\AttendanceApproval;
 use App\Message;
 
-class AbsenceApprovalObserver
+class AttendanceApprovalObserver
 {
-    public function updated(AbsenceApproval $absenceApproval)
+    public function updated(AttendanceApproval $attendanceApproval)
     {
       // $flow_id  = config('emss.flows.absences');
       // $flow_stage = FlowStage::nextSequence($flow_id);
       
       // mencari data absence sesuai dengan relatioship
-      $absence = $absenceApproval->absence()->first();
+      $absence = $attendanceApproval->absence()->first();
 
       // from adalah dari atasan
-      $from = $absenceApproval->user()->first();
+      $from = $attendanceApproval->user()->first();
       
       // to adalah karyawan yang mengajukan
       $to = $absence->user()->first();      
@@ -26,13 +26,13 @@ class AbsenceApprovalObserver
       $message = new Message;
       
       // apakah data absence sudah disetujui
-      if ($absenceApproval->isApproved) {
+      if ($attendanceApproval->isApproved) {
         
         // NEED TO IMPLEMENT FLOW STAGE (send to SAP)
         $absence->stage_id = 2;
 
         // message history
-        $messageAttribute = sprintf('Leave approved from %s to %s',
+        $messageAttribute = sprintf('Permit approved from %s to %s',
         $from->personnelNoWithName, $to->personnelNoWithName);
       } else {
 
@@ -40,7 +40,7 @@ class AbsenceApprovalObserver
         $absence->stage_id = 5;
 
         // message history
-        $messageAttribute = sprintf('Leave rejected from %s to %s',
+        $messageAttribute = sprintf('Permit rejected from %s to %s',
         $from->personnelNoWithName, $to->personnelNoWithName);
       }
       
@@ -57,6 +57,6 @@ class AbsenceApprovalObserver
 
       // sistem mengirim email notifikasi dari atasan ke
       // karyawan yang mengajukan         
-      $to->notify(new LeaveApprovalMessage($from, $absenceApproval));
+      $to->notify(new PermitApprovalMessage($from, $attendanceApproval));
     }
 }

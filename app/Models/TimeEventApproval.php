@@ -4,19 +4,19 @@ namespace App\Models;
 
 use Eloquent as Model;
 
-class AttendanceApproval extends Model
+class TimeEventApproval extends Model
 {
     public $fillable = [
-        'attendance_id',
+        'time_event_id',
         'regno',
         'sequence',
         'status_id',
-        'text'
+        'text',
     ];
-
+    
     protected $casts = [
         'id' => 'integer',
-        'attendance_id' => 'integer',
+        'time_event_id' => 'integer',
         'regno' => 'integer',
         'sequence' => 'integer',
         'status_id' => 'integer',
@@ -29,11 +29,11 @@ class AttendanceApproval extends Model
 
     public function attendance()
     {
-        return $this->belongsTo(\App\Models\Attendance::class);
+        return $this->belongsTo('App\Models\TimeEvent');
     }
 
     public function status()
     {
-        return $this->belongsTo(\App\Models\Status::class);
+        return $this->belongsTo('App\Models\Status');
     }
 }

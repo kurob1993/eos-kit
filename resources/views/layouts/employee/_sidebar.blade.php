@@ -33,9 +33,10 @@
                     <li> <a href="#">Tugas Pokok Fungsi</a> </li>
                 </ul>
             </li>
-            <li class="has-sub {{ 
-            ( (Request::segment(1) == 'leaves') || (Request::segment(1) == 'permits') )
-                ? 'active' : '' 
+            <li class="has-sub {{ (
+            (Request::segment(1) == 'leaves') || (Request::segment(1) == 'permits') 
+                || (Request::segment(1) == 'time_events') || (Request::segment(1) == 'overtimes') 
+                ) ? 'active' : '' 
             }}">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>

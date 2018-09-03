@@ -1,4 +1,5 @@
 @extends('layouts.app') 
+
 @section('content')
 <!-- begin #page-container -->
 @component('layouts.employee._page-container', ['page_header' => 'Pengajuan Tidak Slash'])
@@ -8,38 +9,27 @@
       <div class="panel-heading">
         <h4 class="panel-title">Mengajukan Tidak Slash</h4>
       </div>
-      @include('layouts._flash')
-      <div class="alert alert-success fade in">
-          <i class="fa fa-paper-plane pull-left"></i>
-          <p>Pastikan bahwa tanggal yang dipilih tidak terdapat hari libur kerja/nasional di dalam jadwal kerja Anda.</p>
-          <br />
-          <i class="fa fa-calendar pull-left"></i>
-          <p>Silahkan isi tanggal pengajuan izin tidak slash badge Anda dengan memilih tanggal pada kalender.</p>
-          <br />
-          <i class="fa fa-clock-o pull-left"></i>
-          <p>Silahkan isi jam izin tidak slash badge Anda dengan memilih jam pada icon <i class="fa fa-clock-o"></i>.</p>
-          <br />
-          <i class="fa fa-sliders pull-left"></i>
-          <p>Silahkan isi jenis pencatatan waktu kerja, apakah masuk kerja (Check-in) atau pulang kerja (Check-out).</p>
-          <br />
-          <i class="fa fa-book pull-left"></i>
-          <p>Silahkan isi keterangan izin tidak slash badge Anda.</p>
-          <br />
-      </div> 
         <div class="panel-body">
-        {!! Form::open([ 'url' => route('time_events.store'), 'method' => 'post', 
-        'class'=>'form-horizontal', 'data-parsley-validate'=> 'true', 
-        'files' => 'true' ]) !!}
-        @include('time_events._form') {!! Form::close() !!}
+        {!! Form::open([ 
+          'url' => route('time_events.store'), 
+          'method' => 'post', 
+          'class' => 'form-horizontal', 
+          'data-parsley-validate' => 'true' 
+          ]) 
+        !!}
+        @include('time_events._form') 
+        {!! Form::close() !!}
       </div>
     </div>
   </div>
 </div>
 @endcomponent
+
 <!-- end page container -->
 @endsection
+
  @push('styles')
-<link href={{ url( "/plugins/bootstrap-datepicker/css/datepicker.css") }} rel="stylesheet" />
+<link href={{ url( "/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css") }} rel="stylesheet" />
 <link href={{ url( "/plugins/bootstrap-datepicker/css/datepicker3.css") }} rel="stylesheet" />
 <link href={{ url( "/plugins/bootstrap-select/bootstrap-select.min.css") }} rel="stylesheet" />
 <link href={{ url( "/plugins/selectize/selectize.css") }} rel="stylesheet">
@@ -49,22 +39,26 @@
 <!-- Pace -->
 <script src={{ url( "/plugins/pace/pace.min.js") }}></script>
 
-
 @endpush @push('plugin-scripts')
-<script src={{ url( "/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js") }}></script>
+<script src={{ url( "/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js") }}></script>
 <script src={{ url( "/plugins/bootstrap-select/bootstrap-select.min.js") }}></script>
 <script src={{ url( "/plugins/selectize/selectize.min.js") }}></script>
 <script src={{ url( "/plugins/parsley/dist/parsley.js") }}></script>
 <script src={{ url( "/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js") }}></script>
 
-
 @endpush @push('custom-scripts')
 <script>
   (handleInlineDatePicker) = function() {
     "use strict";
-    $("#datepicker-inline").datepicker({ });
+    $("#datepicker-inline").datepicker({ 
+      format: 'yyyy-mm-dd',
+      todayHighlight: true,
+      startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+      endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 5),
+      // datesDisabled: ['2018-09-01'],
+     });
     $('#datepicker-inline').on('changeDate', function() {
-      $('#time_event_date').val(
+      $('#check_date').val(
           $('#datepicker-inline').datepicker('getFormattedDate')
       );
     });    
@@ -73,49 +67,6 @@
     "use strict";
     $("#timepicker").timepicker({ })
   },
-  (handleDateRangePicker = function() {
-  $("#datepicker-range").datepicker({
-    inputs: $("#datepicker-range-start, #datepicker-range-end")
-  });
-
-  var start = $("#datepicker-range-start");
-  var end = $("#datepicker-range-end");
-
-  function days_diff(s, e) {
-    var diff = new Date(e - s);
-    var days = diff / 1000 / 60 / 60 / 24 + 1;
-    return isNaN(days) ? 1 : days;
-  }
-
-  function today(number) {
-    var today = new Date();
-    var dd = today.getDate() + number;
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    if (dd < 10) {
-      dd = "0" + dd;
-    }
-    if (mm < 10) {
-      mm = "0" + mm;
-    }
-    return yyyy + "-" + mm + "-" + dd;
-  }
-
-  start.datepicker("update", today(0)),
-    end.datepicker("update", today(1)),
-    start.on("changeDate", function() {
-      $("#start_date").val($(this).datepicker("getFormattedDate"));
-      $("#deduction").val(
-        days_diff(start.datepicker("getUTCDate"), end.datepicker("getUTCDate"))
-      );
-    }),
-    end.on("changeDate", function() {
-      $("#end_date").val($(this).datepicker("getFormattedDate"));
-      $("#deduction").val(
-        days_diff(start.datepicker("getUTCDate"), end.datepicker("getUTCDate"))
-      );
-    });
-}),
 (handleSelectpicker = function() {
   var bossOptions = {
     persist: false,
@@ -165,8 +116,6 @@
         bossOptions.options = newOptions;
         var bossSelect = $(".boss-selectize").selectize(bossOptions);
         var selectize = bossSelect[0].selectize;
-        selectize.setValue(res.personnel_no, false);
-        var selectize = bossSelect[1].selectize;
         selectize.setValue(res.personnel_no, false);
     }
   });
@@ -230,12 +179,11 @@
 
 }),
 
-(PermitPlugins = (function() {
+(TimeEventPlugins = (function() {
   "use strict";
   return {
     init: function() {
-      handleDateRangePicker(), handleSelectpicker(), 
-      handleTimePicker(), handleInlineDatePicker();
+      handleSelectpicker(), handleTimePicker(), handleInlineDatePicker();
     }
   };
 })());
@@ -245,5 +193,5 @@
 @endpush 
 
 @push('on-ready-scripts') 
-PermitPlugins.init(); 
+TimeEventPlugins.init(); 
 @endpush

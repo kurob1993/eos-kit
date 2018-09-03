@@ -2,157 +2,157 @@
 
 namespace App\Observers;
 
-use App\Models\Absence;
-use App\Models\AbsenceApproval;
-use App\Models\AbsenceQuota;
+use App\Models\Attendance;
+use App\Models\AttendanceApproval;
+use App\Models\AttendanceQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
-use App\Notifications\LeaveSentToSapMessage;
+use App\Notifications\PermitSentToSapMessage;
 use App\Role;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Session;
 
-class AbsenceObserver
+class AttendanceObserver
 {
-    public function creating(Absence $absence)
+    public function creating(Attendance $attendance)
     {
-        // jika absence adalah cuti tahunan / cuti besar (leaves)
-        if ($absence->isALeave) {
-            // ambil kuota cuti berdasarkan tanggal mulai & berakhir cuti
-            $absence_quota = AbsenceQuota::activeAbsenceQuotaOf(
-                Auth::user()->personnel_no, $absence->start_date, $absence->end_date)
+        // jika attendance adalah izin tahunan / izin besar (leaves)
+        if ($attendance->isAPermit) {
+            // ambil kuota izin berdasarkan tanggal mulai & berakhir izin
+            $attendance_quota = AttendanceQuota::activeAttendanceQuotaOf(
+                Auth::user()->personnel_no, $attendance->start_date, $attendance->end_date)
                 ->first();
     
-            // apakah sisa cuti (balance)  kurang dari pengajuan (deduction)?
-            if ($absence_quota->balance < $absence->deduction) {
+            // apakah sisa izin (balance)  kurang dari pengajuan (deduction)?
+            if ($attendance_quota->balance < $attendance->deduction) {
                 Session::flash("flash_notification", [
                     "level" => "danger",
-                    "message" => "Tidak dapat mengajukan cuti karena jumlah pengajuan cuti "
-                    . "melebihi sisa cuti periode saat ini "
-                    . "(Sisa Cuti =" . $absence_quota->balance . " < pengajuan cuti="
-                    . $absence->deduction . "). Silahkan ajukan cuti dengan jumlah "
-                    . "kurang dari/sama dengan sisa cuti.",
+                    "message" => "Tidak dapat mengajukan izin karena jumlah pengajuan izin "
+                    . "melebihi sisa izin periode saat ini "
+                    . "(Sisa Cuti =" . $attendance_quota->balance . " < pengajuan izin="
+                    . $attendance->deduction . "). Silahkan ajukan izin dengan jumlah "
+                    . "kurang dari/sama dengan sisa izin.",
                 ]);
                 return false;
             }
-            // apakah tanggal cuti sudah pernah dilakukan sebelumnya (intersection)
+            // apakah tanggal izin sudah pernah dilakukan sebelumnya (intersection)
             // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
             // JIKA DENIED tidak termasuk intersected
-            $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
+            $intersected = Attendance::where('personnel_no', Auth::user()->personnel_no)
                 ->leavesOnly()
-                ->intersectWith($absence->start_date, $absence->end_date)
+                ->intersectWith($attendance->start_date, $attendance->end_date)
                 ->first();
             if (sizeof($intersected) > 0) {
                 Session::flash("flash_notification", [
                     "level" => "danger",
-                    "message" => "Tidak dapat mengajukan cuti karena tanggal pengajuan "
+                    "message" => "Tidak dapat mengajukan izin karena tanggal pengajuan "
                     . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
                     . $intersected->formattedPeriod . ").",
                 ]);
                 return false;
             } else {
-                // jika tidak, absence adalah izin (permits)
+                // jika tidak, attendance adalah izin (permits)
             }
         }
     }
 
-    public function created(Absence $absence)
+    public function created(Attendance $attendance)
     {
-        // karyawan yang membuat absence
+        // karyawan yang membuat attendance
         $employee = Auth::user()->employee()->first();
 
-        // mendapatkan absence_type_id dari kuota cuti yang digunakan
-        $absence_type_id = AbsenceQuota::activeAbsenceQuotaOf(
+        // mendapatkan attendance_type_id dari kuota izin yang digunakan
+        $attendance_type_id = AttendanceQuota::activeAttendanceQuotaOf(
             Auth::user()
-                ->personnel_no, $absence->start_date, $absence->end_date)
+                ->personnel_no, $attendance->start_date, $attendance->end_date)
                 ->first()
-            ->absence_type_id;
+            ->attendance_type_id;
 
-        // mendapatkan flow_id untuk absences dari file config
+        // mendapatkan flow_id untuk attendances dari file config
         // mencari sequence pertama dari flow_id diatas
         // mengembalikan flowstage dan mengakses stage_id
-        $flow_id = config('emss.flows.absences');
+        $flow_id = config('emss.flows.attendances');
         $stage_id = FlowStage::firstSequence($flow_id)->first()->stage_id;
 
-        // mengisi absence type dari server bukan dari request
-        $absence->absence_type_id = $absence_type_id;
+        // mengisi attendance type dari server bukan dari request
+        $attendance->attendance_type_id = $attendance_type_id;
 
         // mengisi stage id melalui mekanisme flow stage
-        $absence->stage_id = $stage_id;
+        $attendance->stage_id = $stage_id;
 
         // simpan perubahan
-        $absence->save();
+        $attendance->save();
 
-        // mencari atasan dari karyawan yang mengajukan absences
+        // mencari atasan dari karyawan yang mengajukan attendances
         $closestBoss = $employee->closestBoss();
 
-        // mencari direktur dari karyawan yang mengajukan absence
+        // mencari direktur dari karyawan yang mengajukan attendance
         $director = $employee->director();
 
-        // buat record untuk absence approval
-        $absence_approval = new AbsenceApproval();
+        // buat record untuk attendance approval
+        $attendance_approval = new AttendanceApproval();
 
-        // foreign key pada absence approval
-        $absence_approval->absence_id = $absence->id;
+        // foreign key pada attendance approval
+        $attendance_approval->attendance_id = $attendance->id;
 
         // NEED TO IMPLEMENT FLOW STAGE
         // mengambil status dari firststatus
-        $absence_approval->sequence = 1;
-        $absence_approval->status_id = Status::firstStatus()->id;
+        $attendance_approval->sequence = 1;
+        $attendance_approval->status_id = Status::firstStatus()->id;
 
         // JIKA karyawan tersebut mempunyai atasan langsung
-        // maka simpan data atasan sebagai absence approval
+        // maka simpan data atasan sebagai attendance approval
         // JIKA TIDAK mempunyai atasan langsung
-        // maka absence approval dibuat seolah-olah sudah disetujui
+        // maka attendance approval dibuat seolah-olah sudah disetujui
         // contoh: karyawan yang atasannya langsung direktur
         // atau deputi (UTOMO NUGROHO)
         if ($closestBoss) {
             // menyimpan personnel_no dari closest boss
-            $absence_approval->regno = $closestBoss->personnel_no;
+            $attendance_approval->regno = $closestBoss->personnel_no;
 
             // menyimpan data persetujuan
-            $absence_approval->save();
+            $attendance_approval->save();
 
         } else {
             // bypass regno menggunakan admin  dan sequence
             $admin = Role::retrieveAdmin();
-            $absence_approval->regno = $admin->personnel_no;
-            $absence_approval->sequence = 1;
+            $attendance_approval->regno = $admin->personnel_no;
+            $attendance_approval->sequence = 1;
 
             // menyimpan data persetujuan
-            $absence_approval->save();
+            $attendance_approval->save();
 
             // mengubah status menjadi approved
-            $absence_approval->status_id = Status::ApproveStatus()->id;
-            $absence_approval->text = 'Disetujui oleh Admin';
+            $attendance_approval->status_id = Status::ApproveStatus()->id;
+            $attendance_approval->text = 'Disetujui oleh Admin';
 
             // menyimpan perubahan agar mentrigger observer
-            $absence_approval->save();
+            $attendance_approval->save();
         }
     }
 
-    public function updated(Absence $absence)
+    public function updated(Attendance $attendance)
     {
         // apakah sudah selesai
-        if ($absence->isSuccess) {
-            // mencari data kuota cuti yang dipakai
-            $absenceQuota = AbsenceQuota::activeAbsenceQuota($absence->personnel_no)
+        if ($attendance->isSuccess) {
+            // mencari data kuota izin yang dipakai
+            $attendanceQuota = AttendanceQuota::activeAttendanceQuota($attendance->personnel_no)
                 ->first();
 
-            // menambah pemakaian cuti pada periode tersebut
+            // menambah pemakaian izin pada periode tersebut
             // seharusnya ada tabel history (many to many)
-            // pemakaian cuti berkorelasi dengan absence quota
-            $absenceQuota->deduction += $absence->deduction;
+            // pemakaian izin berkorelasi dengan attendance quota
+            $attendanceQuota->deduction += $attendance->deduction;
 
-            // simpan data kuota cuti
-            $absenceQuota->save();
+            // simpan data kuota izin
+            $attendanceQuota->save();
 
             // to adalah karyawan yang mengajukan
-            $to = $absence->user()->first();
+            $to = $attendance->user()->first();
 
             // sistem mengirim email notifikasi
-            $to->notify(new LeaveSentToSapMessage($absence));
+            $to->notify(new PermitSentToSapMessage($attendance));
         }
     }
 }

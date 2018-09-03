@@ -6,7 +6,8 @@ return [
   'flows' => [
     'absences' => 1,
     'attendances' => 1,
-    'attendance_quotas' => 1
+    'attendance_quotas' => 1,
+    'time_events' => 1
   ],
 
   // format tanggal
@@ -25,6 +26,9 @@ return [
     ],
     'overtimes' => [
       'text' => 'Lembur',      
+    ],
+    'time_events' => [
+      'text' => 'Tidak Slash',      
     ],
   ],
 ];

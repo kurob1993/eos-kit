@@ -78,28 +78,6 @@ class Absence extends Model
         });
     }
 
-    public function scopeIncompleted($query)
-    {
-        // apakah sudah selesai? (finished, failed, denied)
-        return $query->whereIn('stage_id', [
-            Stage::waitingApprovalStage()->id,
-            Stage::sentToSapStage()->id ]);
-    }
-
-    public function scopeIntersectWith($query, $s, $e)
-    {
-        // apakah ada data absence yang beririsan (intersection)
-        // SELECT id, personnel_no, start_date, end_date FROM absences
-        // WHERE (start_date <= $s AND end_date >= $s) 
-        // OR (start_date <= $e AND end_date >= $e)
-        return $query->where(function ($query) use($s){ 
-            $query->where('start_date', '<=', $s)->where('end_date', '>=', $s);
-        })
-        ->orWhere(function ($query) use($e){ 
-            $query->where('start_date', '<=', $e)->where('end_date', '>=', $e); 
-        }); 
-    }
-
     public function getDeductionAttribute()
     {
         // Jumlah pengajuan cuti dalam hari

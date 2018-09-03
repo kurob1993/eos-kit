@@ -2,45 +2,45 @@
 
 namespace App\Observers;
 
-use App\Notifications\LeaveApprovalMessage;
-use App\Models\AbsenceApproval;
+use App\Notifications\PermitApprovalMessage;
+use App\Models\AttendanceQuotaApproval;
 use App\Message;
 
-class AbsenceApprovalObserver
+class AttendanceQuotaApprovalObserver
 {
-    public function updated(AbsenceApproval $absenceApproval)
+    public function updated(AttendanceQuotaApproval $attendanceQuotaApproval)
     {
-      // $flow_id  = config('emss.flows.absences');
+      // $flow_id  = config('emss.flows.attendance_quotas');
       // $flow_stage = FlowStage::nextSequence($flow_id);
       
-      // mencari data absence sesuai dengan relatioship
-      $absence = $absenceApproval->absence()->first();
+      // mencari data attendance sesuai dengan relatioship
+      $attendance = $attendanceQuotaApproval->attendance()->first();
 
       // from adalah dari atasan
-      $from = $absenceApproval->user()->first();
+      $from = $attendanceQuotaApproval->user()->first();
       
       // to adalah karyawan yang mengajukan
-      $to = $absence->user()->first();      
+      $to = $attendance->user()->first();      
 
       // menyimpan catatan pengiriman pesan
       $message = new Message;
       
-      // apakah data absence sudah disetujui
-      if ($absenceApproval->isApproved) {
+      // apakah data attendance sudah disetujui
+      if ($attendanceQuotaApproval->isApproved) {
         
         // NEED TO IMPLEMENT FLOW STAGE (send to SAP)
-        $absence->stage_id = 2;
+        $attendance->stage_id = 2;
 
         // message history
-        $messageAttribute = sprintf('Leave approved from %s to %s',
+        $messageAttribute = sprintf('Permit approved from %s to %s',
         $from->personnelNoWithName, $to->personnelNoWithName);
       } else {
 
         // NEED TO IMPLEMENT FLOW STAGE (denied)
-        $absence->stage_id = 5;
+        $attendance->stage_id = 5;
 
         // message history
-        $messageAttribute = sprintf('Leave rejected from %s to %s',
+        $messageAttribute = sprintf('Permit rejected from %s to %s',
         $from->personnelNoWithName, $to->personnelNoWithName);
       }
       
@@ -52,11 +52,11 @@ class AbsenceApprovalObserver
       // simpan message history
       $message->save();
       
-      // update data absence
-      $absence->save();
+      // update data attendance
+      $attendance->save();
 
       // sistem mengirim email notifikasi dari atasan ke
       // karyawan yang mengajukan         
-      $to->notify(new LeaveApprovalMessage($from, $absenceApproval));
+      $to->notify(new PermitApprovalMessage($from, $attendanceQuotaApproval));
     }
 }

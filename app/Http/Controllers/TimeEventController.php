@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Session;
-use Validator;
 use Illuminate\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
+use App\Http\Requests\StoreTimeEventRequest;
 use App\Models\TimeEvent;
 use App\Models\TimeEventType;
 
@@ -22,7 +22,7 @@ class TimeEventController extends Controller
         // response untuk datatables timeEvents
         if ($request->ajax()) {
 
-            // ambil data izin dari timeEvents untuk user tersebut
+            // ambil data tidak slash dari timeEvents untuk user tersebut
             $timeEvents = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
                 ->with(['timeEventType', 'stage'])
                 ->get();
@@ -58,8 +58,8 @@ class TimeEventController extends Controller
                 'title' => 'Jam'
                 ])
             ->addColumn([
-                'data' => 'time_event_type.description', 
-                'name' => 'time_event_type.description', 
+                'data' => 'timeEventType.description', 
+                'name' => 'timeEventType.description', 
                 'title' => 'Jenis', 
                 'searchable' => false
                 ])
@@ -91,16 +91,16 @@ class TimeEventController extends Controller
             return redirect()->route('time_events.index');
         }
         
-        // mencari data pengajuan attendance yang masih belum selesai
+        // mencari data pengajuan time_event yang masih belum selesai
         $incompletedTimeEvent = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
             ->incompleted()->get();
                 
-        // apakah ada yang belum selesai pengajuan cuti/izinnya??
+        // apakah ada yang belum selesai pengajuan tidak slash/tidak slashnya??
         if ( sizeof($incompletedTimeEvent) > 0 ) {
             Session::flash("flash_notification", [
                 "level"   =>  "danger",
-                "message"=>"Data pengajuan cuti/izin sudah ada dan harus diselesaikan prosesnya " . 
-                "sebelum mengajukan cuti kembali."
+                "message"=>"Data pengajuan tidak slash/tidak slash sudah ada dan harus diselesaikan prosesnya " . 
+                "sebelum mengajukan tidak slash kembali."
             ]);
             // batalkan view create dan kembali ke parent
             return redirect()->route('time_events.index');       
@@ -121,46 +121,19 @@ class TimeEventController extends Controller
         ]);
     }
 
-    public function store(StoreAbsenceRequest $request)
+    public function store(StoreTimeEventRequest $request)
     {
-        try {
-            // mendapatkan data employee dari user
-            // dan mengecek apakah dapat melakukan pelimpahan
-            $canDelegate = Auth::user()->employee()->firstOrFail()->hasSubordinate();
-
-        } catch(ModelNotFoundException $e) {
-            // tampilkan pesan bahwa tidak ada data karyawan yang bisa ditemukan
-            Session::flash("flash_notification", [
-                "level"=>"danger",
-                "message"=>"Tidak ditemukan data karyawan. Silahkan hubungi Divisi HCI&A."
-            ]);
-            // batalkan view create dan kembali ke parent
-            return redirect()->route('time_events.create');
-        }
-
-        // time_events form elements
-        // personnel_no, check_date, check_time, deduction,
-        // permit_type, attachment, note, delegation (if have subordinates)
-        $validator = Validator::make($request->all(), [
-            'personnel_no' => 'required',
-            'check_date' => 'required',
-            'check_time' => 'required',
-            'deduction' => 'required',
-            'permit_type' => 'required',
-            'attachment' => 'required',
-            'note' => 'required',
-        ]);
-        // tampilkan pesan bahwa telah berhasil mengajukan cuti
+        // tampilkan pesan bahwa telah berhasil mengajukan tidak slash
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Berhasil menyimpan pengajuan cuti.",
+            "message" => "Berhasil menyimpan pengajuan tidak slash.",
         ]);
 
-        // membuat pengajuan cuti dengan menambahkan data personnel_no
+        // membuat pengajuan tidak slash dengan menambahkan data personnel_no
         $timeEvent = TimeEvent::create($request->all()
              + ['personnel_no' => Auth::user()->personnel_no]);
 
-        return redirect()->route('leaves.index');
+        return redirect()->url('time_events.index');
     }
 
     public function show($id)

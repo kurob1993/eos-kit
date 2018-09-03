@@ -52,7 +52,7 @@
 @endsection
 
 @push('styles')
-<link href={{ url("/plugins/bootstrap-datepicker/css/datepicker.css") }} rel="stylesheet" />
+<link href={{ url("/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css") }} rel="stylesheet" />
 <link href={{ url("/plugins/bootstrap-datepicker/css/datepicker3.css") }} rel="stylesheet" />
 <link href={{ url("/plugins/bootstrap-select/bootstrap-select.min.css") }} rel="stylesheet" />
 <link href={{ url("/plugins/selectize/selectize.css") }} rel="stylesheet">
@@ -63,7 +63,7 @@
 @endpush
 
 @push('plugin-scripts')
-<script src={{ url("/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js") }}></script>
+<script src={{ url("/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js") }}></script>
 <script src={{ url("/plugins/bootstrap-select/bootstrap-select.min.js") }}></script>
 <script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
 <script src={{ url("/plugins/parsley/dist/parsley.js") }}></script>

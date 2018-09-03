@@ -51,12 +51,4 @@ class TimeEvent extends Model
         // one-to-many relatioship dengan TimeEventApproval
         return $this->hasMany('App\Models\TimeEventApproval');
     }
-    
-    public function scopeIncompleted($query)
-    {
-        // apakah sudah selesai? (finished, failed, denied)
-        return $query->whereIn('stage_id', [
-            Stage::waitingApprovalStage()->id,
-            Stage::sentToSapStage()->id ]);
-    } 
 }

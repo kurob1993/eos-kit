@@ -6,8 +6,12 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Absence;
 use App\Models\AbsenceApproval;
+use App\Models\TimeEvent;
+use App\Models\TimeEventApproval;
 use App\Observers\AbsenceObserver;
 use App\Observers\AbsenceApprovalObserver;
+use App\Observers\TimeEventObserver;
+use App\Observers\TimeEventApprovalObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +29,12 @@ class AppServiceProvider extends ServiceProvider
 
         // Observer untuk model AbsenceApproval
         AbsenceApproval::observe(AbsenceApprovalObserver::class);
+
+        // Observer untuk model TimeEvent
+        TimeEvent::observe(TimeEventObserver::class);
+
+        // Observer untuk model TimeEventApproval
+        TimeEventApproval::observe(TimeEventApprovalObserver::class);
 
 
         \Form::macro('labelRadio', function ($name, $value, $label,

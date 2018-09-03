@@ -3,12 +3,31 @@
     Form Elements: personnel_no, check_date, check_time,
     time_event_type, note, delegation (if have subordinates)
   --}}
+  <div class="col-lg-4">
+    @include('layouts._flash')
+    <div class="alert alert-success fade in">
+        <i class="fa fa-paper-plane pull-left"></i>
+        <p>Pastikan bahwa tanggal yang dipilih tidak terdapat hari libur kerja/nasional di dalam jadwal kerja Anda.</p>
+        <br />
+        <i class="fa fa-calendar pull-left"></i>
+        <p>Silahkan isi tanggal pengajuan izin tidak slash badge Anda dengan memilih tanggal pada kalender.</p>
+        <br />
+        <i class="fa fa-clock-o pull-left"></i>
+        <p>Silahkan isi jam izin tidak slash badge Anda dengan memilih jam pada icon <i class="fa fa-clock-o"></i>.</p>
+        <br />
+        <i class="fa fa-sliders pull-left"></i>
+        <p>Silahkan isi jenis pencatatan waktu kerja, apakah masuk kerja (Check-in) atau pulang kerja (Check-out).</p>
+        <br />
+        <i class="fa fa-book pull-left"></i>
+        <p>Silahkan isi keterangan izin tidak slash badge Anda.</p>
+        <br />
+    </div>     
+  </div>
 
   <!-- begin datepicker inline -->
   <div class="col-lg-4">
     <h5 class="text-center">Pilih tanggal</h5>
-    <div id="datepicker-inline" class="datepicker-range" data-date-today-highlight='true' 
-    data-date-format="yyyy-mm-dd" data-date-start-date="-10d" data-date-end-date="+15d">
+    <div id="datepicker-inline" class="datepicker-range">
       <div></div>
     </div>
   </div>
@@ -57,23 +76,23 @@
         <!-- end check_time field -->
       </div>
 
-      <!-- begin time_event_type field -->
+      <!-- begin time_event_type_id field -->
       <div class="form-group">
-        {!! Form::label('time_event_type', 'Check-in / Check-out') !!}
-        {!! Form::select('time_event_type', ['P10' => 'Check-in', 'P20' => 'Check-out'],
-          null, ['class'=>'form-control','id'=>'time_event_type', 
+        {!! Form::label('time_event_type_id', 'Check-in / Check-out') !!}
+        {!! Form::select('time_event_type_id', ['1' => 'Check-in', '2' => 'Check-out'],
+          null, ['class'=>'form-control','id'=>'time_event_type_id', 
           'data-parsley-required' => 'true',  'placeholder' => 'Silahkan pilih']); 
         !!}
-        {!! $errors->first('time_event_type', '<p class="help-block">:message</p>') !!}
+        {!! $errors->first('time_event_type_id', '<p class="help-block">:message</p>') !!}
       </div>
-       <!-- end time_event_type field -->
+       <!-- end time_event_type_id field -->
   
       <!-- begin note field -->
       <div class="form-group{{ $errors->has('note') ? ' has-error' : '' }}">
         {!! Form::label('note', 'Keterangan Izin') !!} 
         {!! Form::text('note', null, ['class'=>'form-control', 'placeholder'=>'Tulis
         Keterangan Izin', 'id'=>'note', 'data-parsley-required' => 'true']) !!}
-        {!! $errors->first('note', '<p class="help-block">:message</p>') !!}
+        {!! $errors->first('stage_id', '<p class="help-block">:message</p>') !!}
       </div>
       <!-- end note field -->
 
@@ -99,11 +118,11 @@
             </select>
         </div>
         <!-- end approver field -->
-    </div>
 
     <!-- begin submit button -->
     <div class="form-group pull-right">
       {!! Form::submit('Kirim Pengajuan Izin', ['class'=>'btn btn-primary']) !!}
     </div>
     <!-- end submit button -->
+      </div>
   </div>

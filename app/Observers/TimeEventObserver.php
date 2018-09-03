@@ -2,157 +2,112 @@
 
 namespace App\Observers;
 
-use App\Models\Absence;
-use App\Models\AbsenceApproval;
-use App\Models\AbsenceQuota;
+use Session;
+use Illuminate\Support\Facades\Auth;
+use App\Models\TimeEvent;
+use App\Models\TimeEventApproval;
+use App\Models\TimeEventQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
-use App\Notifications\LeaveSentToSapMessage;
+use App\Notifications\TimeEventSentToSapMessage;
 use App\Role;
 use App\User;
-use Illuminate\Support\Facades\Auth;
-use Session;
 
-class AbsenceObserver
+class TimeEventObserver
 {
-    public function creating(Absence $absence)
+    public function creating(TimeEvent $timeEvent)
     {
-        // jika absence adalah cuti tahunan / cuti besar (leaves)
-        if ($absence->isALeave) {
-            // ambil kuota cuti berdasarkan tanggal mulai & berakhir cuti
-            $absence_quota = AbsenceQuota::activeAbsenceQuotaOf(
-                Auth::user()->personnel_no, $absence->start_date, $absence->end_date)
-                ->first();
-    
-            // apakah sisa cuti (balance)  kurang dari pengajuan (deduction)?
-            if ($absence_quota->balance < $absence->deduction) {
-                Session::flash("flash_notification", [
-                    "level" => "danger",
-                    "message" => "Tidak dapat mengajukan cuti karena jumlah pengajuan cuti "
-                    . "melebihi sisa cuti periode saat ini "
-                    . "(Sisa Cuti =" . $absence_quota->balance . " < pengajuan cuti="
-                    . $absence->deduction . "). Silahkan ajukan cuti dengan jumlah "
-                    . "kurang dari/sama dengan sisa cuti.",
-                ]);
-                return false;
-            }
-            // apakah tanggal cuti sudah pernah dilakukan sebelumnya (intersection)
-            // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
-            // JIKA DENIED tidak termasuk intersected
-            $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
-                ->leavesOnly()
-                ->intersectWith($absence->start_date, $absence->end_date)
-                ->first();
-            if (sizeof($intersected) > 0) {
-                Session::flash("flash_notification", [
-                    "level" => "danger",
-                    "message" => "Tidak dapat mengajukan cuti karena tanggal pengajuan "
-                    . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
-                    . $intersected->formattedPeriod . ").",
-                ]);
-                return false;
-            } else {
-                // jika tidak, absence adalah izin (permits)
-            }
+        // apakah tanggal tidak slash sudah pernah dilakukan sebelumnya (intersection)
+        // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
+        // JIKA DENIED tidak termasuk intersected
+        $intersected = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
+            ->where('check_date', '<>', $timeEvent->check_date)
+            ->first();
+        if (sizeof($intersected) > 0) {
+            Session::flash("flash_notification", [
+                "level" => "danger",
+                "message" => "Tidak dapat mengajukan tidak slash karena tanggal pengajuan "
+                . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
+                . $intersected->check_date . ").",
+            ]);
+            return false;
         }
     }
 
-    public function created(Absence $absence)
+    public function created(TimeEvent $timeEvent)
     {
-        // karyawan yang membuat absence
+        // karyawan yang membuat time_event
         $employee = Auth::user()->employee()->first();
 
-        // mendapatkan absence_type_id dari kuota cuti yang digunakan
-        $absence_type_id = AbsenceQuota::activeAbsenceQuotaOf(
-            Auth::user()
-                ->personnel_no, $absence->start_date, $absence->end_date)
-                ->first()
-            ->absence_type_id;
-
-        // mendapatkan flow_id untuk absences dari file config
+        // mendapatkan flow_id untuk time_events dari file config
         // mencari sequence pertama dari flow_id diatas
         // mengembalikan flowstage dan mengakses stage_id
-        $flow_id = config('emss.flows.absences');
+        $flow_id = config('emss.flows.time_events');
         $stage_id = FlowStage::firstSequence($flow_id)->first()->stage_id;
 
-        // mengisi absence type dari server bukan dari request
-        $absence->absence_type_id = $absence_type_id;
-
         // mengisi stage id melalui mekanisme flow stage
-        $absence->stage_id = $stage_id;
+        $timeEvent->stage_id = $stage_id;
 
         // simpan perubahan
-        $absence->save();
+        $timeEvent->save();
 
-        // mencari atasan dari karyawan yang mengajukan absences
+        // mencari atasan dari karyawan yang mengajukan time_events
         $closestBoss = $employee->closestBoss();
 
-        // mencari direktur dari karyawan yang mengajukan absence
+        // mencari direktur dari karyawan yang mengajukan time_event
         $director = $employee->director();
 
-        // buat record untuk absence approval
-        $absence_approval = new AbsenceApproval();
+        // buat record untuk time_event approval
+        $timeEvent_approval = new TimeEventApproval();
 
-        // foreign key pada absence approval
-        $absence_approval->absence_id = $absence->id;
+        // foreign key pada time_event approval
+        $timeEvent_approval->time_event_id = $timeEvent->id;
 
         // NEED TO IMPLEMENT FLOW STAGE
         // mengambil status dari firststatus
-        $absence_approval->sequence = 1;
-        $absence_approval->status_id = Status::firstStatus()->id;
+        $timeEvent_approval->sequence = 1;
+        $timeEvent_approval->status_id = Status::firstStatus()->id;
 
         // JIKA karyawan tersebut mempunyai atasan langsung
-        // maka simpan data atasan sebagai absence approval
+        // maka simpan data atasan sebagai time_event approval
         // JIKA TIDAK mempunyai atasan langsung
-        // maka absence approval dibuat seolah-olah sudah disetujui
+        // maka time_event approval dibuat seolah-olah sudah disetujui
         // contoh: karyawan yang atasannya langsung direktur
         // atau deputi (UTOMO NUGROHO)
         if ($closestBoss) {
             // menyimpan personnel_no dari closest boss
-            $absence_approval->regno = $closestBoss->personnel_no;
+            $timeEvent_approval->regno = $closestBoss->personnel_no;
 
             // menyimpan data persetujuan
-            $absence_approval->save();
+            $timeEvent_approval->save();
 
         } else {
             // bypass regno menggunakan admin  dan sequence
             $admin = Role::retrieveAdmin();
-            $absence_approval->regno = $admin->personnel_no;
-            $absence_approval->sequence = 1;
+            $timeEvent_approval->regno = $admin->personnel_no;
+            $timeEvent_approval->sequence = 1;
 
             // menyimpan data persetujuan
-            $absence_approval->save();
+            $timeEvent_approval->save();
 
             // mengubah status menjadi approved
-            $absence_approval->status_id = Status::ApproveStatus()->id;
-            $absence_approval->text = 'Disetujui oleh Admin';
+            $timeEvent_approval->status_id = Status::ApproveStatus()->id;
+            $timeEvent_approval->text = 'Disetujui oleh Admin';
 
             // menyimpan perubahan agar mentrigger observer
-            $absence_approval->save();
+            $timeEvent_approval->save();
         }
     }
 
-    public function updated(Absence $absence)
+    public function updated(TimeEvent $timeEvent)
     {
         // apakah sudah selesai
-        if ($absence->isSuccess) {
-            // mencari data kuota cuti yang dipakai
-            $absenceQuota = AbsenceQuota::activeAbsenceQuota($absence->personnel_no)
-                ->first();
-
-            // menambah pemakaian cuti pada periode tersebut
-            // seharusnya ada tabel history (many to many)
-            // pemakaian cuti berkorelasi dengan absence quota
-            $absenceQuota->deduction += $absence->deduction;
-
-            // simpan data kuota cuti
-            $absenceQuota->save();
-
+        if ($timeEvent->isSuccess) {
             // to adalah karyawan yang mengajukan
-            $to = $absence->user()->first();
+            $to = $timeEvent->user()->first();
 
             // sistem mengirim email notifikasi
-            $to->notify(new LeaveSentToSapMessage($absence));
+            $to->notify(new TimeEventSentToSapMessage($timeEvent));
         }
     }
 }
