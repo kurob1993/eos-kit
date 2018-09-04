@@ -10,7 +10,12 @@
   @include('layouts._flash')
   <div class="panel-body">
     <div class="table-responsive">
-      {!! $html->table(['class'=>'table table-striped']) !!}
+      {!! $absenceTable->table(['class'=>'table table-striped']) !!}
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="table-responsive">
+      {!! $attendanceTable->table(['class'=>'table table-striped']) !!}
     </div>
   </div>
 </div>
@@ -34,7 +39,8 @@
 <!-- DataTables -->
 <script src={{ url("/plugins/DataTables/js/jquery.dataTables.js") }}></script>
 <!-- Generated scripts from DataTables -->
-{!! $html->scripts() !!}
+{!! $absenceTable->scripts() !!}
+{!! $attendanceTable->scripts() !!}
 @endpush
 
 @push('custom-scripts')

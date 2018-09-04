@@ -45,10 +45,12 @@ class DebugController extends Controller
             
         // dd($absences->toArray());
 
-        // apakah absence merupakan cuti tahunan / cuti besar
-        $absence = Absence::find(43);
+        // // apakah absence merupakan cuti tahunan / cuti besar
+        // $absence = Absence::find(43);
         // dd($absence->isALeave);
-        dd($absence->updated_at);
+        
+        // // FormatDates Trait
+        // dd($absence->updated_at);
 
         // $absences = Auth::user()->absences()->with(['absenceType', 'stage']);
         // dd($absences->get()->toArray());
@@ -154,7 +156,25 @@ class DebugController extends Controller
         // $intersected = \App\Models\TimeEvent::where('personnel_no', Auth::user()->personnel_no)
         // ->where('check_date', '2018-09-12')
         // ->first();
-        
         // dd($intersected);
+
+    // // ambil data persetujuan absence, WARNING nested relationship eager loading
+    // $absenceApprovals = \App\Models\AbsenceApproval::where('regno', Auth::user()->personnel_no)
+    //     ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType'])
+    //     ->get();
+    
+        // $aar = \App\Http\Resources\AbsenceApprovalResource::collection(
+        //     \App\Models\AbsenceApproval::all()
+        // );
+
+        $aar = new \App\Http\Resources\AbsenceApprovalResource(\App\Models\AbsenceApproval::find(27));
+
+        // $aar = (\App\Http\Resources\AbsenceApprovalResource::collection(
+        //     \App\Models\AbsenceApproval::where('regno', Auth::user()->personnel_no)
+        //         ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType'])
+        //     )
+        // );
+
+        return ($aar);
     }
 }

@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Session;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Datatables;
+use Yajra\DataTables\Html\Builder;
 use App\Models\AbsenceApproval;
 use App\Models\AttendanceApproval;
 use App\Models\TimeEventApproval;
 use App\Models\AttendanceQuotaApproval;
 use App\Models\Status;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Yajra\DataTables\Datatables;
-use Yajra\DataTables\Html\Builder;
-use Session;
 
 class HomeController extends Controller
 {
@@ -40,7 +40,7 @@ class HomeController extends Controller
     // $absenceApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
     //     ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType']);
 
-    // // ambil data persetujuan attendance, WARNING nested relationship eager loading
+    // // // ambil data persetujuan attendance, WARNING nested relationship eager loading
     // $attendanceApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
     //     ->with(['status:id,description', 'attendance.user.employee', 'attendance.attendanceType']);
 
@@ -52,22 +52,42 @@ class HomeController extends Controller
     // $attendanceQuotaApprovals = AttendanceQuotaApproval::where('regno', Auth::user()->personnel_no)
     //     ->with(['status:id,description', 'attendanceQuota.user.employee', 'attendanceQuota.attendanceQuotaType']);
 
-    // var_dump($absenceApprovals->get()->toArray());
+    // echo($absenceApprovals->get(['id', 'status_id', 'absence_id'])->toJson());
     // var_dump($attendanceApprovals->get()->toArray());
     // var_dump($timeEventApprovals->get()->toArray());
     // var_dump($attendanceQuotaApprovals->get()->toArray());
 
     // exit(1);
 
-        // response untuk datatables absences approval
+        // // html builder untuk menampilkan kolom di datatables
+        // $html = $htmlBuilder
+        //     ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
+        //     ->addColumn(['data' => 'absence_id', 'name' => 'absence_id', 'title' => 'Pengajuan', 'orderable' => false])
+        //     ->addColumn(['data' => 'absence.user.personnel_no', 'name' => 'absence.user.personnel_no', 'title' => 'Karyawan', 'orderable' => false,])
+        //     ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Status', 'searchable' => false, 'orderable' => false]);
+
+
+        // tampilkan view index dengan tambahan script html DataTables
+        // return view('dashboards.employee')->with(compact('html'));
+        return view('dashboards.employee');
+    }
+
+    public function personnelServiceDashboard()
+    {
+        return view('dashboards.personnel_service');
+    }
+
+    public function absenceApproval(Request $request)
+    {
+      // response untuk datatables absences approval
         if ($request->ajax()) {
 
             // ambil data persetujuan absence, WARNING nested relationship eager loading
-            $absenceApprovals = AbsenceApproval::all('id')
-                ->where('regno', Auth::user()->personnel_no)
-                ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType']);
+            $absenceApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
+                ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType'])
+                ->get();
 
-            // // ambil data persetujuan attendance, WARNING nested relationship eager loading
+            // // // ambil data persetujuan attendance, WARNING nested relationship eager loading
             // $attendanceApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
             //     ->with(['status:id,description', 'attendance.user.employee', 'attendance.attendanceType']);
 
@@ -109,26 +129,55 @@ class HomeController extends Controller
                         ]);
                     }
                 })
-                ->orderColumn('id', '-id $1')
+                // ->orderColumn('id', '-id $1')
                 ->escapeColumns([2])
                 ->make(true);
         }
-
-        // html builder untuk menampilkan kolom di datatables
-        $html = $htmlBuilder
-            ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
-            ->addColumn(['data' => 'absence_id', 'name' => 'absence_id', 'title' => 'Pengajuan', 'orderable' => false])
-            ->addColumn(['data' => 'absence.user.personnel_no', 'name' => 'absence.user.personnel_no', 'title' => 'Karyawan', 'orderable' => false,])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Status', 'searchable' => false, 'orderable' => false]);
-
-
-        // tampilkan view index dengan tambahan script html DataTables
-        return view('dashboards.employee')->with(compact('html'));
     }
 
-    public function personnelServiceDashboard()
+    public function attendanceApproval(Request $request)
     {
-        return view('dashboards.personnel_service');
+      // response untuk datatables absences approval
+        if ($request->ajax()) {
+
+            // // ambil data persetujuan attendance, WARNING nested relationship eager loading
+            $attendanceApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
+                ->with(['status:id,description', 'attendance.user.employee', 'attendance.attendanceType']);
+
+            // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
+            return Datatables::of($attendanceApprovals)
+                ->editColumn('attendance_id', function (AbsenceApproval $a) {
+                    return '<address>' .'<strong>'. 
+                    $a->attendance->deduction . ' hari cuti</strong><br>' .
+                    $a->attendance->attendanceType->text . '<br>' .
+                    $a->attendance->formattedStartDate . ' - ' . 
+                    $a->attendance->formattedEndDate . '<br>' .
+                    '</address>';
+                })
+                ->editColumn('attendance.user.personnel_no', function (AbsenceApproval $a) {
+                    return $a->attendance->personnel_no . ' - ' . 
+                    $a->attendance->user->name . '<br>' . 
+                    $a->attendance->user->employee->position_name;
+                })
+                ->editColumn('action', function (AbsenceApproval $a) {
+                    if ($a->isNotWaiting) {
+                        return '<span class="label '. (($a->isApproved) ? 'label-primary' : 'label-danger') . '">' .
+                        $a->status->description . '</span>' . '<br>' .
+                        '<small>' . $a->updated_at . 
+                        '</small><br><small>' . $a->text . '</small>';
+                    } else {
+                        return view('dashboards._action', [
+                            'model' => $a,
+                            'approve_url' => route('dashboards.approve', $a->id),
+                            'reject_url' => route('dashboards.reject', $a->id),
+                            'confirm_message' => "Yakin melakukan ",
+                        ]);
+                    }
+                })
+                // ->orderColumn('id', '-id $1')
+                ->escapeColumns([2])
+                ->make(true);
+        }
     }
 
     public function approve(Request $request, $id)
