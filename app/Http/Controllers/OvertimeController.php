@@ -11,6 +11,7 @@ use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\AttendanceQuota;
 use App\Models\AttendanceQuotaType;
+use App\Models\OvertimeReason;
 
 class OvertimeController extends Controller
 {
@@ -72,8 +73,14 @@ class OvertimeController extends Controller
 
     public function create()
     {
+        $overtimeReason = OvertimeReason::all('id', 'text')
+            ->mapWithKeys(function ($item) {
+                return [$item['id'] => $item['text']];
+            })
+            ->all();
+
         // tampilkan view create
-        return view('overtimes.create', [ ]);
+        return view('overtimes.create', [ 'overtime_reason' => $overtimeReason ]);
     }
 
     public function store(StoreAttendanceQuotaRequest $request)

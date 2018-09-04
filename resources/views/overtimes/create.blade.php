@@ -16,7 +16,7 @@
           <p>Silahkan pilih tanggal mulai cuti dengan memilih kalender di sebelah kiri.</p>
           <br />
           <i class="fa fa-calendar pull-left"></i>
-          <p>Silahkan pilih tanggal berakhir cuti dengan memilih kalendear di sebelah kanan.</p>
+          <p>Silahkan pilih tanggal berakhir cuti dengan memilih kalender di sebelah kanan.</p>
           <br />
           <i class="fa fa-paper-plane pull-left"></i>
           <p>Pastikan bahwa tanggal yang dipilih tidak terdapat hari libur kerja/nasional di dalam jadwal kerja Anda.</p>
@@ -42,32 +42,80 @@
 @endsection
 
 @push('styles')
+<link href={{ url("/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css") }} rel="stylesheet" />
+<link href={{ url("/plugins/bootstrap-datepicker/css/datepicker3.css") }} rel="stylesheet" />
+<!-- Selectize -->    
 <link href={{ url("/plugins/bootstrap-select/bootstrap-select.min.css") }} rel="stylesheet" />
 <link href={{ url("/plugins/selectize/selectize.css") }} rel="stylesheet">
 <link href={{ url("/plugins/selectize/selectize.bootstrap3.css") }} rel="stylesheet"> 
+<!-- Parsley -->    
 <link href={{ url("/plugins/parsley/src/parsley.css") }} rel="stylesheet" />
-<!-- jquery-ui-multidatepicker -->
-<link href={{ url("/plugins/Multiple-Dates-Picker/jquery-ui.multidatespicker.css") }} rel="stylesheet" />
-<link href={{ url("/plugins/Multiple-Dates-Picker/jquery-ui-1.10.0.custom.css") }} rel="stylesheet" />
+<!-- Timepicker -->    
+<link href={{ url( "/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css") }} rel="stylesheet" />
 <!-- Pace -->    
 <script src={{ url("/plugins/pace/pace.min.js") }}></script>
 @endpush
 
 @push('plugin-scripts')
+<script src={{ url("/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js") }}></script>
+<!-- Selectize -->    
 <script src={{ url("/plugins/bootstrap-select/bootstrap-select.min.js") }}></script>
 <script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
+<!-- Parsley --> 
 <script src={{ url("/plugins/parsley/dist/parsley.js") }}></script>
-<!-- jquery-ui-multidatepicker -->
-<script src={{ url("/plugins/Multiple-Dates-Picker/jquery-ui.multidatespicker.js") }}></script>
+<!-- Timepicker --> 
+<script src={{ url( "/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js") }}></script>
 @endpush 
 
 @push('custom-scripts')
 <script>
-(handleMultiDatePicker = function() {
-  $('#mdp-demo').multiDatesPicker({
-    altField: '#altField'
-  });  
-}),
+(handleDateRangePicker = function() {
+  $("#datepicker-range").datepicker({
+    inputs: $("#datepicker-range-start, #datepicker-range-end")
+  });
+
+  var start = $("#datepicker-range-start");
+  var end = $("#datepicker-range-end");
+
+  function days_diff(s, e) {
+    var diff = new Date(e - s);
+    var days = diff / 1000 / 60 / 60 / 24 + 1;
+    return isNaN(days) ? 1 : days;
+  }
+
+  function today(number) {
+    var today = new Date();
+    var dd = today.getDate() + number;
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+    if (mm < 10) {
+      mm = "0" + mm;
+    }
+    return yyyy + "-" + mm + "-" + dd;
+  }
+
+  start.datepicker("update", today(0)),
+    end.datepicker("update", today(1)),
+    start.on("changeDate", function() {
+      $("#start_date").val($(this).datepicker("getFormattedDate"));
+      $("#deduction").val(
+        days_diff(start.datepicker("getUTCDate"), end.datepicker("getUTCDate"))
+      );
+    }),
+    end.on("changeDate", function() {
+      $("#end_date").val($(this).datepicker("getFormattedDate"));
+      $("#deduction").val(
+        days_diff(start.datepicker("getUTCDate"), end.datepicker("getUTCDate"))
+      );
+    });
+}),  
+(handleTimePicker) = function() {
+    "use strict";
+    $("#from, #to").timepicker({ })
+}, 
 (handleSelectpicker = function() {
   var bossOptions = {
     persist: false,
@@ -77,30 +125,12 @@
     options: [ ],
     render: {
       item: function(item, escape) {
-        return (
-          "<div>" +
-          (item.personnel_no
-            ? '<span class="label label-default">' + escape(item.personnel_no) + "</span>&nbsp;"
-            : "") +
-          (item.name
-            ? '<span class="name">' + escape(item.name) + "</span>"
-            : "") +
-          "</div>"
-        );
+        return ( "<div>" + (item.personnel_no ? '<span class="label label-default">' + escape(item.personnel_no) + "</span>&nbsp;" : "") + (item.name ? '<span class="name">' + escape(item.name) + "</span>" : "") + "</div>" );
       },
       option: function(item, escape) {
         var label = item.personnel_no || item.name;
         var caption = item.personnel_no ? item.name : null;
-        return (
-          "<div>" +
-          '<span class="label label-default">' +
-          escape(label) +
-          "</span>&nbsp;" +
-          (caption
-            ? '<span class="caption">' + escape(caption) + "</span>"
-            : "") +
-          "</div>"
-        );
+        return ( "<div>" + '<span class="label label-default">' + escape(label) + "</span>&nbsp;" + (caption ? '<span class="caption">' + escape(caption) + "</span>" : "") + "</div>" );
       }
     },
   };
@@ -122,11 +152,11 @@
   });  
 }),
 
-(AttendanceQuotaPlugins = (function() {
+(OvertimePlugins = (function() {
   "use strict";
   return {
     init: function() {
-      handleMultiDatePicker(), handleSelectpicker();
+      handleDateRangePicker(), handleTimePicker(), handleSelectpicker();
     }
   };
 })());
@@ -135,5 +165,5 @@
 
 @endpush 
 @push('on-ready-scripts') 
-AttendanceQuotaPlugins.init(); 
+OvertimePlugins.init(); 
 @endpush

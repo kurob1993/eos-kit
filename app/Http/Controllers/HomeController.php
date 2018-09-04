@@ -36,29 +36,6 @@ class HomeController extends Controller
 
     public function employeeDashboard($request, $htmlBuilder)
     {
-    // // ambil data persetujuan absence, WARNING nested relationship eager loading
-    // $absenceApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
-    //     ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType']);
-
-    // // // ambil data persetujuan attendance, WARNING nested relationship eager loading
-    // $attendanceApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
-    //     ->with(['status:id,description', 'attendance.user.employee', 'attendance.attendanceType']);
-
-    // // ambil data persetujuan timeEvent, WARNING nested relationship eager loading
-    // $timeEventApprovals = TimeEventApproval::where('regno', Auth::user()->personnel_no)
-    //     ->with(['status:id,description', 'timeEvent.user.employee', 'timeEvent.timeEventType']);
-
-    // // ambil data persetujuan attendanceQuota, WARNING nested relationship eager loading
-    // $attendanceQuotaApprovals = AttendanceQuotaApproval::where('regno', Auth::user()->personnel_no)
-    //     ->with(['status:id,description', 'attendanceQuota.user.employee', 'attendanceQuota.attendanceQuotaType']);
-
-    // echo($absenceApprovals->get(['id', 'status_id', 'absence_id'])->toJson());
-    // var_dump($attendanceApprovals->get()->toArray());
-    // var_dump($timeEventApprovals->get()->toArray());
-    // var_dump($attendanceQuotaApprovals->get()->toArray());
-
-    // exit(1);
-
         // // html builder untuk menampilkan kolom di datatables
         // $html = $htmlBuilder
         //     ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
@@ -69,6 +46,7 @@ class HomeController extends Controller
 
         // tampilkan view index dengan tambahan script html DataTables
         // return view('dashboards.employee')->with(compact('html'));
+        
         return view('dashboards.employee');
     }
 
@@ -86,18 +64,6 @@ class HomeController extends Controller
             $absenceApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
                 ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType'])
                 ->get();
-
-            // // // ambil data persetujuan attendance, WARNING nested relationship eager loading
-            // $attendanceApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
-            //     ->with(['status:id,description', 'attendance.user.employee', 'attendance.attendanceType']);
-
-            // // ambil data persetujuan timeEvent, WARNING nested relationship eager loading
-            // $timeEventApprovals = TimeEventApproval::where('regno', Auth::user()->personnel_no)
-            //     ->with(['status:id,description', 'timeEvent.user.employee', 'timeEvent.timeEventType']);
-
-            // // ambil data persetujuan attendanceQuota, WARNING nested relationship eager loading
-            // $attendanceQuotaApprovals = AttendanceQuotaApproval::where('regno', Auth::user()->personnel_no)
-            //     ->with(['status:id,description', 'attendanceQuota.user.employee', 'attendanceQuota.attendanceQuotaType']);
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
             return Datatables::of($absenceApprovals)
@@ -123,8 +89,8 @@ class HomeController extends Controller
                     } else {
                         return view('dashboards._action', [
                             'model' => $a,
-                            'approve_url' => route('dashboards.approve', $a->id),
-                            'reject_url' => route('dashboards.reject', $a->id),
+                            'approve_url' => route('dashboards.approve', ['id' => $a->id, 'approval' => 'absence']),
+                            'reject_url' => route('dashboards.reject', ['id' => $a->id, 'approval' => 'absence']),
                             'confirm_message' => "Yakin melakukan ",
                         ]);
                     }
@@ -146,7 +112,7 @@ class HomeController extends Controller
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
             return Datatables::of($attendanceApprovals)
-                ->editColumn('attendance_id', function (AbsenceApproval $a) {
+                ->editColumn('attendance_id', function (AttendanceApproval $a) {
                     return '<address>' .'<strong>'. 
                     $a->attendance->deduction . ' hari cuti</strong><br>' .
                     $a->attendance->attendanceType->text . '<br>' .
@@ -154,12 +120,12 @@ class HomeController extends Controller
                     $a->attendance->formattedEndDate . '<br>' .
                     '</address>';
                 })
-                ->editColumn('attendance.user.personnel_no', function (AbsenceApproval $a) {
+                ->editColumn('attendance.user.personnel_no', function (AttendanceApproval $a) {
                     return $a->attendance->personnel_no . ' - ' . 
                     $a->attendance->user->name . '<br>' . 
                     $a->attendance->user->employee->position_name;
                 })
-                ->editColumn('action', function (AbsenceApproval $a) {
+                ->editColumn('action', function (AttendanceApproval $a) {
                     if ($a->isNotWaiting) {
                         return '<span class="label '. (($a->isApproved) ? 'label-primary' : 'label-danger') . '">' .
                         $a->status->description . '</span>' . '<br>' .
@@ -168,8 +134,8 @@ class HomeController extends Controller
                     } else {
                         return view('dashboards._action', [
                             'model' => $a,
-                            'approve_url' => route('dashboards.approve', $a->id),
-                            'reject_url' => route('dashboards.reject', $a->id),
+                            'approve_url' => route('dashboards.approve', ['id' => $a->id, 'approval' => 'attendance']),
+                            'reject_url' => route('dashboards.reject', ['id' => $a->id, 'approval' => 'attendance']),
                             'confirm_message' => "Yakin melakukan ",
                         ]);
                     }
@@ -180,12 +146,107 @@ class HomeController extends Controller
         }
     }
 
-    public function approve(Request $request, $id)
+    public function timeEventApproval(Request $request)
     {
-        // cari berdasarkan id kemudian update berdasarkan request + status approve
-        $absenceApproval = AbsenceApproval::find($id);
+      // response untuk datatables absences approval
+        if ($request->ajax()) {
 
-        if (!$absenceApproval->update($request->all() 
+            // // ambil data persetujuan timeEvent, WARNING nested relationship eager loading
+            $timeEventApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
+                ->with(['status:id,description', 'timeEvent.user.employee', 'timeEvent.timeEventType']);
+
+            // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
+            return Datatables::of($timeEventApprovals)
+                ->editColumn('timeEvent_id', function (AbsenceApproval $a) {
+                    return '<address>' .'<strong>'. 
+                    $a->timeEvent->deduction . ' hari cuti</strong><br>' .
+                    $a->timeEvent->timeEventType->text . '<br>' .
+                    $a->timeEvent->formattedStartDate . ' - ' . 
+                    $a->timeEvent->formattedEndDate . '<br>' .
+                    '</address>';
+                })
+                ->editColumn('timeEvent.user.personnel_no', function (AbsenceApproval $a) {
+                    return $a->timeEvent->personnel_no . ' - ' . 
+                    $a->timeEvent->user->name . '<br>' . 
+                    $a->timeEvent->user->employee->position_name;
+                })
+                ->editColumn('action', function (AbsenceApproval $a) {
+                    if ($a->isNotWaiting) {
+                        return '<span class="label '. (($a->isApproved) ? 'label-primary' : 'label-danger') . '">' .
+                        $a->status->description . '</span>' . '<br>' .
+                        '<small>' . $a->updated_at . 
+                        '</small><br><small>' . $a->text . '</small>';
+                    } else {
+                        return view('dashboards._action', [
+                            'model' => $a,
+                            'approve_url' => route('dashboards.approve', ['id' => $a->id, 'approval' => 'time_event']),
+                            'reject_url' => route('dashboards.reject', ['id' => $a->id, 'approval' => 'time_event']),
+                            'confirm_message' => "Yakin melakukan ",
+                        ]);
+                    }
+                })
+                // ->orderColumn('id', '-id $1')
+                ->escapeColumns([2])
+                ->make(true);
+        }
+    }
+
+    public function attendanceQuotaApproval(Request $request)
+    {
+      // response untuk datatables absences approval
+        if ($request->ajax()) {
+
+            // // ambil data persetujuan attendanceQuota, WARNING nested relationship eager loading
+            $attendanceQuotaApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
+                ->with(['status:id,description', 'attendanceQuota.user.employee', 'attendanceQuota.attendanceQuotaType']);
+
+            // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
+            return Datatables::of($attendanceQuotaApprovals)
+                ->editColumn('attendanceQuota_id', function (AbsenceApproval $a) {
+                    return '<address>' .'<strong>'. 
+                    $a->attendanceQuota->deduction . ' hari cuti</strong><br>' .
+                    $a->attendanceQuota->attendanceQuotaType->text . '<br>' .
+                    $a->attendanceQuota->formattedStartDate . ' - ' . 
+                    $a->attendanceQuota->formattedEndDate . '<br>' .
+                    '</address>';
+                })
+                ->editColumn('attendanceQuota.user.personnel_no', function (AbsenceApproval $a) {
+                    return $a->attendanceQuota->personnel_no . ' - ' . 
+                    $a->attendanceQuota->user->name . '<br>' . 
+                    $a->attendanceQuota->user->employee->position_name;
+                })
+                ->editColumn('action', function (AbsenceApproval $a) {
+                    if ($a->isNotWaiting) {
+                        return '<span class="label '. (($a->isApproved) ? 'label-primary' : 'label-danger') . '">' .
+                        $a->status->description . '</span>' . '<br>' .
+                        '<small>' . $a->updated_at . 
+                        '</small><br><small>' . $a->text . '</small>';
+                    } else {
+                        return view('dashboards._action', [
+                            'model' => $a,
+                            'approve_url' => route('dashboards.approve', ['id' => $a->id, 'approval' => 'attendance_quota']),
+                            'reject_url' => route('dashboards.reject', ['id' => $a->id, 'approval' => 'attendance_quota']),
+                            'confirm_message' => "Yakin melakukan ",
+                        ]);
+                    }
+                })
+                // ->orderColumn('id', '-id $1')
+                ->escapeColumns([2])
+                ->make(true);
+        }
+    }
+
+    public function approve(Request $request, $approval, $id)
+    {
+        // poor database design
+        switch ($approval) {
+            case 'absence': $approved = AbsenceApproval::find($id); break;
+            case 'attendance': $approved = AttendanceApproval::find($id); break;
+            case 'time_event': $approved = TimeEventApproval::find($id); break;
+            case 'attendance_quota': $approved = OvertimeApproval::find($id); break;
+        }
+
+        if (!$approved->update($request->all() 
             + ['status_id' => Status::approveStatus()->id])) {
             // kembali lagi jika gagal
             return redirect()->back();
@@ -201,12 +262,17 @@ class HomeController extends Controller
         return redirect()->route('dashboards.employee');
     }
 
-    public function reject(Request $request, $id)
+    public function reject(Request $request, $approval, $id)
     {
-        // cari berdasarkan id kemudian update berdasarkan request + status reject
-        $absenceApproval = AbsenceApproval::find($id);
+        // poor database design
+        switch ($approval) {
+            case 'absence': $approved = AbsenceApproval::find($id); break;
+            case 'attendance': $approved = AttendanceApproval::find($id); break;
+            case 'time_event': $approved = TimeEventApproval::find($id); break;
+            case 'attendance_quota': $approved = AttendanceQuota::find($id); break;
+        }
 
-        if (!$absenceApproval->update($request->all() 
+        if (!$approved->update($request->all() 
             + ['status_id' => Status::rejectStatus()->id])) {
             // kembali lagi jika gagal
             return redirect()->back();

@@ -45,7 +45,6 @@
 
     <div class="row">
       <!-- begin absence_type field -->
-      <!-- This field is not sent via form -->
       <div class="col-xs-6">
         <div class="form-group">
           {!! Form::label('absence_type', 'Jenis Cuti') !!}
@@ -57,9 +56,7 @@
         </div>
       </div>
       <!-- end absence_type field -->
-
       <!-- begin number field -->
-      <!-- This field is not sent via form -->
       <div class="col-xs-3">
         <div class="form-group">
           {!! Form::label('number', 'Sisa Cuti') !!}

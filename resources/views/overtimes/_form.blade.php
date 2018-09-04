@@ -1,4 +1,3 @@
-
   <!-- begin datepicker range -->
   <div id="datepicker-range" data-date-format="yyyy-mm-dd" 
   data-date-start-date="-29d" data-date-end-date="+6d">
@@ -23,69 +22,79 @@
     </div>
     <!-- end personnel_no field -->
 
-    <!-- begin multiple date input range fields -->
-    <div class="form-group{{ $errors->has('start_date') | $errors->has('end_date')  ? ' has-error' : '' }}">
-      <label>Rentang Tanggal </label>
-      <div class="input-group">
-        {!! Form::text('start_date', null, 
-          ['class'=>'form-control', 'placeholder'=>'Tanggal mulai', 
-          'readonly'=>'true', 'id'=>'start_date', 'data-parsley-required' => 'true'])
-        !!}
-        <span class="input-group-addon">to</span> 
-        {!! Form::text('end_date', null, 
-        ['class'=>'form-control', 'placeholder'=>'Tanggal
-        berakhir', 'readonly'=>'true', 'id'=>'end_date', 'data-parsley-required' => 'true']) 
-        !!}
-      </div>
-      {!! $errors->first('start_date', ' <p class="help-block">:message</p>') !!} 
-      {!! $errors->first('end_date', ' <p class="help-block">:message</p>') !!}
-    </div>
-    <!-- end multiple date input range fields -->
-
     <div class="row">
-      <!-- begin absence_type field -->
-      <!-- This field is not sent via form -->
+      <!-- begin start_date field -->
       <div class="col-xs-6">
-        <div class="form-group">
-          {!! Form::label('absence_type', 'Jenis Cuti') !!}
+        <div class="form-group{{ $errors->has('start_date') ? ' has-error' : '' }}">
+          {!! Form::label('start_date', 'Tanggal Mulai') !!}
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
-            <input type="text" class="form-control" id="absence_type" 
-            placeholder="Jenis Cuti" value="" readonly>
+            <input type="text" class="form-control" id="start_date" 
+            placeholder="Mulai" value="" readonly>
           </div>
+          {!! $errors->first('start_date', ' <p class="help-block">:message</p>') !!}
         </div>
       </div>
-      <!-- end absence_type field -->
+      <!-- end start_date field -->
 
-      <!-- begin number field -->
-      <!-- This field is not sent via form -->
-      <div class="col-xs-3">
-        <div class="form-group">
-          {!! Form::label('number', 'Sisa Cuti') !!}
-          <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-            <input type="text" class="form-control" id="number" 
-              placeholder="Durasi" value="" readonly>
-          </div>
-        </div>
-      </div>
-      <!-- end number field -->
-
-      <!-- begin deduction field -->
-      <div class="col-xs-3">
-        <div class="form-group{{ $errors->has('deduction') ? ' has-error' : '' }}">
-          {!! Form::label('deduction', 'Durasi') !!}
+      <!-- begin end_date field -->
+      <div class="col-xs-6">
+        <div class="form-group{{ $errors->has('end_date') ? ' has-error' : '' }}">
+          {!! Form::label('end_date', 'Tanggal berakhir') !!}
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-            {!! Form::text('deduction', null, ['class'=>'form-control',
-            'placeholder'=>'Durasi', 'readonly'=>'true', 'id'=>'deduction']) !!}
+            {!! Form::text('end_date', null, ['class'=>'form-control',
+            'placeholder'=>'Berakhir', 'readonly'=>'true', 'id'=>'end_date']) !!}
           </div>
-          {!! $errors->first('deduction', '
-          <p class="help-block">:message</p>') !!}
+          {!! $errors->first('end_date', ' <p class="help-block">:message</p>') !!}
         </div>
       </div>
-      <!-- end deduction field -->
+      <!-- end end_date field -->
     </div>
+
+    <!-- begin from & to fields -->
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="form-group">
+            {!! Form::label('from', 'Mulai') !!}
+            <div class="input-group bootstrap-timepicker">
+                {!! Form::text('from', null, 
+                  ['class'=>'form-control', 'placeholder'=>'Tanggal mulai', 
+                  'id'=>'from', 'data-parsley-required' => 'true'])
+                !!}
+                <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+              </div>
+              {!! $errors->first('from', ' <p class="help-block">:message</p>') !!}          
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="form-group">
+            {!! Form::label('to', 'Berakhir') !!}
+            <div class="input-group bootstrap-timepicker">
+                {!! Form::text('to', null, 
+                ['class'=>'form-control', 'placeholder'=>'Tanggal
+                berakhir', 'id'=>'to', 'data-parsley-required' => 'true']) 
+                !!}
+                <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+              </div>
+              {!! $errors->first('to', ' <p class="help-block">:message</p>') !!}
+        </div>
+      </div>
+    </div>
+    <!-- end from & to fields -->
+
+    <!-- begin overtime_reason field -->
+      <div class="form-group">
+        {!! Form::label('overtime_reason', 'Alasan Lembur') !!}
+        <div class="input-group">
+          {!! Form::select('time_event_type_id', $overtime_reason,
+          null, ['class'=>'form-control','id'=>'time_event_type_id', 
+          'data-parsley-required' => 'true',  'placeholder' => 'Silahkan pilih']); 
+        !!}
+        </div>
+        {!! $errors->first('overtime_reason', ' <p class="help-block">:message</p>') !!}
+      </div>
+      <!-- end overtime_reason field -->
 
     <!-- begin approver field -->
     <!-- This field is not sent via form -->

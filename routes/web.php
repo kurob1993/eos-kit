@@ -31,8 +31,8 @@ Route::group([
         Route::get('debug', 'DebugController@debug');
 
         // route untuk persetujuan di dashboard
-        Route::post('approve/{id}','HomeController@approve')->name('dashboards.approve');
-        Route::post('reject/{id}','HomeController@reject')->name('dashboards.reject');
+        Route::post('approve/{approval}/{id}','HomeController@approve')->name('dashboards.approve');
+        Route::post('reject/{approval}/{id}','HomeController@reject')->name('dashboards.reject');
         Route::get('absence_approval', 'HomeController@absenceApproval')->name('dashboards.absence_approval');
         Route::get('attendance_approval', 'HomeController@attendanceApproval')->name('dashboards.attendance_approval');
 
