@@ -52,21 +52,21 @@ class TimeEventObserver
         $timeEvent->save();
 
         // mencari atasan dari karyawan yang mengajukan time_events
-        $closestBoss = $employee->closestBoss();
+        $closestBoss = $employee->superintendentBoss();
 
         // mencari direktur dari karyawan yang mengajukan time_event
         $director = $employee->director();
 
         // buat record untuk time_event approval
-        $timeEvent_approval = new TimeEventApproval();
+        $timeEventApproval = new TimeEventApproval();
 
         // foreign key pada time_event approval
-        $timeEvent_approval->time_event_id = $timeEvent->id;
+        $timeEventApproval->time_event_id = $timeEvent->id;
 
         // NEED TO IMPLEMENT FLOW STAGE
         // mengambil status dari firststatus
-        $timeEvent_approval->sequence = 1;
-        $timeEvent_approval->status_id = Status::firstStatus()->id;
+        $timeEventApproval->sequence = 1;
+        $timeEventApproval->status_id = Status::firstStatus()->id;
 
         // JIKA karyawan tersebut mempunyai atasan langsung
         // maka simpan data atasan sebagai time_event approval
@@ -76,26 +76,26 @@ class TimeEventObserver
         // atau deputi (UTOMO NUGROHO)
         if ($closestBoss) {
             // menyimpan personnel_no dari closest boss
-            $timeEvent_approval->regno = $closestBoss->personnel_no;
+            $timeEventApproval->regno = $closestBoss->personnel_no;
 
             // menyimpan data persetujuan
-            $timeEvent_approval->save();
+            $timeEventApproval->save();
 
         } else {
             // bypass regno menggunakan admin  dan sequence
             $admin = Role::retrieveAdmin();
-            $timeEvent_approval->regno = $admin->personnel_no;
-            $timeEvent_approval->sequence = 1;
+            $timeEventApproval->regno = $admin->personnel_no;
+            $timeEventApproval->sequence = 1;
 
             // menyimpan data persetujuan
-            $timeEvent_approval->save();
+            $timeEventApproval->save();
 
             // mengubah status menjadi approved
-            $timeEvent_approval->status_id = Status::ApproveStatus()->id;
-            $timeEvent_approval->text = 'Disetujui oleh Admin';
+            $timeEventApproval->status_id = Status::ApproveStatus()->id;
+            $timeEventApproval->text = 'Disetujui oleh Admin';
 
             // menyimpan perubahan agar mentrigger observer
-            $timeEvent_approval->save();
+            $timeEventApproval->save();
         }
     }
 

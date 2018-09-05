@@ -65,4 +65,9 @@ class AttendanceApproval extends Model
     {
         return $query->where('status_id', Status::firstStatus()->id);
     }
+
+    public function approve()
+    {
+        $aqas = AttendanceQuota::where('attendance_quota_id')->get();
+    }
 }

@@ -33,6 +33,18 @@ class AttendanceQuota extends Model
     public static $rules = [
         
     ];
+    
+    public function user()
+    {
+        // many-to-one relationship dengan User
+        return $this->belongsTo('App\User', 'personnel_no', 'personnel_no');
+    }
+
+    public function stage()
+    {
+        // many-to-one relationship dengan Stage
+        return $this->belongsTo('App\Models\Stage')->withDefault();
+    }
 
     public function attendanceQuotaType()
     {

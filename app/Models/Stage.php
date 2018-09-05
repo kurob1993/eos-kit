@@ -36,6 +36,18 @@ class Stage extends Model
       return $this->belongsToMany('App\Models\Flow')->withPivot('sequence');
     }
 
+    public function scopeWaitingApprovalStage($query)
+    {
+        // NEED TO IMPLEMENT CONFIGURATION
+        return $query->find(1);
+    }
+    
+    public function scopeSentToSapStage($query)
+    {
+        // NEED TO IMPLEMENT CONFIGURATION
+        return $query->find(2);
+    }
+    
     public function scopeSuccessStage($query)
     {
         // NEED TO IMPLEMENT CONFIGURATION
@@ -52,17 +64,5 @@ class Stage extends Model
     {
         // NEED TO IMPLEMENT CONFIGURATION
         return $query->find(5);
-    }
-
-    public function scopeWaitingApprovalStage($query)
-    {
-        // NEED TO IMPLEMENT CONFIGURATION
-        return $query->find(1);
-    }
-
-    public function scopeSentToSapStage($query)
-    {
-        // NEED TO IMPLEMENT CONFIGURATION
-        return $query->find(2);
     }
 }

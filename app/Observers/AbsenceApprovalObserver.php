@@ -29,7 +29,7 @@ class AbsenceApprovalObserver
       if ($absenceApproval->isApproved) {
         
         // NEED TO IMPLEMENT FLOW STAGE (send to SAP)
-        $absence->stage_id = 2;
+        $absence->stage_id = Stage::sentToSapStage();
 
         // message history
         $messageAttribute = sprintf('Leave approved from %s to %s',

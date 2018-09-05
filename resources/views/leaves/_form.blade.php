@@ -1,3 +1,7 @@
+  {{-- 
+    Form Elements: personnel_no, start_date, end_date, deduction,
+    permit_type, note, address, delegation (if have subordinates)
+  --}}
 
   <!-- begin datepicker range -->
   <div id="datepicker-range" data-date-format="yyyy-mm-dd" 

@@ -7,16 +7,16 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
-use App\Models\TimeEvent;
+use App\Models\Attendance;
 
-class TimeEventSentToSapMessage extends Notification implements ShouldQueue
+class PermitSentToSapMessage extends Notification implements ShouldQueue
 {
     use Queueable;
-    public $timeEvent;
+    public $attendance;
 
-    public function __construct(TimeEvent $timeEvent)
+    public function __construct(Attendance $attendance)
     {
-        $this->timeEvent = $timeEvent;
+        $this->attendance = $attendance;
     }
 
     public function via($notifiable)
@@ -27,26 +27,26 @@ class TimeEventSentToSapMessage extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         // judul email
-        $subject = sprintf('%s: Pengajuan tidak slash Anda telah berhasil masuk ke SAP',
-            config('emss.modules.time_events.text') );
+        $subject = sprintf('%s: Pengajuan izin Anda telah berhasil masuk ke SAP',
+            config('emss.modules.permits.text') );
             
         // kalimat pembuka
         $greeting = sprintf('Selamat %s!', $notifiable->name);
 
         // catatan persetujuan
         $sendToSapTimestamp = sprintf('Masuk SAP pada : %s', 
-            $this->timeEvent->updated_at);
+            $this->attendance->updated_at);
 
-        // link untuk melihat tidak slash
-        $url = route('time_events.index');
+        // link untuk melihat izin
+        $url = route('permits.index');
         
         // mengirim email
         return (new MailMessage)
                     ->subject($subject)
                     ->greeting($greeting)
-                    ->line('Pengajuan tidak slash Anda telah berhasil masuk ke SAP.')
+                    ->line('Pengajuan izin Anda telah berhasil masuk ke SAP.')
                     ->line($sendToSapTimestamp)
-                    ->action('Lihat Tidak Slash', $url);
+                    ->action('Lihat Izin', $url);
     }
 
     public function toArray($notifiable)

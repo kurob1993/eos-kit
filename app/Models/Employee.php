@@ -52,13 +52,28 @@ class Employee extends Model
             ->first();
     }
 
+    public function subordinates()
+    {
+        // mencari semua bawahan-bawahan
+        $structs = \App\Models\StructDisp::subordinatesOf($this->personnel_no)->get();
+
+        // mengiterasi bawahan-bawahan dan membuat collection baru
+        $subordinates = $structs->map(function ($item, $key) {
+            // membuat & mengembalikan Employee masing-masing bawahan
+            return \App\Models\Employee::where('personnel_no', $item->empnik)->first();
+        });
+
+        // mengembalikan collection of Employee
+        return $subordinates;
+    }
+
     public function closestBoss()
     {
         // mencari atasan satu tingkat
         $s = $this->structDisp()->closestBossOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? false : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
+        return (is_null($s)) ? [] : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
     }
 
     public function bosses()
@@ -76,28 +91,13 @@ class Employee extends Model
         return $bosses;
     }
 
-    public function subordinates()
-    {
-        // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::subordinatesOf($this->personnel_no)->get();
-
-        // mengiterasi bawahan-bawahan dan membuat collection baru
-        $subordinates = $structs->map(function ($item, $key) {
-            // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::where('personnel_no', $item->empnik)->first();
-        });
-
-        // mengembalikan collection of Employee
-        return $subordinates;
-    }
-
     public function superintendentBoss()
     {
         // mencari semua atasan
         $s = $this->structDisp()->superintendentOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? false : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
+        return (is_null($s)) ? [] : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
     }    
 
     public function managerBoss()
@@ -106,7 +106,7 @@ class Employee extends Model
         $s = $this->structDisp()->managerOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? false : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
+        return (is_null($s)) ? [] : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
     }    
 
     public function generalManagerBoss()
@@ -115,6 +115,6 @@ class Employee extends Model
         $s = $this->structDisp()->generalManagerOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? false : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
+        return (is_null($s)) ? [] : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
     }    
 }

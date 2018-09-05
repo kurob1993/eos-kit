@@ -57,6 +57,6 @@ class TimeEventApprovalObserver
 
       // sistem mengirim email notifikasi dari atasan ke
       // karyawan yang mengajukan         
-      $to->notify(new LeaveApprovalMessage($from, $timeEventApproval));
+      $to->notify(new TimeEventApprovalMessage($from, $timeEventApproval));
     }
 }

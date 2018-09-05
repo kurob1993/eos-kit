@@ -17,43 +17,20 @@ class AttendanceObserver
 {
     public function creating(Attendance $attendance)
     {
-        // jika attendance adalah izin tahunan / izin besar (leaves)
-        if ($attendance->isAPermit) {
-            // ambil kuota izin berdasarkan tanggal mulai & berakhir izin
-            $attendance_quota = AttendanceQuota::activeAttendanceQuotaOf(
-                Auth::user()->personnel_no, $attendance->start_date, $attendance->end_date)
-                ->first();
-    
-            // apakah sisa izin (balance)  kurang dari pengajuan (deduction)?
-            if ($attendance_quota->balance < $attendance->deduction) {
-                Session::flash("flash_notification", [
-                    "level" => "danger",
-                    "message" => "Tidak dapat mengajukan izin karena jumlah pengajuan izin "
-                    . "melebihi sisa izin periode saat ini "
-                    . "(Sisa Cuti =" . $attendance_quota->balance . " < pengajuan izin="
-                    . $attendance->deduction . "). Silahkan ajukan izin dengan jumlah "
-                    . "kurang dari/sama dengan sisa izin.",
-                ]);
-                return false;
-            }
-            // apakah tanggal izin sudah pernah dilakukan sebelumnya (intersection)
-            // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
-            // JIKA DENIED tidak termasuk intersected
-            $intersected = Attendance::where('personnel_no', Auth::user()->personnel_no)
-                ->leavesOnly()
-                ->intersectWith($attendance->start_date, $attendance->end_date)
-                ->first();
-            if (sizeof($intersected) > 0) {
-                Session::flash("flash_notification", [
-                    "level" => "danger",
-                    "message" => "Tidak dapat mengajukan izin karena tanggal pengajuan "
-                    . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
-                    . $intersected->formattedPeriod . ").",
-                ]);
-                return false;
-            } else {
-                // jika tidak, attendance adalah izin (permits)
-            }
+        // apakah tanggal izin sudah pernah dilakukan sebelumnya (intersection)
+        // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
+        // JIKA DENIED tidak termasuk intersected
+        $intersected = Attendance::where('personnel_no', Auth::user()->personnel_no)
+            ->intersectWith($attendance->start_date, $attendance->end_date)
+            ->first();
+        if (sizeof($intersected) > 0) {
+            Session::flash("flash_notification", [
+                "level" => "danger",
+                "message" => "Tidak dapat mengajukan izin karena tanggal pengajuan "
+                . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
+                . $intersected->formattedPeriod . ").",
+            ]);
+            return false;
         }
     }
 
@@ -62,21 +39,11 @@ class AttendanceObserver
         // karyawan yang membuat attendance
         $employee = Auth::user()->employee()->first();
 
-        // mendapatkan attendance_type_id dari kuota izin yang digunakan
-        $attendance_type_id = AttendanceQuota::activeAttendanceQuotaOf(
-            Auth::user()
-                ->personnel_no, $attendance->start_date, $attendance->end_date)
-                ->first()
-            ->attendance_type_id;
-
         // mendapatkan flow_id untuk attendances dari file config
         // mencari sequence pertama dari flow_id diatas
         // mengembalikan flowstage dan mengakses stage_id
         $flow_id = config('emss.flows.attendances');
         $stage_id = FlowStage::firstSequence($flow_id)->first()->stage_id;
-
-        // mengisi attendance type dari server bukan dari request
-        $attendance->attendance_type_id = $attendance_type_id;
 
         // mengisi stage id melalui mekanisme flow stage
         $attendance->stage_id = $stage_id;
@@ -136,18 +103,6 @@ class AttendanceObserver
     {
         // apakah sudah selesai
         if ($attendance->isSuccess) {
-            // mencari data kuota izin yang dipakai
-            $attendanceQuota = AttendanceQuota::activeAttendanceQuota($attendance->personnel_no)
-                ->first();
-
-            // menambah pemakaian izin pada periode tersebut
-            // seharusnya ada tabel history (many to many)
-            // pemakaian izin berkorelasi dengan attendance quota
-            $attendanceQuota->deduction += $attendance->deduction;
-
-            // simpan data kuota izin
-            $attendanceQuota->save();
-
             // to adalah karyawan yang mengajukan
             $to = $attendance->user()->first();
 

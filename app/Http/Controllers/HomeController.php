@@ -243,15 +243,19 @@ class HomeController extends Controller
             case 'absence': $approved = AbsenceApproval::find($id); break;
             case 'attendance': $approved = AttendanceApproval::find($id); break;
             case 'time_event': $approved = TimeEventApproval::find($id); break;
-            case 'attendance_quota': $approved = OvertimeApproval::find($id); break;
+            case 'attendance_quota': $approved = AttendanceQuotaApproval::find($id); break;
         }
 
-        if (!$approved->update($request->all() 
-            + ['status_id' => Status::approveStatus()->id])) {
-            // kembali lagi jika gagal
-            return redirect()->back();
+        if ($approval == 'attendance_quota') {
+            $approved->approve();
+        } else {
+                if (!$approved->update($request->all() 
+                + ['status_id' => Status::approveStatus()->id])) {
+                // kembali lagi jika gagal
+                return redirect()->back();
+            }
         }
-
+        
         // tampilkan pesan bahwa telah berhasil menyetujui
         Session::flash("flash_notification", [
             "level" => "success",

@@ -1,3 +1,8 @@
+  {{-- 
+    Form Elements: personnel_no, start_date, day_assignment, from,
+    to, overtime_reason, note, delegation (if have subordinates)
+  --}}
+
 <div class="col-lg-4">
   @include('layouts._flash')
   <div class="alert alert-success fade in">
@@ -69,7 +74,7 @@
     <!-- begin from & to fields -->
     <div class="row">
       <div class="col-xs-6">
-        <div class="form-group">
+        <div class="form-group{{ $errors->has('from') ? ' has-error' : '' }}">
             {!! Form::label('from', 'Mulai') !!}
             <div class="input-group bootstrap-timepicker">
                 {!! Form::text('from', null, 
@@ -85,7 +90,7 @@
         </div>
       </div>
       <div class="col-xs-6">
-        <div class="form-group">
+        <div class="form-group{{ $errors->has('to') ? ' has-error' : '' }}">
             {!! Form::label('to', 'Berakhir') !!}
             <div class="input-group bootstrap-timepicker">
                 {!! Form::text('to', null, 
@@ -104,7 +109,7 @@
     <!-- end from & to fields -->
 
     <!-- begin overtime_reason field -->
-      <div class="form-group">
+      <div class="form-group{{ $errors->has('overtime_reason') ? ' has-error' : '' }}">
         {!! Form::label('overtime_reason', 'Alasan Lembur') !!}
           {!! Form::select('overtime_reason', $overtime_reason,
           null, ['class'=>'form-control', 'id'=>'overtime_reason', 
@@ -114,25 +119,25 @@
       </div>
       <!-- end overtime_reason field -->
 
-    <!-- begin closest_approver field -->
+    <!-- begin superintendent_approver field -->
     <!-- This field is not sent via form -->
-    <div class="form-group{{ $errors->has('closest_approver') ? ' has-error' : '' }}">
-        {!! Form::label('closest_approver', 'Superintendent') !!}
-        <select class="form-control boss-selectize">
-            <option value="" selected>Piilh Atasan</option>
+    <div class="form-group{{ $errors->has('superintendent_approver') ? ' has-error' : '' }}">
+        {!! Form::label('superintendent_approver', 'Superintendent') !!}
+        <select class="form-control superintendent-selectize">
+            <option value="" selected>Pilih Atasan</option>
           </select>
       </div>
-      <!-- end closest_approver field -->
+      <!-- end superintendent_approver field -->
 
-      <!-- begin two_step_above_approver field -->
+      <!-- begin manager_approver field -->
     <!-- This field is not sent via form -->
-    <div class="form-group{{ $errors->has('two_step_above_approver') ? ' has-error' : '' }}">
-        {!! Form::label('two_step_above_approver', 'Manager') !!}
-        <select class="form-control one-boss-above-selectize">
-            <option value="" selected>Piilh Atasan</option>
+    <div class="form-group{{ $errors->has('manager_approver') ? ' has-error' : '' }}">
+        {!! Form::label('manager_approver', 'Manager') !!}
+        <select class="form-control manager-selectize">
+            <option value="" selected>Pilih Atasan</option>
           </select>
       </div>
-      <!-- end two_step_above_approver field -->
+      <!-- end manager_approver field -->
 
       <!-- begin submit button -->
     <div class="form-group pull-right">

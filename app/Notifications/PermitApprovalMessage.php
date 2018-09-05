@@ -7,21 +7,21 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
-use App\Models\TimeEventApproval;
+use App\Models\AttendanceApproval;
 
-class TimeEventApprovalMessage extends Notification implements ShouldQueue
+class LeaveApprovalMessage extends Notification implements ShouldQueue
 {
     use Queueable;
     public $approved;
     public $fromUser;
-    public $timeEventApproval;
+    public $attendanceApproval;
 
-    public function __construct(User $user, TimeEventApproval $timeEventApproval)
+    public function __construct(User $user, AttendanceApproval $attendanceApproval)
     {
         $this->fromUser = $user;
-        $this->approved = $timeEventApproval->isApproved;
+        $this->approved = $attendanceApproval->isApproved;
         // lazy eager loading
-        $this->timeEventApproval = $timeEventApproval->load('absence.stage');
+        $this->attendanceApproval = $attendanceApproval->load('attendance.stage');
     }
 
     public function via($notifiable)
@@ -32,10 +32,10 @@ class TimeEventApprovalMessage extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         // judul email
-        $subjectText = ($this->approved) ? 'Pengajuan tidak slash Anda telah disetujui' :
-            'Pengajuan tidak slash Anda telah ditolak';
+        $subjectText = ($this->approved) ? 'Pengajuan izin Anda telah disetujui' :
+            'Pengajuan izin Anda telah ditolak';
         $subject = sprintf('%s: %s oleh %s!',
-            config('emss.modules.time_events.text'), $subjectText, $this->fromUser->name );
+            config('emss.modules.permits.text'), $subjectText, $this->fromUser->name );
         
         // kalimat pembuka
         $greetingText = ($this->approved) ? 'Selamat' : 'Mohon maaf';
@@ -43,14 +43,14 @@ class TimeEventApprovalMessage extends Notification implements ShouldQueue
 
         // catatan persetujuan
         $approvalNotes = sprintf('Catatan: %s', 
-            $this->timeEventApproval->text);
+            $this->attendanceApproval->text);
 
         // catatan tahapan persetujuan
         $currentStageText = sprintf('Tahapan pengajuan: %s',
-            $this->timeEventApproval->absence->stage->description);
+            $this->attendanceApproval->attendance->stage->description);
 
-        // link untuk melihat tidak slash
-        $url = route('time_events.index');
+        // link untuk melihat izin
+        $url = route('permits.index');
         
         // mengirim email
         return (new MailMessage)
@@ -59,7 +59,7 @@ class TimeEventApprovalMessage extends Notification implements ShouldQueue
                     ->line($subjectText)
                     ->line($approvalNotes)
                     ->line($currentStageText)
-                    ->action('Lihat Tidak Slash', $url);
+                    ->action('Lihat Izin', $url);
     }
 
     public function toArray($notifiable)

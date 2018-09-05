@@ -2,16 +2,16 @@
 
 namespace App\Observers;
 
+use Session;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\LeaveSentToSapMessage;
+use App\Role;
+use App\User;
 use App\Models\Absence;
 use App\Models\AbsenceApproval;
 use App\Models\AbsenceQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
-use App\Notifications\LeaveSentToSapMessage;
-use App\Role;
-use App\User;
-use Illuminate\Support\Facades\Auth;
-use Session;
 
 class AbsenceObserver
 {
@@ -36,24 +36,22 @@ class AbsenceObserver
                 ]);
                 return false;
             }
-            // apakah tanggal cuti sudah pernah dilakukan sebelumnya (intersection)
-            // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
-            // JIKA DENIED tidak termasuk intersected
-            $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
-                ->leavesOnly()
-                ->intersectWith($absence->start_date, $absence->end_date)
-                ->first();
-            if (sizeof($intersected) > 0) {
-                Session::flash("flash_notification", [
-                    "level" => "danger",
-                    "message" => "Tidak dapat mengajukan cuti karena tanggal pengajuan "
-                    . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
-                    . $intersected->formattedPeriod . ").",
-                ]);
-                return false;
-            } else {
-                // jika tidak, absence adalah izin (permits)
-            }
+        }
+
+        // apakah tanggal absence sudah pernah dilakukan sebelumnya (intersection)
+        // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
+        // JIKA DENIED tidak termasuk intersected
+        $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
+            ->intersectWith($absence->start_date, $absence->end_date)
+            ->first();
+        if (sizeof($intersected) > 0) {
+            Session::flash("flash_notification", [
+                "level" => "danger",
+                "message" => "Tidak dapat melakukan pengajuan pada tanggal tersebut "
+                . "karena sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
+                . $intersected->formattedPeriod . ").",
+            ]);
+            return false;
         }
     }
 

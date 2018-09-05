@@ -79,7 +79,7 @@
     $("#from, #to").timepicker({ })
 }, 
 (handleSelectpicker = function() {
-  var bossOptions = {
+  var minManagerOptions = {
     persist: false,
     valueField: "personnel_no",
     labelField: "name",
@@ -96,27 +96,12 @@
       }
     },
   };
-  $.ajax({
-  url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/superintendentBoss',
-      type: 'GET',
-      dataType: 'json',
-      error: function() {},
-      success: function(res) {
-        var newOptions = [];
-        var o = {name: res.name, personnel_no: res.personnel_no};
-        newOptions.push(o);
-        bossOptions.options = newOptions;
-        var bossSelect = $(".boss-selectize").selectize(bossOptions);
-        var selectize = bossSelect[0].selectize;
-        selectize.setValue(res.personnel_no, false);
-    }
-  });
 
-   var bossAboveOptions = {
+  var minSuperintendentOptions = {
     persist: false,
-    valueField: "name",
-    labelField: "personnel_no",
-    searchField: ["personnel_no", "name"],
+    valueField: "personnel_no",
+    labelField: "name",
+    searchField: ["name", "personnel_no"],
     options: [ ],
     render: {
       item: function(item, escape) {
@@ -127,23 +112,40 @@
         var caption = item.personnel_no ? item.name : null;
         return ( "<div>" + '<span class="label label-default">' + escape(label) + "</span>&nbsp;" + (caption ? '<span class="caption">' + escape(caption) + "</span>" : "") + "</div>" );
       }
-    }
+    },
   };
+
   $.ajax({
-  url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/managerBoss',
+  url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/minManagerBoss',
       type: 'GET',
       dataType: 'json',
       error: function() {},
       success: function(res) {
-        var managerOptions = [];
+        var newOptions = [];
         var o = {name: res.name, personnel_no: res.personnel_no};
-        managerOptions.push(o);
-        bossAboveOptions.options = managerOptions;
-        var subSelect = $(".one-boss-above-selectize").selectize(bossAboveOptions);
-        var selectizex = subSelectp.selectize;
-        selectizex.setValue(res.personnel_no, false);
+        newOptions.push(o);
+        minManagerOptions.options = newOptions;
+        var bossSelect = $(".manager-selectize").selectize(minManagerOptions);
+        var selectize = bossSelect[0].selectize;
+        selectize.setValue(res.personnel_no, false);
     }
-  }); 
+  });
+
+  $.ajax({
+  url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/minSuperintendentBoss',
+      type: 'GET',
+      dataType: 'json',
+      error: function() {},
+      success: function(res) {
+        var newOptions = [];
+        var o = {name: res.name, personnel_no: res.personnel_no};
+        newOptions.push(o);
+        minSuperintendentOptions.options = newOptions;
+        var bossSelect = $(".superintendent-selectize").selectize(minSuperintendentOptions);
+        var selectize = bossSelect[0].selectize;
+        selectize.setValue(res.personnel_no, false);
+    }
+  });
 }),
 
 (OvertimePlugins = (function() {

@@ -3,7 +3,7 @@
 @section('content')
 <!-- begin #page-container -->
 @component('layouts.employee._page-container', ['page_header' => 'Employee Dashboard'])
-<div class="panel panel-prussian">
+{{-- <div class="panel panel-prussian">
   <div class="panel-heading">
     <h4 class="panel-title">Kotak Masuk Persetujuan</h4>
   </div>
@@ -18,6 +18,68 @@
       {!! $attendanceTable->table(['class'=>'table table-striped']) !!}
     </div>
   </div>
+</div> --}}
+<div class="row">
+  <div class="col-lg-12 col-xl-9">
+      <!-- begin of dashboard nav-tabs  -->
+      <ul class="nav nav-tabs">
+          <li class="active">
+              <a href="#tab-leaves" data-toggle="tab" aria-expanded="true"> Cuti </a>
+          </li>
+          <li class="">
+              <a href="#tab-permits" data-toggle="tab" aria-expanded="true"> Izin </a>
+          </li>
+          <li class="">
+              <a href="#tab-time-events" data-toggle="tab" aria-expanded="true"> Tidak Slash </a>
+          </li>
+          <li class="">
+              <a href="#tab-overtimes" data-toggle="tab" aria-expanded="true"> Lembur </a>
+          </li>
+      </ul>
+      <!-- end of dashboard nav-tabs  -->
+
+      <!-- begin of tab-content  -->
+      <div class="tab-content">
+          <!-- begin of leaves tab  -->
+          <div class="tab-pane fade active in" id="tab-leaves">
+              <div class="panel-body p-0">
+                  <div class="table-responsive">
+                    {!! $absenceTable->table(['class'=>'table table-striped']) !!}
+                  </div>
+                </div>
+          </div>
+          <!-- end of leaves tab  -->
+
+          <!-- begin of permits tab  -->
+          <div class="tab-pane fade" id="tab-permits">
+              <div class="panel-body p-0">
+                  <div class="table-responsive">
+                    {!! $attendanceTable->table(['class'=>'table table-striped']) !!}
+                  </div>
+                </div>
+          </div>
+          <!-- end of permits tab  -->
+
+          <!-- begin of time-events tab  -->
+          <div class="tab-pane fade" id="tab-time-events">
+              <div class="panel-body p-0">
+
+              </div>
+          </div>
+          <!-- end of time-events tab  -->
+
+          <!-- begin of overtimes tab  -->
+          <div class="tab-pane fade" id="tab-overtimes">
+              <div class="panel-body p-0">
+
+              </div>
+          </div>
+          <!-- end of overtimes tab  -->
+
+      </div>
+      <!-- begin of tab-content  -->
+  </div>
+
 </div>
 @endcomponent
 <!-- end page container -->

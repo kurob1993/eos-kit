@@ -1,4 +1,3 @@
-
   {{-- 
     Form Elements: personnel_no, start_date, end_date, deduction,
     permit_type, attachment, note, delegation (if have subordinates)
