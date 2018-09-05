@@ -10,17 +10,6 @@
       <div class="panel-heading">
         <h4 class="panel-title">Mengajukan Lembur</h4>
       </div>
-      @include('layouts._flash')
-      <div class="alert alert-success fade in">
-          <i class="fa fa-calendar pull-left"></i>
-          <p>Silahkan pilih tanggal mulai cuti dengan memilih kalender di sebelah kiri.</p>
-          <br />
-          <i class="fa fa-calendar pull-left"></i>
-          <p>Silahkan pilih tanggal berakhir cuti dengan memilih kalender di sebelah kanan.</p>
-          <br />
-          <i class="fa fa-paper-plane pull-left"></i>
-          <p>Pastikan bahwa tanggal yang dipilih tidak terdapat hari libur kerja/nasional di dalam jadwal kerja Anda.</p>
-      </div>
       <div class="panel-body">
         {!! Form::open([
             'url' => route('overtimes.store'), 
@@ -42,6 +31,7 @@
 @endsection
 
 @push('styles')
+<!-- Datepicker -->
 <link href={{ url("/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css") }} rel="stylesheet" />
 <link href={{ url("/plugins/bootstrap-datepicker/css/datepicker3.css") }} rel="stylesheet" />
 <!-- Selectize -->    
@@ -69,49 +59,21 @@
 
 @push('custom-scripts')
 <script>
-(handleDateRangePicker = function() {
-  $("#datepicker-range").datepicker({
-    inputs: $("#datepicker-range-start, #datepicker-range-end")
-  });
-
-  var start = $("#datepicker-range-start");
-  var end = $("#datepicker-range-end");
-
-  function days_diff(s, e) {
-    var diff = new Date(e - s);
-    var days = diff / 1000 / 60 / 60 / 24 + 1;
-    return isNaN(days) ? 1 : days;
-  }
-
-  function today(number) {
-    var today = new Date();
-    var dd = today.getDate() + number;
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    if (dd < 10) {
-      dd = "0" + dd;
-    }
-    if (mm < 10) {
-      mm = "0" + mm;
-    }
-    return yyyy + "-" + mm + "-" + dd;
-  }
-
-  start.datepicker("update", today(0)),
-    end.datepicker("update", today(1)),
-    start.on("changeDate", function() {
-      $("#start_date").val($(this).datepicker("getFormattedDate"));
-      $("#deduction").val(
-        days_diff(start.datepicker("getUTCDate"), end.datepicker("getUTCDate"))
-      );
-    }),
-    end.on("changeDate", function() {
-      $("#end_date").val($(this).datepicker("getFormattedDate"));
-      $("#deduction").val(
-        days_diff(start.datepicker("getUTCDate"), end.datepicker("getUTCDate"))
-      );
+(handleInlineDatePicker) = function() {
+  "use strict";
+  $("#datepicker-inline").datepicker({ 
+    format: 'yyyy-mm-dd',
+    todayHighlight: true,
+    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 5),
+    // datesDisabled: ['2018-09-01'],
     });
-}),  
+  $('#datepicker-inline').on('changeDate', function() {
+    $('#start_date').val(
+        $('#datepicker-inline').datepicker('getFormattedDate')
+    );
+  });    
+}, 
 (handleTimePicker) = function() {
     "use strict";
     $("#from, #to").timepicker({ })
@@ -134,9 +96,8 @@
       }
     },
   };
-
   $.ajax({
-  url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/closestBoss',
+  url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/superintendentBoss',
       type: 'GET',
       dataType: 'json',
       error: function() {},
@@ -149,14 +110,47 @@
         var selectize = bossSelect[0].selectize;
         selectize.setValue(res.personnel_no, false);
     }
-  });  
+  });
+
+   var bossAboveOptions = {
+    persist: false,
+    valueField: "name",
+    labelField: "personnel_no",
+    searchField: ["personnel_no", "name"],
+    options: [ ],
+    render: {
+      item: function(item, escape) {
+        return ( "<div>" + (item.personnel_no ? '<span class="label label-default">' + escape(item.personnel_no) + "</span>&nbsp;" : "") + (item.name ? '<span class="name">' + escape(item.name) + "</span>" : "") + "</div>" );
+      },
+      option: function(item, escape) {
+        var label = item.personnel_no || item.name;
+        var caption = item.personnel_no ? item.name : null;
+        return ( "<div>" + '<span class="label label-default">' + escape(label) + "</span>&nbsp;" + (caption ? '<span class="caption">' + escape(caption) + "</span>" : "") + "</div>" );
+      }
+    }
+  };
+  $.ajax({
+  url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/managerBoss',
+      type: 'GET',
+      dataType: 'json',
+      error: function() {},
+      success: function(res) {
+        var managerOptions = [];
+        var o = {name: res.name, personnel_no: res.personnel_no};
+        managerOptions.push(o);
+        bossAboveOptions.options = managerOptions;
+        var subSelect = $(".one-boss-above-selectize").selectize(bossAboveOptions);
+        var selectizex = subSelectp.selectize;
+        selectizex.setValue(res.personnel_no, false);
+    }
+  }); 
 }),
 
 (OvertimePlugins = (function() {
   "use strict";
   return {
     init: function() {
-      handleDateRangePicker(), handleTimePicker(), handleSelectpicker();
+      handleInlineDatePicker(), handleTimePicker(), handleSelectpicker();
     }
   };
 })());

@@ -81,6 +81,10 @@ class DebugController extends Controller
         // $bosses = \App\Models\StructDisp::closestBossOf('10112');
         // dd($bosses->first()->toArray());
 
+       // mencari atasan superintendent
+        $bosses = \App\Models\StructDisp::SuperintendentOf('11777');
+        dd($bosses->get()->toArray());
+
         // // mencari atasan dari GM
         // $bosses = \App\Models\StructDisp::closestBossOf('10233');
         // dd($bosses->first());
@@ -167,14 +171,17 @@ class DebugController extends Controller
         //     \App\Models\AbsenceApproval::all()
         // );
 
-        $aar = new \App\Http\Resources\AbsenceApprovalResource(\App\Models\AbsenceApproval::find(27));
-
+        // $aar = new \App\Http\Resources\AbsenceApprovalResource(\App\Models\AbsenceApproval::find(27));
         // $aar = (\App\Http\Resources\AbsenceApprovalResource::collection(
         //     \App\Models\AbsenceApproval::where('regno', Auth::user()->personnel_no)
         //         ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType'])
         //     )
         // );
+        // return ($aar);
+        
+        // // mengecek apakah boleh melakukan lembur
+        // var_dump(Auth::user()->employee->allowedForOvertime());
 
-        return ($aar);
+
     }
 }

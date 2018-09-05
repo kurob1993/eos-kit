@@ -1,16 +1,32 @@
-  <!-- begin datepicker range -->
-  <div id="datepicker-range" data-date-format="yyyy-mm-dd" 
-  data-date-start-date="-29d" data-date-end-date="+6d">
-    <div class=" col-lg-4">
-      <h5 class="text-center">Pilih tanggal mulai</h5>
-      <div id="datepicker-range-start" class="datepicker-range"></div>
-    </div>
-    <div class=" col-lg-4">
-      <h5 class="text-center">Pilih tanggal berakhir</h5>
-      <div id="datepicker-range-end" class="datepicker-range"></div>
-    </div>
+<div class="col-lg-4">
+  @include('layouts._flash')
+  <div class="alert alert-success fade in">
+      <i class="fa fa-paper-plane pull-left"></i>
+      <p>Pastikan bahwa tanggal yang dipilih tidak terdapat hari libur kerja/nasional di dalam jadwal kerja Anda.</p>
+      <br />
+      <i class="fa fa-calendar pull-left"></i>
+      <p>Silahkan isi tanggal pengajuan lembur Anda dengan memilih tanggal pada kalender.</p>
+      <br />
+      <i class="fa fa-clock-o pull-left"></i>
+      <p>Silahkan isi keterangan apakah lembur selesai pada hari yang sama atau keesokan hari.</p>
+      <br />
+      <i class="fa fa-clock-o pull-left"></i>
+      <p>Silahkan isi jam mulai dan berakhir lembur Anda dengan memilih jam pada icon <i class="fa fa-clock-o"></i>.</p>
+      <br />
+      <i class="fa fa-sliders pull-left"></i>
+      <p>Silahkan isi jenis lembur Anda.</p>
+      <br />
+  </div>     
+</div>
+
+<!-- begin datepicker inline -->
+<div class="col-lg-4">
+  <h5 class="text-center">Pilih tanggal</h5>
+  <div id="datepicker-inline" class="datepicker-range">
+    <div></div>
   </div>
-  <!-- end datepicker range -->
+</div>
+<!-- end datepicker inline -->
 
   <div class="col-lg-4">
     <!-- begin personnel_no field -->
@@ -37,19 +53,17 @@
       </div>
       <!-- end start_date field -->
 
-      <!-- begin end_date field -->
+      <!-- begin day_assignment field -->
       <div class="col-xs-6">
-        <div class="form-group{{ $errors->has('end_date') ? ' has-error' : '' }}">
-          {!! Form::label('end_date', 'Tanggal berakhir') !!}
-          <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-            {!! Form::text('end_date', null, ['class'=>'form-control',
-            'placeholder'=>'Berakhir', 'readonly'=>'true', 'id'=>'end_date']) !!}
-          </div>
-          {!! $errors->first('end_date', ' <p class="help-block">:message</p>') !!}
+        <div class="form-group{{ $errors->has('day_assignment') ? ' has-error' : '' }}">
+          {!! Form::label('day_assignment', 'Berakhir pada') !!}
+          {!! Form::select('day_asasignment', [ '=' => 'Hari yang sama', '>' => 'Keesokan hari' ],
+            null, ['class'=>'form-control', 'id'=>'day_asasignment', 
+            'data-parsley-required' => 'true', 'placeholder' => 'Silahkan pilih']); !!}
+          {!! $errors->first('day_assignment', ' <p class="help-block">:message</p>') !!}
         </div>
       </div>
-      <!-- end end_date field -->
+      <!-- end day_assignment field -->
     </div>
 
     <!-- begin from & to fields -->
@@ -59,8 +73,11 @@
             {!! Form::label('from', 'Mulai') !!}
             <div class="input-group bootstrap-timepicker">
                 {!! Form::text('from', null, 
-                  ['class'=>'form-control', 'placeholder'=>'Tanggal mulai', 
-                  'id'=>'from', 'data-parsley-required' => 'true'])
+                  ['class'=>'form-control', 'placeholder'=>'Jam mulai', 
+                    'id'=>'from', 'data-provide'=>'timepicker', 
+                    'data-show-meridian'=>'false',
+                    'data-minute-step'=>15, 'data-default-time'=>'false',
+                    'data-parsley-required'=>'true'])
                 !!}
                 <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
               </div>
@@ -72,8 +89,11 @@
             {!! Form::label('to', 'Berakhir') !!}
             <div class="input-group bootstrap-timepicker">
                 {!! Form::text('to', null, 
-                ['class'=>'form-control', 'placeholder'=>'Tanggal
-                berakhir', 'id'=>'to', 'data-parsley-required' => 'true']) 
+                [ 'class'=>'form-control', 'placeholder'=>'Jam berakhir', 
+                  'id'=>'to', 'data-parsley-required' => 'true',
+                  'data-provide'=>'timepicker', 'data-show-meridian'=>'false',
+                  'data-minute-step'=>15, 'data-default-time'=>'false',
+                ]) 
                 !!}
                 <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
               </div>
@@ -86,25 +106,33 @@
     <!-- begin overtime_reason field -->
       <div class="form-group">
         {!! Form::label('overtime_reason', 'Alasan Lembur') !!}
-        <div class="input-group">
-          {!! Form::select('time_event_type_id', $overtime_reason,
-          null, ['class'=>'form-control','id'=>'time_event_type_id', 
-          'data-parsley-required' => 'true',  'placeholder' => 'Silahkan pilih']); 
-        !!}
-        </div>
+          {!! Form::select('overtime_reason', $overtime_reason,
+          null, ['class'=>'form-control', 'id'=>'overtime_reason', 
+          'data-parsley-required' => 'true', 'placeholder' => 'Silahkan pilih']); 
+          !!}
         {!! $errors->first('overtime_reason', ' <p class="help-block">:message</p>') !!}
       </div>
       <!-- end overtime_reason field -->
 
-    <!-- begin approver field -->
+    <!-- begin closest_approver field -->
     <!-- This field is not sent via form -->
-    <div class="form-group{{ $errors->has('approver') ? ' has-error' : '' }}">
-        {!! Form::label('approver', 'Atasan') !!}
+    <div class="form-group{{ $errors->has('closest_approver') ? ' has-error' : '' }}">
+        {!! Form::label('closest_approver', 'Superintendent') !!}
         <select class="form-control boss-selectize">
             <option value="" selected>Piilh Atasan</option>
           </select>
       </div>
-      <!-- end approver field -->
+      <!-- end closest_approver field -->
+
+      <!-- begin two_step_above_approver field -->
+    <!-- This field is not sent via form -->
+    <div class="form-group{{ $errors->has('two_step_above_approver') ? ' has-error' : '' }}">
+        {!! Form::label('two_step_above_approver', 'Manager') !!}
+        <select class="form-control one-boss-above-selectize">
+            <option value="" selected>Piilh Atasan</option>
+          </select>
+      </div>
+      <!-- end two_step_above_approver field -->
 
       <!-- begin submit button -->
     <div class="form-group pull-right">

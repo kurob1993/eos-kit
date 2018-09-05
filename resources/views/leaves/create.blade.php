@@ -177,30 +177,12 @@
     options: [    ],
     render: {
       item: function(item, escape) {
-        return (
-          "<div>" +
-          (item.personnel_no
-            ? '<span class="label label-default">' + escape(item.personnel_no) + "</span>&nbsp;"
-            : "") +
-          (item.name
-            ? '<span class="name">' + escape(item.name) + "</span>"
-            : "") +
-          "</div>"
-        );
+        return ( "<div>" + (item.personnel_no ? '<span class="label label-default">' + escape(item.personnel_no) + "</span>&nbsp;" : "") + (item.name ? '<span class="name">' + escape(item.name) + "</span>" : "") + "</div>" );
       },
       option: function(item, escape) {
         var label = item.personnel_no || item.name;
         var caption = item.personnel_no ? item.name : null;
-        return (
-          "<div>" +
-          '<span class="label label-default">' +
-          escape(label) +
-          "</span>&nbsp;" +
-          (caption
-            ? '<span class="caption">' + escape(caption) + "</span>"
-            : "") +
-          "</div>"
-        );
+        return ( "<div>" + '<span class="label label-default">' + escape(label) + "</span>&nbsp;" + (caption ? '<span class="caption">' + escape(caption) + "</span>" : "") + "</div>" );
       }
     }
   };

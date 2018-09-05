@@ -24,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Fix for doctrine using mariaDB
         Schema::defaultStringLength(191);
 
         // Observer untuk model Absence
@@ -38,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
         // Observer untuk model TimeEventApproval
         TimeEventApproval::observe(TimeEventApprovalObserver::class);
 
-
+        // Form macro laravelcollective
         \Form::macro('labelRadio', function ($name, $value, $label,
             $labelAttributes = [], $radioAttributes = [])
         {
@@ -91,9 +92,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // DataTables builder for absence approval
         $this->app->bind('datatables.html.absenceTable', function () {
             return $this->app->make(Builder::class);
         });
+
+        // DataTables builder for attendance approval
         $this->app->bind('datatables.html.attendanceTable', function () {
             return $this->app->make(Builder::class);
         });        

@@ -120,7 +120,7 @@
     }
   });
   
-   @if (Auth::user()->employee()->first()->hasSubordinate())
+   @if (Auth::user()->employee()->first()->canDelegate())
   
   var subOptions = {
     persist: false,

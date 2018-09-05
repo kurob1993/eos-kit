@@ -22,7 +22,13 @@ class StructDisp extends Model
     public function employee()
     {
       // many-to-one relationship
-      return $this->belongsTo('\App\Models\Employee', 'personnel_no', 'empnik');
+      return $this->belongsTo('\App\Models\Employee', 'empnik', 'personnel_no');
+    }
+
+    public function employeeBoss()
+    {
+      // many-to-one relationship
+      return $this->belongsTo('\App\Models\Employee', 'dirnik', 'personnel_no');
     }
 
     public function scopeStructOf($query, $p)
@@ -61,5 +67,34 @@ class StructDisp extends Model
       return $query
         ->where('emppersk', 'LIKE', strtoupper($s))
         ->where('no', 1);
+    }
+
+    public function scopeSuperintendentOf($query, $p)
+    {
+      // struct mencari atasan superintendent
+      return $query
+        ->structOf($p)
+        ->whereHas('employeeBoss', function($query) {
+          $query->where('esgrp', 'CS');
+        });
+    }
+
+    public function scopeManagerOf($query, $p)
+    {
+      // struct mencari atasan manager
+      return $query
+        ->structOf($p)
+        ->whereHas('employeeBoss', function($query) {
+          $query->where('esgrp', 'BS');
+        });
+    }
+    public function scopeGeneralManagerOf($query, $p)
+    {
+      // struct mencari atasan general manager
+      return $query
+        ->structOf($p)
+        ->whereHas('employeeBoss', function($query) {
+          $query->where('esgrp', 'AS');
+        });
     }
 }

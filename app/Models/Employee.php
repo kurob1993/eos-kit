@@ -22,10 +22,18 @@ class Employee extends Model
       return $this->hasMany('App\Models\StructDisp', 'empnik', 'personnel_no');
     }
 
-    public function hasSubordinate()
+    public function canDelegate()
     {
         // apakah boleh melakukan pelimpahan wewenang?
         return (($this->esgrp == 'BS') || ($this->esgrp == 'AS'))
+        ? true : false;
+    }
+
+    public function allowedForOvertime()
+    {
+        // apakah boleh melakukan lembur?
+        return ( ($this->esgrp == 'ES') || ($this->esgrp == 'EF') 
+                 || ($this->esgrp == 'F') )
         ? true : false;
     }
 
@@ -61,7 +69,7 @@ class Employee extends Model
         // mengiterasi atasan-atasan dan membuat collection baru
         $bosses = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing atasan
-            return \App\Models\Employee::where('personnel_no', $item->dirnik)->first();
+            return \App\Models\Employee::where('personnel_no', $item->dirnik)->first();;
         });
 
         // mengembalikan collection of Employee
@@ -82,4 +90,31 @@ class Employee extends Model
         // mengembalikan collection of Employee
         return $subordinates;
     }
+
+    public function superintendentBoss()
+    {
+        // mencari semua atasan
+        $s = $this->structDisp()->superintendentOf($this->personnel_no)->first();
+
+        // mengembalikan Employee model
+        return (is_null($s)) ? false : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
+    }    
+
+    public function managerBoss()
+    {
+        // mencari semua atasan
+        $s = $this->structDisp()->managerOf($this->personnel_no)->first();
+
+        // mengembalikan Employee model
+        return (is_null($s)) ? false : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
+    }    
+
+    public function generalManagerBoss()
+    {
+        // mencari semua atasan
+        $s = $this->structDisp()->generalManagerOf($this->personnel_no)->first();
+
+        // mengembalikan Employee model
+        return (is_null($s)) ? false : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
+    }    
 }

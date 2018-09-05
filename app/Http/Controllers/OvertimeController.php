@@ -73,6 +73,20 @@ class OvertimeController extends Controller
 
     public function create()
     {
+        // mengecek apakah boleh mengajukan overtime
+        $allowedForOvertime = Auth::user()->employee->allowedForOvertime();
+
+        // apakah tidak boleh mengajukan overtime?
+        if (!$allowedForOvertime) {
+            Session::flash("flash_notification", [
+                "level"   =>  "danger",
+                "message"=>"Mohon maaf, Anda tidak dapat mengajukan lembur " . 
+                "karena golongan Anda bukan ES/EF/F."
+            ]);
+            // batalkan view create dan kembali ke parent
+            return redirect()->route('overtimes.index');            
+        }
+        
         $overtimeReason = OvertimeReason::all('id', 'text')
             ->mapWithKeys(function ($item) {
                 return [$item['id'] => $item['text']];

@@ -86,7 +86,7 @@ class PermitController extends Controller
         try {
             // mendapatkan data employee dari user
             // dan mengecek apakah dapat melakukan pelimpahan
-            $canDelegate = Auth::user()->employee()->firstOrFail()->hasSubordinate();
+            $canDelegate = Auth::user()->employee()->firstOrFail()->canDelegate();
 
         } catch(ModelNotFoundException $e) {
             // tampilkan pesan bahwa tidak ada data karyawan yang bisa ditemukan
@@ -148,7 +148,7 @@ class PermitController extends Controller
         try {
             // mendapatkan data employee dari user
             // dan mengecek apakah dapat melakukan pelimpahan
-            $canDelegate = Auth::user()->employee()->firstOrFail()->hasSubordinate();
+            $canDelegate = Auth::user()->employee()->firstOrFail()->canDelegate();
 
         } catch(ModelNotFoundException $e) {
             // tampilkan pesan bahwa tidak ada data karyawan yang bisa ditemukan
