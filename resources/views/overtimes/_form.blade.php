@@ -1,6 +1,6 @@
   {{-- 
     Form Elements: personnel_no, start_date, day_assignment, from,
-    to, overtime_reason, note, delegation (if have subordinates)
+    to, overtime_reason, delegation (if have subordinates)
   --}}
 
 <div class="col-lg-4">
@@ -50,8 +50,11 @@
           {!! Form::label('start_date', 'Tanggal Mulai') !!}
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
-            <input type="text" class="form-control" id="start_date" 
-            placeholder="Mulai" value="" readonly>
+            {!! Form::text('start_date', null, 
+              ['class'=>'form-control', 'placeholder'=>'Mulai', 
+              'id'=>'start_date', 'data-parsley-required'=>'true',
+              'readonly' => 'readonly'])
+            !!}
           </div>
           {!! $errors->first('start_date', ' <p class="help-block">:message</p>') !!}
         </div>
@@ -62,8 +65,8 @@
       <div class="col-xs-6">
         <div class="form-group{{ $errors->has('day_assignment') ? ' has-error' : '' }}">
           {!! Form::label('day_assignment', 'Berakhir pada') !!}
-          {!! Form::select('day_asasignment', [ '=' => 'Hari yang sama', '>' => 'Keesokan hari' ],
-            null, ['class'=>'form-control', 'id'=>'day_asasignment', 
+          {!! Form::select('day_assignment', [ '=' => 'Hari yang sama', '>' => 'Keesokan hari' ],
+            null, ['class'=>'form-control', 'id'=>'day_assignment', 
             'data-parsley-required' => 'true', 'placeholder' => 'Silahkan pilih']); !!}
           {!! $errors->first('day_assignment', ' <p class="help-block">:message</p>') !!}
         </div>
@@ -108,16 +111,16 @@
     </div>
     <!-- end from & to fields -->
 
-    <!-- begin overtime_reason field -->
-      <div class="form-group{{ $errors->has('overtime_reason') ? ' has-error' : '' }}">
-        {!! Form::label('overtime_reason', 'Alasan Lembur') !!}
-          {!! Form::select('overtime_reason', $overtime_reason,
-          null, ['class'=>'form-control', 'id'=>'overtime_reason', 
+    <!-- begin overtime_reason_id field -->
+      <div class="form-group{{ $errors->has('overtime_reason_id') ? ' has-error' : '' }}">
+        {!! Form::label('overtime_reason_id', 'Alasan Lembur') !!}
+          {!! Form::select('overtime_reason_id', $overtime_reason,
+          null, ['class'=>'form-control', 'id'=>'overtime_reason_id', 
           'data-parsley-required' => 'true', 'placeholder' => 'Silahkan pilih']); 
           !!}
-        {!! $errors->first('overtime_reason', ' <p class="help-block">:message</p>') !!}
+        {!! $errors->first('overtime_reason_id', ' <p class="help-block">:message</p>') !!}
       </div>
-      <!-- end overtime_reason field -->
+      <!-- end overtime_reason_id field -->
 
     <!-- begin superintendent_approver field -->
     <!-- This field is not sent via form -->

@@ -27,10 +27,10 @@ class StoreAttendanceQuotaRequest extends FormRequest
         return [
           'personnel_no' => 'required',
           'start_date' => 'required',
-          'end_date' => 'required',
-          'deduction' => 'required',
-          'note' => 'required',
-          'address' => 'required'
+          'day_assignment' => 'required',
+          'from' => 'required',
+          'to' => 'required',
+          'overtime_reason_id' => 'required',
         ];
     }
 }

@@ -39,36 +39,23 @@ class StructDispController extends Controller
 
     public function minSuperintendentBoss($empnik)
     {
-        // mencari atasan dengan minimal level CS
-        // apabila tidak ditemukan maka cari di level BS
-        // apabila tidak ditemukan di level BS
-        // maka cari di level AS    
-        $superintendent = Employee::where('personnel_no', $empnik)
+        // mencari atasan minimal golongan CS
+        return Employee::where('personnel_no', $empnik)
             ->first()
-            ->superintendentBoss();
-        
-        if (!$superintendent)
-            return $this->minManagerBoss($empnik);
-        else
-            return $superintendent;
+            ->minSuperintendentBoss();
     }
     
     public function minManagerBoss($empnik)
     {
-        // meneruskan recursive call dari atas
-        $manager = Employee::where('personnel_no', $empnik)
+        // mencari atasan minimal golongan BS
+        return Employee::where('personnel_no', $empnik)
             ->first()
-            ->managerBoss();
-        
-        if (!$manager)
-            return $this->minGeneralManagerBoss($empnik);
-        else
-            return $manager;
+            ->minManagerBoss();
     }
 
-    public function minGeneralManagerBoss($empnik)
+    public function generalManagerBoss($empnik)
     {
-        // meneruskan recursive call dari atas
+        // mencari atasan minimal golongan AS
         return Employee::where('personnel_no', $empnik)
             ->first()
             ->generalManagerBoss();

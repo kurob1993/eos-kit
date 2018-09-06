@@ -31,10 +31,18 @@ Route::group([
         Route::get('debug', 'DebugController@debug');
 
         // route untuk persetujuan di dashboard
-        Route::post('approve/{approval}/{id}','HomeController@approve')->name('dashboards.approve');
-        Route::post('reject/{approval}/{id}','HomeController@reject')->name('dashboards.reject');
-        Route::get('absence_approval', 'HomeController@absenceApproval')->name('dashboards.absence_approval');
-        Route::get('attendance_approval', 'HomeController@attendanceApproval')->name('dashboards.attendance_approval');
+        Route::post('approve/{approval}/{id}','HomeController@approve')
+            ->name('dashboards.approve');
+        Route::post('reject/{approval}/{id}','HomeController@reject')
+            ->name('dashboards.reject');
+        Route::get('absence_approval', 'HomeController@absenceApproval')
+            ->name('dashboards.absence_approval');
+        Route::get('attendance_approval', 'HomeController@attendanceApproval')
+            ->name('dashboards.attendance_approval');
+        Route::get('attendance_quota_approval', 'HomeController@attendanceQuotaApproval')
+            ->name('dashboards.attendance_quota_approval');
+        Route::get('time_event_approval', 'HomeController@timeEventApproval')
+            ->name('dashboards.time_event_approval');
 
         // route untuk leave
         Route::resource('leaves', 'LeaveController', ['except' => [ 

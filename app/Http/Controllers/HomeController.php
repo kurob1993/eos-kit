@@ -95,7 +95,7 @@ class HomeController extends Controller
                         ]);
                     }
                 })
-                // ->orderColumn('id', '-id $1')
+                ->orderColumn('id', '-id $1')
                 ->escapeColumns([2])
                 ->make(true);
         }
@@ -140,7 +140,7 @@ class HomeController extends Controller
                         ]);
                     }
                 })
-                // ->orderColumn('id', '-id $1')
+                ->orderColumn('id', '-id $1')
                 ->escapeColumns([2])
                 ->make(true);
         }
@@ -152,12 +152,12 @@ class HomeController extends Controller
         if ($request->ajax()) {
 
             // // ambil data persetujuan timeEvent, WARNING nested relationship eager loading
-            $timeEventApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
+            $timeEventApprovals = TimeEventApproval::where('regno', Auth::user()->personnel_no)
                 ->with(['status:id,description', 'timeEvent.user.employee', 'timeEvent.timeEventType']);
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
             return Datatables::of($timeEventApprovals)
-                ->editColumn('timeEvent_id', function (AbsenceApproval $a) {
+                ->editColumn('timeEvent_id', function (TimeEventApproval $a) {
                     return '<address>' .'<strong>'. 
                     $a->timeEvent->deduction . ' hari cuti</strong><br>' .
                     $a->timeEvent->timeEventType->text . '<br>' .
@@ -165,12 +165,12 @@ class HomeController extends Controller
                     $a->timeEvent->formattedEndDate . '<br>' .
                     '</address>';
                 })
-                ->editColumn('timeEvent.user.personnel_no', function (AbsenceApproval $a) {
+                ->editColumn('timeEvent.user.personnel_no', function (TimeEventApproval $a) {
                     return $a->timeEvent->personnel_no . ' - ' . 
                     $a->timeEvent->user->name . '<br>' . 
                     $a->timeEvent->user->employee->position_name;
                 })
-                ->editColumn('action', function (AbsenceApproval $a) {
+                ->editColumn('action', function (TimeEventApproval $a) {
                     if ($a->isNotWaiting) {
                         return '<span class="label '. (($a->isApproved) ? 'label-primary' : 'label-danger') . '">' .
                         $a->status->description . '</span>' . '<br>' .
@@ -185,7 +185,7 @@ class HomeController extends Controller
                         ]);
                     }
                 })
-                // ->orderColumn('id', '-id $1')
+                ->orderColumn('id', '-id $1')
                 ->escapeColumns([2])
                 ->make(true);
         }
@@ -197,12 +197,12 @@ class HomeController extends Controller
         if ($request->ajax()) {
 
             // // ambil data persetujuan attendanceQuota, WARNING nested relationship eager loading
-            $attendanceQuotaApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
+            $attendanceQuotaApprovals = AttendanceQuotaApproval::where('regno', Auth::user()->personnel_no)
                 ->with(['status:id,description', 'attendanceQuota.user.employee', 'attendanceQuota.attendanceQuotaType']);
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
             return Datatables::of($attendanceQuotaApprovals)
-                ->editColumn('attendanceQuota_id', function (AbsenceApproval $a) {
+                ->editColumn('attendanceQuota_id', function (attendanceQuotaApproval $a) {
                     return '<address>' .'<strong>'. 
                     $a->attendanceQuota->deduction . ' hari cuti</strong><br>' .
                     $a->attendanceQuota->attendanceQuotaType->text . '<br>' .
@@ -210,12 +210,12 @@ class HomeController extends Controller
                     $a->attendanceQuota->formattedEndDate . '<br>' .
                     '</address>';
                 })
-                ->editColumn('attendanceQuota.user.personnel_no', function (AbsenceApproval $a) {
+                ->editColumn('attendanceQuota.user.personnel_no', function (attendanceQuotaApproval $a) {
                     return $a->attendanceQuota->personnel_no . ' - ' . 
                     $a->attendanceQuota->user->name . '<br>' . 
                     $a->attendanceQuota->user->employee->position_name;
                 })
-                ->editColumn('action', function (AbsenceApproval $a) {
+                ->editColumn('action', function (attendanceQuotaApproval $a) {
                     if ($a->isNotWaiting) {
                         return '<span class="label '. (($a->isApproved) ? 'label-primary' : 'label-danger') . '">' .
                         $a->status->description . '</span>' . '<br>' .
@@ -230,7 +230,7 @@ class HomeController extends Controller
                         ]);
                     }
                 })
-                // ->orderColumn('id', '-id $1')
+                ->orderColumn('id', '-id $1')
                 ->escapeColumns([2])
                 ->make(true);
         }

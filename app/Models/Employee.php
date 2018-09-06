@@ -116,5 +116,30 @@ class Employee extends Model
 
         // mengembalikan Employee model
         return (is_null($s)) ? [] : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
-    }    
+    }
+
+    public function minSuperintendentBoss()
+    {
+        // mencari atasan dengan minimal level CS
+        // apabila tidak ditemukan maka cari di level BS
+        // apabila tidak ditemukan di level BS
+        // maka cari di level AS    
+       $superintendent = $this->superintendentBoss();
+        
+        if (!$superintendent)
+            return $this->minManagerBoss($this->personnel_no);
+        else
+            return $superintendent;
+    }
+
+    public function minManagerBoss()
+    {
+        // meneruskan recursive call dari atas
+        $manager = $this->managerBoss();
+        
+        if (!$manager)
+            return $this->generalManagerBoss($this->personnel_no);
+        else
+            return $manager;
+    }
 }

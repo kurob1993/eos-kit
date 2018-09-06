@@ -3,22 +3,6 @@
 @section('content')
 <!-- begin #page-container -->
 @component('layouts.employee._page-container', ['page_header' => 'Employee Dashboard'])
-{{-- <div class="panel panel-prussian">
-  <div class="panel-heading">
-    <h4 class="panel-title">Kotak Masuk Persetujuan</h4>
-  </div>
-  @include('layouts._flash')
-  <div class="panel-body">
-    <div class="table-responsive">
-      {!! $absenceTable->table(['class'=>'table table-striped']) !!}
-    </div>
-  </div>
-  <div class="panel-body">
-    <div class="table-responsive">
-      {!! $attendanceTable->table(['class'=>'table table-striped']) !!}
-    </div>
-  </div>
-</div> --}}
 <div class="row">
   <div class="col-lg-12 col-xl-9">
       <!-- begin of dashboard nav-tabs  -->
@@ -63,7 +47,7 @@
           <!-- begin of time-events tab  -->
           <div class="tab-pane fade" id="tab-time-events">
               <div class="panel-body p-0">
-
+                {!! $timeEventTable->table(['class'=>'table table-striped']) !!}
               </div>
           </div>
           <!-- end of time-events tab  -->
@@ -71,7 +55,7 @@
           <!-- begin of overtimes tab  -->
           <div class="tab-pane fade" id="tab-overtimes">
               <div class="panel-body p-0">
-
+                {!! $attendanceQuotaTable->table(['class'=>'table table-striped']) !!}
               </div>
           </div>
           <!-- end of overtimes tab  -->
@@ -103,6 +87,8 @@
 <!-- Generated scripts from DataTables -->
 {!! $absenceTable->scripts() !!}
 {!! $attendanceTable->scripts() !!}
+{!! $attendanceQuotaTable->scripts() !!}
+{!! $timeEventTable->scripts() !!}
 @endpush
 
 @push('custom-scripts')

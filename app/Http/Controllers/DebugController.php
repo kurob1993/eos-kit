@@ -13,14 +13,16 @@ class DebugController extends Controller
 {
     public function debug()
     {
-        $flow_id = \Config::get('emss.flows.absences');
-        // mencari flow berdasarkan flow_id
-        $flow = \App\Models\Flow::find($flow_id);
-        // var_dump($flow->toArray());
-        // mengakses stages melalui many to many relationship melalui pivot table
-        foreach ($flow->stages as $stage) {
-          var_dump($stage->pivot->toArray());
-        }
+        dd(\Carbon\Carbon::parse('2018-09-01')->addDays(1));
+
+        // $flow_id = \Config::get('emss.flows.absences');
+        // // mencari flow berdasarkan flow_id
+        // $flow = \App\Models\Flow::find($flow_id);
+        // // var_dump($flow->toArray());
+        // // mengakses stages melalui many to many relationship melalui pivot table
+        // foreach ($flow->stages as $stage) {
+        //   var_dump($stage->pivot->toArray());
+        // }
 
         // // mencari first sequence terhadap flow_id
         // $flow_id = \Config::get('emss.flows.absences');
@@ -86,9 +88,9 @@ class DebugController extends Controller
         // $bosses = \App\Models\StructDisp::closestBossOf('10112');
         // dd($bosses->first()->toArray());
 
-    //    // mencari atasan superintendent
-    //     $bosses = \App\Models\StructDisp::SuperintendentOf('11777');
-    //     dd($bosses->get()->toArray());
+        //    // mencari atasan superintendent
+        //     $bosses = \App\Models\StructDisp::SuperintendentOf('11777');
+        //     dd($bosses->get()->toArray());
 
         // // mencari atasan dari GM
         // $bosses = \App\Models\StructDisp::closestBossOf('10233');
@@ -167,10 +169,10 @@ class DebugController extends Controller
         // ->first();
         // dd($intersected);
 
-    // // ambil data persetujuan absence, WARNING nested relationship eager loading
-    // $absenceApprovals = \App\Models\AbsenceApproval::where('regno', Auth::user()->personnel_no)
-    //     ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType'])
-    //     ->get();
+        // // ambil data persetujuan absence, WARNING nested relationship eager loading
+        // $absenceApprovals = \App\Models\AbsenceApproval::where('regno', Auth::user()->personnel_no)
+        //     ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType'])
+        //     ->get();
     
         // $aar = \App\Http\Resources\AbsenceApprovalResource::collection(
         //     \App\Models\AbsenceApproval::all()

@@ -23,6 +23,13 @@ class AttendanceQuotaType extends Model
 
     public function attendanceQuotas()
     {
+        // one-to-many relationship dengan AttendanceQuota
         return $this->hasMany('App\Models\AttendanceQuota');
     }
+
+    public function scopeSuratPerintahLembur($query)
+    {
+        // NEED TO IMPLEMENT CONFIGURATION
+        return $query->find(1);
+    }    
 }

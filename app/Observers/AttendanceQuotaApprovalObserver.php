@@ -14,19 +14,25 @@ class AttendanceQuotaApprovalObserver
       // $flow_stage = FlowStage::nextSequence($flow_id);
       
       // to adalah karyawan yang mengajukan
-      $to = $attendanceQuotaApproval->attendanceQuota->user;
-
       // from adalah dari atasan
-      $from = $attendanceQuotaApproval->user;    
-
       // menyimpan catatan pengiriman pesan
+      $to = $attendanceQuotaApproval->attendanceQuota->user;
+      $from = $attendanceQuotaApproval->user;    
       $message = new Message;
 
-      // attendanceQuota dari approval ini
+      // mencari semua approval dari AttendanceQuota ini
       $aq = $attendanceQuotaApproval->attendanceQuota;
-
       $aqas = $aq->attendanceQuotaApproval;
 
+      switch ($attendanceQuotaApproval->sequence) {
+        case 1: 
+          // lakukan 
+        break;
+        case 2: 
+          // cek apakah sudah disetujui pada sequence sebelumnya
+        break;
+      }
+      
       $allApproved = true;
       $allApproved &= $aqas->map(function ($a){
         return $a->isApproved;

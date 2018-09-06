@@ -54,90 +54,78 @@ class AttendanceQuotaObserver
         // mencari atasan & direktur dari karyawan yang mengajukan attendanceQuotas
         $a = $employee->minSuperintendentBoss()->personnel_no;
         $b = $employee->minManagerBoss()->personnel_no;
-        $c = $employee->minGeneralManagerBoss()->personnel_no;
-        $director = $employee->director();
+        $c = $employee->generalManagerBoss()->personnel_no;
 
         /***********************************************************************
-        * buat record AttendanceQuotaApproval yang terdiri dari dua persetujuan
-        * pertama untuk Superintendent dan kedua untuk Manager
-        * apabila karyawan tidak memiliki atasan Superintendent maka
-        * hanya dibuat AttendanceQuotaApproval hanya untuk atasan Manager
-        * dan apabila karyawan tidak memiliki Superintendent & Manager langsung
-        * maka hanya dibuat AttendanceQuotaApproval hanya untuk General Manager
+        * Membbuat record AttendanceQuotaApproval (aqa) dari skenario:
+        * 1. Karyawan yang memiliki atasan Superintendent & Manager ->
+        *    2 (dua) aqa dengan sequence Superintendent (1) & Manager (2)
+        * 2. Karyawan yang memiliki atasan Superintendent tetapi tidak memiliki
+        *    atasan Manager -> 2 (dua) aqa dengan sequence Superintendent (1)
+        *    & General Manager (2)
+        * 3. Karyawan yang tidak memiliki atasan Superintendent tetapi memiliki
+        *    atasan Manager -> 1 (satu) aqa dengan sequence Manager (1)
+        * 4. Karyawan yang tidak memiliki Superintendent & Manager ->
+        *    1 (satu) aqa dengan sequence General Manager (1)
         ***********************************************************************/
-            
+        
+        // minimal satu firstAqa untuk semua skenario
         $firstAqa = new AttendanceQuotaApproval();
-        $firstAqa->attendanceQuota_id = $attendanceQuota->id;
+        $firstAqa->attendance_quota_id = $attendanceQuota->id;
         $firstAqa->sequence = 1;
         $firstAqa->status_id = Status::firstStatus()->id;
+        
+        if ( ($a <> $b) && ($a <> $c) && ($b <> $c) ) {
+        
+            // Skenario 1
+            // set approver pertama Superintendent (1)
+            $firstAqa->regno = $a;
 
-        if (($a == $b) && ($a <> $c) && ($b <> $c) ) {
-            
-            // Jika tidak memliki atasan langsung Superintendent
-            // Maka approvernya adalah Manager
-            $firstAqa->regno = $a->personnel_no;
-        
-        } else if ( ($a == $b) && ($a == $c) && ($b == $c) ) {
-            
-            // Jika tidak memliki atasan langsung Superintendent & Manager
-            // maka approvernya adalah General Manager
-            $firstAqa->regno = $c->personnel_no;
-        
-        } else if ( ($a <> $b) && ($a <> $c) && ($b <> $c) ) {
-        
-            // Jika punya atasan langsung Superintendent & Manager
-            // Membuat aqa untuk approver keduanya
+            // buat approver kedua yaitu Manager (2)
             $secondAqa = new AttendanceQuotaApproval();
-            $secondAqa->attendanceQuota_id = $attendanceQuota->id;
+            $secondAqa->attendance_quota_id = $attendanceQuota->id;
             $secondAqa->sequence = 2;
             $secondAqa->status_id = Status::firstStatus()->id;
+            $secondAqa->regno = $b;
 
-            // approver pertama adalah atasan langsung Superintendent
-            $firstAqa->regno = $a->personnel_no;
-            // approver kedua adalah atasan langsung Manager
-            $secondAqa->regno = $b->personnel_no;
+            // menyimpan approver
+            $firstAqa->save();
+            $secondAqa->save(); 
         
-        } else if ( ($a <> $b) && ($a <> $c) && ($b == $c) ) {
+        } else if ( ($a <> $b ) && ($a <> $c) && ($b == $c) ) {
+            
+            // Skenario 2
+            // set approver pertama Superintendent (1)
+            $firstAqa->regno = $a;
 
-        
-        } else {
-        
-            // Karyawan yang tidak memiliki atasan/atasannya adalah Direktur
-            // dalam hal ini adalah General Manager ATAU
-            // karyawan yang tidak memiliki atasan sama sekali
-            // contoh: Deputi (UTOMO NUGROHO)
+            // buat approver kedua General Manager (2)
+            $secondAqa = new AttendanceQuotaApproval();
+            $secondAqa->attendance_quota_id = $attendanceQuota->id;
+            $secondAqa->sequence = 2;
+            $secondAqa->status_id = Status::firstStatus()->id;
+            $secondAqa->regno = $c;
 
-            // bypass regno menggunakan admin  dan sequence
-            $admin = Role::retrieveAdmin();
-            $firstAqa->regno = $admin->personnel_no;
-            $firstAqa->sequence = 1;
+            // menyimpan approver
+            $firstAqa->save();
+            $secondAqa->save(); 
 
-            // menyimpan data persetujuan
+        } else if ( ($a == $b) && ($a <> $c) && ($b <> $c) ) {
+
+            // Skenario 3
+            // set approver pertama Manager (1)
+            $firstAqa->regno = $b;
+            
+            // menyimpan approver
             $firstAqa->save();
 
-            // mengubah status menjadi approved
-            $firstAqa->status_id = Status::ApproveStatus()->id;
-            $firstAqa->text = 'Disetujui oleh Admin';
+        } else if ( ($a == $b) && ($a == $c) && ($b == $c) ) {
 
-            // menyimpan perubahan agar mentrigger observer
+            // Skenario 4
+            // set approver pertama General Manager (1)
+            $firstAqa->regno = $c;            
+
+            // menyimpan approver
             $firstAqa->save();
-        }
-
-
-        // JIKA karyawan tersebut mempunyai atasan langsung
-        // maka simpan data atasan sebagai attendanceQuota approval
-        // JIKA TIDAK mempunyai atasan langsung
-        // maka attendanceQuota approval dibuat seolah-olah sudah disetujui
-        // contoh: karyawan yang atasannya langsung direktur
-        // atau deputi (UTOMO NUGROHO)
-        if ($minSuperintendentBoss) {
-            // menyimpan personnel_no dari closest boss
-            $firstAqa->regno = $minSuperintendentBoss->personnel_no;
-
-            // menyimpan data persetujuan
-            $firstAqa->save();
-
-        } else {
 
         }
     }

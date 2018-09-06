@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Session;
+use Carbon\Carbon;
 use Illuminate\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Session;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\AttendanceQuota;
 use App\Models\AttendanceQuotaType;
 use App\Models\OvertimeReason;
+use App\Http\Requests\StoreAttendanceQuotaRequest;
 
 class OvertimeController extends Controller
 {
@@ -55,8 +57,8 @@ class OvertimeController extends Controller
                 'title' => 'Berakhir'
                 ])
             ->addColumn([
-                'data' => 'overtimeReason.text', 
-                'name' => 'overtimeReason.text', 
+                'data' => 'overtime_reason.text', 
+                'name' => 'overtime_reason.text', 
                 'title' => 'Jenis', 
                 'searchable' => false
                 ])
@@ -105,10 +107,24 @@ class OvertimeController extends Controller
             "message" => "Berhasil menyimpan pengajuan cuti.",
         ]);
 
+        // menghitung end_date berdasarkan day_assignment
+        switch ($request->input('day_assignment')) {
+            case '=':
+                $end_date = $request->input('start_date');
+            break;
+            case '>':
+                $end_date = Carbon::parse($request->input('start_date'))->addDays(1);
+            break;
+        }
+
         // membuat pengajuan lembur dengan menambahkan data personnel_no
         $absence = AttendanceQuota::create($request->all()
-             + ['personnel_no' => Auth::user()->personnel_no]);
+             + ['personnel_no' => Auth::user()->personnel_no,
+                'end_date' => $end_date,
+                'attendance_quota_type_id' => AttendanceQuotaType::suratPerintahLembur()->id
+                ]);
 
+        // kembali ke halaman index overtime
         return redirect()->route('overtimes.index');
     }
 
