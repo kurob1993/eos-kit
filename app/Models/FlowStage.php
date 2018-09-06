@@ -10,8 +10,8 @@ class FlowStage extends Pivot
   {
     $t = $this->getTable();
 
-    // SELECT * FROM stages WHERE (sequence) IN
-    // ( SELECT MIN(sequence) FROM stages )
+    // SELECT * FROM flow_stage WHERE (sequence) IN
+    // ( SELECT MIN(sequence) FROM flow_stage )
     return $query->whereIn('sequence', function ($query) use ($t) {
       $query->from($t)->selectRaw('min(sequence)');
     });

@@ -246,16 +246,12 @@ class HomeController extends Controller
             case 'attendance_quota': $approved = AttendanceQuotaApproval::find($id); break;
         }
 
-        if ($approval == 'attendance_quota') {
-            $approved->approve();
-        } else {
-                if (!$approved->update($request->all() 
-                + ['status_id' => Status::approveStatus()->id])) {
-                // kembali lagi jika gagal
-                return redirect()->back();
-            }
+        if (!$approved->update($request->all() 
+            + ['status_id' => Status::approveStatus()->id])) {
+            // kembali lagi jika gagal
+            return redirect()->back();
         }
-        
+
         // tampilkan pesan bahwa telah berhasil menyetujui
         Session::flash("flash_notification", [
             "level" => "success",

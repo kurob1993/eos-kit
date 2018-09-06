@@ -13,23 +13,30 @@ class AttendanceQuotaApprovalObserver
       // $flow_id  = config('emss.flows.attendance_quotas');
       // $flow_stage = FlowStage::nextSequence($flow_id);
       
-      // mencari data attendance sesuai dengan relatioship
-      $attendance = $attendanceQuotaApproval->attendance()->first();
+      // to adalah karyawan yang mengajukan
+      $to = $attendanceQuotaApproval->attendanceQuota->user;
 
       // from adalah dari atasan
-      $from = $attendanceQuotaApproval->user()->first();
-      
-      // to adalah karyawan yang mengajukan
-      $to = $attendance->user()->first();      
+      $from = $attendanceQuotaApproval->user;    
 
       // menyimpan catatan pengiriman pesan
       $message = new Message;
+
+      // attendanceQuota dari approval ini
+      $aq = $attendanceQuotaApproval->attendanceQuota;
+
+      $aqas = $aq->attendanceQuotaApproval;
+
+      $allApproved = true;
+      $allApproved &= $aqas->map(function ($a){
+        return $a->isApproved;
+      });
       
-      // apakah data attendance sudah disetujui
-      if ($attendanceQuotaApproval->isApproved) {
+      // apakah data attendanceQuota sudah disetujui
+      if ($allApproved) {
         
         // NEED TO IMPLEMENT FLOW STAGE (send to SAP)
-        $attendance->stage_id = 2;
+        $attendanceQuota->stage_id = Stage::sentToSapStage()->id;
 
         // message history
         $messageAttribute = sprintf('Permit approved from %s to %s',
@@ -37,7 +44,7 @@ class AttendanceQuotaApprovalObserver
       } else {
 
         // NEED TO IMPLEMENT FLOW STAGE (denied)
-        $attendance->stage_id = 5;
+        $attendanceQuota->stage_id = Stage::deniedStage()->id;
 
         // message history
         $messageAttribute = sprintf('Permit rejected from %s to %s',

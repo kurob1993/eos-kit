@@ -3,27 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreAbsenceRequest;
-use App\Models\Absence;
 use Illuminate\Config;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Requests\StoreAbsenceRequest;
+use App\Models\Absence;
+
 class DebugController extends Controller
 {
     public function debug()
     {
-        // // mencari flow berdasarkan flow_id
-        // $flow = \App\Models\Flow::find($flow_id);
+        $flow_id = \Config::get('emss.flows.absences');
+        // mencari flow berdasarkan flow_id
+        $flow = \App\Models\Flow::find($flow_id);
         // var_dump($flow->toArray());
-        // // mengakses stages melalui many to many relationship melalui pivot table
-        // foreach ($flow->stages as $stage) {
-        //   var_dump($stage->pivot->toArray());
-        // }
+        // mengakses stages melalui many to many relationship melalui pivot table
+        foreach ($flow->stages as $stage) {
+          var_dump($stage->pivot->toArray());
+        }
 
         // // mencari first sequence terhadap flow_id
         // $flow_id = \Config::get('emss.flows.absences');
         // $flow = \App\Models\FlowStage::firstSequence($flow_id);
-        // var_dump($flow->toArray());
+        // dd($flow->get()->toArray());
+ 
+        // $flow = \App\Models\FlowStage::nextSequence($flow_id);
+        // dd($flow->get()->toArray());
 
         // // mengecek kuota absence terhadap suatu rentang tanggal
         // $absence_type_id = \App\Models\AbsenceQuota::activeAbsenceQuotaOf(
@@ -81,9 +86,9 @@ class DebugController extends Controller
         // $bosses = \App\Models\StructDisp::closestBossOf('10112');
         // dd($bosses->first()->toArray());
 
-       // mencari atasan superintendent
-        $bosses = \App\Models\StructDisp::SuperintendentOf('11777');
-        dd($bosses->get()->toArray());
+    //    // mencari atasan superintendent
+    //     $bosses = \App\Models\StructDisp::SuperintendentOf('11777');
+    //     dd($bosses->get()->toArray());
 
         // // mencari atasan dari GM
         // $bosses = \App\Models\StructDisp::closestBossOf('10233');
