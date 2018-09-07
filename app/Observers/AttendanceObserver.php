@@ -52,7 +52,7 @@ class AttendanceObserver
         $attendance->save();
 
         // mencari atasan dari karyawan yang mengajukan attendances
-        $closestBoss = $employee->closestBoss();
+        $closestBoss = $employee->minSuperintendentBoss();
 
         // mencari direktur dari karyawan yang mengajukan attendance
         $director = $employee->director();

@@ -57,7 +57,7 @@ class AttendanceQuotaObserver
         $c = $employee->generalManagerBoss()->personnel_no;
 
         /***********************************************************************
-        * Membbuat record AttendanceQuotaApproval (aqa) dari skenario:
+        * Membuat record AttendanceQuotaApproval (aqa) dari skenario:
         * 1. Karyawan yang memiliki atasan Superintendent & Manager ->
         *    2 (dua) aqa dengan sequence Superintendent (1) & Manager (2)
         * 2. Karyawan yang memiliki atasan Superintendent tetapi tidak memiliki

@@ -1,7 +1,6 @@
 @extends('layouts.app') 
 
 @section('content')
-
 <!-- begin #page-container -->
 @component('layouts.employee._page-container', ['page_header' => 'Pengajuan Cuti'])
 <div class="row">
@@ -34,16 +33,6 @@
       </div>
     </div>
   </div>
-  {{-- <div class="col-lg-12 col-xl-3">
-    <div class="panel">
-      <div class="panel-heading">
-        heading
-      </div>
-      <div class="panel-body">
-        body
-      </div>
-    </div>
-  </div> --}}
 </div>
 
 @endcomponent
@@ -73,7 +62,12 @@
 <script>
   (handleDateRangePicker = function() {
   $("#datepicker-range").datepicker({
-    inputs: $("#datepicker-range-start, #datepicker-range-end")
+    inputs: $("#datepicker-range-start, #datepicker-range-end"),
+    format: 'yyyy-mm-dd',
+    todayHighlight: true,
+    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 5),
+    // datesDisabled: ['2018-09-01'],
   });
 
   var start = $("#datepicker-range-start");
@@ -152,7 +146,7 @@
   };
 
   $.ajax({
-  url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/closestBoss',
+  url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/minSuperintendentBoss',
       type: 'GET',
       dataType: 'json',
       error: function() {},
@@ -167,7 +161,7 @@
     }
   });
   
-   @if (Auth::user()->employee()->first()->hasSubordinate())
+   @if (Auth::user()->employee()->first()->canDelegate())
   
   var subOptions = {
     persist: false,

@@ -126,7 +126,7 @@ class DebugController extends Controller
         // var_dump($e->subordinates()->toArray()); 
 
         // // apakah boleh melakukan pelimpahan wewenang?
-        // var_dump(Auth::user()->employee()->first()->hasSubordinate());
+        // var_dump(Auth::user()->employee()->first()->canDelegate());
 
         //Melihat return firstStatus pada model status
         // $status = \App\Models\Status::firstStatus()->id;

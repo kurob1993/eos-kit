@@ -60,22 +60,24 @@ class AbsenceObserver
         // karyawan yang membuat absence
         $employee = Auth::user()->employee()->first();
 
-        // mendapatkan absence_type_id dari kuota cuti yang digunakan
-        $absence_type_id = AbsenceQuota::activeAbsenceQuotaOf(
-            Auth::user()
-                ->personnel_no, $absence->start_date, $absence->end_date)
-                ->first()
-            ->absence_type_id;
+        if ($absence->isALeave) {
+            // mendapatkan absence_type_id dari kuota cuti yang digunakan
+            $absence_type_id = AbsenceQuota::activeAbsenceQuotaOf(
+                Auth::user()
+                    ->personnel_no, $absence->start_date, $absence->end_date)
+                    ->first()
+                    ->absence_type_id;
+    
+            // mengisi absence type dari server bukan dari request
+            $absence->absence_type_id = $absence_type_id;
+        }
 
         // mendapatkan flow_id untuk absences dari file config
         // mencari sequence pertama dari flow_id diatas
         // mengembalikan flowstage dan mengakses stage_id
         $flow_id = config('emss.flows.absences');
         $stage_id = FlowStage::firstSequence($flow_id)->first()->stage_id;
-
-        // mengisi absence type dari server bukan dari request
-        $absence->absence_type_id = $absence_type_id;
-
+            
         // mengisi stage id melalui mekanisme flow stage
         $absence->stage_id = $stage_id;
 
@@ -83,7 +85,7 @@ class AbsenceObserver
         $absence->save();
 
         // mencari atasan dari karyawan yang mengajukan absences
-        $closestBoss = $employee->closestBoss();
+        $closestBoss = $employee->minSuperintendentBoss();
 
         // mencari direktur dari karyawan yang mengajukan absence
         $director = $employee->director();

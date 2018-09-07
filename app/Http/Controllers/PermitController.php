@@ -14,6 +14,7 @@ use App\Models\Attendance;
 use App\Models\AttendanceType;
 use App\Models\Absence;
 use App\Models\AbsenceType;
+use App\Http\Requests\StorePermitRequest;
 
 class PermitController extends Controller
 {
@@ -23,26 +24,29 @@ class PermitController extends Controller
         // response untuk datatables attendances
         if ($request->ajax()) {
 
-            // ambil data izin dari attendances untuk user tersebut
+            // ambil data izin dari attendances (elr) pada column alias
             $attendances = Attendance::where('personnel_no', Auth::user()->personnel_no)
-                ->with(['attendanceType', 'stage'])
+                ->with(['permitType', 'stage'])
                 ->get();
 
-            // ambil data izin dari absences (kecuali 0100 & 0200) untuk user tersebut
-            $attendances = Absence::where('personnel_no', Auth::user()->personnel_no)
+            // ambil data izin dari absences (elr) (kecuali 0100 & 0200) pada column alias
+            $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
                 ->excludeLeaves()
-                ->with(['absenceType', 'stage'])
+                ->with(['permitType', 'stage'])
                 ->get();
+
+            // merge collection
+            $permits = $attendances->merge($absences);
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
-            return Datatables::of($attendances)
-                ->editColumn('stage.description', function (Absence $absence) {
+            return Datatables::of($permits)
+                ->editColumn('stage.description', function ($a) {
                     return '<span class="label label-default">' 
-                    . $absence->stage->description . '</span>';})
-                ->editColumn('start_date', function (Absence $absence) {
-                    return $absence->start_date->format(config('emss.date_format'));})
-                ->editColumn('end_date', function (Absence $absence) {
-                    return $absence->end_date->format(config('emss.date_format'));})
+                    . $a->stage->description . '</span>';})
+                ->editColumn('start_date', function ($a) {
+                    return $a->start_date->format(config('emss.date_format'));})
+                ->editColumn('end_date', function ($a) {
+                    return $a->end_date->format(config('emss.date_format'));})
                 ->escapeColumns([4])
                 ->make(true);
         }
@@ -65,8 +69,8 @@ class PermitController extends Controller
                 'title' => 'Berakhir'
                 ])
             ->addColumn([
-                'data' => 'absence_type.text', 
-                'name' => 'absence_type.text', 
+                'data' => 'permit_type.text', 
+                'name' => 'permit_type.text', 
                 'title' => 'Jenis', 
                 'searchable' => false
                 ])
@@ -98,52 +102,29 @@ class PermitController extends Controller
             return redirect()->route('permits.index');
         }
 
-        // mencari data pengajuan absence yang masih belum selesai
-        $incompletedAbsence = Absence::where('personnel_no', Auth::user()->personnel_no)
-            ->incompleted()->get();
-        
-        // mencari data pengajuan attendance yang masih belum selesai
-        $incompletedAttendance = Attendance::where('personnel_no', Auth::user()->personnel_no)
-            ->incompleted()->get();
-                
-        // apakah ada yang belum selesai pengajuan cuti/izinnya??
-        if (sizeof($incompletedAbsence) > 0 || sizeof($incompletedAttendance) > 0) {
-            Session::flash("flash_notification", [
-                "level"   =>  "danger",
-                "message"=>"Data pengajuan cuti/izin sudah ada dan harus diselesaikan prosesnya " . 
-                "sebelum mengajukan cuti kembali."
-            ]);
-            // batalkan view create dan kembali ke parent
-            return redirect()->route('permits.index');       
-        }
-
         // transform array to key value pairs. For alternative:
         // $data = array_map(function($obj){ return (array) $obj; }, $ref);
-        $absenceType = AbsenceType::excludeLeaves()
-            ->get(['subtype', 'text', 'max_duration'])
+        $absenceType = $this->nonLeaveAbsenceTypes()
             ->mapWithKeys(function ($item) {
                 $maxDuration = (!is_null($item['max_duration'])) ? 
                 ' (' . $item['max_duration'] . ' hari)' : '';
                 return [$item['subtype'] => $item['text'] . $maxDuration];
             })
             ->all();
-        $attendanceType = AttendanceType::all('subtype', 'text')
+        $attendanceType = $this->attendanceTypes()
             ->mapWithKeys(function ($item) {
                 return [$item['subtype'] => $item['text']];
             })
             ->all();
-        
-        // merge absence_types & attendance_types
-        $permitTypes = array_merge($absenceType, $attendanceType);
 
         // tampilkan view create
         return view('permits.create', [ 
             'can_delegate' => $canDelegate, 
-            'permit_types' => $permitTypes,
+            'permit_types' => array_merge($absenceType, $attendanceType),
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StorePermitRequest $request)
     {
         try {
             // mendapatkan data employee dari user
@@ -160,29 +141,37 @@ class PermitController extends Controller
             return redirect()->route('permits.create');
         }
 
-        // permits form elements
-        // personnel_no, start_date, end_date, deduction,
-        // permit_type, attachment, note, delegation (if have subordinates)
-        $validator = Validator::make($request->all(), [
-            'personnel_no' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'deduction' => 'required',
-            'permit_type' => 'required',
-            'attachment' => 'required',
-            'note' => 'required',
-        ]);
-        // tampilkan pesan bahwa telah berhasil mengajukan cuti
+        // tampilkan pesan bahwa telah berhasil mengajukan izin
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Berhasil menyimpan pengajuan cuti.",
+            "message" => "Berhasil menyimpan pengajuan izin.",
         ]);
 
-        // membuat pengajuan cuti dengan menambahkan data personnel_no
-        $absence = Absence::create($request->all()
-             + ['personnel_no' => Auth::user()->personnel_no]);
+        // memeriksa apakah permit_type adalah attendance atau absence
+        $permitType = $request->input('permit_type');
+        if ($this->isAnAbsence($permitType)) {
 
-        return redirect()->route('leaves.index');
+            $absence_type_id = AbsenceType::where('subtype', $permitType)->first()->id;
+
+            // membuat pengajuan izin dengan menambahkan data personnel_no
+            Absence::create($request->all()
+                + ['personnel_no' => Auth::user()->personnel_no,
+                   'absence_type_id' => $absence_type_id, ]);
+                
+        } else if ($this->isAnAttendance($permitType)) {
+
+            $attendance_type_id = AttendanceType::where('subtype', $permitType)->first()->id;
+            // membuat pengajuan izin dengan menambahkan data personnel_no
+            Attendance::create($request->all()
+                + ['personnel_no' => Auth::user()->personnel_no,
+                   'attendance_type_id' => $attendance_type_id, ]);
+                
+        } else {
+
+        }
+
+        // kembali ke index permits
+        return redirect()->route('permits.index');
     }
 
     public function show($id)
@@ -203,5 +192,36 @@ class PermitController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    protected function attendanceTypes()
+    {
+        return AttendanceType::all('subtype', 'text');
+    }
+
+    protected function nonLeaveAbsenceTypes()
+    {
+        return AbsenceType::excludeLeaves()
+            ->get(['subtype', 'text', 'max_duration']);
+    }
+
+    protected function isAnAbsence($permitType)
+    {
+        $isAnAbsence = $this->nonLeaveAbsenceTypes()
+            ->filter(function ($item, $key) use($permitType) {
+                return $item->subtype == $permitType;
+        });
+
+        return !$isAnAbsence->isEmpty();
+    }
+
+    protected function isAnAttendance($permitType)
+    {
+        $isAnAttendance = $this->attendanceTypes()
+            ->filter(function ($item, $key) use($permitType) {
+                return $item->subtype == $permitType;
+        });
+
+        return !$isAnAttendance->isEmpty();
     }
 }

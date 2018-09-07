@@ -58,5 +58,11 @@ class Attendance extends Model
         return $query->whereIn('stage_id', [
             Stage::waitingApprovalStage()->id,
             Stage::sentToSapStage()->id ]);
-    } 
+    }
+
+    public function permitType()
+    {
+        // column aliasing for attendanceType
+        return $this->belongsTo('App\Models\AttendanceType');
+    }    
 }

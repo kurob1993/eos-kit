@@ -62,8 +62,7 @@ class HomeController extends Controller
 
             // ambil data persetujuan absence, WARNING nested relationship eager loading
             $absenceApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
-                ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType'])
-                ->get();
+                ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType']);
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
             return Datatables::of($absenceApprovals)

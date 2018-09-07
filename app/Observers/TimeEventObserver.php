@@ -52,7 +52,7 @@ class TimeEventObserver
         $timeEvent->save();
 
         // mencari atasan dari karyawan yang mengajukan time_events
-        $closestBoss = $employee->superintendentBoss();
+        $supeintendentBoss = $employee->minSuperintendentBoss();
 
         // mencari direktur dari karyawan yang mengajukan time_event
         $director = $employee->director();
@@ -74,9 +74,9 @@ class TimeEventObserver
         // maka time_event approval dibuat seolah-olah sudah disetujui
         // contoh: karyawan yang atasannya langsung direktur
         // atau deputi (UTOMO NUGROHO)
-        if ($closestBoss) {
+        if ($supeintendentBoss) {
             // menyimpan personnel_no dari closest boss
-            $timeEventApproval->regno = $closestBoss->personnel_no;
+            $timeEventApproval->regno = $supeintendentBoss->personnel_no;
 
             // menyimpan data persetujuan
             $timeEventApproval->save();

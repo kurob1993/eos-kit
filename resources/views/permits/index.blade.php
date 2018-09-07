@@ -7,6 +7,7 @@
   <div class="panel-heading">
     <h4 class="panel-title">Daftar Izin Saya</h4>
   </div>
+  @include('layouts._flash')
   <div class="panel-body">
     <p> <a class="btn btn-primary" href="{{ route('permits.create') }}">Tambah</a> </p>
     <div class="table-responsive">

@@ -20,7 +20,7 @@ class LeaveFormCreator
         $this->user = Auth::user();
 
         try {
-            $this->canDelegate = $this->user->employee()->firstOrFail()->hasSubordinate();                
+            $this->canDelegate = $this->user->employee()->firstOrFail()->canDelegate();                
 
         } catch (ModelNotFoundException $e) {
             // tampilkan pesan bahwa tidak ada data karyawan yang bisa ditemukan

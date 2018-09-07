@@ -13,7 +13,15 @@ class Absence extends Model
 {
     use FormatDates, PeriodDates, ReceiveStage;
 
-    public $fillable = ['personnel_no', 'start_date', 'end_date', 'note', 'address'];
+    public $fillable = [
+        'personnel_no', 
+        'start_date', 
+        'end_date', 
+        'absence_type_id', 
+        'note', 
+        'address', 
+        'attachment'
+    ];
 
     protected $casts = [
         'id' => 'integer',
@@ -24,6 +32,7 @@ class Absence extends Model
         'stage_id' => 'integer',
         'note' => 'string',
         'address' => 'string',
+        'attachment' => 'string',
     ];
 
     protected static function boot()
@@ -89,5 +98,11 @@ class Absence extends Model
         // jika absence adalah cuti tahunan / cuti besar
         return ($this->absenceType->subtype == '0100' 
             || $this->absenceType->subtype == '0200') ? true : false;
+    }
+
+    public function permitType()
+    {
+        // column aliasing untuk absence_type
+        return $this->absenceType();
     }
 }
