@@ -2,61 +2,64 @@
 
 namespace App\Observers;
 
-use App\Notifications\PermitApprovalMessage;
-use App\Models\AttendanceQuotaApproval;
 use App\Message;
+use App\Models\AttendanceQuotaApproval;
+use App\Models\Stage;
+use App\Notifications\OvertimeApprovalMessage;
 
 class AttendanceQuotaApprovalObserver
 {
-    public function updated(AttendanceQuotaApproval $attendanceQuotaApproval)
+    public function updating(AttendanceQuotaApproval $currentAqa)
     {
       // $flow_id  = config('emss.flows.attendance_quotas');
       // $flow_stage = FlowStage::nextSequence($flow_id);
       
+      // mencari semua AttendanceQuota dari approval ini
+      $aq = $currentAqa->attendanceQuota;
+
       // to adalah karyawan yang mengajukan
       // from adalah dari atasan
       // menyimpan catatan pengiriman pesan
-      $to = $attendanceQuotaApproval->attendanceQuota->user;
-      $from = $attendanceQuotaApproval->user;    
+      $to = $aq->user;
+      $from = $currentAqa->user;    
       $message = new Message;
 
-      // mencari semua approval dari AttendanceQuota ini
-      $aq = $attendanceQuotaApproval->attendanceQuota;
-      $aqas = $aq->attendanceQuotaApproval;
-
-      switch ($attendanceQuotaApproval->sequence) {
+      switch ($currentAqa->sequence) {
         case 1: 
-          // lakukan 
+          // message history
+          $messageAttribute = sprintf('Overtime partially approved from %s to %s',
+          $from->personnelNoWithName, $to->personnelNoWithName);
         break;
         case 2: 
-          // cek apakah sudah disetujui pada sequence sebelumnya
+          // mencari approval pertama
+          $firstApproval = $aq->first_approval;
+
+          // apakah approval pertama sudah disetujui pada sequence sebelumnya
+          // jika ya proses ke Send to SAP, jika tidak batalkan persetujuan
+          if ($firstApproval->is_approved) {
+            // NEED TO IMPLEMENT FLOW STAGE (send to SAP)
+            $aq->stage_id = Stage::sentToSapStage()->id;
+
+            // message history
+            $messageAttribute = sprintf('Overtime completely approved from %s to %s',
+            $from->personnelNoWithName, $to->personnelNoWithName); 
+
+            // simpan perubahan Stage untuk AttendanceQuota
+            $aq->save();
+          } else {
+            // tampilkan pesan bahwa persetujuan sebelumnya harus diselesaikan
+            Session::flash("flash_notification", [
+              "level"   =>  "danger",
+              "message"=>"Tidak dapat melakukan persetujuan karena data persetujuan " 
+              . "pada proses sebelumnya belum diselesaikan." 
+              . $firstApproval->user->personnelNoWithName
+            ]);
+            // batalkan persetujuan
+            return false;
+          }
         break;
       }
-      
-      $allApproved = true;
-      $allApproved &= $aqas->map(function ($a){
-        return $a->isApproved;
-      });
-      
-      // apakah data attendanceQuota sudah disetujui
-      if ($allApproved) {
-        
-        // NEED TO IMPLEMENT FLOW STAGE (send to SAP)
-        $attendanceQuota->stage_id = Stage::sentToSapStage()->id;
 
-        // message history
-        $messageAttribute = sprintf('Permit approved from %s to %s',
-        $from->personnelNoWithName, $to->personnelNoWithName);
-      } else {
-
-        // NEED TO IMPLEMENT FLOW STAGE (denied)
-        $attendanceQuota->stage_id = Stage::deniedStage()->id;
-
-        // message history
-        $messageAttribute = sprintf('Permit rejected from %s to %s',
-        $from->personnelNoWithName, $to->personnelNoWithName);
-      }
-      
       // simpan data message history lainnya
       $message->setAttribute('from', $from->id);
       $message->setAttribute('to', $to->id);
@@ -65,11 +68,8 @@ class AttendanceQuotaApprovalObserver
       // simpan message history
       $message->save();
       
-      // update data attendance
-      $attendance->save();
-
       // sistem mengirim email notifikasi dari atasan ke
       // karyawan yang mengajukan         
-      $to->notify(new PermitApprovalMessage($from, $attendanceQuotaApproval));
+      $to->notify(new OvertimeApprovalMessage($from, $currentAqa));
     }
 }

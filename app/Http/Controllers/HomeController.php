@@ -62,6 +62,7 @@ class HomeController extends Controller
 
             // ambil data persetujuan absence, WARNING nested relationship eager loading
             $absenceApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
+                ->leavesOnly()
                 ->with(['status:id,description', 'absence.user.employee', 'absence.absenceType']);
 
             // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
@@ -237,6 +238,12 @@ class HomeController extends Controller
 
     public function approve(Request $request, $approval, $id)
     {
+        // tampilkan pesan bahwa telah berhasil menyetujui
+        Session::flash("flash_notification", [
+            "level" => "success",
+            "message" => "Berhasil menyetujui cuti."
+        ]);
+        
         // poor database design
         switch ($approval) {
             case 'absence': $approved = AbsenceApproval::find($id); break;
@@ -250,12 +257,6 @@ class HomeController extends Controller
             // kembali lagi jika gagal
             return redirect()->back();
         }
-
-        // tampilkan pesan bahwa telah berhasil menyetujui
-        Session::flash("flash_notification", [
-            "level" => "success",
-            "message" => "Berhasil menyetujui cuti."
-        ]);
 
         // kembali lagi ke dashboard employee
         return redirect()->route('dashboards.employee');

@@ -2,7 +2,11 @@
             <ul class="nav">
                     <li class="nav-profile text-center">
                         <div class="nav-profile-image ">
-                            <img class="img-circle" src={{ url("/images", [$employee['personnel_no'] . '.jpg'])  }}>
+                            @if(!file_exists(url("/images", [$employee['personnel_no'] . '.jpg'])))
+                            <img class="img-circle" src={{ url("/images/default.png") }}> 
+                            @else
+                            <img class="img-circle" src={{ url("/images", [$employee['personnel_no'] . '.jpg']) }}>
+                            @endif
                         </div>
                         <div class="nav-profile-info">
                             <small>{{ $employee['personnel_no'] }}</small>

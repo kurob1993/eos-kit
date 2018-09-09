@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Models\AttendanceApproval;
 
-class LeaveApprovalMessage extends Notification implements ShouldQueue
+class PermitApprovalMessage extends Notification implements ShouldQueue
 {
     use Queueable;
     public $approved;

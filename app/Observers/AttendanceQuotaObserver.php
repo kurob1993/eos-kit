@@ -7,7 +7,7 @@ use App\Models\AttendanceQuotaApproval;
 use App\Models\AttendanceQuotaQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
-use App\Notifications\LeaveSentToSapMessage;
+use App\Notifications\OvertimeSentToSapMessage;
 use App\Role;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -122,7 +122,7 @@ class AttendanceQuotaObserver
 
             // Skenario 4
             // set approver pertama General Manager (1)
-            $firstAqa->regno = $c;            
+            $firstAqa->regno = $c;
 
             // menyimpan approver
             $firstAqa->save();
@@ -139,7 +139,7 @@ class AttendanceQuotaObserver
             $to = $attendanceQuota->user()->first();
 
             // sistem mengirim email notifikasi
-            $to->notify(new LeaveSentToSapMessage($attendanceQuota));
+            $to->notify(new OvertimeSentToSapMessage($attendanceQuota));
         }
     }
 }

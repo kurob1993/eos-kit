@@ -13,7 +13,7 @@ class SidebarUserComposer
     {
         try {
             // mendapatkan data employee dari user
-             $employee = Auth::user()->employee()->firstOrFail();
+            $employee = Auth::user()->employee()->firstOrFail();
             
             // menyimpan global variable view ini
             $view->with('employee', $employee->toArray());
@@ -25,7 +25,7 @@ class SidebarUserComposer
                 "message"=>"Tidak ditemukan data karyawan."
             ]);
             // batalkan view create dan kembali ke parent
-            return redirect('/leaves');
+            // return urlu('/leaves');
         }
     }
 }

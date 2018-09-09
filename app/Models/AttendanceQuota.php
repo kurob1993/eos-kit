@@ -46,7 +46,7 @@ class AttendanceQuota extends Model
         return $this->belongsTo('App\Models\Stage')->withDefault();
     }
 
-    public function attendaceQuotaApproval()
+    public function attendanceQuotaApproval()
     {
         // one-to-many relationship dengan AttendanceQuotaApproval
         return $this->hasMany('App\Models\AttendanceQuotaApproval');
@@ -62,5 +62,17 @@ class AttendanceQuota extends Model
     {
         // many-to-one relationship dengan OvertimeReason
         return $this->belongsTo('App\Models\OvertimeReason');
+    }
+
+    public function getFirstApprovalAttribute()
+    {
+        // mencari approval dengan sequence 1
+        return $this->attendanceQuotaApproval()->where('sequence', 1)->first();
+    }
+
+    public function getSecondApprovalAttribute()
+    {
+        // mencari approval dengan sequence 2
+        return $this->attendanceQuotaApproval()->where('sequence', 2)->first();
     }
 }

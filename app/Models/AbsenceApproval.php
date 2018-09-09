@@ -61,5 +61,12 @@ class AbsenceApproval extends Model
     {
         return $query->where('status_id', Status::firstStatus()->id);
     }
-    
+
+    public function scopeLeavesOnly($query)
+    {
+        // Querying Relationship Existence
+        return $query->whereHas('absence', function ($query){
+            $query->leavesOnly();
+        });
+    }
 }

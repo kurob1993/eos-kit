@@ -2,9 +2,10 @@
 
 namespace App\Observers;
 
-use App\Notifications\LeaveApprovalMessage;
-use App\Models\TimeEventApproval;
 use App\Message;
+use App\Models\TimeEventApproval;
+use App\Models\Stage;
+use App\Notifications\TimeEventApprovalMessage;
 
 class TimeEventApprovalObserver
 {
@@ -32,7 +33,7 @@ class TimeEventApprovalObserver
         $timeEvent->stage_id = 2;
 
         // message history
-        $messageAttribute = sprintf('Leave approved from %s to %s',
+        $messageAttribute = sprintf('Time Event approved from %s to %s',
         $from->personnelNoWithName, $to->personnelNoWithName);
       } else {
 
@@ -40,7 +41,7 @@ class TimeEventApprovalObserver
         $timeEvent->stage_id = 5;
 
         // message history
-        $messageAttribute = sprintf('Leave rejected from %s to %s',
+        $messageAttribute = sprintf('Time Event rejected from %s to %s',
         $from->personnelNoWithName, $to->personnelNoWithName);
       }
       
