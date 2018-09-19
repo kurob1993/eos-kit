@@ -38,7 +38,8 @@
 @endcomponent
 <!-- end page container -->
 @endsection
- @push('styles')
+
+@push('styles')
 <link href={{ url( "/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css") }} rel="stylesheet" />
 <link href={{ url( "/plugins/bootstrap-datepicker/css/datepicker3.css") }} rel="stylesheet" />
 <link href={{ url( "/plugins/bootstrap-select/bootstrap-select.min.css") }} rel="stylesheet" />
@@ -48,18 +49,18 @@
 <link href={{ url( "/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css") }} rel="stylesheet" />
 <!-- Pace -->
 <script src={{ url( "/plugins/pace/pace.min.js") }}></script>
+@endpush 
 
-
-@endpush @push('plugin-scripts')
+@push('plugin-scripts')
 <script src={{ url( "/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js") }}></script>
 <script src={{ url( "/plugins/bootstrap-select/bootstrap-select.min.js") }}></script>
 <script src={{ url( "/plugins/selectize/selectize.min.js") }}></script>
 <script src={{ url( "/plugins/parsley/dist/parsley.js") }}></script>
 <script src={{ url( "/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js") }}></script>
+@endpush 
 
-
-@endpush @push('custom-scripts')
-<script>
+@push('custom-scripts')
+<script type="text/javascript">
   (handleInlineDatePicker) = function() {
     "use strict";
     $("#datepicker-inline").datepicker({ });
@@ -75,7 +76,12 @@
   },
   (handleDateRangePicker = function() {
   $("#datepicker-range").datepicker({
-    inputs: $("#datepicker-range-start, #datepicker-range-end")
+    inputs: $("#datepicker-range-start, #datepicker-range-end"),
+    format: 'yyyy-mm-dd',
+      todayHighlight: true,
+      startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+      endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 5),
+      // datesDisabled: ['2018-09-01'],    
   });
 
   var start = $("#datepicker-range-start");
@@ -241,7 +247,6 @@
 })());
 
 </script>
-
 @endpush 
 
 @push('on-ready-scripts') 

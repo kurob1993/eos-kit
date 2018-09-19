@@ -46,19 +46,23 @@ Route::group([
 
         // route untuk leave
         Route::resource('leaves', 'LeaveController', ['except' => [ 
-            'destroy', 'show', 'update', 'edit' ]]);
+            'destroy', 'update', 'edit' ]]);
         
         // route untuk permit
         Route::resource('permits', 'PermitController',  ['except' => [ 
             'destroy', 'show', 'update', 'edit' ]]);
-            
+        Route::get('permits/absence/{id}', 'PermitController@showAbsence')
+            ->name('permits.absence');
+        Route::get('permits/attendance/{id}', 'PermitController@showAttendance')
+            ->name('permits.attendance');
+
         // route untuk  time event
         Route::resource('time_events', 'TimeEventController',  ['except' => [ 
-            'destroy', 'show', 'update', 'edit' ]]);
+            'destroy', 'update', 'edit' ]]);
 
         // route untuk  overtime
         Route::resource('overtimes', 'OvertimeController',  ['except' => [ 
-            'destroy', 'show', 'update', 'edit' ]]);
+            'destroy', 'update', 'edit' ]]);
 });
 
 // route untuk role personnel_service

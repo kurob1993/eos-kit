@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Stage;
-use App\Traits\FormatDates;
 use App\Traits\ReceiveStage;
 
 class TimeEvent extends Model
 {
-    use FormatDates, ReceiveStage;
+    use ReceiveStage;
 
     public $fillable = [
         'personnel_no',

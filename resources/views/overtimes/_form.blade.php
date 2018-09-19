@@ -144,7 +144,7 @@
 
       <!-- begin submit button -->
     <div class="form-group pull-right">
-      {!! Form::submit('Kirim Pengajuan Cuti', ['class'=>'btn btn-primary']) !!}
+      {!! Form::submit('Kirim Pengajuan Lembur', ['class'=>'btn btn-primary']) !!}
     </div>
     <!-- end submit button -->
   </div>

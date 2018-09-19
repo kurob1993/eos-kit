@@ -89,7 +89,7 @@
   
       <!-- begin note field -->
       <div class="form-group{{ $errors->has('note') ? ' has-error' : '' }}">
-        {!! Form::label('note', 'Keterangan Izin') !!} 
+        {!! Form::label('note', 'Keterangan Tidak Slash') !!} 
         {!! Form::text('note', null, ['class'=>'form-control', 'placeholder'=>'Tulis
         Keterangan Izin', 'id'=>'note', 'data-parsley-required' => 'true']) !!}
         {!! $errors->first('note', '<p class="help-block">:message</p>') !!}
@@ -121,7 +121,7 @@
 
     <!-- begin submit button -->
     <div class="form-group pull-right">
-      {!! Form::submit('Kirim Pengajuan Izin', ['class'=>'btn btn-primary']) !!}
+      {!! Form::submit('Kirim Pengajuan Tidak Slash', ['class'=>'btn btn-primary']) !!}
     </div>
     <!-- end submit button -->
       </div>

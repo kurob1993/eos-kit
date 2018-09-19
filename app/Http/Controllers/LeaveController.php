@@ -17,59 +17,67 @@ class LeaveController extends Controller
 {
     public function index(Request $request, Builder $htmlBuilder)
     {
+        // ambil data cuti untuk user tersebut
+        $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
+            ->LeavesOnly()
+            ->with(['absenceType', 'stage'])
+            ->get();
+
         // response untuk datatables absences
         if ($request->ajax()) {
 
-            // ambil data cuti untuk user tersebut
-            $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
-                ->LeavesOnly()
-                ->with(['absenceType', 'stage']);
-
-            // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
             return Datatables::of($absences)
-                ->editColumn('stage.description', function (Absence $absence) {
-                    return '<span class="label label-default">' 
-                    . $absence->stage->description . '</span>';})
-                ->editColumn('start_date', function (Absence $absence) {
-                    return $absence->start_date->format(config('emss.date_format'));})
-                ->editColumn('end_date', function (Absence $absence) {
-                    return $absence->end_date->format(config('emss.date_format'));})
-                ->escapeColumns([4])
+                ->editColumn('summary', function ($absence) {
+                    // kolom summary menggunakan view _summary
+                    return view('leaves._summary', [ 
+                        'summary' => $absence,
+                        'when' => $absence->created_at->format('d/m') 
+                    ]);
+                })
+                ->editColumn('approver', function ($absence) {
+                    // personnel_no dan name atasan
+                    return $absence
+                        ->absenceApprovals->first()
+                        ->user
+                        ->personnelNoWithName;
+                })
+                ->setRowAttr([
+                    // href untuk dipasang di setiap tr
+                    'data-href' => function ($absence) {
+                        return route('leaves.show', ['leaf' => $absence->id]);
+                    } 
+                ])
+                ->escapeColumns([0,1])
                 ->make(true);
         }
 
-        // html builder untuk menampilkan kolom di datatables
+        // disable paging, searching, details button but enable responsive
+        $htmlBuilder->parameters([
+            'paging' => false,
+            'searching' => false,
+            'responsive' => [ 'details' => false ],
+            "columnDefs" => [ [ "width" => "60%", "targets" => 0 ] ]
+        ]);
+
         $html = $htmlBuilder
             ->addColumn([
-                'data' => 'id',
-                'name' => 'id', 
-                'title' => 'ID'
+                'data' => 'summary',
+                'name' => 'summary',
+                'title' => 'Summary',
+                'searchable' => false,
+                'orderable' => false, 
                 ])
             ->addColumn([
-                'data' => 'start_date', 
-                'name' => 'start_date', 
-                'title' => 'Mulai'
-                ])
-            ->addColumn([
-                'data' => 'end_date', 
-                'name' => 'end_date', 
-                'title' => 'Berakhir'
-                ])
-            ->addColumn([
-                'data' => 'absence_type.text', 
-                'name' => 'absence_type.text', 
-                'title' => 'Jenis', 
-                'searchable' => false
-                ])
-            ->addColumn([
-                'data' => 'stage.description', 
-                'name' => 'stage.description', 
-                'title' => 'Tahap', 
-                'searchable' => false
+                'data' => 'approver',
+                'name' => 'approver',
+                'title' => 'Approver',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
                 ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('leaves.index')->with(compact('html'));
+        return view('leaves.index')->with(compact('html', 'absences'));
     }
 
     public function create()
@@ -103,20 +111,7 @@ class LeaveController extends Controller
             ]);
             // batalkan view create dan kembali ke parent
             return redirect()->route('leaves.index');
-        }
-
-        // apakah ada yang belum selesai pengajuan cutinya?
-        $incompleted = Absence::where('personnel_no', Auth::user()->personnel_no)
-            ->incompleted()->get();
-        if (sizeof($incompleted) > 0) {
-            Session::flash("flash_notification", [
-                "level"   =>  "danger",
-                "message"=>"Data pengajuan cuti/izin sudah ada dan harus diselesaikan prosesnya " . 
-                "sebelum mengajukan cuti kembali."
-            ]);
-            // batalkan view create dan kembali ke parent
-            return redirect()->route('leaves.index');       
-        }        
+        }  
 
         // tampilkan view create
         return view('leaves.create', [
@@ -143,7 +138,12 @@ class LeaveController extends Controller
 
     public function show($id)
     {
-        //
+        $leave = Absence::find($id)
+            ->load(['absenceType', 'stage', 'absenceApprovals']);
+
+        $leaveId = $leave->id;
+        
+        return view('leaves.show', compact('leave', 'leaveId'));
     }
 
     public function edit($id)

@@ -22,6 +22,21 @@ class Employee extends Model
       return $this->hasMany('App\Models\StructDisp', 'empnik', 'personnel_no');
     }
 
+    public function isSuperintendent()
+    {
+        return (substr($this->esgrp, 0, 1) == 'C') ? true : false;
+    }
+
+    public function isManager()
+    {
+        return (substr($this->esgrp, 0, 1) == 'B') ? true : false;
+    }
+
+    public function isGeneralManager()
+    {
+        return (substr($this->esgrp, 0, 1) == 'A') ? true : false;
+    }
+
     public function canDelegate()
     {
         // apakah boleh melakukan pelimpahan wewenang?
@@ -123,23 +138,32 @@ class Employee extends Model
         // mencari atasan dengan minimal level CS
         // apabila tidak ditemukan maka cari di level BS
         // apabila tidak ditemukan di level BS
-        // maka cari di level AS    
-       $superintendent = $this->superintendentBoss();
+        // maka cari di level AS            
+
+        if ($this->isSuperintendent() || $this->isManager() ) {
+            return $this->closestBoss();
+        } else {
+            $superintendent = $this->superintendentBoss();
         
-        if (!$superintendent)
-            return $this->minManagerBoss($this->personnel_no);
-        else
-            return $superintendent;
+            if (!$superintendent)
+                return $this->minManagerBoss();
+            else
+                return $superintendent;
+        }
     }
 
     public function minManagerBoss()
     {
-        // meneruskan recursive call dari atas
-        $manager = $this->managerBoss();
-        
-        if (!$manager)
-            return $this->generalManagerBoss($this->personnel_no);
-        else
-            return $manager;
+        if ($this->isSuperintendent() || $this->isManager() ) {
+            return $this->closestBoss();
+        } else {
+            // meneruskan recursive call dari atas
+            $manager = $this->managerBoss();
+            
+            if (!$manager)
+                return $this->generalManagerBoss();
+            else
+                return $manager;
+        }
     }
 }

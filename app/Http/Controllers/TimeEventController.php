@@ -13,65 +13,71 @@ use App\Http\Requests\StoreTimeEventRequest;
 use App\Models\TimeEvent;
 use App\Models\TimeEventType;
 
-
 class TimeEventController extends Controller
 {
 
     public function index(Request $request, Builder $htmlBuilder)
     {
-        // response untuk datatables timeEvents
+        // ambil data tidak slash dari timeEvents untuk user tersebut
+        $timeEvents = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
+            ->with(['timeEventType', 'stage'])
+            ->get();
+
+            // response untuk datatables timeEvents
         if ($request->ajax()) {
 
-            // ambil data tidak slash dari timeEvents untuk user tersebut
-            $timeEvents = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
-                ->with(['timeEventType', 'stage'])
-                ->get();
-
-            // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
             return Datatables::of($timeEvents)
-                ->editColumn('stage.description', function (TimeEvent $timeEvent) {
-                    return '<span class="label label-default">' 
-                    . $timeEvent->stage->description . '</span>'; })
-                ->editColumn('check_date', function (TimeEvent $timeEvent) {
-                    return $timeEvent->check_date->format(config('emss.date_format')); })
-                ->editColumn('check_time', function (TimeEvent $timeEvent) {
-                    return $timeEvent->check_time; })
-                ->escapeColumns([4])
+                ->editColumn('summary', function ($timeEvent) {
+                    // kolom summary menggunakan view _summary
+                    return view('time_events._summary', [ 
+                        'summary' => $timeEvent,
+                        'when' => $timeEvent->created_at->format('d/m') 
+                    ]);
+                })
+                ->editColumn('approver', function ($timeEvent) {
+                    // personnel_no dan name atasan
+                    return $timeEvent
+                        ->timeEventApprovals->first()
+                        ->user
+                        ->personnelNoWithName;
+                })
+                ->setRowAttr([
+                    // href untuk dipasang di setiap tr
+                    'data-href' => function ($timeEvent) {
+                        return route('time_events.show', ['time_event' => $timeEvent->id]);
+                    } 
+                ])
+                ->escapeColumns([0,1])
                 ->make(true);
         }
 
-        // html builder untuk menampilkan kolom di datatables
+        // disable paging, searching, details button but enable responsive
+        $htmlBuilder->parameters([
+            'paging' => false,
+            'searching' => false,
+            'responsive' => [ 'details' => false ],
+            "columnDefs" => [ [ "width" => "60%", "targets" => 0 ] ]
+        ]);
+
         $html = $htmlBuilder
             ->addColumn([
-                'data' => 'id',
-                'name' => 'id', 
-                'title' => 'ID'
+                'data' => 'summary',
+                'name' => 'summary',
+                'title' => 'Summary',
+                'searchable' => false,
+                'orderable' => false, 
                 ])
             ->addColumn([
-                'data' => 'check_date', 
-                'name' => 'check_date', 
-                'title' => 'Tanggal'
-                ])
-            ->addColumn([
-                'data' => 'check_time', 
-                'name' => 'check_time', 
-                'title' => 'Jam'
-                ])
-            ->addColumn([
-                'data' => 'time_event_type.description', 
-                'name' => 'time_event_type.description', 
-                'title' => 'Jenis', 
-                'searchable' => false
-                ])
-            ->addColumn([
-                'data' => 'stage.description', 
-                'name' => 'stage.description', 
-                'title' => 'Tahap', 
-                'searchable' => false
+                'data' => 'approver',
+                'name' => 'approver',
+                'title' => 'Approver',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
                 ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('time_events.index')->with(compact('html'));
+        return view('time_events.index')->with(compact('html', 'timeEvents'));
     }
 
     public function create()
@@ -123,7 +129,12 @@ class TimeEventController extends Controller
 
     public function show($id)
     {
-        //
+        $timeEvent = TimeEvent::find($id)
+            ->load(['timeEventType', 'stage', 'timeEventApprovals']);
+
+        $timeEventId = $timeEvent->id;
+        
+        return view('time_events.show', compact('timeEvent', 'timeEventId'));
     }
 
     public function edit($id)

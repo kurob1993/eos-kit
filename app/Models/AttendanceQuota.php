@@ -3,13 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\FormatDates;
 use App\Traits\PeriodDates;
 use App\Traits\ReceiveStage;
 
 class AttendanceQuota extends Model
 {
-    use FormatDates, PeriodDates, ReceiveStage;
+    use PeriodDates, ReceiveStage;
     
     public $fillable = [
         'personnel_no',

@@ -21,68 +21,74 @@ class PermitController extends Controller
 
     public function index(Request $request, Builder $htmlBuilder)
     {
+        // ambil data izin dari attendances (elr) pada column alias
+        $attendances = Attendance::where('personnel_no', Auth::user()->personnel_no)
+            ->with(['permitType', 'stage', 'permitApprovals'])
+            ->get();
+
+        // ambil data izin dari absences (elr) (kecuali 0100 & 0200) pada column alias
+        $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
+            ->excludeLeaves()
+            ->with(['permitType', 'stage', 'permitApprovals'])
+            ->get();
+
+        // merge collection
+        $permits = $attendances->merge($absences);
+
         // response untuk datatables attendances
         if ($request->ajax()) {
 
-            // ambil data izin dari attendances (elr) pada column alias
-            $attendances = Attendance::where('personnel_no', Auth::user()->personnel_no)
-                ->with(['permitType', 'stage'])
-                ->get();
-
-            // ambil data izin dari absences (elr) (kecuali 0100 & 0200) pada column alias
-            $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
-                ->excludeLeaves()
-                ->with(['permitType', 'stage'])
-                ->get();
-
-            // merge collection
-            $permits = $attendances->merge($absences);
-
-            // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
             return Datatables::of($permits)
-                ->editColumn('stage.description', function ($a) {
-                    return '<span class="label label-default">' 
-                    . $a->stage->description . '</span>';})
-                ->editColumn('start_date', function ($a) {
-                    return $a->start_date->format(config('emss.date_format'));})
-                ->editColumn('end_date', function ($a) {
-                    return $a->end_date->format(config('emss.date_format'));})
-                ->escapeColumns([4])
+                ->editColumn('summary', function ($permit) {                    
+                    return view('permits._summary', [ 
+                        'summary' => $permit,
+                        'when' => $permit->created_at->format('d/m') 
+                    ]);
+
+                })
+                ->editColumn('approver', function ($permit) {
+                    return $permit->permitApprovals->first()->user->personnelNoWithName;
+                })
+                ->setRowAttr([
+                    'data-href' => function($permit) {
+                        if ($this->isInstanceOfAbsence($permit))
+                            $routeName = 'permits.absence';
+                        else if ($this->isInstanceOfAttendance($permit))
+                            $routeName = 'permits.attendance';
+                        return route($routeName, ['id' => $permit->id]);
+                    }, 
+                ])
+                ->escapeColumns([0,1])
                 ->make(true);
         }
 
-        // html builder untuk menampilkan kolom di datatables
+        // disable paging, searching, details button but enable responsive
+        $htmlBuilder->parameters([
+            'paging' => false,
+            'searching' => false,
+            'responsive' => [ 'details' => false ],
+            "columnDefs" => [ [ "width" => "60%", "targets" => 0 ] ]
+        ]);
+
         $html = $htmlBuilder
             ->addColumn([
-                'data' => 'id',
-                'name' => 'id', 
-                'title' => 'ID'
+                'data' => 'summary',
+                'name' => 'summary',
+                'title' => 'Summary',
+                'searchable' => false,
+                'orderable' => false, 
                 ])
             ->addColumn([
-                'data' => 'start_date', 
-                'name' => 'start_date', 
-                'title' => 'Mulai'
-                ])
-            ->addColumn([
-                'data' => 'end_date', 
-                'name' => 'end_date', 
-                'title' => 'Berakhir'
-                ])
-            ->addColumn([
-                'data' => 'permit_type.text', 
-                'name' => 'permit_type.text', 
-                'title' => 'Jenis', 
-                'searchable' => false
-                ])
-            ->addColumn([
-                'data' => 'stage.description', 
-                'name' => 'stage.description', 
-                'title' => 'Tahap', 
-                'searchable' => false
+                'data' => 'approver',
+                'name' => 'approver',
+                'title' => 'Approver',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
                 ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('permits.index')->with(compact('html'));
+        return view('permits.index',compact('html', 'permits'));
     }
 
     public function create()
@@ -148,7 +154,8 @@ class PermitController extends Controller
         ]);
 
         $path = $request->file('attachment')->store('permits');
-        $request->merge([ 'attachment' => $path ]);
+        $requestData = $request->all();
+        $requestData['attachment'] = $path;
         
         // memeriksa apakah permit_type adalah attendance atau absence
         $permitType = $request->input('permit_type');
@@ -157,7 +164,7 @@ class PermitController extends Controller
             $absence_type_id = AbsenceType::where('subtype', $permitType)->first()->id;
 
             // membuat pengajuan izin dengan menambahkan data personnel_no
-            Absence::create($request->all()
+            Absence::create($requestData
                 + ['personnel_no' => Auth::user()->personnel_no,
                    'absence_type_id' => $absence_type_id, ]);
                 
@@ -165,7 +172,7 @@ class PermitController extends Controller
 
             $attendance_type_id = AttendanceType::where('subtype', $permitType)->first()->id;
             // membuat pengajuan izin dengan menambahkan data personnel_no
-            Attendance::create($request->all()
+            Attendance::create($requestData
                 + ['personnel_no' => Auth::user()->personnel_no,
                    'attendance_type_id' => $attendance_type_id, ]);
                 
@@ -177,9 +184,24 @@ class PermitController extends Controller
         return redirect()->route('permits.index');
     }
 
-    public function show($id)
+    public function showAbsence($id)
     {
-        //
+        $permit = Absence::find($id)
+            ->load(['permitType', 'stage', 'permitApprovals']);
+
+        $permitId = 'absence-' . $permit->id;
+        
+        return view('permits._show-absence', compact('permit', 'permitId'));
+    }
+    
+    public function showAttendance($id)
+    {
+        $permit = Attendance::find($id)
+            ->load(['permitType', 'stage', 'permitApprovals']);
+
+        $permitId = 'attendance-' . $permit->id;
+
+        return view('permits._show-attendance', compact('permit', 'permitId'));
     }
 
     public function edit($id)
@@ -195,6 +217,16 @@ class PermitController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    protected function isInstanceOfAbsence($permit)
+    {
+        return $permit instanceOf Absence;
+    }
+
+    protected function isInstanceOfAttendance($permit)
+    {
+        return $permit instanceOf Attendance;
     }
 
     protected function attendanceTypes()

@@ -36,16 +36,7 @@ class HomeController extends Controller
 
     public function employeeDashboard($request, $htmlBuilder)
     {
-        // // html builder untuk menampilkan kolom di datatables
-        // $html = $htmlBuilder
-        //     ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
-        //     ->addColumn(['data' => 'absence_id', 'name' => 'absence_id', 'title' => 'Pengajuan', 'orderable' => false])
-        //     ->addColumn(['data' => 'absence.user.personnel_no', 'name' => 'absence.user.personnel_no', 'title' => 'Karyawan', 'orderable' => false,])
-        //     ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Status', 'searchable' => false, 'orderable' => false]);
-
-
-        // tampilkan view index dengan tambahan script html DataTables
-        // return view('dashboards.employee')->with(compact('html'));
+        
         
         return view('dashboards.employee');
     }
@@ -266,10 +257,22 @@ class HomeController extends Controller
     {
         // poor database design
         switch ($approval) {
-            case 'absence': $approved = AbsenceApproval::find($id); break;
-            case 'attendance': $approved = AttendanceApproval::find($id); break;
-            case 'time_event': $approved = TimeEventApproval::find($id); break;
-            case 'attendance_quota': $approved = AttendanceQuota::find($id); break;
+            case 'absence': 
+                $approved = AbsenceApproval::find($id); 
+                $moduleText = config('emss.absences.text');
+            break;
+            case 'attendance': 
+                $approved = AttendanceApproval::find($id);
+                $moduleText = config('emss.attendances.text');
+            break;
+            case 'time_event': 
+                $approved = TimeEventApproval::find($id);
+                $moduleText = config('emss.time_events.text');
+            break;
+            case 'attendance_quota': 
+                $approved = AttendanceQuotaApproval::find($id);
+                $moduleText = config('emss.overtimes.text'); 
+            break;
         }
 
         if (!$approved->update($request->all() 
@@ -281,7 +284,7 @@ class HomeController extends Controller
         // tampilkan pesan bahwa telah berhasil menolak
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Berhasil menolak cuti" 
+            "message" => "Berhasil menolak " . $moduleText
         ]);
 
         // kembali lagi ke dashboard employee

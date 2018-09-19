@@ -19,58 +19,64 @@ class OvertimeController extends Controller
 {
     public function index(Request $request, Builder $htmlBuilder)
     {
-        // response untuk datatables absences
+        // ambil data cuti untuk user tersebut
+        $overtimes = AttendanceQuota::where('personnel_no', Auth::user()->personnel_no)
+            ->with(['overtimeReason', 'stage'])
+            ->get();
+
+        // response untuk datatables attendanceQuota
         if ($request->ajax()) {
 
-            // ambil data cuti untuk user tersebut
-            $attendanceQuotas = AttendanceQuota::where('personnel_no', Auth::user()->personnel_no)
-                ->with(['overtimeReason', 'stage']);
-
-            // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
-            return Datatables::of($attendanceQuotas)
-                ->editColumn('stage.description', function (AttendanceQuota $attendanceQuota) {
-                    return '<span class="label label-default">' 
-                    . $attendanceQuota->stage->description . '</span>';})
-                ->editColumn('start_date', function (AttendanceQuota $attendanceQuota) {
-                    return $attendanceQuota->start_date->format(config('emss.date_format'));})
-                ->editColumn('end_date', function (AttendanceQuota $attendanceQuota) {
-                    return $attendanceQuota->end_date->format(config('emss.date_format'));})
-                ->escapeColumns([4])
+            return Datatables::of($overtimes)
+                ->editColumn('summary', function ($overtime) {
+                    // kolom summary menggunakan view _summary
+                    return view('overtimes._summary', [ 
+                        'summary' => $overtime,
+                        'when' => $overtime->created_at->format('d/m') 
+                    ]);
+                })
+                ->editColumn('approver', function ($overtime) {
+                    // personnel_no dan name atasan
+                    return $overtime
+                        ->attendanceQuotaApprovals;
+                })
+                ->setRowAttr([
+                    // href untuk dipasang di setiap tr
+                    'data-href' => function ($overtime) {
+                        return route('overtimes.show', ['leaf' => $overtime->id]);
+                    } 
+                ])
+                ->escapeColumns([0,1])
                 ->make(true);
         }
 
-        // html builder untuk menampilkan kolom di datatables
+        // disable paging, searching, details button but enable responsive
+        $htmlBuilder->parameters([
+            'paging' => false,
+            'searching' => false,
+            'responsive' => [ 'details' => false ],
+            "columnDefs" => [ [ "width" => "60%", "targets" => 0 ] ]
+        ]);
+
         $html = $htmlBuilder
             ->addColumn([
-                'data' => 'id',
-                'name' => 'id', 
-                'title' => 'ID'
+                'data' => 'summary',
+                'name' => 'summary',
+                'title' => 'Summary',
+                'searchable' => false,
+                'orderable' => false, 
                 ])
             ->addColumn([
-                'data' => 'start_date', 
-                'name' => 'start_date', 
-                'title' => 'Mulai'
-                ])
-            ->addColumn([
-                'data' => 'end_date', 
-                'name' => 'end_date', 
-                'title' => 'Berakhir'
-                ])
-            ->addColumn([
-                'data' => 'overtime_reason.text', 
-                'name' => 'overtime_reason.text', 
-                'title' => 'Jenis', 
-                'searchable' => false
-                ])
-            ->addColumn([
-                'data' => 'stage.description', 
-                'name' => 'stage.description', 
-                'title' => 'Tahap', 
-                'searchable' => false
+                'data' => 'approver',
+                'name' => 'approver',
+                'title' => 'Approver',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
                 ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('overtimes.index')->with(compact('html'));
+        return view('overtimes.index')->with(compact('html', 'overtimes'));
     }
 
     public function create()
@@ -104,7 +110,7 @@ class OvertimeController extends Controller
         // tampilkan pesan bahwa telah berhasil mengajukan cuti
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Berhasil menyimpan pengajuan cuti.",
+            "message" => "Berhasil menyimpan pengajuan lembur.",
         ]);
 
         // menghitung end_date berdasarkan day_assignment
@@ -130,7 +136,12 @@ class OvertimeController extends Controller
 
     public function show($id)
     {
-        //
+        $overtime = AttendanceQuota::find($id)
+            ->load(['attendanceQuotaType', 'stage', 'attendanceQuotaApproval']);
+
+        $overtimeId = $overtime->id;
+        
+        return view('overtimes.show', compact('overtime', 'overtimeId'));
     }
 
     public function edit($id)

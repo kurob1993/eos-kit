@@ -21,6 +21,11 @@ trait PeriodDates
         return $this->formattedStartDate . '-' . $this->formattedEndDate;
     }
 
+    public function getDurationAttribute()
+    {
+        return $this->end_date->diffInDays($this->start_date) + 1;
+    }
+
     public function scopeIntersectWith($query, $s, $e)
     {
         // apakah ada data absence yang beririsan (intersection)

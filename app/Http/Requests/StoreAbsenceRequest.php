@@ -28,6 +28,7 @@ class StoreAbsenceRequest extends FormRequest
           'personnel_no' => 'required',
           'start_date' => 'required',
           'end_date' => 'required',
+          'absence_type' => 'required',
           'deduction' => 'required',
           'note' => 'required',
           'address' => 'required'

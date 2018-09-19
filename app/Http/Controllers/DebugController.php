@@ -13,7 +13,10 @@ class DebugController extends Controller
 {
     public function debug()
     {
-        dd(\Carbon\Carbon::parse('2018-09-01')->addDays(1));
+
+        // dd(\App\Models\Employee::where('personnel_no', 11725)->first()->isSuperintendent());
+        
+        // dd(\Carbon\Carbon::parse('2018-09-01')->addDays(1));
 
         // $flow_id = \Config::get('emss.flows.absences');
         // // mencari flow berdasarkan flow_id

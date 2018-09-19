@@ -4,21 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Stage;
-use App\Traits\FormatDates;
 use App\Traits\PeriodDates;
 use App\Traits\ReceiveStage;
 
 
 class Attendance extends Model
 {
-    use FormatDates, PeriodDates, ReceiveStage;
+    use PeriodDates, ReceiveStage;
 
     public $fillable = [
         'personnel_no',
         'start_date',
         'end_date',
         'attendance_type_id',
-        'stage_id'
+        'stage_id',
+        'attachment'
     ];
 
     protected $casts = [
@@ -33,6 +33,12 @@ class Attendance extends Model
     public static $rules = [
         
     ];
+
+    public function user()
+    {
+        // many-to-one relationship dengan User
+        return $this->belongsTo('App\User', 'personnel_no', 'personnel_no');
+    }
 
     public function attendanceType()
     {
@@ -62,7 +68,13 @@ class Attendance extends Model
 
     public function permitType()
     {
-        // column aliasing for attendanceType
-        return $this->belongsTo('App\Models\AttendanceType');
-    }    
+        // column aliasing untuk attendanceType
+        return $this->attendanceType();
+    }
+
+    public function permitApprovals()
+    {
+        // column aliasing untuk attendanceApprovals
+        return $this->attendanceApprovals();
+    }
 }

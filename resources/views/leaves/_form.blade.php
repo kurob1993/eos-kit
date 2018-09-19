@@ -1,6 +1,6 @@
   {{-- 
     Form Elements: personnel_no, start_date, end_date, deduction,
-    permit_type, note, address, delegation (if have subordinates)
+    absence_type, note, address, delegation (if have subordinates)
   --}}
 
   <!-- begin datepicker range -->
@@ -52,8 +52,10 @@
           {!! Form::label('absence_type', 'Jenis Cuti') !!}
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
-            <input type="text" class="form-control" id="absence_type" 
-            placeholder="Jenis Cuti" value="{{ $absence_quota->absenceType->text }}" readonly>
+            {!! Form::hidden('absence_type_id', $absence_quota->absenceType->id) !!}
+            {!! Form::text('absence_type', $absence_quota->absenceType->text, 
+            ['class' => 'form-control', 'placeholder' => 'Jenis Cuti', 
+            'readonly' => 'readonly', 'id' => 'absence_type']) !!}
           </div>
         </div>
       </div>

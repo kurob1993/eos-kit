@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use Session;
 use App\Message;
 use App\Models\AttendanceQuotaApproval;
 use App\Models\Stage;
@@ -51,7 +52,7 @@ class AttendanceQuotaApprovalObserver
             Session::flash("flash_notification", [
               "level"   =>  "danger",
               "message"=>"Tidak dapat melakukan persetujuan karena data persetujuan " 
-              . "pada proses sebelumnya belum diselesaikan." 
+              . "pada proses sebelumnya belum diselesaikan. " 
               . $firstApproval->user->personnelNoWithName
             ]);
             // batalkan persetujuan

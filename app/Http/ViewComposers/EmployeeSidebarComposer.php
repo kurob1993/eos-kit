@@ -12,9 +12,9 @@ class EmployeeSidebarComposer
 
     public function compose(View $view)
     {
-        $needApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
-            ->waitedForApproval()->get();
+        // $needApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
+        //     ->waitedForApproval()->get();
 
-        $view->with('count_of_needed_approvals', count($needApprovals));
+        // $view->with('count_of_needed_approvals', count($needApprovals));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Notifications\LeaveApprovalMessage;
 use App\Models\AbsenceApproval;
+use App\Models\Stage;
 use App\Message;
 
 class AbsenceApprovalObserver
@@ -29,7 +30,7 @@ class AbsenceApprovalObserver
       if ($absenceApproval->isApproved) {
         
         // NEED TO IMPLEMENT FLOW STAGE (send to SAP)
-        $absence->stage_id = Stage::sentToSapStage();
+        $absence->stage_id = Stage::sentToSapStage()->id;
 
         // message history
         $messageAttribute = sprintf('Leave approved from %s to %s',

@@ -5,19 +5,29 @@
 @component('layouts.employee._page-container', ['page_header' => 'Employee Dashboard'])
 <div class="row">
   <div class="col-lg-12 col-xl-9">
+    <h4>Persetujuan Karyawan</h4>
+    @include('layouts._flash')
       <!-- begin of dashboard nav-tabs  -->
       <ul class="nav nav-tabs">
           <li class="active">
-              <a href="#tab-leaves" data-toggle="tab" aria-expanded="true"> Cuti </a>
+              <a href="#tab-leaves" data-toggle="tab" aria-expanded="true"> Cuti
+                  <span class="badge badge-info m-l-5">{{ $countLeaveApprovals }}</span>
+              </a>
           </li>
           <li class="">
-              <a href="#tab-permits" data-toggle="tab" aria-expanded="true"> Izin </a>
+              <a href="#tab-permits" data-toggle="tab" aria-expanded="true"> Izin 
+                <span class="badge badge-info m-l-5">{{ $countPermitApprovals }}</span>
+              </a>
           </li>
           <li class="">
-              <a href="#tab-time-events" data-toggle="tab" aria-expanded="true"> Tidak Slash </a>
+              <a href="#tab-time-events" data-toggle="tab" aria-expanded="true"> Tidak Slash 
+                <span class="badge badge-info m-l-5">{{ $countTimeEventApprovals }}</span>
+              </a>
           </li>
           <li class="">
-              <a href="#tab-overtimes" data-toggle="tab" aria-expanded="true"> Lembur </a>
+              <a href="#tab-overtimes" data-toggle="tab" aria-expanded="true"> Lembur 
+                <span class="badge badge-info m-l-5">{{ $countOvertimeApprovals }}</span>
+              </a>
           </li>
       </ul>
       <!-- end of dashboard nav-tabs  -->
@@ -28,7 +38,7 @@
           <div class="tab-pane fade active in" id="tab-leaves">
               <div class="panel-body p-0">
                   <div class="table-responsive">
-                    {!! $absenceTable->table(['class'=>'table table-striped']) !!}
+                    {!! $absenceTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
                   </div>
                 </div>
           </div>
@@ -38,7 +48,7 @@
           <div class="tab-pane fade" id="tab-permits">
               <div class="panel-body p-0">
                   <div class="table-responsive">
-                    {!! $attendanceTable->table(['class'=>'table table-striped']) !!}
+                    {!! $attendanceTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
                   </div>
                 </div>
           </div>
@@ -47,7 +57,7 @@
           <!-- begin of time-events tab  -->
           <div class="tab-pane fade" id="tab-time-events">
               <div class="panel-body p-0">
-                {!! $timeEventTable->table(['class'=>'table table-striped']) !!}
+                {!! $timeEventTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
               </div>
           </div>
           <!-- end of time-events tab  -->
@@ -55,7 +65,7 @@
           <!-- begin of overtimes tab  -->
           <div class="tab-pane fade" id="tab-overtimes">
               <div class="panel-body p-0">
-                {!! $attendanceQuotaTable->table(['class'=>'table table-striped']) !!}
+                {!! $attendanceQuotaTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
               </div>
           </div>
           <!-- end of overtimes tab  -->
@@ -70,20 +80,22 @@
 @endsection
 
 @push('styles')
-    <!-- DataTables -->
-    <link href={{ url("/plugins/DataTables/css/data-table.css") }} rel="stylesheet" />
-    <!-- Selectize -->
-    <link href={{ url("/plugins/selectize/selectize.css") }} rel="stylesheet">
-    <link href={{ url("/plugins/selectize/selectize.bootstrap3.css") }} rel="stylesheet">
-    <!-- Pace -->    
-    <script src={{ url("/plugins/pace/pace.min.js") }}></script>
+<!-- DataTables -->
+<link href={{ url("/plugins/DataTables/css/jquery.dataTables.min.css") }} rel="stylesheet" />
+<link href={{ url("/plugins/DataTables/Responsive/css/responsive.dataTables.min.css") }} rel="stylesheet" />
+  <!-- Selectize -->
+  <link href={{ url("/plugins/selectize/selectize.css") }} rel="stylesheet">
+  <link href={{ url("/plugins/selectize/selectize.bootstrap3.css") }} rel="stylesheet">
+  <!-- Pace -->    
+  <script src={{ url("/plugins/pace/pace.min.js") }}></script>
 @endpush
 
 @push('plugin-scripts')
 <!-- Selectize -->
 <script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
 <!-- DataTables -->
-<script src={{ url("/plugins/DataTables/js/jquery.dataTables.js") }}></script>
+<script src={{ url("/plugins/DataTables/js/jquery.dataTables.min.js") }}></script>
+<script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
 <!-- Generated scripts from DataTables -->
 {!! $absenceTable->scripts() !!}
 {!! $attendanceTable->scripts() !!}

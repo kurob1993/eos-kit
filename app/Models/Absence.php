@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Config;
 use App\Models\Stage;
-use App\Traits\FormatDates;
 use App\Traits\PeriodDates;
 use App\Traits\ReceiveStage;
 
 class Absence extends Model
 {
-    use FormatDates, PeriodDates, ReceiveStage;
+    use PeriodDates, ReceiveStage;
 
     public $fillable = [
         'personnel_no', 
@@ -104,5 +103,11 @@ class Absence extends Model
     {
         // column aliasing untuk absence_type
         return $this->absenceType();
+    }
+
+    public function permitApprovals()
+    {
+        // column aliasing untuk absenceApprovals
+        return $this->absenceApprovals();
     }
 }

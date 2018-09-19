@@ -32,6 +32,9 @@ class AppServiceProvider extends ServiceProvider
         // Fix for doctrine using mariaDB
         Schema::defaultStringLength(191);
 
+        config(['app.locale' => 'id']);
+        \Carbon\Carbon::setLocale('id');
+
         // Observer untuk model Absence
         Absence::observe(AbsenceObserver::class);
         // Observer untuk model AbsenceApproval
