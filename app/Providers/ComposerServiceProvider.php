@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Yajra\DataTables\Html\Builder;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -16,22 +17,10 @@ class ComposerServiceProvider extends ServiceProvider
     {
         // view composer untuk sidebar-user
         View::composer('layouts._sidebar-user', 'App\Http\ViewComposers\SidebarUserComposer');
-
-        // view composer untuk employee-sidebar
-        View::composer('layouts.employee._sidebar', 'App\Http\ViewComposers\EmployeeSidebarComposer');
         
-        // view composer / view creator tidak dapat menangkap exception
-        // sehingga dipindahkan ke controller saja T_T
-        // // view composer untuk formulir cuti
-        // View::composer('leaves._form', 'App\Http\ViewComposers\LeaveFormComposer');
-        // // view creator untuk formulir cuti
-        // View::creator('leaves._form', 'App\Http\ViewCreators\LeaveFormCreator');
-
-        // // Using Closure based composers...
-        // View::composer('layouts._sidebar', function ($view) {
-
-        // });
-    }
+        // view composer untuk dashboards.employee
+        View::composer('dashboards.employee', 'App\Http\ViewComposers\EmployeeDashboardComposer');
+   }
 
     /**
      * Register the service provider.
@@ -40,6 +29,24 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // DataTables builder for absence approval
+        $this->app->bind('datatables.html.absenceTable', function () {
+            return $this->app->make(Builder::class);
+        });
+
+        // DataTables builder for attendance approval
+        $this->app->bind('datatables.html.attendanceTable', function () {
+            return $this->app->make(Builder::class);
+        });        
+
+        // DataTables builder for attendance quota approval
+        $this->app->bind('datatables.html.attendanceQuotaTable', function () {
+            return $this->app->make(Builder::class);
+
+        });        
+        // DataTables builder for time event approval
+        $this->app->bind('datatables.html.timeEventTable', function () {
+            return $this->app->make(Builder::class);
+        });   
     }
 }

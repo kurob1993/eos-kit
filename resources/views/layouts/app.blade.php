@@ -22,6 +22,9 @@
 	<link href={{ url("/plugins/font-awesome/css/font-awesome.min.css") }} rel="stylesheet" />
 	<!-- Simple line icons -->
 	<link href={{ url("/plugins/simple-line-icons/simple-line-icons.css") }} rel="stylesheet">
+	
+	@stack('styles')
+	
 	<!-- Base Styles -->
 	<link href={{ url("/css/animate.min.css") }} rel="stylesheet" />
 	<link href={{ url("/css/style.css") }} rel="stylesheet" />
@@ -29,8 +32,6 @@
 	<link href={{ url("/css/theme/default.css") }} rel="stylesheet" id="theme" />
 	<link href={{ url("/css/style-custom.css") }} rel="stylesheet" /> 
 	
-	@stack('styles')
-
 	<script>
 		window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),

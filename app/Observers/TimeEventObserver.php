@@ -17,20 +17,26 @@ class TimeEventObserver
 {
     public function creating(TimeEvent $timeEvent)
     {
-        // apakah tanggal tidak slash sudah pernah dilakukan sebelumnya (intersection)
-        // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
-        // JIKA DENIED tidak termasuk intersected
+        // mencari pengajuan TimeEvent pada tanggal yang sama
         $intersected = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
             ->where('check_date', $timeEvent->check_date)
+            ->with(['timeEventType'])
             ->first();
+        
+        // apakah tanggal tidak slash sudah pernah dilakukan sebelumnya (intersection)
         if (sizeof($intersected) > 0) {
-            Session::flash("flash_notification", [
-                "level" => "danger",
-                "message" => "Tidak dapat mengajukan tidak slash karena tanggal pengajuan "
-                . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
-                . $intersected->check_date . ").",
-            ]);
-            return false;
+
+            // apakah timeEventType yang akan disimpan sama dengan intersected
+            if ($intersected->time_event_type_id == $timeEvent->time_event_type_id) {
+                Session::flash("flash_notification", [
+                    "level" => "danger",
+                    "message" => "Tidak dapat mengajukan tidak slash karena tanggal pengajuan "
+                    . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
+                    . $intersected->check_date . "-" 
+                    . $intersected->timeEventType->description . ").",
+                ]);
+                return false;
+            }
         }
     }
 

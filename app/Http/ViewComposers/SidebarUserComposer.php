@@ -25,7 +25,7 @@ class SidebarUserComposer
                 "message"=>"Tidak ditemukan data karyawan."
             ]);
             // batalkan view create dan kembali ke parent
-            // return urlu('/leaves');
+            // return url('/leaves');
         }
     }
 }

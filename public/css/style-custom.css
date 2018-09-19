@@ -121,3 +121,10 @@
 .sidebar .nav>li.nav-profile {
   padding: 10px;
 }
+
+table.dataTable.no-footer {
+  border-color: #e2e7eb;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px
+}

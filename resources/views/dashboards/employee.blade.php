@@ -11,22 +11,38 @@
       <ul class="nav nav-tabs">
           <li class="active">
               <a href="#tab-leaves" data-toggle="tab" aria-expanded="true"> Cuti
-                  <span class="badge badge-info m-l-5">{{ $countLeaveApprovals }}</span>
+                  @if ($countLeaveApprovals > 0) 
+                  <span class="badge pull-right m-l-5">
+                      {{$countLeaveApprovals}} 
+                  </span>
+                  @endif
               </a>
           </li>
           <li class="">
               <a href="#tab-permits" data-toggle="tab" aria-expanded="true"> Izin 
-                <span class="badge badge-info m-l-5">{{ $countPermitApprovals }}</span>
+                  @if ($countPermitApprovals > 0) 
+                  <span class="badge pull-right m-l-5">
+                      {{$countPermitApprovals}} 
+                  </span>
+                  @endif
               </a>
           </li>
           <li class="">
-              <a href="#tab-time-events" data-toggle="tab" aria-expanded="true"> Tidak Slash 
-                <span class="badge badge-info m-l-5">{{ $countTimeEventApprovals }}</span>
+              <a href="#tab-time-events" data-toggle="tab" aria-expanded="true"> Slash
+                  @if ($countTimeEventApprovals > 0) 
+                  <span class="badge pull-right m-l-5">
+                      {{$countTimeEventApprovals}} 
+                  </span>
+                  @endif                 
               </a>
           </li>
           <li class="">
-              <a href="#tab-overtimes" data-toggle="tab" aria-expanded="true"> Lembur 
-                <span class="badge badge-info m-l-5">{{ $countOvertimeApprovals }}</span>
+              <a href="#tab-overtimes" data-toggle="tab" aria-expanded="true"> Lembur
+                  @if ($countOvertimeApprovals > 0) 
+                  <span class="badge pull-right m-l-5">
+                      {{$countOvertimeApprovals}} 
+                  </span>
+                  @endif 
               </a>
           </li>
       </ul>

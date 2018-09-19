@@ -11,11 +11,6 @@
             @role('employee')
             <li class="{{ Route::current()->getName() == 'dashboards.employee' ? 'active' : '' }}">
                 <a href="{{ route('dashboards.employee') }}">
-                    @if ($count_of_needed_approvals > 0) 
-                    <span class="badge pull-right">
-                        {{$count_of_needed_approvals}} 
-                    </span>
-                    @endif
                     <i class="fa fa-inbox"></i>
                     <span>Dashboard</span>
                 </a>
