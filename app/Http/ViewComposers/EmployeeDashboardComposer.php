@@ -33,26 +33,32 @@ class EmployeeDashboardComposer
             ->waitedForApproval()->get();
         $view->with('countTimeEventApprovals', count($countTimeEventApprovals));
 
+        // disable paging, searching, details button but enable responsive
+        $tableParameters = [ 'paging' => false, 'searching' => false, 'responsive' => [ 'details' => false ], ];
+        $summaryField = [ 'data' => 'summary', 'name' => 'summary', 'title' => 'Summary', 'searchable' => false, 'orderable' => false, ];
+        $detailField = [ 'data' => 'detail', 'name' => 'detail', 'title' => 'Detail', 'class' => 'desktop', 'searchable' => false, 'orderable' => false, ];
+        $approverField = [ 'data' => 'approver', 'name' => 'approver', 'title' => 'Approver', 'class' => 'desktop', 'searchable' => false, 'orderable' => false, ];
+
         // table builder untuk AbsenceApproval
         $absenceTableBuilder = app('datatables.html.absenceTable');
         $absenceTable = $absenceTableBuilder
-        ->setTableAttribute('id', 'absenceTable')
-        ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
-        ->addColumn(['data' => 'absence_id', 'name' => 'absence_id', 'title' => 'Pengajuan', 'orderable' => false])
-        ->addColumn(['data' => 'absence.user.personnel_no', 'name' => 'absence.user.personnel_no', 'title' => 'Karyawan', 'orderable' => false,])
-        ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Status', 'searchable' => false, 'orderable' => false])
-        ->ajax(route('dashboards.absence_approval'));
+            ->setTableAttribute('id', 'absenceTable')
+            ->addColumn($summaryField)
+            ->addColumn($detailField)
+            ->addColumn($approverField)
+            ->ajax(route('dashboards.absence_approval'));
+        $absenceTable->parameters($tableParameters);
         $view->with('absenceTable', $absenceTable);
 
         // table builder untuk AttendanceApproval
         $attendanceTableBuilder = app('datatables.html.attendanceTable');
         $attendanceTable = $attendanceTableBuilder
             ->setTableAttribute('id', 'attendanceTable')
-            ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
-            ->addColumn(['data' => 'attendance_id', 'name' => 'attendance_id', 'title' => 'Pengajuan', 'orderable' => false])
-            ->addColumn(['data' => 'attendance.user.personnel_no', 'name' => 'attendance.user.personnel_no', 'title' => 'Karyawan', 'orderable' => false,])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Status', 'searchable' => false, 'orderable' => false])
+            ->addColumn($summaryField)
+            ->addColumn($detailField)
+            ->addColumn($approverField)
             ->ajax(route('dashboards.attendance_approval'));
+        $attendanceTable->parameters($tableParameters);
         $view->with('attendanceTable', $attendanceTable);
         
         // table builder untuk AttendanceQuotaApproval

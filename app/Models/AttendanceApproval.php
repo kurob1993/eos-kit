@@ -42,6 +42,12 @@ class AttendanceApproval extends Model
         return $this->belongsTo('\App\Models\Attendance');
     }
 
+    public function permit()
+    {
+        // many-to-one relationship dengan absence
+        return $this->attendance();
+    }
+
     public function status()
     {
         // one-to-one relationship dengan status

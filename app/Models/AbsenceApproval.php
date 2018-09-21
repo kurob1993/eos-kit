@@ -34,6 +34,12 @@ class AbsenceApproval extends Model
         return $this->belongsTo('\App\Models\Absence');
     }
 
+    public function permit()
+    {
+        // many-to-one relationship dengan absence
+        return $this->absence();
+    }
+
     public function status()
     {
         // one-to-one relationship dengan status
@@ -45,6 +51,14 @@ class AbsenceApproval extends Model
         // Querying Relationship Existence
         return $query->whereHas('absence', function ($query){
             $query->leavesOnly();
+        });
+    }
+
+    public function scopeExcludeLeaves($query)
+    {
+        // Querying Relationship Absence
+        return $query->whereHas('absence', function ($query){
+            $query->excludeLeaves();
         });
     }
 }

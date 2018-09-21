@@ -43,6 +43,11 @@ Route::group([
             ->name('dashboards.attendance_quota_approval');
         Route::get('time_event_approval', 'HomeController@timeEventApproval')
             ->name('dashboards.time_event_approval');
+        
+        Route::get('detail/leave/{id}', 'HomeController@leaveSummary')
+            ->name('dashboards.leave_summary');
+        Route::get('detail/permit/{approval}/{id}', 'HomeController@permitSummary')
+            ->name('dashboards.permit_summary');
 
         // route untuk leave
         Route::resource('leaves', 'LeaveController', ['except' => [ 

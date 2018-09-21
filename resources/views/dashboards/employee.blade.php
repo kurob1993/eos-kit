@@ -91,6 +91,20 @@
   </div>
 
 </div>
+
+<div class="modal fade" id="modal-dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">Persetujuan (ID: <span id="title-span"></span>)</h4>
+        </div>
+        <div class="modal-body">
+          
+        </div>
+      </div>
+    </div>
+  </div>
 @endcomponent
 <!-- end page container -->
 @endsection
@@ -167,8 +181,12 @@
 	})());
 
 </script>
+
+@include('layouts._modal-detail-script')
+
 @endpush
 
 @push('on-ready-scripts')
 EmployeePlugins.init(); 
+ModalDetailPlugins.init();
 @endpush
