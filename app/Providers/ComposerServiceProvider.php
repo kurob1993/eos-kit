@@ -29,13 +29,13 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // DataTables builder for absence approval
-        $this->app->bind('datatables.html.absenceTable', function () {
+        // DataTables builder for leave approval
+        $this->app->bind('datatables.html.leaveTable', function () {
             return $this->app->make(Builder::class);
         });
 
-        // DataTables builder for attendance approval
-        $this->app->bind('datatables.html.attendanceTable', function () {
+        // DataTables builder for permit approval
+        $this->app->bind('datatables.html.permitTable', function () {
             return $this->app->make(Builder::class);
         });        
 

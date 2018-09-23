@@ -35,10 +35,10 @@ Route::group([
             ->name('dashboards.approve');
         Route::post('reject/{approval}/{id}','HomeController@reject')
             ->name('dashboards.reject');
-        Route::get('absence_approval', 'HomeController@absenceApproval')
-            ->name('dashboards.absence_approval');
-        Route::get('attendance_approval', 'HomeController@attendanceApproval')
-            ->name('dashboards.attendance_approval');
+        Route::get('leave_approval', 'HomeController@leaveApproval')
+            ->name('dashboards.leave_approval');
+        Route::get('permit_approval', 'HomeController@permitApproval')
+            ->name('dashboards.permit_approval');
         Route::get('attendance_quota_approval', 'HomeController@attendanceQuotaApproval')
             ->name('dashboards.attendance_quota_approval');
         Route::get('time_event_approval', 'HomeController@timeEventApproval')

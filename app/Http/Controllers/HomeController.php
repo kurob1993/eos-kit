@@ -50,17 +50,17 @@ class HomeController extends Controller
         return view('dashboards.personnel_service');
     }
 
-    public function absenceApproval(Request $request)
+    public function leaveApproval(Request $request)
     {
         // ambil data persetujuan absence, WARNING nested relationship eager loading
         $leaveApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
             ->leavesOnly()
             ->with([
                 'status:id,description', 
-                'absence.user.employee', 
+                'absence.user:personnel_no,name', 
                 'absence.absenceType'
                 ])
-            ->get();
+            ->get(['id', 'regno', 'absence_id', 'status_id', 'created_at', 'updated_at']);
 
       // response untuk datatables absences approval
         if ($request->ajax()) {
@@ -95,17 +95,17 @@ class HomeController extends Controller
         }
     }
 
-    public function attendanceApproval(Request $request)
+    public function permitApproval(Request $request)
     {
         // ambil data persetujuan absence, WARNING nested relationship eager loading
         $absenceApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
             ->excludeLeaves()
             ->with([
                 'status:id,description', 
-                'permit.user.employee', 
+                'permit.user:personnel_no,name', 
                 'permit.permitType'
                 ])
-            ->get();
+            ->get(['id', 'regno', 'absence_id', 'status_id', 'created_at', 'updated_at']);
 
         // ambil data persetujuan attendance, WARNING nested relationship eager loading
         $attendanceApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
@@ -114,7 +114,7 @@ class HomeController extends Controller
                 'permit.user.employee', 
                 'permit.permitType'
                 ])
-            ->get();
+            ->get(['id', 'regno', 'attendance_id', 'status_id', 'created_at', 'updated_at']);
 
         // merge collection
         $permitApprovals = $attendanceApprovals->merge($absenceApprovals);            

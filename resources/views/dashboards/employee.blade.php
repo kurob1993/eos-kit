@@ -54,7 +54,7 @@
           <div class="tab-pane fade active in" id="tab-leaves">
               <div class="panel-body p-0">
                   <div class="table-responsive">
-                    {!! $absenceTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+                    {!! $leaveTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
                   </div>
                 </div>
           </div>
@@ -64,7 +64,7 @@
           <div class="tab-pane fade" id="tab-permits">
               <div class="panel-body p-0">
                   <div class="table-responsive">
-                    {!! $attendanceTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+                    {!! $permitTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
                   </div>
                 </div>
           </div>
@@ -127,8 +127,8 @@
 <script src={{ url("/plugins/DataTables/js/jquery.dataTables.min.js") }}></script>
 <script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
 <!-- Generated scripts from DataTables -->
-{!! $absenceTable->scripts() !!}
-{!! $attendanceTable->scripts() !!}
+{!! $leaveTable->scripts() !!}
+{!! $permitTable->scripts() !!}
 {!! $attendanceQuotaTable->scripts() !!}
 {!! $timeEventTable->scripts() !!}
 @endpush

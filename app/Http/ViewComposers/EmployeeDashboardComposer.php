@@ -40,26 +40,26 @@ class EmployeeDashboardComposer
         $approverField = [ 'data' => 'approver', 'name' => 'approver', 'title' => 'Approver', 'class' => 'desktop', 'searchable' => false, 'orderable' => false, ];
 
         // table builder untuk AbsenceApproval
-        $absenceTableBuilder = app('datatables.html.absenceTable');
-        $absenceTable = $absenceTableBuilder
-            ->setTableAttribute('id', 'absenceTable')
+        $leaveTableBuilder = app('datatables.html.leaveTable');
+        $leaveTable = $leaveTableBuilder
+            ->setTableAttribute('id', 'leaveTable')
             ->addColumn($summaryField)
             ->addColumn($detailField)
             ->addColumn($approverField)
-            ->ajax(route('dashboards.absence_approval'));
-        $absenceTable->parameters($tableParameters);
-        $view->with('absenceTable', $absenceTable);
+            ->ajax(route('dashboards.leave_approval'));
+        $leaveTable->parameters($tableParameters);
+        $view->with('leaveTable', $leaveTable);
 
         // table builder untuk AttendanceApproval
-        $attendanceTableBuilder = app('datatables.html.attendanceTable');
-        $attendanceTable = $attendanceTableBuilder
-            ->setTableAttribute('id', 'attendanceTable')
+        $permitTableBuilder = app('datatables.html.permitTable');
+        $permitTable = $permitTableBuilder
+            ->setTableAttribute('id', 'permitTable')
             ->addColumn($summaryField)
             ->addColumn($detailField)
             ->addColumn($approverField)
-            ->ajax(route('dashboards.attendance_approval'));
-        $attendanceTable->parameters($tableParameters);
-        $view->with('attendanceTable', $attendanceTable);
+            ->ajax(route('dashboards.permit_approval'));
+        $permitTable->parameters($tableParameters);
+        $view->with('permitTable', $permitTable);
         
         // table builder untuk AttendanceQuotaApproval
         $attendanceQuotaTableBuilder = app('datatables.html.attendanceQuotaTable');
