@@ -23,7 +23,7 @@ class AttendanceQuotaObserver
         $intersected = AttendanceQuota::where('personnel_no', Auth::user()->personnel_no)
             ->intersectWith($attendanceQuota->start_date, $attendanceQuota->end_date)
             ->first();
-        if (sizeof($intersected) > 0) {
+        if ((sizeof($intersected) > 0) && !$attendanceQuota->is_denied) {
             Session::flash("flash_notification", [
                 "level" => "danger",
                 "message" => "Tidak dapat mengajukan lembur karena tanggal pengajuan "

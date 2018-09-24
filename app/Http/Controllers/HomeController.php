@@ -65,7 +65,8 @@ class HomeController extends Controller
       // response untuk datatables absences approval
         if ($request->ajax()) {
 
-            return Datatables::of($leaveApprovals)
+            return Datatables::of($leaveApprovals->sortBy('status.id')
+            ->sortBy('absence.user.personnel_no'))
                 ->editColumn('summary', function ($leaveApproval) {                    
                     return view('dashboards.leaves._summary', [ 
                         'summary' => $leaveApproval,
@@ -112,7 +113,7 @@ class HomeController extends Controller
         $attendanceApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
             ->with([
                 'status:id,description', 
-                'permit.user.employee', 
+                'permit.user:personnel_no,name', 
                 'permit.permitType'
                 ])
             ->get(['id', 'regno', 'attendance_id', 'status_id', 'created_at', 'updated_at']);
@@ -123,11 +124,12 @@ class HomeController extends Controller
         // response untuk datatables absences approval
         if ($request->ajax()) {
 
-            return Datatables::of($permitApprovals)
+            return Datatables::of($permitApprovals->sortBy('status.id')
+            ->sortBy('permit.user.personnel_no'))
                 ->editColumn('summary', function ($permitApproval) {                    
                     return view('dashboards.permits._summary', [ 
                         'summary' => $permitApproval,
-                        'when' => $permitApproval->created_at->format('d/m') 
+                        'when' => $permitApproval->created_at 
                     ]);
                 })
                 ->editColumn('detail', function ($permitApproval) {
@@ -174,7 +176,8 @@ class HomeController extends Controller
       // response untuk datatables absences approval
         if ($request->ajax()) {
 
-            return Datatables::of($timeEventApprovals)
+            return Datatables::of($timeEventApprovals->sortBy('status.id')
+            ->sortBy('timeEvent.user.personnel_no'))
                 ->editColumn('summary', function ($timeEventApproval) {                    
                     return view('dashboards.time_events._summary', [ 
                         'summary' => $timeEventApproval,
@@ -219,7 +222,8 @@ class HomeController extends Controller
         // response untuk datatables absences approval
         if ($request->ajax()) {
 
-            return Datatables::of($overtimeApprovals)
+            return Datatables::of($overtimeApprovals->sortBy('status.id')
+            ->sortBy('attendanceQuota.user.personnel_no'))
                 ->editColumn('summary', function ($overtimeApproval) {                    
                     return view('dashboards.overtimes._summary', [ 
                         'summary' => $overtimeApproval,
