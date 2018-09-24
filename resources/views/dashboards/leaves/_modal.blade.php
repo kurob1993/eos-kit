@@ -1,5 +1,5 @@
 <table id="table-detail" class="table table-bordered table-condensed m-b-0" 
-    data-id="{{ $leaveId }}">
+    data-id="{{ $leave->plain_id }}">
     <tbody>
         <tr>
             <td>Mulai</td>

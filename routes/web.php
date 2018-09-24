@@ -39,13 +39,18 @@ Route::group([
             ->name('dashboards.leave_approval');
         Route::get('permit_approval', 'HomeController@permitApproval')
             ->name('dashboards.permit_approval');
-        Route::get('attendance_quota_approval', 'HomeController@attendanceQuotaApproval')
-            ->name('dashboards.attendance_quota_approval');
+        Route::get('overtime_approval', 'HomeController@overtimeApproval')
+            ->name('dashboards.overtime_approval');
         Route::get('time_event_approval', 'HomeController@timeEventApproval')
             ->name('dashboards.time_event_approval');
         
+        // route untuk summary masing-masing persetujuan
         Route::get('detail/leave/{id}', 'HomeController@leaveSummary')
             ->name('dashboards.leave_summary');
+        Route::get('detail/time_event/{id}', 'HomeController@timeEventSummary')
+            ->name('dashboards.time_event_summary');
+        Route::get('detail/overtime/{id}', 'HomeController@overtimeSummary')
+            ->name('dashboards.overtime_summary');
         Route::get('detail/permit/{approval}/{id}', 'HomeController@permitSummary')
             ->name('dashboards.permit_summary');
 

@@ -56,4 +56,9 @@ class TimeEvent extends Model
         // one-to-many relatioship dengan TimeEventApproval
         return $this->hasMany('App\Models\TimeEventApproval');
     }
+
+    public function getPlainIdAttribute()
+    {
+        return 'time_event-' . $this->id;
+    }  
 }

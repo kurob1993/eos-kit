@@ -1,5 +1,5 @@
 <table id="table-detail" class="table table-bordered table-condensed m-b-0" 
-    data-id="{{ $permitId }}">
+    data-id="{{ $permit->plain_id }}">
     <tbody>
         <tr>
             <td>Mulai</td>
@@ -26,13 +26,13 @@
             <td>Tahap</td>
             <td><span class="label label-default">{{ $permit->stage->description }}</span></td>
         </tr>
-        @if ($permit->is_sent_to_sap) 
+        @if (!$permit->is_waiting_approval) 
         <tr>
             <td>Disetujui oleh:</td>
             <td>
                 @component('layouts._personnel-no-with-name', [
-                    'personnel_no' => $permit->absenceApprovals->first()->user->personnel_no,
-                    'employee_name' => $permit->absenceApprovals->first()->user->name])
+                    'personnel_no' => $permit->permitApprovals->first()->user->personnel_no,
+                    'employee_name' => $permit->permitApprovals->first()->user->name])
                 @endcomponent 
             </td>
         </tr>
@@ -55,7 +55,7 @@
     </tbody>
 </table>
 <br />
-@if (!$permit->stage->is_sent_to_sap)
+@if ($permit->is_waiting_approval)
 {!! Form::model($permit, ['url' => $approve_url, 'method' => 'post', 
     'class' => 'form-inline js-confirm', 'data-confirm' => $confirm_message . 'persetujuan?'] ) !!}
 {!! Form::submit('Setuju', ['class'=>'btn btn-block btn-primary m-b-5']) !!}

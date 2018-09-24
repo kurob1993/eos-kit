@@ -23,16 +23,23 @@ trait ReceiveStage
     public function getIsFailedAttribute()
     {
         // apakah absence ini tahapnya failed
-        return ($this->stage_id == Stage::FailedStage()->id) ?
+        return ($this->stage_id == Stage::failedStage()->id) ?
             true : false;
     }    
 
     public function getIsDeniedAttribute()
     {
-        // apakah absence ini tahapnya failed
-        return ($this->stage_id == Stage::FailedStage()->id) ?
+        // apakah absence ini tahapnya denied
+        return ($this->stage_id == Stage::deniedStage()->id) ?
             true : false;
-    } 
+    }
+
+    public function getIsWaitingApprovalAttribute()
+    {
+        // apakah tahapnya waiting approval
+        return ($this->stage_id == Stage::waitingApprovalStage()->id) ?
+            true : false;
+    }
 
     public function scopeIncompleted($query)
     {

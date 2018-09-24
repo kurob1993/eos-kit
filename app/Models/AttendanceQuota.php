@@ -74,4 +74,9 @@ class AttendanceQuota extends Model
         // mencari approval dengan sequence 2
         return $this->attendanceQuotaApproval()->where('sequence', 2)->first();
     }
+
+    public function getPlainIdAttribute()
+    {
+        return 'overtime-' . $this->id;
+    }      
 }

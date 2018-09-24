@@ -78,9 +78,10 @@ class HomeController extends Controller
                     ]);
                 })
                 ->editColumn('approver', function ($leaveApproval) {
-                    return $leaveApproval
-                        ->user
-                        ->personnelNoWithName;
+                    return view('layouts._personnel-no-with-name', [
+                        'personnel_no' => $leaveApproval->user->personnel_no,
+                        'employee_name' => $leaveApproval->user->name,
+                    ]);
                 })
                 ->setRowAttr([
                     'data-href' => function($leaveApproval) {
@@ -135,9 +136,10 @@ class HomeController extends Controller
                     ]);
                 })
                 ->editColumn('approver', function ($permitApproval) {
-                    return $permitApproval
-                        ->user
-                        ->personnelNoWithName;
+                    return view('layouts._personnel-no-with-name', [
+                        'personnel_no' => $permitApproval->user->personnel_no,
+                        'employee_name' => $permitApproval->user->name,
+                    ]);
                 })
                 ->setRowAttr([
                     'data-href' => function($permitApproval) {
@@ -146,7 +148,7 @@ class HomeController extends Controller
                         else if ($permitApproval->permit instanceof Attendance)
                             $approval = 'attendance';
                         return route('dashboards.permit_summary', [
-                            'id' => $permitApproval->permit->id,
+                            'id' => $permitApproval->id,
                             'approval' => $approval
                             ]
                         );
@@ -159,89 +161,91 @@ class HomeController extends Controller
 
     public function timeEventApproval(Request $request)
     {
+
+        // ambil data persetujuan timeEvent, WARNING nested relationship eager loading
+        $timeEventApprovals = TimeEventApproval::where('regno', Auth::user()->personnel_no)
+            ->with([
+                'status:id,description', 
+                'timeEvent.user:personnel_no,name', 
+                'timeEvent.timeEventType'
+                ])
+            ->get(['id', 'regno', 'time_event_id', 'status_id', 'created_at', 'updated_at']);
+
       // response untuk datatables absences approval
         if ($request->ajax()) {
 
-            // // ambil data persetujuan timeEvent, WARNING nested relationship eager loading
-            $timeEventApprovals = TimeEventApproval::where('regno', Auth::user()->personnel_no)
-                ->with(['status:id,description', 'timeEvent.user.employee', 'timeEvent.timeEventType']);
-
-            // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
             return Datatables::of($timeEventApprovals)
-                ->editColumn('time_event_id', function (TimeEventApproval $a) {
-                    return '<address>' .'<strong>'. 
-                    'Izin tidak slash </strong>' .
-                    $a->timeEvent->timeEventType->text . '<br>' .
-                    $a->timeEvent->check_date . ' - ' . 
-                    $a->timeEvent->check_time . '<br>' .
-                    '</address>';
+                ->editColumn('summary', function ($timeEventApproval) {                    
+                    return view('dashboards.time_events._summary', [ 
+                        'summary' => $timeEventApproval,
+                        'when' => $timeEventApproval->created_at->format('d/m') 
+                    ]);
                 })
-                ->editColumn('time_event.user.personnel_no', function (TimeEventApproval $a) {
-                    return $a->timeEvent->personnel_no . ' - ' . 
-                    $a->timeEvent->user->name . '<br>' . 
-                    $a->timeEvent->user->employee->position_name;
+                ->editColumn('detail', function ($timeEventApproval) {
+                    return view('dashboards.time_events._detail', [
+                        'detail' => $timeEventApproval,
+                    ]);
                 })
-                ->editColumn('action', function (TimeEventApproval $a) {
-                    if ($a->isNotWaiting) {
-                        return '<span class="label '. (($a->isApproved) ? 'label-primary' : 'label-danger') . '">' .
-                        $a->status->description . '</span>' . '<br>' .
-                        '<small>' . $a->updated_at . 
-                        '</small><br><small>' . $a->text . '</small>';
-                    } else {
-                        return view('dashboards._action', [
-                            'model' => $a,
-                            'approve_url' => route('dashboards.approve', ['id' => $a->id, 'approval' => 'time_event']),
-                            'reject_url' => route('dashboards.reject', ['id' => $a->id, 'approval' => 'time_event']),
-                            'confirm_message' => "Yakin melakukan ",
-                        ]);
-                    }
+                ->editColumn('approver', function ($timeEventApproval) {
+                    return view('layouts._personnel-no-with-name', [
+                        'personnel_no' => $timeEventApproval->user->personnel_no,
+                        'employee_name' => $timeEventApproval->user->name,
+                    ]);
                 })
-                ->orderColumn('id', '-id $1')
-                ->escapeColumns([2])
+                ->setRowAttr([
+                    'data-href' => function($timeEventApproval) {
+                        return route('dashboards.time_event_summary', [
+                            'id' => $timeEventApproval->id,
+                            ]
+                        );
+                    }, 
+                ])
+                ->escapeColumns([0,1])
                 ->make(true);
         }
     }
 
-    public function attendanceQuotaApproval(Request $request)
+    public function overtimeApproval(Request $request)
     {
-      // response untuk datatables absences approval
+        // // ambil data persetujuan attendanceQuota, WARNING nested relationship eager loading
+        $overtimeApprovals = AttendanceQuotaApproval::where('regno', Auth::user()->personnel_no)
+            ->with([
+                'status:id,description',
+                'attendanceQuota.user:personnel_no,name', 
+                'attendanceQuota.overtimeReason'
+                ])
+                ->get(['id', 'regno', 'attendance_quota_id', 'status_id', 'created_at', 'updated_at']);
+
+        // response untuk datatables absences approval
         if ($request->ajax()) {
 
-            // // ambil data persetujuan attendanceQuota, WARNING nested relationship eager loading
-            $attendanceQuotaApprovals = AttendanceQuotaApproval::where('regno', Auth::user()->personnel_no)
-                ->with(['status:id,description', 'attendanceQuota.user.employee', 'attendanceQuota.overtimeReason']);
-
-            // mengembalikan data sesuai dengan format yang dibutuhkan DataTables
-            return Datatables::of($attendanceQuotaApprovals)
-                ->editColumn('attendance_quota_id', function (attendanceQuotaApproval $a) {
-                    return '<address>' .
-                    $a->attendanceQuota->overtimeReason->text . '<br>' .
-                    $a->attendanceQuota->formattedStartDate . ' - ' . 
-                    $a->attendanceQuota->formattedEndDate . '<br>' .
-                    '</address>';
+            return Datatables::of($overtimeApprovals)
+                ->editColumn('summary', function ($overtimeApproval) {                    
+                    return view('dashboards.overtimes._summary', [ 
+                        'summary' => $overtimeApproval,
+                        'when' => $overtimeApproval->created_at->format('d/m') 
+                    ]);
                 })
-                ->editColumn('attendance_quota.user.personnel_no', function (attendanceQuotaApproval $a) {
-                    return $a->attendanceQuota->personnel_no . ' - ' . 
-                    $a->attendanceQuota->user->name . '<br>' . 
-                    $a->attendanceQuota->user->employee->position_name;
+                ->editColumn('detail', function ($overtimeApproval) {
+                    return view('dashboards.overtimes._detail', [
+                        'detail' => $overtimeApproval,
+                    ]);
                 })
-                ->editColumn('action', function (attendanceQuotaApproval $a) {
-                    if ($a->isNotWaiting) {
-                        return '<span class="label '. (($a->isApproved) ? 'label-primary' : 'label-danger') . '">' .
-                        $a->status->description . '</span>' . '<br>' .
-                        '<small>' . $a->updated_at . 
-                        '</small><br><small>' . $a->text . '</small>';
-                    } else {
-                        return view('dashboards._action', [
-                            'model' => $a,
-                            'approve_url' => route('dashboards.approve', ['id' => $a->id, 'approval' => 'attendance_quota']),
-                            'reject_url' => route('dashboards.reject', ['id' => $a->id, 'approval' => 'attendance_quota']),
-                            'confirm_message' => "Yakin melakukan ",
-                        ]);
-                    }
+                ->editColumn('approver', function ($overtimeApproval) {
+                    return view('layouts._personnel-no-with-name', [
+                        'personnel_no' => $overtimeApproval->user->personnel_no,
+                        'employee_name' => $overtimeApproval->user->name,
+                    ]);
                 })
-                ->orderColumn('id', '-id $1')
-                ->escapeColumns([2])
+                ->setRowAttr([
+                    'data-href' => function($overtimeApproval) {
+                        return route('dashboards.overtime_summary', [
+                            'id' => $overtimeApproval->id,
+                            ]
+                        );
+                    }, 
+                ])
+                ->escapeColumns([0,1])
                 ->make(true);
         }
     }
@@ -254,7 +258,11 @@ class HomeController extends Controller
                 $approved = AbsenceApproval::find($id); 
                 $moduleText = config('emss.absences.text');
             break;
-            case 'permit': 
+            case 'absence': 
+                $approved = AbsenceApproval::find($id);
+                $moduleText = config('emss.absences.text');
+            break;
+            case 'attendance': 
                 $approved = AttendanceApproval::find($id);
                 $moduleText = config('emss.attendances.text');
             break;
@@ -262,7 +270,7 @@ class HomeController extends Controller
                 $approved = TimeEventApproval::find($id);
                 $moduleText = config('emss.time_events.text');
             break;
-            case 'attendance_quota': 
+            case 'overtime': 
                 $approved = AttendanceQuotaApproval::find($id);
                 $moduleText = config('emss.overtimes.text'); 
             break;
@@ -292,7 +300,11 @@ class HomeController extends Controller
                 $approved = AbsenceApproval::find($id); 
                 $moduleText = config('emss.absences.text');
             break;
-            case 'permit': 
+            case 'absence': 
+                $approved = AbsenceApproval::find($id);
+                $moduleText = config('emss.absences.text');
+            break;
+            case 'attendance': 
                 $approved = AttendanceApproval::find($id);
                 $moduleText = config('emss.attendances.text');
             break;
@@ -300,7 +312,7 @@ class HomeController extends Controller
                 $approved = TimeEventApproval::find($id);
                 $moduleText = config('emss.time_events.text');
             break;
-            case 'attendance_quota': 
+            case 'overtime': 
                 $approved = AttendanceQuotaApproval::find($id);
                 $moduleText = config('emss.overtimes.text'); 
             break;
@@ -325,12 +337,9 @@ class HomeController extends Controller
     public function leaveSummary($id)
     {
         $leaveApproval = AbsenceApproval::find($id);
-
-        $leaveApprovalId = $leaveApproval->id;
         
         return view('dashboards.leaves._modal', [
             'leave' => $leaveApproval->absence, 
-            'leaveId' => $leaveApprovalId,
             'approve_url' => route('dashboards.approve', ['id' => $leaveApproval->id, 'approval' => 'leave']),
             'reject_url' => route('dashboards.reject', ['id' => $leaveApproval->id, 'approval' => 'leave']),
             'confirm_message' => "Yakin melakukan ",
@@ -351,15 +360,34 @@ class HomeController extends Controller
             break;
         }
 
-        $approved = AttendanceApproval::find($id);
-
-        $approvedId = $approval . '-' . $approved->id;
-        
         return view('dashboards.permits._modal', [
             'permit' => $approved->permit, 
-            'permitId' => $approvedId,
-            'approve_url' => route('dashboards.approve', ['id' => $approved->id, 'approval' => 'permit']),
-            'reject_url' => route('dashboards.reject', ['id' => $approved->id, 'approval' => 'permit']),
+            'approve_url' => route('dashboards.approve', ['id' => $approved->id, 'approval' => $approval]),
+            'reject_url' => route('dashboards.reject', ['id' => $approved->id, 'approval' => $approval]),
+            'confirm_message' => "Yakin melakukan ",
+            ]);
+    }
+
+    public function timeEventSummary($id)
+    {
+        $timeEventApproval = TimeEventApproval::find($id);
+        
+        return view('dashboards.time_events._modal', [
+            'timeEvent' => $timeEventApproval->timeEvent, 
+            'approve_url' => route('dashboards.approve', ['id' => $timeEventApproval->id, 'approval' => 'time_event']),
+            'reject_url' => route('dashboards.reject', ['id' => $timeEventApproval->id, 'approval' => 'time_event']),
+            'confirm_message' => "Yakin melakukan ",
+            ]);
+    }
+
+    public function overtimeSummary($id)
+    {
+        $overtimeApproval = AttendanceQuotaApproval::find($id);
+        
+        return view('dashboards.overtimes._modal', [
+            'overtime' => $overtimeApproval->attendanceQuota, 
+            'approve_url' => route('dashboards.approve', ['id' => $overtimeApproval->id, 'approval' => 'overtime']),
+            'reject_url' => route('dashboards.reject', ['id' => $overtimeApproval->id, 'approval' => 'overtime']),
             'confirm_message' => "Yakin melakukan ",
             ]);
     }

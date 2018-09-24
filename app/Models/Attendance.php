@@ -57,14 +57,6 @@ class Attendance extends Model
         // one-to-many relatioship dengan AttendanceApproval
         return $this->hasMany('App\Models\AttendanceApproval');
     }
-    
-    public function scopeIncompleted($query)
-    {
-        // apakah sudah selesai? (finished, failed, denied)
-        return $query->whereIn('stage_id', [
-            Stage::waitingApprovalStage()->id,
-            Stage::sentToSapStage()->id ]);
-    }
 
     public function permitType()
     {
@@ -77,4 +69,17 @@ class Attendance extends Model
         // column aliasing untuk attendanceApprovals
         return $this->attendanceApprovals();
     }
+
+    public function scopeIncompleted($query)
+    {
+        // apakah sudah selesai? (finished, failed, denied)
+        return $query->whereIn('stage_id', [
+            Stage::waitingApprovalStage()->id,
+            Stage::sentToSapStage()->id ]);
+    }
+
+    public function getPlainIdAttribute()
+    {
+        return 'attendance-' . $this->id;
+    }    
 }

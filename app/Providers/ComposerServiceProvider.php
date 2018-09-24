@@ -40,7 +40,7 @@ class ComposerServiceProvider extends ServiceProvider
         });        
 
         // DataTables builder for attendance quota approval
-        $this->app->bind('datatables.html.attendanceQuotaTable', function () {
+        $this->app->bind('datatables.html.overtimeTable', function () {
             return $this->app->make(Builder::class);
 
         });        

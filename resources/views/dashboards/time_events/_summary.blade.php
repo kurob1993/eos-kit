@@ -1,6 +1,6 @@
 <p class="pull-right">{{$when}}</p>
-<p class="m-b-0">Persetujuan cuti {{$summary->absence->duration}} hari</p>
-<p><small>{{$summary->absence->user->personnelNoWithName}}</small></p>
+<p class="m-b-0">Persetujuan tidak slash</p>
+<p><small>{{$summary->timeEvent->user->personnelNoWithName}}</small></p>
 <span class="label label-default">
-    {{$summary->absence->stage->description}}
+    {{$summary->timeEvent->stage->description}}
 </span>

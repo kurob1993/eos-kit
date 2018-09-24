@@ -81,7 +81,7 @@
           <!-- begin of overtimes tab  -->
           <div class="tab-pane fade" id="tab-overtimes">
               <div class="panel-body p-0">
-                {!! $attendanceQuotaTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+                {!! $overtimeTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
               </div>
           </div>
           <!-- end of overtimes tab  -->
@@ -129,7 +129,7 @@
 <!-- Generated scripts from DataTables -->
 {!! $leaveTable->scripts() !!}
 {!! $permitTable->scripts() !!}
-{!! $attendanceQuotaTable->scripts() !!}
+{!! $overtimeTable->scripts() !!}
 {!! $timeEventTable->scripts() !!}
 @endpush
 

@@ -68,6 +68,18 @@ class Absence extends Model
         return $this->hasMany('App\Models\AbsenceApproval');
     }
 
+    public function permitType()
+    {
+        // column aliasing untuk absence_type
+        return $this->absenceType();
+    }
+
+    public function permitApprovals()
+    {
+        // column aliasing untuk absenceApprovals
+        return $this->absenceApprovals();
+    }
+
     public function scopeLeavesOnly($query)
     {
         // Querying Relationship Existence
@@ -99,15 +111,8 @@ class Absence extends Model
             || $this->absenceType->subtype == '0200') ? true : false;
     }
 
-    public function permitType()
+    public function getPlainIdAttribute()
     {
-        // column aliasing untuk absence_type
-        return $this->absenceType();
-    }
-
-    public function permitApprovals()
-    {
-        // column aliasing untuk absenceApprovals
-        return $this->absenceApprovals();
+        return 'absence-' . $this->id;
     }
 }

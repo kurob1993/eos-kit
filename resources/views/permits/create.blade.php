@@ -172,8 +172,6 @@
         var bossSelect = $(".boss-selectize").selectize(bossOptions);
         var selectize = bossSelect[0].selectize;
         selectize.setValue(res.personnel_no, false);
-        var selectize = bossSelect[1].selectize;
-        selectize.setValue(res.personnel_no, false);
     }
   });
   

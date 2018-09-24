@@ -8,22 +8,36 @@ trait ReceiveStatus
 {
     public function getIsNotWaitingAttribute()
     {
-        // apakah absence approval sudah disetujui ATAU ditolak
+        // apakah approval sudah disetujui ATAU ditolak
         // TRUE apabila sudah setuju ATAU sudah tolak
         // FALSE apabila masih waiting
         return ($this->status_id <> Status::firstStatus()->id) ?
             true : false;
     }
+
+    public function getIsWaitingAttribute()
+    {
+        // apakah approval masih waiting
+        return ($this->status_id == Status::firstStatus()->id) ?
+            true : false;
+    }
     
     public function getIsApprovedAttribute()
     {
-        // apakah absence approval sudah disetujui
+        // apakah approval sudah disetujui
         return ($this->status_id == Status::approveStatus()->id) ?
+            true : false;
+    }
+
+    public function getIsRejectedAttribute()
+    {
+        // apakah approval sudah ditolak
+        return ($this->status_id == Status::rejectStatus()->id) ?
             true : false;
     }
 
     public function scopeWaitedForApproval($query)
     {
         return $query->where('status_id', Status::firstStatus()->id);
-    }    
+    }
 }

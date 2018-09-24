@@ -15,13 +15,20 @@ class EmployeeDashboardComposer
     {
         // Jumlah item notifikasi untuk absence
         $countLeaveApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
-            ->waitedForApproval()->get();
+            ->leavesOnly()
+            ->waitedForApproval()
+            ->get();
         $view->with('countLeaveApprovals', count($countLeaveApprovals));
 
         // Jumlah item notifikasi untuk permit
-        $countPermitApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
-            ->waitedForApproval()->get();
-        $view->with('countPermitApprovals', count($countPermitApprovals));
+        $absenceApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
+            ->excludeLeaves()
+            ->waitedForApproval()
+            ->get();
+        $attendanceApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
+            ->waitedForApproval()
+            ->get();
+        $view->with('countPermitApprovals', count($absenceApprovals) + count($attendanceApprovals));
 
         // Jumlah item notifikasi untuk overtime
         $countOvertimeApprovals = AttendanceQuotaApproval::where('regno', Auth::user()->personnel_no)
@@ -60,27 +67,27 @@ class EmployeeDashboardComposer
             ->ajax(route('dashboards.permit_approval'));
         $permitTable->parameters($tableParameters);
         $view->with('permitTable', $permitTable);
-        
-        // table builder untuk AttendanceQuotaApproval
-        $attendanceQuotaTableBuilder = app('datatables.html.attendanceQuotaTable');
-        $attendanceQuotaTable = $attendanceQuotaTableBuilder
-            ->setTableAttribute('id', 'attendanceQuotaTable')
-            ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
-            ->addColumn(['data' => 'attendance_quota_id', 'name' => 'attendance_quota_id', 'title' => 'Pengajuan', 'orderable' => false])
-            ->addColumn(['data' => 'attendance_quota.user.personnel_no', 'name' => 'attendance_quota.user.personnel_no', 'title' => 'Karyawan', 'orderable' => false,])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Status', 'searchable' => false, 'orderable' => false])
-            ->ajax(route('dashboards.attendance_quota_approval'));
-        $view->with('attendanceQuotaTable', $attendanceQuotaTable);
 
         // table builder untuk TimeEventApproval
         $timeEventTableBuilder = app('datatables.html.timeEventTable');
         $timeEventTable = $timeEventTableBuilder
             ->setTableAttribute('id', 'timeEventTable')
-            ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID'])
-            ->addColumn(['data' => 'time_event_id', 'name' => 'time_event_id', 'title' => 'Pengajuan', 'orderable' => false])
-            ->addColumn(['data' => 'time_event.user.personnel_no', 'name' => 'time_event.user.personnel_no', 'title' => 'Karyawan', 'orderable' => false,])
-            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Status', 'searchable' => false, 'orderable' => false])
+            ->addColumn($summaryField)
+            ->addColumn($detailField)
+            ->addColumn($approverField)
             ->ajax(route('dashboards.time_event_approval'));
-        $view->with('timeEventTable', $timeEventTable);        
+        $timeEventTable->parameters($tableParameters);
+        $view->with('timeEventTable', $timeEventTable);
+
+        // table builder untuk AttendanceQuotaApproval
+        $overtimeTableBuilder = app('datatables.html.overtimeTable');
+        $overtimeTable = $overtimeTableBuilder
+            ->setTableAttribute('id', 'overtimeTable')
+            ->addColumn($summaryField)
+            ->addColumn($detailField)
+            ->addColumn($approverField)
+            ->ajax(route('dashboards.overtime_approval'));
+        $overtimeTable->parameters($tableParameters);
+        $view->with('overtimeTable', $overtimeTable);
     }
 }
