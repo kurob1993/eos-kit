@@ -44,10 +44,13 @@ class PermitController extends Controller
                         'summary' => $permit,
                         'when' => $permit->created_at->format('d/m') 
                     ]);
-
                 })
                 ->editColumn('approver', function ($permit) {
-                    return $permit->permitApprovals->first()->user->personnelNoWithName;
+                    // personnel_no dan name atasan
+                    return view('layouts._personnel-no-with-name', [
+                        'personnel_no' => $permit->permitApprovals->first()->user->personnel_no,
+                        'employee_name' => $permit->permitApprovals->first()->user->name,
+                    ]);
                 })
                 ->setRowAttr([
                     'data-href' => function($permit) {

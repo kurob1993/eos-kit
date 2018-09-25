@@ -11,7 +11,7 @@
   <div class="panel-body">
     <p> <a class="btn btn-primary" href="{{ route('time_events.create') }}">Tambah</a> </p>
     <div class="table-responsive">
-      {!! $html->table(['class'=>'table table-striped']) !!}
+      {!! $html->table(['class'=>'table table-striped', 'width'=>'100%']) !!}
     </div>
   </div>
 </div>

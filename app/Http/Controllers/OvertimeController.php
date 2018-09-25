@@ -37,8 +37,14 @@ class OvertimeController extends Controller
                 })
                 ->editColumn('approver', function ($overtime) {
                     // personnel_no dan name atasan
-                    return $overtime
-                        ->attendanceQuotaApprovals;
+                        $views = '';
+                        foreach ($overtime->attendanceQuotaApproval as $item) {
+                            $views =  $views . view('layouts._personnel-no-with-name', [
+                                'personnel_no' => $item->user->personnel_no,
+                                'employee_name' => $item->user->name,
+                            ]) . '<br />';
+                        }
+                    return $views;
                 })
                 ->setRowAttr([
                     // href untuk dipasang di setiap tr

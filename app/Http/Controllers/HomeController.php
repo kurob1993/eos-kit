@@ -124,12 +124,12 @@ class HomeController extends Controller
         // response untuk datatables absences approval
         if ($request->ajax()) {
 
-            return Datatables::of($permitApprovals->sortBy('status.id')
-            ->sortBy('permit.user.personnel_no'))
+            return Datatables::of($permitApprovals->sortBy('permit.user.personnel_no')
+            ->sortBy('status.id'))
                 ->editColumn('summary', function ($permitApproval) {                    
                     return view('dashboards.permits._summary', [ 
                         'summary' => $permitApproval,
-                        'when' => $permitApproval->created_at 
+                        'when' => $permitApproval->created_at->format('d/m')
                     ]);
                 })
                 ->editColumn('detail', function ($permitApproval) {
@@ -260,15 +260,15 @@ class HomeController extends Controller
         switch ($approval) {
             case 'leave': 
                 $approved = AbsenceApproval::find($id); 
-                $moduleText = config('emss.absences.text');
+                $moduleText = config('emss.leaves.text');
             break;
             case 'absence': 
                 $approved = AbsenceApproval::find($id);
-                $moduleText = config('emss.absences.text');
+                $moduleText = config('emss.permits.text');
             break;
             case 'attendance': 
                 $approved = AttendanceApproval::find($id);
-                $moduleText = config('emss.attendances.text');
+                $moduleText = config('emss.permits.text');
             break;
             case 'time_event': 
                 $approved = TimeEventApproval::find($id);
@@ -302,15 +302,15 @@ class HomeController extends Controller
         switch ($approval) {
             case 'leave': 
                 $approved = AbsenceApproval::find($id); 
-                $moduleText = config('emss.absences.text');
+                $moduleText = config('emss.leaves.text');
             break;
             case 'absence': 
                 $approved = AbsenceApproval::find($id);
-                $moduleText = config('emss.absences.text');
+                $moduleText = config('emss.permits.text');
             break;
             case 'attendance': 
                 $approved = AttendanceApproval::find($id);
-                $moduleText = config('emss.attendances.text');
+                $moduleText = config('emss.permits.text');
             break;
             case 'time_event': 
                 $approved = TimeEventApproval::find($id);

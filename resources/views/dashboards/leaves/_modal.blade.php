@@ -29,7 +29,7 @@
             <td>Tahap</td>
             <td><span class="label label-default">{{ $leave->stage->description }}</span></td>
         </tr>
-        @if ($leave->is_sent_to_sap) 
+        @if (!$leave->is_waiting_approval) 
         <tr>
             <td>Disetujui oleh:</td>
             <td>
@@ -58,7 +58,7 @@
     </tbody>
 </table>
 <br />
-@if (!$leave->is_sent_to_sap)
+@if ($leave->is_waiting_approval)
 {!! Form::model($leave, ['url' => $approve_url, 'method' => 'post', 
     'class' => 'form-inline js-confirm', 'data-confirm' => $confirm_message . 'persetujuan?'] ) !!}
 {!! Form::submit('Setuju', ['class'=>'btn btn-block btn-primary m-b-5']) !!}

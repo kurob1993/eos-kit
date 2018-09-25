@@ -23,6 +23,7 @@ class AttendanceObserver
         $intersected = Attendance::where('personnel_no', Auth::user()->personnel_no)
             ->intersectWith($attendance->start_date, $attendance->end_date)
             ->first();
+
         if ((sizeof($intersected) > 0) && !$attendance->is_denied) {
             Session::flash("flash_notification", [
                 "level" => "danger",
