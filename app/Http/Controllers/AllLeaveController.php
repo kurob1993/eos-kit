@@ -2,20 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use Illuminate\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Session;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Http\Requests\StoreAbsenceRequest;
 use App\Models\Absence;
 use App\Models\Stage;
 use App\Events\SendingAbsenceToSap;
+use App\DataTables\AllLeavesDataTable;
 
 class AllLeaveController extends Controller
 {
+
+    public function index(AllLeavesDataTable $dataTable)
+    {
+        return $dataTable->render('all_leaves.index');
+    }
+
+    /*
     public function index(Request $request, Builder $htmlBuilder)
     {
         // response untuk datatables absences
@@ -58,6 +66,16 @@ class AllLeaveController extends Controller
                 ->escapeColumns([4])
                 ->make(true);
         }
+
+        $tableParameters = [ 
+            'paging' => false, 
+            'searching' => false, 
+            'responsive' => [ 
+                'details' => 'column' 
+                ], 
+            ];
+
+        $htmlBuilder->parameters($tableParameters);
 
         // html builder untuk menampilkan kolom di datatables
         $html = $htmlBuilder
@@ -103,7 +121,9 @@ class AllLeaveController extends Controller
 
         // tampilkan view index dengan tambahan script html DataTables
         return view('all_leaves.index')->with(compact('html'));
+
     }
+    */
 
     public function create()
     {

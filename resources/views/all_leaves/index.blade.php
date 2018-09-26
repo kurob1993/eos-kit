@@ -10,7 +10,8 @@
   @include('layouts._flash')
   <div class="panel-body">
     <div class="table-responsive">
-      {!! $html->table(['class'=>'table table-striped']) !!}
+      {{-- {!! $html->table(['class'=>'table table-striped']) !!} --}}
+      {!! $dataTable->table() !!}
     </div>
   </div>
 </div>
@@ -19,20 +20,21 @@
 @endsection
 
 @push('styles')
-    <!-- DataTables -->
-    <link href={{ url("/plugins/DataTables/css/data-table.css") }} rel="stylesheet" />
-    <!-- Selectize -->
-    <link href={{ url("/plugins/selectize/selectize.css") }} rel="stylesheet">
-    <link href={{ url("/plugins/selectize/selectize.bootstrap3.css") }} rel="stylesheet">
-    <!-- Pace -->    
-    <script src={{ url("/plugins/pace/pace.min.js") }}></script>
+<!-- DataTables -->
+<link href={{ url("/plugins/DataTables/css/jquery.dataTables.min.css") }} rel="stylesheet" />
+<link href={{ url("/plugins/DataTables/Responsive/css/responsive.dataTables.min.css") }} rel="stylesheet" />
+<link href={{ url("/plugins/DataTables/Buttons/css/buttons.dataTables.min.css") }} rel="stylesheet" />
+  <!-- Pace -->    
+  <script src={{ url("/plugins/pace/pace.min.js") }}></script>
 @endpush
 
 @push('plugin-scripts')
-<!-- Selectize -->
-<script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
 <!-- DataTables -->
-<script src={{ url("/plugins/DataTables/js/jquery.dataTables.js") }}></script>
+<script src={{ url("/plugins/DataTables/js/jquery.dataTables.min.js") }}></script>
+<script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
+<script src={{ url("/plugins/DataTables/Buttons/js/dataTables.buttons.min.js") }}></script>
+<script src={{ url("/vendor/datatables/buttons.server-side.js") }}></script>
 <!-- Generated scripts from DataTables -->
-{!! $html->scripts() !!}
+{{-- {!! $html->scripts() !!} --}}
+{!! $dataTable->scripts() !!}
 @endpush
