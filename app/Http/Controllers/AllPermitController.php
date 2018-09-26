@@ -3,24 +3,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\DataTables\AllLeaveDataTable;
+use App\DataTables\AllAbsencePermitDataTable;
+use App\DataTables\AllAttendancePermitDataTable;
 
-class AllLeaveController extends Controller
+class AllPermitController extends Controller
 {
 
-    public function index(AllLeaveDataTable $dataTable)
+    public function absence(AllAbsencePermitDataTable $dataTable)
     {
-        return $dataTable->render('all_leaves.index');
+        return $dataTable->render('all_permits.absence.index');
+    }
+
+    public function attendance(AllAttendancePermitDataTable $dataTable)
+    {
+        return $dataTable->render('all_permits.attendance.index');
+    }
+
+    public function index()
+    {
+        //
     }
 
     public function create()
     {
-
+        //
     }
 
-    public function store(StoreAbsenceRequest $request)
+    public function store(Request $request)
     {
-
+        //
     }
 
     public function show($id)
@@ -42,7 +53,7 @@ class AllLeaveController extends Controller
     {
         //
     }
-
+    
     public function integrate(Request $request, $id)
     {
         // cari berdasarkan id kemudian update berdasarkan request + status reject
@@ -80,5 +91,5 @@ class AllLeaveController extends Controller
 
         // kembali lagi ke all leaves
         return redirect()->route('all_leaves.index');
-    }    
+    }       
 }

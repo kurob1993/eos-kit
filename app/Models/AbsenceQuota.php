@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Carbon\Carbon;
+use App\Traits\PeriodDates;
 
 class AbsenceQuota extends Model
 {
+    use PeriodDates;
+    
     public $fillable = [
         'personnel_no',
         'start_date',
@@ -36,7 +39,7 @@ class AbsenceQuota extends Model
     public function user()
     {
         // many-to-one relationship dengan User
-      return $this->belongsTo('App\User', 'personnel_no' );
+      return $this->belongsTo('App\User', 'personnel_no', 'personnel_no' );
     }
 
     public function absenceType()
@@ -67,5 +70,20 @@ class AbsenceQuota extends Model
       return $query->where('start_date', '<', $s)
         ->where('end_date', '>', $e)
         ->where('personnel_no', '=' , $p);
+    }
+
+    public function getPlainIdAttribute()
+    {
+        return 'abquota-' . $this->id;
+    }
+
+    public function getFormattedStartDeductionAttribute()
+    {
+        return $this->start_date->format($this->periodDateFormat);
+    }
+
+    public function getFormattedEndDeductionAttribute()
+    {
+        return $this->end_date->format($this->periodDateFormat);
     }
 }

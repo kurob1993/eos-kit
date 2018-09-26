@@ -3,24 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\DataTables\AllLeaveDataTable;
+use App\DataTables\AllTimeEventDataTable;
 
-class AllLeaveController extends Controller
+class AllTimeEventController extends Controller
 {
 
-    public function index(AllLeaveDataTable $dataTable)
+    public function index(AllTimeEventDataTable $dataTable)
     {
-        return $dataTable->render('all_leaves.index');
+        return $dataTable->render('all_time_events.index');
     }
 
     public function create()
     {
-
+        //
     }
 
-    public function store(StoreAbsenceRequest $request)
+    public function store(Request $request)
     {
-
+        //
     }
 
     public function show($id)
@@ -80,5 +80,5 @@ class AllLeaveController extends Controller
 
         // kembali lagi ke all leaves
         return redirect()->route('all_leaves.index');
-    }    
+    }       
 }

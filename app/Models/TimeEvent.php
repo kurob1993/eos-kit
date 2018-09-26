@@ -60,5 +60,10 @@ class TimeEvent extends Model
     public function getPlainIdAttribute()
     {
         return 'time_event-' . $this->id;
-    }  
+    }
+
+    public function getFormattedCheckDateAttribute()
+    {
+        return $this->check_date->format('d.m.Y');
+    }      
 }

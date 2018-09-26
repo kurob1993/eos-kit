@@ -66,7 +66,7 @@ class HomeController extends Controller
         if ($request->ajax()) {
 
             return Datatables::of($leaveApprovals->sortBy('status.id')
-            ->sortBy('absence.user.personnel_no'))
+            )
                 ->editColumn('summary', function ($leaveApproval) {                    
                     return view('dashboards.leaves._summary', [ 
                         'summary' => $leaveApproval,

@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.personnel_service._page-container', ['page_header' => 'Cuti Karyawan'])
+@component('layouts.personnel_service._page-container', ['page_header' => 'Izin Karyawan'])
 <div class="panel panel-prussian">
     <div class="panel-heading">
         <div class="btn-group pull-right" data-toggle="buttons">
@@ -13,7 +13,7 @@
                 <input name="options" id="option2" type="radio"> <i class="fa fa-star"></i>
             </label>
         </div>
-        <h4 class="panel-title">Pengajuan Cuti Seluruh Karyawan</h4>
+        <h4 class="panel-title">Pengajuan Izin Seluruh Karyawan (Absence)</h4>
     </div>
   @include('layouts._flash')
   <div class="panel-body">

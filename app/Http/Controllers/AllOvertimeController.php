@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\AllAbsenceQuotaDataTable;
+use Illuminate\Http\Request;
+use App\DataTables\AllOvertimeDataTable;
 
-class AllAbsenceQuotaController extends Controller
+class AllOvertimeController extends Controller
 {
-    public function index(AllAbsenceQuotaDataTable $dataTable)
+
+    public function index(AllOvertimeDataTable $dataTable)
     {
-        return $dataTable->render('all_absence_quotas.index');
+        return $dataTable->render('all_overtimes.index');
     }
 
     public function create()
     {
-
+        //
     }
 
-    public function store(StoreAbsenceRequest $request)
+    public function store(Request $request)
     {
-
+        //
     }
 
     public function show($id)
@@ -39,5 +41,5 @@ class AllAbsenceQuotaController extends Controller
     public function destroy($id)
     {
         //
-    }
+    }   
 }
