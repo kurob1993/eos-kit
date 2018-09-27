@@ -14,7 +14,7 @@ $(document).ready(function() {
     var c = confirm(text);
     return c;
   });
-
+  
   // delete review book
   $(document.body).on("submit", ".js-review-delete", function() {
     var $el = $(this);

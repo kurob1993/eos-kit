@@ -47,3 +47,11 @@
 <!-- Generated scripts from DataTables -->
 {!! $dataTable->scripts() !!}
 @endpush
+
+@push('custom-scripts')
+@include('scripts._button-submit-script')
+@endpush
+
+@push('on-ready-scripts')
+ButtonSubmitPlugins.init(); 
+@endpush

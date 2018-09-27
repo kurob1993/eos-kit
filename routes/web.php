@@ -90,6 +90,7 @@ Route::group([
     Route::get('', 'HomeController@personnelServiceDashboard')
         ->name('dashboards.personnel_service');
 
+    // route untuk integration & confirmation SAP
     Route::post('integrate/{approval}/{id}', 'PersonnelServiceController@integrate')
         ->name('personnel_service.integrate');
     Route::post('confirm/{approval}/{id}', 'PersonnelServiceController@confirm')

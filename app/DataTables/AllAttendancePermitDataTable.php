@@ -2,9 +2,10 @@
 
 namespace App\DataTables;
 
+Use Storage;
+use Yajra\DataTables\Services\DataTable;
 use App\Models\Attendance;
 use App\Models\Stage;
-use Yajra\DataTables\Services\DataTable;
 
 class AllAttendancePermitDataTable extends DataTable
 {
@@ -48,6 +49,13 @@ class AllAttendancePermitDataTable extends DataTable
                         ]) . '<br />';
                 return $a;
             })
+            ->editColumn('attachment', function (Attendance $attendance){
+                return '<img class="center-block img-responsive" src="' 
+                    . Storage::url($attendance->attachment) . '">';
+            })
+            ->addColumn('duration', function(Attendance $attendance){
+                return $attendance->duration . ' hari';
+            })            
             ->addColumn('action', function(Attendance $attendance){
                 if ($attendance->is_finished) {
 
@@ -56,10 +64,10 @@ class AllAttendancePermitDataTable extends DataTable
                 } else if ($attendance->is_sent_to_sap) {
                     // apakah stage-nya: sent to sap kemudian coba kirim manual
                     // atau dikirim secara otomatis (belum diakomodasi)
-                    return view('all_permits.attendance._action', [
+                    return view('components._action-confirm-integrate', [
                         'model' => $attendance,
-                        'integrate_url' => route('personnel_service.integrate', ['id' => $attendance->id, 'approval' => '']),
-                        'confirm_url' => route('personnel_service.confirm', ['id' => $attendance->id, 'approval' => ''])
+                        'integrate_url' => route('personnel_service.integrate', ['id' => $attendance->id, 'approval' => 'attendance']),
+                        'confirm_url' => route('personnel_service.confirm', ['id' => $attendance->id, 'approval' => 'attendance'])
                     ]);
                 } else if ($attendance->isFailed) {
                     // apakah stage-nya: failed
@@ -165,6 +173,14 @@ class AllAttendancePermitDataTable extends DataTable
                 'orderable' => false,
             ],
             [ 
+                'data' => 'duration', 
+                'name' => 'duration', 
+                'title' => 'Durasi', 
+                'class' => 'text-center',
+                'searchable' => false,
+                'orderable' => false,
+            ],            
+            [ 
                 'data' => 'attendance_type.text', 
                 'name' => 'attendance_type.text', 
                 'title' => 'Jenis Izin', 
@@ -184,6 +200,14 @@ class AllAttendancePermitDataTable extends DataTable
                 'name' => 'stage.description', 
                 'title' => 'Tahap', 
                 'searchable' => false, 
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'attachment', 
+                'name' => 'attachment', 
+                'title' => 'Lampiran', 
+                'class' => 'none',
+                'searchable' => false,
                 'orderable' => false,
             ],
         ];

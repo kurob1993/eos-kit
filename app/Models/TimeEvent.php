@@ -65,5 +65,5 @@ class TimeEvent extends Model
     public function getFormattedCheckDateAttribute()
     {
         return $this->check_date->format('d.m.Y');
-    }      
+    }
 }

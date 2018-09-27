@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\PeriodDates;
 use App\Traits\ReceiveStage;
@@ -78,5 +79,15 @@ class AttendanceQuota extends Model
     public function getPlainIdAttribute()
     {
         return 'overtime-' . $this->id;
-    }      
+    }
+
+    public function getDurationAttribute()
+    {
+        $start = Carbon::createFromFormat('Y-m-d H:i:s', 
+            $this->start_date->format('Y-m-d') . ' '. $this->from);
+        $end = Carbon::createFromFormat('Y-m-d H:i:s', 
+            $this->end_date->format('Y-m-d') . ' '. $this->to);
+        
+        return $end->diffInMinutes($start);
+    }
 }

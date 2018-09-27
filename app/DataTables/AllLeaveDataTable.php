@@ -48,6 +48,9 @@ class AllLeaveDataTable extends DataTable
                         ]) . '<br />';
                 return $a;
             })
+            ->addColumn('duration', function(Absence $absence){
+                return $absence->duration . ' hari';
+            })            
             ->addColumn('action', function(Absence $absence){
                 if ($absence->is_finished) {
 
@@ -56,10 +59,12 @@ class AllLeaveDataTable extends DataTable
                 } else if ($absence->is_sent_to_sap) {
                     // apakah stage-nya: sent to sap kemudian coba kirim manual
                     // atau dikirim secara otomatis (belum diakomodasi)
-                    return view('all_leaves._action', [
+                    return view('components._action-confirm-integrate', [
                         'model' => $absence,
-                        'integrate_url' => route('personnel_service.integrate', ['id' => $absence->id, 'approval' => '']),
-                        'confirm_url' => route('personnel_service.confirm', ['id' => $absence->id, 'approval' => ''])
+                        'integrate_url' => route('personnel_service.integrate', [
+                            'id' => $absence->id, 'approval' => 'absence' ] ),
+                        'confirm_url' => route('personnel_service.confirm', [
+                            'id' => $absence->id, 'approval' => 'absence' ] )
                     ]);
                 } else if ($absence->isFailed) {
                     // apakah stage-nya: failed
@@ -109,6 +114,9 @@ class AllLeaveDataTable extends DataTable
             'pageLength' => 50,
             'buttons' => ['excel'],
             'responsive' => true,
+            // 'columnDefs' => [
+            //     [ 'responsivePriority' => 1, 'targets' => 7 ],
+            // ],
             "language" => [
                 'processing' => '<i class="fa fa-spinner fa-spin fa-fw"></i><span class="sr-only">Loading...</span> '
             ],
@@ -165,6 +173,14 @@ class AllLeaveDataTable extends DataTable
                 'searchable' => false,
                 'orderable' => false,
             ],
+            [ 
+                'data' => 'duration', 
+                'name' => 'duration', 
+                'title' => 'Durasi', 
+                'class' => 'text-center',
+                'searchable' => false,
+                'orderable' => false,
+            ],            
             [ 
                 'data' => 'address', 
                 'name' => 'address', 

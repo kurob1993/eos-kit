@@ -48,6 +48,9 @@ class AllOvertimeDataTable extends DataTable
                         ]) . '<br />';
                 return $a;
             })
+            ->addColumn('duration', function(AttendanceQuota $overtime){
+                return $overtime->duration . ' menit';
+            })            
             ->addColumn('action', function(AttendanceQuota $overtime){
                 if ($overtime->is_finished) {
 
@@ -56,10 +59,10 @@ class AllOvertimeDataTable extends DataTable
                 } else if ($overtime->is_sent_to_sap) {
                     // apakah stage-nya: sent to sap kemudian coba kirim manual
                     // atau dikirim secara otomatis (belum diakomodasi)
-                    return view('all_overtimes._action', [
+                    return view('components._action-confirm-integrate', [
                         'model' => $overtime,
-                        'integrate_url' => route('personnel_service.integrate', ['id' => $overtime->id, 'approval' => '']),
-                        'confirm_url' => route('personnel_service.confirm', ['id' => $overtime->id, 'approval' => ''])
+                        'integrate_url' => route('personnel_service.integrate', ['id' => $overtime->id, 'approval' => 'overtime']),
+                        'confirm_url' => route('personnel_service.confirm', ['id' => $overtime->id, 'approval' => 'overtime'])
                     ]);
                 } else if ($overtime->isFailed) {
                     // apakah stage-nya: failed
@@ -79,7 +82,7 @@ class AllOvertimeDataTable extends DataTable
         // ambil semua data cuti user
         return $model->newQuery()
             ->with([
-                'attendanceQuotaType', 
+                'overtimeReason', 
                 'stage',
                 'user:personnel_no,name',
                 'attendanceQuotaApproval'
@@ -145,7 +148,14 @@ class AllOvertimeDataTable extends DataTable
             [ 
                 'data' => 'start_date', 
                 'name' => 'start_date', 
-                'title' => 'Mulai',
+                'title' => 'Tanggal Mulai',
+                'searchable' => false,
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'from', 
+                'name' => 'from', 
+                'title' => 'Jam Mulai',
                 'searchable' => false,
                 'orderable' => false,
             ],
@@ -157,9 +167,24 @@ class AllOvertimeDataTable extends DataTable
                 'orderable' => false,
             ],
             [ 
-                'data' => 'attendance_quota_type.text', 
-                'name' => 'attendance_quota_type.text', 
-                'title' => 'Jenis Cuti', 
+                'data' => 'to', 
+                'name' => 'to', 
+                'title' => 'Jam Berakhir',
+                'searchable' => false,
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'duration', 
+                'name' => 'duration', 
+                'title' => 'Durasi', 
+                'class' => 'text-center',
+                'searchable' => false,
+                'orderable' => false,
+            ],            
+            [ 
+                'data' => 'overtime_reason.text', 
+                'name' => 'overtime_reason.text', 
+                'title' => 'Alasan lembur', 
                 'searchable' => false,
                 'orderable' => false,
             ],

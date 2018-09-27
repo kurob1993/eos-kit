@@ -30,9 +30,6 @@ class AllAbsenceQuotaDataTable extends DataTable
             })
             ->editColumn('end_deduction', function (AbsenceQuota $absenceQuota) {
                 return $absenceQuota->formatted_end_deduction;
-            })
-            ->addColumn('action', function(AbsenceQuota $absenceQuota){
-              
             });
     }
 
@@ -63,7 +60,6 @@ class AllAbsenceQuotaDataTable extends DataTable
         return $this->builder()
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->addAction(['width' => '80px'])
                     ->parameters($this->getBuilderParameters());
     }
 

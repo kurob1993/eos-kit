@@ -53,10 +53,10 @@ class AllTimeEventDataTable extends DataTable
                 } else if ($timeEvent->is_sent_to_sap) {
                     // apakah stage-nya: sent to sap kemudian coba kirim manual
                     // atau dikirim secara otomatis (belum diakomodasi)
-                    return view('all_time_events._action', [
+                    return view('components._action-confirm-integrate', [
                         'model' => $timeEvent,
-                        'integrate_url' => route('personnel_service.integrate', ['id' => $timeEvent->id, 'approval' => '']),
-                        'confirm_url' => route('personnel_service.confirm', ['id' => $timeEvent->id, 'approval' => ''])
+                        'integrate_url' => route('personnel_service.integrate', ['id' => $timeEvent->id, 'approval' => 'time_event']),
+                        'confirm_url' => route('personnel_service.confirm', ['id' => $timeEvent->id, 'approval' => 'time_event'])
                     ]);
                 } else if ($timeEvent->isFailed) {
                     // apakah stage-nya: failed

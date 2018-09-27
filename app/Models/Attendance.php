@@ -18,7 +18,8 @@ class Attendance extends Model
         'end_date',
         'attendance_type_id',
         'stage_id',
-        'attachment'
+        'note',
+        'attachment',
     ];
 
     protected $casts = [
@@ -27,7 +28,7 @@ class Attendance extends Model
         'start_date' => 'date',
         'end_date' => 'date',
         'attendance_type_id' => 'integer',
-        'stage_id' => 'integer'
+        'stage_id' => 'integer',
     ];
 
     public static $rules = [

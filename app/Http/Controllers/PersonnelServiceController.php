@@ -2,15 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use Session;
+use Illuminate\Http\Request;
+use App\Models\Absence;
+use App\Models\Attendance;
+use App\Models\AttendanceQuota;
+use App\Models\TimeEvent;
+use App\Models\Stage;
+
 class PersonnelServiceController extends Controller
 {
-    public function integrate(Request $request, $id)
+    private function switchSubmission($approval, $id)
     {
-        // cari berdasarkan id kemudian update berdasarkan request + status reject
-        $absence = Absence::find($id);
+        switch($approval) {
+            case 'absence':
+                $submission = Absence::find($id);
+            break;
+            case 'attendance':
+                $submission = Attendance::find($id);
+            break;
+            case 'time_event':
+                $submission = TimeEvent::find($id);
+            break;
+            case 'overtime':
+                $submission = AttendanceQuota::find($id);
+            break;
+        }
+
+        return $submission;
+    }
+
+    public function integrate(Request $request, $approval, $id)
+    {
+        $submission = $this->switchSubmission($approval, $id);
         
         // dispatch event agar dapat dimasukkan ke dalam job
-        event(new SendingAbsenceToSap($absence));
+        event(new SendingAbsenceToSap($submission));
         
         // tampilkan pesan bahwa telah berhasil 
         Session::flash("flash_notification", [
@@ -19,16 +46,15 @@ class PersonnelServiceController extends Controller
         ]);
 
         // kembali lagi ke index
-        return redirect()->route('all_leaves.index');
+        return redirect()->back();
     }
 
-    public function confirm(Request $request, $id)
+    public function confirm(Request $request, $approval, $id)
     {
-        // cari berdasarkan id kemudian update berdasarkan request + status reject
-        $absence = Absence::find($id);
-        $absence->stage_id = Stage::successStage()->id;
+        $submission = $this->switchSubmission($approval, $id);
+        $submission->stage_id = Stage::successStage()->id;
         
-        if (!$absence->save()) {
+        if (!$submission->save()) {
             // kembali lagi jika gagal
             return redirect()->back();
         }
@@ -40,6 +66,6 @@ class PersonnelServiceController extends Controller
         ]);
 
         // kembali lagi ke all leaves
-        return redirect()->route('all_leaves.index');
-    }   
+        return redirect()->back();
+    }
 }
