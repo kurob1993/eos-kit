@@ -31,6 +31,9 @@ Route::group([
     'middleware' => ['auth', 'role:employee']], function () {
     Route::get('debug', 'DebugController@debug');
 
+    // route untuk halaman help
+Route::resource('help', 'HelpController');
+
     // route untuk default home --> dashboard
     Route::get('/', 'HomeController@index')->name('dashboards.employee');
 
