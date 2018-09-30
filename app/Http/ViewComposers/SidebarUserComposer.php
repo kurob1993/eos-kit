@@ -19,8 +19,8 @@ class SidebarUserComposer
             // menyimpan global variable view ini
             $view->with('employee', $employee->toArray());
 
-            if (Storage::disk('public')->exists($employee['personnel_no'] . '.jpg'))
-                $view->with('picture', Storage::url( $employee['personnel_no'] . '.jpg' ));
+            if (Storage::disk('public')->exists( 'pic/' . $employee['personnel_no'] . '.jpg'))
+                $view->with('picture', Storage::url( 'pic/' . $employee['personnel_no'] . '.jpg' ));
             else
                 $view->with('picture', Storage::url( 'default.png' ));
 
