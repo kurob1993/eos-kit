@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -20,7 +21,9 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    use AuthenticatesUsers {
+        logout as performLogout;
+    }
 
     /**
      * Where to redirect users after login.
@@ -39,6 +42,12 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
     
+    public function logout(Request $request)
+    {
+        $this->performLogout($request);
+        return redirect()->away('https://sso.krakatausteel.com');
+    }
+        
     public function programaticallyLogin($encrypted)
     {
         // $decrypted = Crypt::decryptString($encrypted);

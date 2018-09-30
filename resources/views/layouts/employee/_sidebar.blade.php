@@ -106,6 +106,10 @@
                 <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                     {{ csrf_field() }}
                 </form>
+                {{-- <a href="https://sso.krakatausteel.com">
+                    <i class="fa fa-sign-out"></i>
+                    <span>Kembali ke SSO</span>
+                </a> --}}
             </li>
             <!-- begin sidebar minify button -->
             <!-- end sidebar minify button -->
