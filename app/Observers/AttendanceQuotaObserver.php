@@ -8,6 +8,7 @@ use App\Models\AttendanceQuotaQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
 use App\Notifications\OvertimeSentToSapMessage;
+use App\Notifications\OvertimeDeletedMessage;
 use App\Role;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -135,12 +136,28 @@ class AttendanceQuotaObserver
     {
         // apakah sudah selesai
         if ($attendanceQuota->isSuccess) {
-
+ 
             // to adalah karyawan yang mengajukan
             $to = $attendanceQuota->user()->first();
 
             // sistem mengirim email notifikasi
             $to->notify(new OvertimeSentToSapMessage($attendanceQuota));
         }
+    }
+
+    public function deleting(AttendanceQuota $attendanceQuota)
+    {
+        $approvals = $attendanceQuota->attendanceQuotaApproval;
+
+        // hapus semua approval terkait lembur
+        foreach ($approvals as $approval)
+            $approval->delete();
+    }
+
+    public function deleted(AttendanceQuota $attendanceQuota)
+    {
+        // sistem mengirim notifikasi
+        $to = $attendanceQuota->user;
+        $to->notify(new OvertimeDeletedMessage($attendanceQuota));
     }
 }

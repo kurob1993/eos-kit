@@ -52,10 +52,11 @@ class AllOvertimeDataTable extends DataTable
                 return $overtime->duration . ' menit';
             })            
             ->addColumn('action', function(AttendanceQuota $overtime){
-                if ($overtime->is_finished) {
-
-                } else if ($overtime->is_denied) {
-
+                if ($overtime->is_waiting_approval || $overtime->is_failed) {
+                    // return view('components._action-delete', [
+                    //     'model' => $overtime,
+                    //     'delete_url' => route('personnel_service.delete', ['id' => $overtime->id, 'approval' => 'overtime'])
+                    // ]);
                 } else if ($overtime->is_sent_to_sap) {
                     // apakah stage-nya: sent to sap kemudian coba kirim manual
                     // atau dikirim secara otomatis (belum diakomodasi)
@@ -64,9 +65,7 @@ class AllOvertimeDataTable extends DataTable
                         'integrate_url' => route('personnel_service.integrate', ['id' => $overtime->id, 'approval' => 'overtime']),
                         'confirm_url' => route('personnel_service.confirm', ['id' => $overtime->id, 'approval' => 'overtime'])
                     ]);
-                } else if ($overtime->isFailed) {
-                    // apakah stage-nya: failed
-                }                
+                }
             })
             ->escapeColumns([]);
     }

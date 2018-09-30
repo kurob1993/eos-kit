@@ -54,14 +54,14 @@
           <div class="tab-pane fade active in" id="tab-leaves">
               <div class="panel-body p-0">
                   <p>
-                    <a class="btn btn-primary" 
+                    {{-- <a class="btn btn-primary" 
                       href="{{ route('dashboards.approve_all', ['approval' => 'leaves']) }}">
                       Setujui Semua
                     </a>
                     <a class="btn btn-danger" 
                       href="{{ route('dashboards.reject_all', ['approval' => 'leaves']) }}">
                       Tolak Semua
-                    </a>
+                    </a> --}}
                   </p>
                   <div class="table-responsive">
                     {!! $leaveTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}

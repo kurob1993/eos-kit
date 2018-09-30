@@ -22,13 +22,17 @@ Route::post('logout', [
     'as' => 'logout',
     'uses' => 'Auth\LoginController@logout']);
 
-// route untuk default home --> dashboard
-Route::get('/', 'HomeController@index')->name('dashboards.employee');
+// route for programatically login to system
+Route::get('a/{encrypted}', 'Auth\LoginController@programaticallyLogin')
+    ->name('login.a');
 
 // route untuk role employee
 Route::group([
     'middleware' => ['auth', 'role:employee']], function () {
     Route::get('debug', 'DebugController@debug');
+
+    // route untuk default home --> dashboard
+    Route::get('/', 'HomeController@index')->name('dashboards.employee');
 
     // route untuk persetujuan di dashboard
     Route::post('approve/{approval}/{id}', 'HomeController@approve')
@@ -95,14 +99,11 @@ Route::group([
         ->name('personnel_service.integrate');
     Route::post('confirm/{approval}/{id}', 'PersonnelServiceController@confirm')
         ->name('personnel_service.confirm');
+        Route::post('delete/{approval}/{id}', 'PersonnelServiceController@delete')
+        ->name('personnel_service.delete');
 
     // route untuk manage daftar semua cuti
     Route::resource('all_leaves', 'AllLeaveController', ['only' => ['index']]);
-
-    // Route::post('integrate/{id}', 'AllLeaveController@integrate')
-    //     ->name('all_leaves.integrate');
-    // Route::post('confirm/{id}', 'AllLeaveController@confirm')
-    //     ->name('all_leaves.confirm');
 
     // route untuk manage daftar semua kuota cuti
     Route::resource('all_absence_quotas', 'AllAbsenceQuotaController', ['only' => ['index']]);

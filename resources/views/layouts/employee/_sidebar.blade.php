@@ -15,7 +15,7 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="has-sub">
+            {{-- <li class="has-sub">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>
                         <i class="icon-user"></i>
@@ -27,7 +27,7 @@
                     <li> <a href="#">Organisasi</a> </li>
                     <li> <a href="#">Tugas Pokok Fungsi</a> </li>
                 </ul>
-            </li>
+            </li> --}}
             <li class="has-sub {{ (
             (Request::segment(1) == 'leaves') || (Request::segment(1) == 'permits') 
                 || (Request::segment(1) == 'time_events') || (Request::segment(1) == 'overtimes') 
@@ -51,11 +51,11 @@
                     <li class="{{ Request::segment(1)=='overtimes' ? 'active' : '' }}">
                         <a href="{{ url('overtimes') }}">Lembur</a>
                     </li>
-                    <li> <a href="#">Waktu Kerja</a> </li>
-                    <li> <a href="#">Laporan Aktivitas</a> </li>
+                    {{-- <li> <a href="#">Waktu Kerja</a> </li>
+                    <li> <a href="#">Laporan Aktivitas</a> </li> --}}
                 </ul>
             </li>
-            <li class="has-sub">
+            {{-- <li class="has-sub">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>
                         <i class="fa fa-suitcase"></i>
@@ -74,7 +74,7 @@
                 <ul class="sub-menu">
                     <li> <a href="#">Medical Check-up</a> </li>
                 </ul>
-            </li>
+            </li> --}}
 
             {{-- route to dashboard basis from employee sidebar --}} 
             @role(['basis'])

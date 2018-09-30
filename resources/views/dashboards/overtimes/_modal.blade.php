@@ -11,7 +11,7 @@
         </tr>
         <tr>
             <td>Durasi</td>
-            <td>{{ $overtime->duration }} hari</td>
+            <td>{{ $overtime->duration }} menit</td>
         </tr>
         <tr>
             <td>Jenis Lembur</td>

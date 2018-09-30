@@ -236,10 +236,17 @@ class HomeController extends Controller
                     ]);
                 })
                 ->editColumn('approver', function ($overtimeApproval) {
-                    return view('layouts._personnel-no-with-name', [
-                        'personnel_no' => $overtimeApproval->user->personnel_no,
-                        'employee_name' => $overtimeApproval->user->name,
-                    ]);
+                    $approvals = $overtimeApproval->attendanceQuota->attendanceQuotaApproval;
+                    $a = '';
+                    
+                    foreach ($approvals as $approval) {
+                        $a = $a . view('layouts._personnel-no-with-name', [
+                            'personnel_no' => $approval->user->personnel_no,
+                            'employee_name' => $approval->user->name,
+                        ]) . '<br />';
+                    }
+
+                    return $a;
                 })
                 ->setRowAttr([
                     'data-href' => function($overtimeApproval) {
@@ -260,23 +267,23 @@ class HomeController extends Controller
         switch ($approval) {
             case 'leave': 
                 $approved = AbsenceApproval::find($id); 
-                $moduleText = config('emss.leaves.text');
+                $moduleText = config('emss.modules.leaves.text');
             break;
             case 'absence': 
                 $approved = AbsenceApproval::find($id);
-                $moduleText = config('emss.permits.text');
+                $moduleText = config('emss.modules.permits.text');
             break;
             case 'attendance': 
                 $approved = AttendanceApproval::find($id);
-                $moduleText = config('emss.permits.text');
+                $moduleText = config('emss.modules.permits.text');
             break;
             case 'time_event': 
                 $approved = TimeEventApproval::find($id);
-                $moduleText = config('emss.time_events.text');
+                $moduleText = config('emss.modules.time_events.text');
             break;
             case 'overtime': 
                 $approved = AttendanceQuotaApproval::find($id);
-                $moduleText = config('emss.overtimes.text'); 
+                $moduleText = config('emss.modules.overtimes.text'); 
             break;
         }
 
@@ -302,23 +309,23 @@ class HomeController extends Controller
         switch ($approval) {
             case 'leave': 
                 $approved = AbsenceApproval::find($id); 
-                $moduleText = config('emss.leaves.text');
+                $moduleText = config('emss.modules.leaves.text');
             break;
             case 'absence': 
                 $approved = AbsenceApproval::find($id);
-                $moduleText = config('emss.permits.text');
+                $moduleText = config('emss.modules.permits.text');
             break;
             case 'attendance': 
                 $approved = AttendanceApproval::find($id);
-                $moduleText = config('emss.permits.text');
+                $moduleText = config('emss.modules.permits.text');
             break;
             case 'time_event': 
                 $approved = TimeEventApproval::find($id);
-                $moduleText = config('emss.time_events.text');
+                $moduleText = config('emss.modules.time_events.text');
             break;
             case 'overtime': 
                 $approved = AttendanceQuotaApproval::find($id);
-                $moduleText = config('emss.overtimes.text'); 
+                $moduleText = config('emss.modules.overtimes.text'); 
             break;
         }
 
@@ -356,11 +363,11 @@ class HomeController extends Controller
         switch ($approval) {
             case 'absence': 
                 $approved = AbsenceApproval::find($id); 
-                $moduleText = config('emss.absences.text');
+                $moduleText = config('emss.modules.absences.text');
             break;
             case 'attendance': 
                 $approved = AttendanceApproval::find($id);
-                $moduleText = config('emss.attendances.text');
+                $moduleText = config('emss.modules.attendances.text');
             break;
         }
 

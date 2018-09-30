@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <!-- begin mobile sidebar expand / collapse button -->
             <div class="navbar-header navbar-header-without-bg">
-                <a href="index.html" class="navbar-brand">
+                <a href={{ url("/") }} class="navbar-brand">
                         <span>
                             <img width="26px" src={{ url("/images", ['krakatausteel-logo.png'])  }}>
                         </span>

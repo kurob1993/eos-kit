@@ -31,6 +31,25 @@ class PersonnelServiceController extends Controller
 
         return $submission;
     }
+    
+    public function delete(Request $request, $approval, $id)
+    {
+        $submission = $this->switchSubmission($approval, $id);
+
+        if (!$submission->delete()) {
+            // kembali lagi jika gagal
+            return redirect()->back();
+        }
+
+        // tampilkan pesan bahwa telah berhasil 
+        Session::flash("flash_notification", [
+            "level" => "success",
+            "message" => "Data pengajuan berhasil dihapus."
+        ]);
+
+        // kembali lagi ke index
+        return redirect()->back();
+    }
 
     public function integrate(Request $request, $approval, $id)
     {
@@ -62,7 +81,7 @@ class PersonnelServiceController extends Controller
         // tampilkan pesan bahwa telah berhasil menolak
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Data cuti berhasil dikonfirmasi masuk ke SAP."
+            "message" => "Data berhasil dikonfirmasi masuk ke SAP."
         ]);
 
         // kembali lagi ke all leaves

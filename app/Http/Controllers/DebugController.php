@@ -7,14 +7,17 @@ use Illuminate\Config;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\StoreAbsenceRequest;
-use App\Models\Absence;
+use Illuminate\Support\Facades\Crypt;
 
 class DebugController extends Controller
 {
     public function debug()
     {
+        $encrypted = Crypt::encryptString('11725');
+        dd($encrypted);
 
-        dd(\Storage::disk('public')->exists('11725.jpg'));
+        // dd(\Storage::disk('public')->exists('11725.jpg'));
+
         // // Jumlah item notifikasi untuk overtime
         // $countOvertimeApprovals = \App\Models\AttendanceQuotaApproval::where('regno', Auth::user()->personnel_no)
         //     ->waitedForApproval()->get()->toArray();
