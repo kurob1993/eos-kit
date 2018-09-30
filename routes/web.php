@@ -23,7 +23,7 @@ Route::post('logout', [
     'uses' => 'Auth\LoginController@logout']);
 
 // route for programatically login to system
-Route::get('a/{encrypted}', 'Auth\LoginController@programaticallyLogin')
+Route::get('a/{personnel_no}/{email}', 'Auth\LoginController@programaticallyLogin')
     ->name('login.a');
 
 // route untuk role employee
