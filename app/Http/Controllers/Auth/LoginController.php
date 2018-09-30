@@ -84,7 +84,7 @@ class LoginController extends Controller
                 // create the employee
                 $employee = new Employee();
                 $employee->personnel_no = $structDisp->empnik;
-                $employee->name = $structDisp->empnik;
+                $employee->name = $structDisp->empname;
                 $employee->esgrp = $structDisp->emppersk;
                 $employee->cost_ctr = $structDisp->empkostl;
                 $employee->position_name = $structDisp->emppostx;
