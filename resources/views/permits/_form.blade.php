@@ -83,7 +83,7 @@
           <div class="form-group {{ $errors->has('attachment') ? ' has-error' : '' }}">
               {!! Form::label('attachment', 'Lampiran') !!}
               <div class="input-group">
-                {!! Form::file('attachment', [ 'data-parsley-required' => 'true', 
+                {!! Form::file('attachment', [  
                 'accept' => 'image/*']); !!}
               </div>
               {!! $errors->first('attachment', '

@@ -37,7 +37,7 @@ class PersonnelServiceController extends Controller
         $submission = $this->switchSubmission($approval, $id);
         
         // dispatch event agar dapat dimasukkan ke dalam job
-        event(new SendingAbsenceToSap($submission));
+        // event(new SendingAbsenceToSap($submission));
         
         // tampilkan pesan bahwa telah berhasil 
         Session::flash("flash_notification", [

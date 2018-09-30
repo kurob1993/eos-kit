@@ -14,11 +14,12 @@ class DebugController extends Controller
     public function debug()
     {
 
-        // Jumlah item notifikasi untuk overtime
-        $countOvertimeApprovals = \App\Models\AttendanceQuotaApproval::where('regno', Auth::user()->personnel_no)
-            ->waitedForApproval()->get()->toArray();
+        dd(\Storage::disk('public')->exists('11725.jpg'));
+        // // Jumlah item notifikasi untuk overtime
+        // $countOvertimeApprovals = \App\Models\AttendanceQuotaApproval::where('regno', Auth::user()->personnel_no)
+        //     ->waitedForApproval()->get()->toArray();
 
-        dd($countOvertimeApprovals);
+        // dd($countOvertimeApprovals);
 
         // dd(\App\Models\Employee::where('personnel_no', 11725)->first()->isSuperintendent());
         

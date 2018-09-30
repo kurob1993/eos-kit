@@ -156,9 +156,12 @@ class PermitController extends Controller
             "message" => "Berhasil menyimpan pengajuan izin.",
         ]);
 
-        $path = $request->file('attachment')->store('permits');
         $requestData = $request->all();
-        $requestData['attachment'] = $path;
+        
+        if (!empty($request->file('attachment'))) {
+            $path = $request->file('attachment')->store('permits');
+            $requestData['attachment'] = $path;
+        }
         
         // memeriksa apakah permit_type adalah attendance atau absence
         $permitType = $request->input('permit_type');

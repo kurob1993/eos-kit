@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
+use App\Rules\PermitHasAttachment;
 
 class StorePermitRequest extends FormRequest
 {
@@ -28,10 +30,14 @@ class StorePermitRequest extends FormRequest
             'personnel_no' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
-            'deduction' => 'required',
+            'deduction' => ['required', ],
             'note' => 'required',
             'permit_type' => 'required',
-            'attachment' => 'required',
+            'attachment' => [
+                'required',
+                'mimes:jpeg,jpg,png', 
+                // new PermitHasAttachment(Input::get('permit_type'))
+            ],
         ];
     }
 }
