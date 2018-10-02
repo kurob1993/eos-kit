@@ -18,36 +18,14 @@
 
 </div>
 <div class="player-container">
+  @foreach ($videos as $video)
   <video
-    id="video"
+    id="{{ $video['id'] }}"
     class="video-js vjs-fluid"
     controls data-setup={}>
-    <source src="storage/pendahuluan.mp4" type="video/mp4">
+    <source src={{ $video['url'] }} type="video/mp4">
   </video>
-  <video
-    id="video2"
-    class="video-js vjs-fluid"
-    controls data-setup={}>
-    <source src="storage/cuti.mp4" type="video/mp4">
-  </video>
-  <video
-    id="video3"
-    class="video-js vjs-fluid"
-    controls data-setup={}>
-    <source src="storage/izin.mp4" type="video/mp4">
-  </video>
-  <video
-    id="video4"
-    class="video-js vjs-fluid"
-    controls data-setup={}>
-    <source src="storage/lembur.mp4" type="video/mp4">
-  </video>
-  <video
-    id="video5"
-    class="video-js vjs-fluid"
-    controls data-setup={}>
-    <source src="storage/tidak_slash.mp4" type="video/mp4">
-  </video>
+  @endforeach
   <br />
 </div>
 @endcomponent
