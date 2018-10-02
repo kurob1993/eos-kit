@@ -19,6 +19,11 @@
 
             <!-- begin header navigation right -->
             <ul class="nav navbar-nav navbar-right text-center">
+                <li class="dropdown">
+                    <a href={{ route('help.index') }}>
+                        <strong>Bantuan</strong>&nbsp;&nbsp;<i class="fa fa-question-circle"></i>
+                    </a>
+                </li>
             </ul>
             <!-- end header navigation right -->
         </div>

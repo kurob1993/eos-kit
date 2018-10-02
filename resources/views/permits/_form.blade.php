@@ -102,7 +102,7 @@
       <p class="help-block">:message</p>') !!}
     </div>
     <!-- end note field -->
-
+{{-- 
       <!-- begin delegation field -->
       @if ($can_delegate)
       <div class="form-group">
@@ -116,7 +116,7 @@
       </div>
       @endif
       <!-- end delegation field -->
-
+ --}}
     <!-- begin approver field -->
     <!-- This field is not sent via form -->
     <div class="form-group{{ $errors->has('approver') ? ' has-error' : '' }}">
