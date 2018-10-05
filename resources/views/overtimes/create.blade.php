@@ -64,7 +64,7 @@
   $("#datepicker-inline").datepicker({ 
     format: 'yyyy-mm-dd',
     todayHighlight: true,
-    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    startDate: '-3d',
     endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 5),
     // datesDisabled: ['2018-09-01'],
     });
