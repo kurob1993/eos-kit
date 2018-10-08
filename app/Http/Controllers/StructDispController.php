@@ -16,7 +16,7 @@ class StructDispController extends Controller
     public function subordinates($empnik)
     {
         // mencari seluruh semua bawahan
-        return Employee::where('personnel_no', $empnik)
+        return Employee::findByPersonnel($empnik)
             ->first()
             ->subordinates();
     }
@@ -24,7 +24,7 @@ class StructDispController extends Controller
     public function bosses($empnik)
     {
         // mencari seluruh atasan
-        return Employee::where('personnel_no', $empnik)
+        return Employee::findByPersonnel($empnik)
             ->first()
             ->bosses();
     }
@@ -32,7 +32,7 @@ class StructDispController extends Controller
     public function closestBoss($empnik)
     {
         // mencari atasan satu tingkat di atas
-        return Employee::where('personnel_no', $empnik)
+        return Employee::findByPersonnel($empnik)
             ->first()
             ->closestBoss();
     }
@@ -40,7 +40,7 @@ class StructDispController extends Controller
     public function minSuperintendentBoss($empnik)
     {
         // mencari atasan minimal golongan CS
-        return Employee::where('personnel_no', $empnik)
+        return Employee::findByPersonnel($empnik)
             ->first()
             ->minSuperintendentBoss();
     }
@@ -48,7 +48,7 @@ class StructDispController extends Controller
     public function minManagerBoss($empnik)
     {
         // mencari atasan minimal golongan BS
-        return Employee::where('personnel_no', $empnik)
+        return Employee::findByPersonnel($empnik)
             ->first()
             ->minManagerBoss();
     }
@@ -56,7 +56,7 @@ class StructDispController extends Controller
     public function generalManagerBoss($empnik)
     {
         // mencari atasan minimal golongan AS
-        return Employee::where('personnel_no', $empnik)
+        return Employee::findByPersonnel($empnik)
             ->first()
             ->generalManagerBoss();
     }

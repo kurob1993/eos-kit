@@ -22,6 +22,41 @@ class Employee extends Model
       return $this->hasMany('App\Models\StructDisp', 'empnik', 'personnel_no');
     }
 
+    public function scopeFindByPersonnel($query, $p)
+    {
+        // mencari data StructDisp pada diri sendiri (no == 1)
+        $struct = \App\Models\StructDisp::structOf($p)
+            ->selfStruct()
+            ->first();
+
+        // jika ditemukan datanya di StructDisp
+        if( !is_null($struct) ) {
+
+            // mencari di Employee
+            $employee = $query
+                ->where('personnel_no', $p)
+                ->first();
+
+            // jika tidak ditemukan di Employee buat baru
+            if ( is_null($employee) ) {
+                $employee = new \App\Models\Employee();
+                $employee->personnel_no = $struct->empnik;    
+            } 
+
+            // buat baru / update perubahan employee
+            $employee->name = $struct->empname;
+            $employee->esgrp = $struct->emppersk;
+            $employee->cost_ctr = $struct->empkostl;
+            $employee->position_name = $struct->emppostx;
+            $employee->org_unit_name = $struct->emportx;
+            $employee->save();
+        }
+
+        // kembalikan data Employee berdasarkan pencarian (terbaru)
+        return $query
+            ->where('personnel_no', $p);
+    }
+
     public function isSuperintendent()
     {
         return (substr($this->esgrp, 0, 1) == 'C') ? true : false;
@@ -75,7 +110,7 @@ class Employee extends Model
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::where('personnel_no', $item->empnik)->first();
+            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -88,7 +123,7 @@ class Employee extends Model
         $s = $this->structDisp()->closestBossOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? [] : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
+        return (is_null($s)) ? [] : (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
     }
 
     public function bosses()
@@ -99,7 +134,7 @@ class Employee extends Model
         // mengiterasi atasan-atasan dan membuat collection baru
         $bosses = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing atasan
-            return \App\Models\Employee::where('personnel_no', $item->dirnik)->first();;
+            return \App\Models\Employee::findByPersonnel($item->dirnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -112,7 +147,7 @@ class Employee extends Model
         $s = $this->structDisp()->superintendentOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? [] : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
+        return (is_null($s)) ? [] : (\App\Models\Employee::findByPersonnel($s->dirnik)->first());        
     }    
 
     public function managerBoss()
@@ -121,7 +156,7 @@ class Employee extends Model
         $s = $this->structDisp()->managerOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? [] : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
+        return (is_null($s)) ? [] : (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
     }    
 
     public function generalManagerBoss()
@@ -130,7 +165,7 @@ class Employee extends Model
         $s = $this->structDisp()->generalManagerOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? [] : (\App\Models\Employee::where('personnel_no', $s->dirnik)->first());
+        return (is_null($s)) ? [] : (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
     }
 
     public function minSuperintendentBoss()
