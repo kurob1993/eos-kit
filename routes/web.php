@@ -88,6 +88,18 @@ Route::resource('help', 'HelpController');
         'destroy', 'update', 'edit']]);
 });
 
+Route::group([
+    'prefix' => 'secretary',
+    'middleware' => ['auth', 'role:secretary']], function (){
+
+    Route::get('', 'HomeController@secretaryDashboard')
+        ->name('dashboards.secretary');
+
+    // route untuk leave
+    Route::resource('leaves', 'SecretaryLeaveController', ['only' => [
+        'index', 'create']]);
+    });
+
 // route untuk role personnel_service
 Route::group([
     'prefix' => 'personnel_service',

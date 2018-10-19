@@ -61,6 +61,12 @@ class User extends Authenticatable
     return AbsenceQuota::activeAbsenceQuota($this->personnel_no);
   }
 
+  public function families()
+  {
+    // one-to-many relationship dengan it0021
+    return $this->hasMany('App\Models\Family', 'PERNR', 'personnel_no');
+  }
+
   public function getPersonnelNoWithNameAttribute()
   {
     // menggabungkan personnel_no dan nama

@@ -22,6 +22,18 @@ class Employee extends Model
       return $this->hasMany('App\Models\StructDisp', 'empnik', 'personnel_no');
     }
 
+    public function families()
+    {
+      // one-to-many relationship dengan it0021
+      return $this->hasMany('App\Models\Family', 'PERNR', 'personnel_no');
+    }
+
+    public function positions()
+    {
+      // one-to-many relationship dengan it0001
+      return $this->hasMany('App\Models\Position', 'PERNR', 'personnel_no');
+    }
+
     public function scopeFindByPersonnel($query, $p)
     {
         // mencari data StructDisp pada diri sendiri (no == 1)

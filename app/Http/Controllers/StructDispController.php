@@ -7,10 +7,21 @@ use App\Models\Employee;
 
 class StructDispController extends Controller
 {
-     public function show($empnik)
+    public function index()
     {
-        // menampilkan structdisp
-        return \App\Models\StructDisp::where('empnik', $empnik)->get();
+        $paginated = \App\Models\StructDisp::selfStruct()->paginate();
+        $paginated->transform(function ($item, $key) {
+            return Employee::findByPersonnel($item->empnik)->first();
+        });
+
+        return $paginated;
+    }
+
+    public function show($empnik)
+    {
+        // mencari seluruh semua bawahan
+        return Employee::findByPersonnel($empnik)
+            ->first();
     }
 
     public function subordinates($empnik)
