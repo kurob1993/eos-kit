@@ -13,7 +13,7 @@ class SecretaryController extends Controller
 
     public function leave()
     {
-
+        
     }
 
     public function permit()
@@ -28,7 +28,7 @@ class SecretaryController extends Controller
 
     public function time_event()
     {
-        
+
     }
 
     public function create()

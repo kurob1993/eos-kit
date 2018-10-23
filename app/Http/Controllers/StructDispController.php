@@ -24,6 +24,12 @@ class StructDispController extends Controller
             ->first();
     }
 
+    public function showByCostCenter($cost_center)
+    {
+        return Employee::findByCostCenter($cost_center)
+            ->get();
+    }
+
     public function subordinates($empnik)
     {
         // mencari seluruh semua bawahan

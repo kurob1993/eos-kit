@@ -31,6 +31,12 @@ class StructDisp extends Model
       return $this->belongsTo('\App\Models\Employee', 'dirnik', 'personnel_no');
     }
 
+    public function scopeCostCenterOf($query, $c)
+    {
+      // struct untuk mencari by cost center
+      return $query->where('empkostl', $c);
+    }
+
     public function scopeStructOf($query, $p)
     {
       // struct untuk personnel_no

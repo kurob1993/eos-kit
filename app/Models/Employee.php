@@ -69,6 +69,38 @@ class Employee extends Model
             ->where('personnel_no', $p);
     }
 
+    public function scopeFindByCostCenter($query, $c)
+    {
+        // mencari data StructDisp pada diri sendiri (no == 1)
+        $struct = \App\Models\StructDisp::selfStruct()
+            ->costCenterOf($c)
+            ->get();
+
+        $struct->each(function ($item, $key) {
+
+            // mencari di Employee
+            $employee = Employee::where('personnel_no', $item->empnik)
+                ->first();
+
+            // jika tidak ditemukan di Employee buat baru
+            if ( is_null($employee) ) {
+                $employee = new \App\Models\Employee();
+                $employee->personnel_no = $item->empnik;
+            }
+
+            // buat baru / update perubahan employee
+            $employee->name = $item->empname;
+            $employee->esgrp = $item->emppersk;
+            $employee->cost_ctr = $item->empkostl;
+            $employee->position_name = $item->emppostx;
+            $employee->org_unit_name = $item->emportx;
+            $employee->save();
+        });
+        
+        // kembalikan data Employee berdasarkan pencarian (terbaru)
+        return $query->where('cost_ctr', $c);
+    }
+
     public function isSuperintendent()
     {
         return (substr($this->esgrp, 0, 1) == 'C') ? true : false;

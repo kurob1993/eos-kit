@@ -88,6 +88,7 @@ Route::resource('help', 'HelpController');
         'destroy', 'update', 'edit']]);
 });
 
+// route untuk role secretary
 Route::group([
     'prefix' => 'secretary',
     'middleware' => ['auth', 'role:secretary']], function (){
