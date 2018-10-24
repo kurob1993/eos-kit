@@ -97,8 +97,7 @@ Route::group([
         ->name('dashboards.secretary');
 
     // route untuk leave
-    Route::resource('leaves', 'SecretaryLeaveController', ['only' => [
-        'index', 'create']]);
+    Route::get('leaves', 'SecretaryController@leave');
     });
 
 // route untuk role personnel_service

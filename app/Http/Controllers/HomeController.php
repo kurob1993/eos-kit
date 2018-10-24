@@ -26,28 +26,33 @@ class HomeController extends Controller
 
     public function index(Request $request, Builder $htmlBuilder)
     {
+        dd('here');
         // if (Laratrust::hasRole('basis')) return $this->basisDashboard();
         // if (Laratrust::hasRole('employee')) return $this->employeeDashboard();
         // if (Laratrust::hasRole('personnel_service')) return $this->personnelServiceDashboard();
+        // if (Auth::user()->hasRole('secretary')) dd('secretary here');
 
-        return $this->employeeDashboard($request, $htmlBuilder);
+        // return $this->employeeDashboard($request, $htmlBuilder);
     }
 
+    public function employeeDashboard($request, $htmlBuilder)
+    {
+        return view('dashboards.employee');
+    }
+    
     public function basisDashboard()
     {
         return view('dashboards.basis');
     }
 
-    public function employeeDashboard($request, $htmlBuilder)
-    {
-        
-        
-        return view('dashboards.employee');
-    }
-
     public function personnelServiceDashboard()
     {
         return view('dashboards.personnel_service');
+    }
+
+    public function secretaryDashboard()
+    {
+        return view('dashboards.secretary');
     }
 
     public function leaveApproval(Request $request)

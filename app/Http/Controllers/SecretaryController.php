@@ -13,7 +13,7 @@ class SecretaryController extends Controller
 
     public function leave()
     {
-        
+        return view('secretary.leaves.index');
     }
 
     public function permit()
