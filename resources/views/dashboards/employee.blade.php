@@ -36,7 +36,7 @@
                   @endif                 
               </a>
           </li>
-          <li class="">
+          {{-- <li class="">
               <a href="#tab-overtimes" data-toggle="tab" aria-expanded="true"> Lembur
                   @if ($countOvertimeApprovals > 0) 
                   <span class="badge pull-right m-l-5">
@@ -44,7 +44,7 @@
                   </span>
                   @endif 
               </a>
-          </li>
+          </li> --}}
       </ul>
       <!-- end of dashboard nav-tabs  -->
 

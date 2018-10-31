@@ -161,15 +161,6 @@ class Employee extends Model
         return $subordinates;
     }
 
-    public function closestBoss()
-    {
-        // mencari atasan satu tingkat
-        $s = $this->structDisp()->closestBossOf($this->personnel_no)->first();
-
-        // mengembalikan Employee model
-        return (is_null($s)) ? [] : (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
-    }
-
     public function bosses()
     {
         // mencari semua atasan
@@ -185,8 +176,23 @@ class Employee extends Model
         return $bosses;
     }
 
+    public function closestBoss()
+    {
+        // menginisialisasi ulang atasan
+        $this->bosses();
+
+        // mencari atasan satu tingkat
+        $s = $this->structDisp()->closestBossOf($this->personnel_no)->first();
+
+        // mengembalikan Employee model
+        return (is_null($s)) ? [] : (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
+    }
+
     public function superintendentBoss()
     {
+        // menginisialisasi ulang atasan
+        $this->bosses();
+
         // mencari semua atasan
         $s = $this->structDisp()->superintendentOf($this->personnel_no)->first();
 
@@ -196,6 +202,9 @@ class Employee extends Model
 
     public function managerBoss()
     {
+        // menginisialisasi ulang atasan
+        $this->bosses();
+
         // mencari semua atasan
         $s = $this->structDisp()->managerOf($this->personnel_no)->first();
 
@@ -205,6 +214,9 @@ class Employee extends Model
 
     public function generalManagerBoss()
     {
+        // menginisialisasi ulang atasan
+        $this->bosses();
+
         // mencari semua atasan
         $s = $this->structDisp()->generalManagerOf($this->personnel_no)->first();
 

@@ -10,7 +10,7 @@
       <div class="stats-icon"><i class="fa fa-phone-square"></i></div>
       <div class="stats-info">
         <h4>Ada pertanyaan seputar penggunaan?</h4>
-        <p>Hubungi 72405, 72193, 72163</p>	
+        <p>Hubungi 72405, 72195, 72163</p>	
       </div>
     </div>
   </div>

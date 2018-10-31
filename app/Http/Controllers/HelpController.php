@@ -14,10 +14,10 @@ class HelpController extends Controller
     public function index()
     {
         $videos = collect([
-            [ 'id' => 'video1', 'url' => asset('storage/pendahuluan.mp4') ],
+            // [ 'id' => 'video1', 'url' => asset('storage/pendahuluan.mp4') ],
             [ 'id' => 'video2', 'url' => asset('storage/izin.mp4') ],
             [ 'id' => 'video3', 'url' => asset('storage/cuti.mp4') ],
-            [ 'id' => 'video4', 'url' => asset('storage/lembur.mp4') ],
+            // [ 'id' => 'video4', 'url' => asset('storage/lembur.mp4') ],
             [ 'id' => 'video5', 'url' => asset('storage/tidak_slash.mp4') ],
         ]);
         
