@@ -27,7 +27,7 @@
         </tr>
         <tr>
             <td>Atasan</td>
-            <td>{{ $leave->absenceApprovals->first()->user->personnelNoWithName }}</td>
+            <td>{{ $leave->absenceApprovals->first()->employee->personnelNoWithName }}</td>
         </tr>
         <tr>
             <td>Tahap</td>

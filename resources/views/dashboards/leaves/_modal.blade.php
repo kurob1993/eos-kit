@@ -34,8 +34,8 @@
             <td>Disetujui oleh:</td>
             <td>
                 @component('layouts._personnel-no-with-name', [
-                    'personnel_no' => $leave->absenceApprovals->first()->user->personnel_no,
-                    'employee_name' => $leave->absenceApprovals->first()->user->name])
+                    'personnel_no' => $leave->absenceApprovals->first()->employee->personnel_no,
+                    'employee_name' => $leave->absenceApprovals->first()->employee->name])
                 @endcomponent 
             </td>
         </tr>
@@ -48,8 +48,8 @@
             <td>Atasan:</td>
             <td>
                 @component('layouts._personnel-no-with-name', [
-                    'personnel_no' => $leave->absenceApprovals->first()->user->personnel_no,
-                    'employee_name' => $leave->absenceApprovals->first()->user->name
+                    'personnel_no' => $leave->absenceApprovals->first()->employee->personnel_no,
+                    'employee_name' => $leave->absenceApprovals->first()->employee->name
                 ])
                 @endcomponent
             </td>

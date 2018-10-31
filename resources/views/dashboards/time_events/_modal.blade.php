@@ -27,8 +27,8 @@
             <td>Disetujui oleh:</td>
             <td>
                 @component('layouts._personnel-no-with-name', [
-                    'personnel_no' => $timeEvent->timeEventApprovals->first()->user->personnel_no,
-                    'employee_name' => $timeEvent->timeEventApprovals->first()->user->name])
+                    'personnel_no' => $timeEvent->timeEventApprovals->first()->employee->personnel_no,
+                    'employee_name' => $timeEvent->timeEventApprovals->first()->employee->name])
                 @endcomponent 
             </td>
         </tr>
@@ -41,8 +41,8 @@
             <td>Atasan:</td>
             <td>
                 @component('layouts._personnel-no-with-name', [
-                    'personnel_no' => $timeEvent->timeEventApprovals->first()->user->personnel_no,
-                    'employee_name' => $timeEvent->timeEventApprovals->first()->user->name
+                    'personnel_no' => $timeEvent->timeEventApprovals->first()->employee->personnel_no,
+                    'employee_name' => $timeEvent->timeEventApprovals->first()->employee->name
                 ])
                 @endcomponent
             </td>

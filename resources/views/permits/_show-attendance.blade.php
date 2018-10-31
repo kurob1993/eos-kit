@@ -23,7 +23,7 @@
         </tr>
         <tr>
             <td>Atasan</td>
-            <td>{{ $permit->attendanceApprovals->first()->user->personnelNoWithName }}</td>
+            <td>{{ $permit->attendanceApprovals->first()->employee->personnelNoWithName }}</td>
         </tr>
         <tr>
             <td>Tahap</td>

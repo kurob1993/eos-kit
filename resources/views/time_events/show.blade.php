@@ -19,7 +19,7 @@
         </tr>
         <tr>
             <td>Atasan</td>
-            <td>{{ $timeEvent->timeEventApprovals->first()->user->personnelNoWithName }}</td>
+            <td>{{ $timeEvent->timeEventApprovals->first()->employee->personnelNoWithName }}</td>
         </tr>
         <tr>
             <td>Tahap</td>

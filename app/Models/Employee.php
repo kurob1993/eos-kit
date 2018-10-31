@@ -257,4 +257,10 @@ class Employee extends Model
                 return $manager;
         }
     }
+
+    public function getPersonnelNoWithNameAttribute()
+    {
+      // menggabungkan personnel_no dan nama
+      return $this->personnel_no . ' - ' . $this->name;
+    }    
 }

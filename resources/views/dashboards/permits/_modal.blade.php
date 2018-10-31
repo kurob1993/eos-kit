@@ -31,8 +31,8 @@
             <td>Disetujui oleh:</td>
             <td>
                 @component('layouts._personnel-no-with-name', [
-                    'personnel_no' => $permit->permitApprovals->first()->user->personnel_no,
-                    'employee_name' => $permit->permitApprovals->first()->user->name])
+                    'personnel_no' => $permit->permitApprovals->first()->employee->personnel_no,
+                    'employee_name' => $permit->permitApprovals->first()->employee->name])
                 @endcomponent 
             </td>
         </tr>
@@ -45,8 +45,8 @@
             <td>Atasan:</td>
             <td>
                 @component('layouts._personnel-no-with-name', [
-                    'personnel_no' => $permit->permitApprovals->first()->user->personnel_no,
-                    'employee_name' => $permit->permitApprovals->first()->user->name
+                    'personnel_no' => $permit->permitApprovals->first()->employee->personnel_no,
+                    'employee_name' => $permit->permitApprovals->first()->employee->name
                 ])
                 @endcomponent
             </td>
