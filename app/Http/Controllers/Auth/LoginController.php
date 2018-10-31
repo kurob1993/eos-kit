@@ -47,11 +47,6 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
-    protected function authenticated(Request $request, $user)
-    {
-        if (Auth::user()->hasRole('secretary')) dd('secretary here');
-    }
     
     public function logout(Request $request)
     {
@@ -62,7 +57,7 @@ class LoginController extends Controller
         return redirect()->away('https://sso.krakatausteel.com');
     }
         
-    public function programaticallyLogin($personnel_no, $email)
+    public function programaticallyEmployeeLogin(Request $request, $personnel_no, $email)
     {
         $personnel_no = base64_decode($personnel_no);
         $email = base64_decode($email);
@@ -72,20 +67,22 @@ class LoginController extends Controller
             $user = User::where('personnel_no', $personnel_no)->first();
             $employee = Employee::where('personnel_no', $personnel_no)->first();
 
-            if (is_null($user) || is_null($employee)) {
+            // find the employee details
+            $structDisp = StructDisp::structOf($personnel_no)
+                ->selfStruct()
+                ->firstOrFail();
 
-                // find the employee details
-                $structDisp = StructDisp::structOf($personnel_no)
-                    ->selfStruct()
-                    ->firstOrFail();
-                    
+            if (is_null($user)) {    
                 // create the new user
                 $user = new User();
                 $user->email = $email;
                 $user->personnel_no = $structDisp->empnik;
                 $user->name = $structDisp->empname;
                 $user->password = Hash::make(str_random(32));
-                
+                $user->save();
+            }
+
+            if (is_null($employee)) {
                 // create the employee
                 $employee = new Employee();
                 $employee->personnel_no = $structDisp->empnik;
@@ -94,25 +91,28 @@ class LoginController extends Controller
                 $employee->cost_ctr = $structDisp->empkostl;
                 $employee->position_name = $structDisp->emppostx;
                 $employee->org_unit_name = $structDisp->emportx;
-                
-                $user->save();
                 $employee->save();
-                
-                // attach the role
+            }
+            
+            // attach the role if not available
+            if (!$user->hasRole('employee')) {
                 $employeeRole = Role::where('name', 'employee')->first();
                 $user->attachRole($employeeRole);
-
             }
 
             // Programmatically login user
             Auth::login($user);
-            
-            // redirect to dashboards
-            return redirect()->route('dashboards.employee');            
 
         } catch (ModelNotFoundException $e) {
             
-            return 'employee not found';
+            return 'Employee not found!';
         }
+
+        return $this->sendLoginResponse($request);
+    }
+
+    public function programaticallySecretaryLogin(Request $request, $cost_center, $email)
+    {
+
     }
 }

@@ -16,10 +16,16 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         // view composer untuk sidebar-user
-        View::composer('layouts._sidebar-user', 'App\Http\ViewComposers\SidebarUserComposer');
+        View::composer('layouts._sidebar-user', 
+            'App\Http\ViewComposers\SidebarUserComposer');
+
+        // view composer untuk sidebar-secretary
+        View::composer('layouts.secretary._sidebar', 
+            'App\Http\ViewComposers\SidebarSecretaryComposer');
         
         // view composer untuk dashboards.employee
-        View::composer('dashboards.employee', 'App\Http\ViewComposers\EmployeeDashboardComposer');
+        View::composer('dashboards.employee', 
+            'App\Http\ViewComposers\EmployeeDashboardComposer');
    }
 
     /**

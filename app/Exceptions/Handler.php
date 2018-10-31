@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Handler extends ExceptionHandler
 {
@@ -58,6 +60,12 @@ class Handler extends ExceptionHandler
             ], 404);
         }
 
+        if ($exception instanceof AuthorizationException) {
+            return response()->json([
+                'error' => 'Not authorized.'
+            ], 403);
+        }
+
         return parent::render($request, $exception);
     }
 
@@ -74,6 +82,8 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
-        return redirect()->away('https://sso.krakatausteel.com');
+        return response()
+            ->view('layouts.unauthenticated', [], 200)
+            ->header('Content-Type', 'text/html');
     }
 }

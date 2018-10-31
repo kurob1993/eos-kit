@@ -13,8 +13,9 @@ class DebugController extends Controller
 {
     public function debug()
     {
-        $encrypted = Crypt::encryptString('11725');
-        dd($encrypted);
+        dd(Auth::user()->toArray());
+        // $encrypted = Crypt::encryptString('11725');
+        // dd($encrypted);
 
         // dd(\Storage::disk('public')->exists('11725.jpg'));
 

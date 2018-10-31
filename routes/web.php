@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
  */
+Route::get('debug', 'DebugController@debug');
 
 // route untuk login
 Route::get('login', [
@@ -22,17 +23,24 @@ Route::post('logout', [
     'as' => 'logout',
     'uses' => 'Auth\LoginController@logout']);
 
-// route for programatically login to system
-Route::get('a/{personnel_no}/{email}', 'Auth\LoginController@programaticallyLogin')
+// route for programatically employee login to system
+Route::get('a/{personnel_no}/{email}', 'Auth\LoginController@programaticallyEmployeeLogin')
     ->name('login.a');
+
+// route for programatically secretary login to system
+Route::get('b/{cost_center}/{email}', 'Auth\LoginController@programaticallySecretaryLogin')
+    ->name('login.b');
+
+// route untuk user yang belum di set Role-nya
+Route::get('noRole', 'HomeController@noRole')
+    ->name('noRole');
 
 // route untuk role employee
 Route::group([
     'middleware' => ['auth', 'role:employee']], function () {
-    Route::get('debug', 'DebugController@debug');
 
     // route untuk halaman help
-Route::resource('help', 'HelpController');
+    Route::resource('help', 'HelpController');
 
     // route untuk default home --> dashboard
     Route::get('/', 'HomeController@index')->name('dashboards.employee');
@@ -88,18 +96,6 @@ Route::resource('help', 'HelpController');
         'destroy', 'update', 'edit']]);
 });
 
-// route untuk role secretary
-Route::group([
-    'prefix' => 'secretary',
-    'middleware' => ['auth', 'role:secretary']], function (){
-
-    Route::get('', 'HomeController@secretaryDashboard')
-        ->name('dashboards.secretary');
-
-    // route untuk leave
-    Route::get('leaves', 'SecretaryController@leave');
-    });
-
 // route untuk role personnel_service
 Route::group([
     'prefix' => 'personnel_service',
@@ -145,6 +141,30 @@ Route::group([
     Route::get('', 'HomeController@basisDashboard')->name('dashboards.basis');
     Route::get('settings', 'SettingController@index')->name('settings');
     Route::post('settings', 'SettingController@store')->name('settings.store');
+});
+
+// route untuk role secretary
+Route::group([
+    'prefix' => 'secretary',
+    'middleware' => ['auth', 'role:secretary']], function (){
+
+    Route::get('', 'SecretaryController@index')
+        ->name('secretary.index');
+
+    // route untuk leave
+    Route::get('leaves', 'SecretaryController@leave')
+        ->name('secretary.leaves.index');
+    // route untuk permit
+    Route::get('permits', 'SecretaryController@permit')
+        ->name('secretary.permits.index');
+    // route untuk time_event
+    Route::get('time_events', 'SecretaryController@time_event')
+        ->name('secretary.time_events.index');
+    // route untuk overtime
+    Route::get('overtimes', 'SecretaryController@overtime')
+        ->name('secretary.overtimes.index');
+    Route::get('overtimes/create', 'SecretaryController@createOvertime')
+        ->name('secretary.overtimes.create');
 });
 
 Route::get('/soap', 'SoapController@show');

@@ -19,6 +19,11 @@
           <br />
           <i class="fa fa-paper-plane pull-left"></i>
           <p>Pastikan bahwa tanggal yang dipilih tidak terdapat hari libur kerja/nasional di dalam jadwal kerja Anda.</p>
+          <br />
+          <i class="fa fa-paper-plane pull-left"></i>
+          <p>Jika tanggal pengajuan terdapat hari libur, silahkan bagi dalam formulir terpisah agar tidak terdapat hari libur dalam pengajuan.
+	      Contoh: Pengajuan tanggal 16/08 sampai dengan 18/08 dimana tanggal 17/08 adalah hari libur, maka pengajuan di ajukan 2 (dua) kali yaitu tanggal 16/08 s/d 16/08 dan pengajuan tanggal 18/08 s/d 18/08.
+      	  </p>          
       </div>
       <div class="panel-body">
         {!! Form::open([

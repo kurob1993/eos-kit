@@ -1,0 +1,1 @@
+Karyawan belum diberikan akses. Silahkan hubungi Divisi HCI&A.
