@@ -37,8 +37,8 @@ class TimeEventController extends Controller
                 ->editColumn('approver', function ($timeEvent) {
                     // personnel_no dan name atasan
                     return view('layouts._personnel-no-with-name', [
-                        'personnel_no' => $timeEvent->timeEventApprovals->first()->user->personnel_no,
-                        'employee_name' => $timeEvent->timeEventApprovals->first()->user->name,
+                        'personnel_no' => $timeEvent->timeEventApprovals->first()->employee->personnel_no,
+                        'employee_name' => $timeEvent->timeEventApprovals->first()->employee->name,
                     ]);
                 })
                 ->setRowAttr([

@@ -40,8 +40,8 @@ class OvertimeController extends Controller
                         $views = '';
                         foreach ($overtime->attendanceQuotaApproval as $item) {
                             $views =  $views . view('layouts._personnel-no-with-name', [
-                                'personnel_no' => $item->user->personnel_no,
-                                'employee_name' => $item->user->name,
+                                'personnel_no' => $item->employee->personnel_no,
+                                'employee_name' => $item->employee->name,
                             ]) . '<br />';
                         }
                     return $views;

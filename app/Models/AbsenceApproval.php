@@ -28,6 +28,12 @@ class AbsenceApproval extends Model
         return $this->belongsTo('App\User', 'regno', 'personnel_no');
     }
 
+    public function employee()
+    {
+        // many-to-one relationship dengan Employee
+        return $this->belongsTo('App\Models\Employee', 'regno', 'personnel_no');
+    }
+
     public function absence()
     {
         // many-to-one relationship dengan absence

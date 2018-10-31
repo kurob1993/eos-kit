@@ -79,8 +79,8 @@ class HomeController extends Controller
                 })
                 ->editColumn('approver', function ($leaveApproval) {
                     return view('layouts._personnel-no-with-name', [
-                        'personnel_no' => $leaveApproval->user->personnel_no,
-                        'employee_name' => $leaveApproval->user->name,
+                        'personnel_no' => $leaveApproval->employee->personnel_no,
+                        'employee_name' => $leaveApproval->employee->name,
                     ]);
                 })
                 ->setRowAttr([
@@ -138,8 +138,8 @@ class HomeController extends Controller
                 })
                 ->editColumn('approver', function ($permitApproval) {
                     return view('layouts._personnel-no-with-name', [
-                        'personnel_no' => $permitApproval->user->personnel_no,
-                        'employee_name' => $permitApproval->user->name,
+                        'personnel_no' => $permitApproval->employee->personnel_no,
+                        'employee_name' => $permitApproval->employee->name,
                     ]);
                 })
                 ->setRowAttr([
@@ -190,8 +190,8 @@ class HomeController extends Controller
                 })
                 ->editColumn('approver', function ($timeEventApproval) {
                     return view('layouts._personnel-no-with-name', [
-                        'personnel_no' => $timeEventApproval->user->personnel_no,
-                        'employee_name' => $timeEventApproval->user->name,
+                        'personnel_no' => $timeEventApproval->employee->personnel_no,
+                        'employee_name' => $timeEventApproval->employee->name,
                     ]);
                 })
                 ->setRowAttr([
@@ -240,8 +240,8 @@ class HomeController extends Controller
                     
                     foreach ($approvals as $approval) {
                         $a = $a . view('layouts._personnel-no-with-name', [
-                            'personnel_no' => $approval->user->personnel_no,
-                            'employee_name' => $approval->user->name,
+                            'personnel_no' => $approval->employee->personnel_no,
+                            'employee_name' => $approval->employee->name,
                         ]) . '<br />';
                     }
 
