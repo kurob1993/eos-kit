@@ -29,7 +29,7 @@ class StoreAttendanceRequest extends FormRequest
           'start_date' => 'required',
           'end_date' => 'required',
           'deduction' => 'required',
-          'note' => 'required',
+          'note' => 'required|max:100',
           'address' => 'required'
         ];
     }

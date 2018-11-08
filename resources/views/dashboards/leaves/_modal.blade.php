@@ -7,7 +7,7 @@
         </tr>
         <tr>
             <td>Berakhir</td>
-            <td> {{ $leave->formatted_start_date }} </td>
+            <td> {{ $leave->formatted_end_date }} </td>
         </tr>
         <tr>
             <td>Durasi</td>

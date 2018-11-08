@@ -97,7 +97,8 @@
     <div class="form-group{{ $errors->has('note') ? ' has-error' : '' }}">
       {!! Form::label('note', 'Keterangan Izin') !!} 
       {!! Form::text('note', null, ['class'=>'form-control', 'placeholder'=>'Tulis
-      Keterangan Izin', 'id'=>'note', 'data-parsley-required' => 'true']) !!}
+      Keterangan Izin', 'id'=>'note', 'data-parsley-required' => 'true',
+      'data-parsley-maxlength' => 100]) !!}
       {!! $errors->first('note', '
       <p class="help-block">:message</p>') !!}
     </div>

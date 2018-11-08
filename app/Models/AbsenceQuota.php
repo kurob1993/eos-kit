@@ -65,16 +65,16 @@ class AbsenceQuota extends Model
         $now = Carbon::now()->toDateTimeString();
         
       // mencari apakah ada kuota cuti untuk hari ini
-      return $query->where('start_date', '<', $now)
-        ->where('end_date', '>', $now)
+      return $query->where('start_date', '<=', $now)
+        ->where('end_date', '>=', $now)
         ->where('personnel_no', '=' , $p);
     }
 
     public function scopeActiveAbsenceQuotaOf($query, $p, $s, $e)
     {
       // mencari apakah ada kuota cuti untuk rentang tanggal
-      return $query->where('start_date', '<', $s)
-        ->where('end_date', '>', $e)
+      return $query->where('start_date', '<=', $s)
+        ->where('end_date', '>=', $e)
         ->where('personnel_no', '=' , $p);
     }
 

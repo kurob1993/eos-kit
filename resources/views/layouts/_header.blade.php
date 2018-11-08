@@ -7,7 +7,7 @@
                         <span>
                             <img width="26px" src={{ url("/images", ['krakatausteel-logo.png'])  }}>
                         </span>
-                        <span>&nbsp; Human Capital Information</span>
+                        <span>&nbsp; {{ config('app.name') }}</span>
                     </a>
                 <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
                         <span class="icon-bar"></span>
