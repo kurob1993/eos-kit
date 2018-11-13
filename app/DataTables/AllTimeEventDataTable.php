@@ -60,7 +60,14 @@ class AllTimeEventDataTable extends DataTable
                     ]);
                 } else if ($timeEvent->isFailed) {
                     // apakah stage-nya: failed
-                }                
+                }  else if ($timeEvent->is_waiting_approval) {
+                    // apakah stage-nya: waiting approval
+                    return view('components._action-delete', [
+                        'model' => $timeEvent,
+                        'delete_url' => route('personnel_service.delete', [
+                            'id' => $timeEvent->id, 'approval' => 'time_event' ] )
+                    ]);
+                }              
             })
             ->escapeColumns([]);
     }

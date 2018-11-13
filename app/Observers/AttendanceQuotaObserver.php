@@ -152,11 +152,7 @@ class AttendanceQuotaObserver
         // hapus semua approval terkait lembur
         foreach ($approvals as $approval)
             $approval->delete();
-    }
-
-    public function deleted(AttendanceQuota $attendanceQuota)
-    {
-        // sistem mengirim notifikasi
+            // sistem mengirim notifikasi
         $to = $attendanceQuota->user;
         $to->notify(new OvertimeDeletedMessage($attendanceQuota));
     }

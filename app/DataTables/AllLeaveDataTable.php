@@ -66,9 +66,16 @@ class AllLeaveDataTable extends DataTable
                         'confirm_url' => route('personnel_service.confirm', [
                             'id' => $absence->id, 'approval' => 'absence' ] )
                     ]);
-                } else if ($absence->isFailed) {
+                } else if ($absence->is_failed) {
                     // apakah stage-nya: failed
-                }                
+                } else if ($absence->is_waiting_approval) {
+                    // apakah stage-nya: waiting approval
+                    return view('components._action-delete', [
+                        'model' => $absence,
+                        'delete_url' => route('personnel_service.delete', [
+                            'id' => $absence->id, 'approval' => 'absence' ] )
+                    ]);
+                }
             })
             ->escapeColumns([]);
     }

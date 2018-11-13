@@ -71,6 +71,13 @@ class AllAbsencePermitDataTable extends DataTable
                     ]);
                 } else if ($absence->isFailed) {
                     // apakah stage-nya: failed
+                } else if ($absence->is_waiting_approval) {
+                    // apakah stage-nya: waiting approval
+                    return view('components._action-delete', [
+                        'model' => $absence,
+                        'delete_url' => route('personnel_service.delete', [
+                            'id' => $absence->id, 'approval' => 'absence' ] )
+                    ]);
                 }
             })
             ->escapeColumns([]);

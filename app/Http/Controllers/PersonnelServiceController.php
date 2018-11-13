@@ -36,10 +36,7 @@ class PersonnelServiceController extends Controller
     {
         $submission = $this->switchSubmission($approval, $id);
 
-        if (!$submission->delete()) {
-            // kembali lagi jika gagal
-            return redirect()->back();
-        }
+        $submission->delete();
 
         // tampilkan pesan bahwa telah berhasil 
         Session::flash("flash_notification", [

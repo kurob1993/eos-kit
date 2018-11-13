@@ -5,6 +5,7 @@ namespace App\Observers;
 use Session;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\LeaveSentToSapMessage;
+use App\Notifications\AbsenceDeletedMessage;
 use App\Role;
 use App\User;
 use App\Models\Absence;
@@ -137,17 +138,21 @@ class AbsenceObserver
     {
         // apakah sudah selesai
         if ($absence->isSuccess) {
-            // mencari data kuota cuti yang dipakai
-            $absenceQuota = AbsenceQuota::activeAbsenceQuota($absence->personnel_no)
-                ->first();
 
-            // menambah pemakaian cuti pada periode tersebut
-            // seharusnya ada tabel history (many to many)
-            // pemakaian cuti berkorelasi dengan absence quota
-            $absenceQuota->deduction += $absence->deduction;
-
-            // simpan data kuota cuti
-            $absenceQuota->save();
+            // jika absence adalah cuti maka lakukan penambahan deduction
+            if ($absence->is_a_leave) {
+                // mencari data kuota cuti yang dipakai
+                $absenceQuota = AbsenceQuota::activeAbsenceQuota($absence->personnel_no)
+                    ->first();
+    
+                // menambah pemakaian cuti pada periode tersebut
+                // seharusnya ada tabel history (many to many)
+                // pemakaian cuti berkorelasi dengan absence quota
+                $absenceQuota->deduction += $absence->deduction;
+    
+                // simpan data kuota cuti
+                $absenceQuota->save();
+            }
 
             // to adalah karyawan yang mengajukan
             $to = $absence->user()->first();
@@ -156,4 +161,18 @@ class AbsenceObserver
             $to->notify(new LeaveSentToSapMessage($absence));
         }
     }
+
+    public function deleting(Absence $absence)
+    {
+        $approvals = $absence->absenceApprovals;
+        
+        // hapus semua approval terkait absence
+        foreach ($approvals as $approval)
+            $approval->delete();
+
+        // // sistem mengirim notifikasi
+        $to = $absence->user;
+        $to->notify(new AbsenceDeletedMessage($absence));    
+    }
+
 }

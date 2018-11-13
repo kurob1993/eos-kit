@@ -8,6 +8,7 @@ use App\Models\AttendanceQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
 use App\Notifications\PermitSentToSapMessage;
+use App\Notifications\AttendanceDeletedMessage;
 use App\Role;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -110,5 +111,18 @@ class AttendanceObserver
             // sistem mengirim email notifikasi
             $to->notify(new PermitSentToSapMessage($attendance));
         }
+    }
+
+    public function deleting(Attendance $attendance)
+    {
+        $approvals = $attendance->attendanceApprovals;
+        
+        // hapus semua approval terkait attendance
+        foreach ($approvals as $approval)
+            $approval->delete();
+
+        // // sistem mengirim notifikasi
+        $to = $attendance->user;
+        $to->notify(new AttendanceDeletedMessage($attendance));    
     }
 }

@@ -10,6 +10,7 @@ use App\Models\TimeEventQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
 use App\Notifications\TimeEventSentToSapMessage;
+use App\Notifications\TimeEventDeletedMessage;
 use App\Role;
 use App\User;
 
@@ -115,5 +116,18 @@ class TimeEventObserver
             // sistem mengirim email notifikasi
             $to->notify(new TimeEventSentToSapMessage($timeEvent));
         }
+    }
+
+    public function deleting(TimeEvent $timeEvent)
+    {
+        $approvals = $timeEvent->timeEventApprovals;
+        
+        // hapus semua approval terkait timeEvent
+        foreach ($approvals as $approval)
+            $approval->delete();
+
+        // // sistem mengirim notifikasi
+        $to = $timeEvent->user;
+        $to->notify(new TimeEventDeletedMessage($timeEvent));    
     }
 }
