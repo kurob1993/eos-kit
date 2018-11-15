@@ -197,7 +197,9 @@ class Employee extends Model
         $s = $this->structDisp()->superintendentOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? [] : (\App\Models\Employee::findByPersonnel($s->dirnik)->first());        
+        return ( is_null($s) || $this->isSuperintendent() ) ? 
+            [] : 
+            (\App\Models\Employee::findByPersonnel($s->dirnik)->first());        
     }    
 
     public function managerBoss()
@@ -209,7 +211,9 @@ class Employee extends Model
         $s = $this->structDisp()->managerOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? [] : (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
+        return ( is_null($s) || $this->isManager() ) ? 
+            [] : 
+            (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
     }    
 
     public function generalManagerBoss()
@@ -221,7 +225,9 @@ class Employee extends Model
         $s = $this->structDisp()->generalManagerOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? [] : (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
+        return ( is_null($s) || $this->isGeneralManager() ) ? 
+            [] : 
+            (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
     }
 
     public function minSuperintendentBoss()
