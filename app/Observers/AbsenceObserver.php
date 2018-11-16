@@ -109,14 +109,8 @@ class AbsenceObserver
         // maka absence approval dibuat seolah-olah sudah disetujui
         // contoh: karyawan yang atasannya langsung direktur
         // atau deputi (UTOMO NUGROHO)
-        if ($closestBoss) {
-            // menyimpan personnel_no dari closest boss
-            $absence_approval->regno = $closestBoss->personnel_no;
-
-            // menyimpan data persetujuan
-            $absence_approval->save();
-
-        } else {
+        if ($employee->is_a_transfer_knowledge || !$closestBoss) {
+            
             // bypass regno menggunakan admin  dan sequence
             $admin = Role::retrieveAdmin();
             $absence_approval->regno = $admin->personnel_no;
@@ -130,6 +124,12 @@ class AbsenceObserver
             $absence_approval->text = 'Disetujui oleh Admin';
 
             // menyimpan perubahan agar mentrigger observer
+            $absence_approval->save();
+        } else {
+            // menyimpan personnel_no dari closest boss
+            $absence_approval->regno = $closestBoss->personnel_no;
+
+            // menyimpan data persetujuan
             $absence_approval->save();
         }
     }

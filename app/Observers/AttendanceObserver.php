@@ -76,14 +76,8 @@ class AttendanceObserver
         // maka attendance approval dibuat seolah-olah sudah disetujui
         // contoh: karyawan yang atasannya langsung direktur
         // atau deputi (UTOMO NUGROHO)
-        if ($closestBoss) {
-            // menyimpan personnel_no dari closest boss
-            $attendance_approval->regno = $closestBoss->personnel_no;
-
-            // menyimpan data persetujuan
-            $attendance_approval->save();
-
-        } else {
+        if ($employee->is_a_transfer_knowledge || !$closestBoss) {
+            
             // bypass regno menggunakan admin  dan sequence
             $admin = Role::retrieveAdmin();
             $attendance_approval->regno = $admin->personnel_no;
@@ -97,6 +91,12 @@ class AttendanceObserver
             $attendance_approval->text = 'Disetujui oleh Admin';
 
             // menyimpan perubahan agar mentrigger observer
+            $attendance_approval->save();
+        } else {
+            // menyimpan personnel_no dari closest boss
+            $attendance_approval->regno = $closestBoss->personnel_no;
+
+            // menyimpan data persetujuan
             $attendance_approval->save();
         }
     }

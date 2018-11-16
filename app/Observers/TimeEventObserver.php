@@ -80,15 +80,9 @@ class TimeEventObserver
         // JIKA TIDAK mempunyai atasan langsung
         // maka time_event approval dibuat seolah-olah sudah disetujui
         // contoh: karyawan yang atasannya langsung direktur
-        // atau deputi (UTOMO NUGROHO)
-        if ($supeintendentBoss) {
-            // menyimpan personnel_no dari closest boss
-            $timeEventApproval->regno = $supeintendentBoss->personnel_no;
-
-            // menyimpan data persetujuan
-            $timeEventApproval->save();
-
-        } else {
+        // atau deputi (UTOMO NUGROHO) 
+        if ($employee->is_a_transfer_knowledge || !$supeintendentBoss) {
+            
             // bypass regno menggunakan admin  dan sequence
             $admin = Role::retrieveAdmin();
             $timeEventApproval->regno = $admin->personnel_no;
@@ -102,6 +96,12 @@ class TimeEventObserver
             $timeEventApproval->text = 'Disetujui oleh Admin';
 
             // menyimpan perubahan agar mentrigger observer
+            $timeEventApproval->save();
+        } else {
+            // menyimpan personnel_no dari closest boss
+            $timeEventApproval->regno = $supeintendentBoss->personnel_no;
+
+            // menyimpan data persetujuan
             $timeEventApproval->save();
         }
     }

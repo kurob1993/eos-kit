@@ -268,5 +268,13 @@ class Employee extends Model
     {
       // menggabungkan personnel_no dan nama
       return $this->personnel_no . ' - ' . $this->name;
-    }    
+    }
+    
+    public function getIsATransferKnowledgeAttribute()
+    {
+        $s = $this->structdisp()->selfStruct()->first();
+
+        return $s->emp_hrp1000_s_short == '6200300001' 
+            && $s->emp_hrp1000_o_short == '62003';
+    }
 }
