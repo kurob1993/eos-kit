@@ -22,15 +22,7 @@ class AllAttendancePermitDataTable extends DataTable
                 return $attendance->plain_id;
             })
             ->editColumn('stage.description', function (Attendance $attendance) {
-                switch ($attendance->stage->id) {
-                    case Stage::waitingApprovalStage()->id: $class = 'info'; break; 
-                    case Stage::sentToSapStage()->id: $class = 'warning'; break;
-                    case Stage::successStage()->id: $class = 'primary';  break;
-                    case Stage::failedStage()->id: $class = 'danger'; break;
-                    case Stage::deniedStage()->id: $class = 'default';  break;
-                }
-                
-                return '<span class="label label-' . $class . '">' 
+                return '<span class="label label-' . $attendance->stage->class_description  . '">' 
                 . $attendance->stage->description . '</span>';
             })
             ->editColumn('start_date', function (Attendance $attendance) {

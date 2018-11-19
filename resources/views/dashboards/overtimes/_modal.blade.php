@@ -19,7 +19,13 @@
         </tr>
         <tr>
                 <td>Tahap</td>
-                <td><span class="label label-default">{{ $overtime->stage->description }}</span></td>
+                <td>
+                    @component('components._stage-description', [
+                        'class' => $overtime->stage->class_description, 
+                        'description' => $overtime->stage->description
+                        ])
+                    @endcomponent
+                </td>
         </tr>
         
         @if (!$overtime->is_waiting_approval) 

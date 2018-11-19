@@ -21,15 +21,7 @@ class AllOvertimeDataTable extends DataTable
                 return $overtime->plain_id;
             })
             ->editColumn('stage.description', function (AttendanceQuota $overtime) {
-                switch ($overtime->stage->id) {
-                    case Stage::waitingApprovalStage()->id: $class = 'info'; break; 
-                    case Stage::sentToSapStage()->id: $class = 'warning'; break;
-                    case Stage::successStage()->id: $class = 'primary';  break;
-                    case Stage::failedStage()->id: $class = 'danger'; break;
-                    case Stage::deniedStage()->id: $class = 'default';  break;
-                }
-                
-                return '<span class="label label-' . $class . '">' 
+                return '<span class="label label-' .$overtime->stage->class_description . '">' 
                 . $overtime->stage->description . '</span>';
             })
             ->editColumn('start_date', function (AttendanceQuota $overtime) {

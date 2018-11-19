@@ -21,15 +21,7 @@ class AllLeaveDataTable extends DataTable
                 return $absence->plain_id;
             })
             ->editColumn('stage.description', function (Absence $absence) {
-                switch ($absence->stage->id) {
-                    case Stage::waitingApprovalStage()->id: $class = 'info'; break; 
-                    case Stage::sentToSapStage()->id: $class = 'warning'; break;
-                    case Stage::successStage()->id: $class = 'primary';  break;
-                    case Stage::failedStage()->id: $class = 'danger'; break;
-                    case Stage::deniedStage()->id: $class = 'default';  break;
-                }
-                
-                return '<span class="label label-' . $class . '">' 
+                return '<span class="label label-' . $absence->stage->class_description . '">' 
                 . $absence->stage->description . '</span>';
             })
             ->editColumn('start_date', function (Absence $absence) {

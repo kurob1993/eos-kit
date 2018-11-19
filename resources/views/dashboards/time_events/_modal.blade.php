@@ -19,7 +19,13 @@
         </tr>
         <tr>
             <td>Tahap</td>
-            <td><span class="label label-default">{{ $timeEvent->stage->description }}</span></td>
+            <td>
+                @component('components._stage-description', [
+                    'class' => $timeEvent->stage->class_description, 
+                    'description' => $timeEvent->stage->description
+                    ])
+                @endcomponent
+            </td>
         </tr>
         
         @if (!$timeEvent->is_waiting_approval) 

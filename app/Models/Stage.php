@@ -65,4 +65,29 @@ class Stage extends Model
         // NEED TO IMPLEMENT CONFIGURATION
         return $query->find(5);
     }
+
+    public function getClassDescriptionAttribute()
+    {
+        $class = 'default';
+
+        switch ($this->id) {
+            case Stage::waitingApprovalStage()->id:
+                $class = 'default';
+            break;
+            case Stage::SentToSapStage()->id:
+                $class = 'success';
+            break;
+            case Stage::SuccessStage()->id:
+                $class = 'primary';
+            break;
+            case Stage::failedStage()->id:
+                $class = 'info';
+            break;
+            case Stage::deniedStage()->id:
+                $class = 'danger';
+            break;
+        }
+
+        return $class;
+    }
 }

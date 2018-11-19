@@ -21,15 +21,7 @@ class AllTimeEventDataTable extends DataTable
                 return $timeEvent->plain_id;
             })
             ->editColumn('stage.description', function (TimeEvent $timeEvent) {
-                switch ($timeEvent->stage->id) {
-                    case Stage::waitingApprovalStage()->id: $class = 'info'; break; 
-                    case Stage::sentToSapStage()->id: $class = 'warning'; break;
-                    case Stage::successStage()->id: $class = 'primary';  break;
-                    case Stage::failedStage()->id: $class = 'danger'; break;
-                    case Stage::deniedStage()->id: $class = 'default';  break;
-                }
-                
-                return '<span class="label label-' . $class . '">' 
+                return '<span class="label label-' . $timeEvent->stage->class_description . '">' 
                 . $timeEvent->stage->description . '</span>';
             })
             ->editColumn('check_date', function (TimeEvent $timeEvent) {

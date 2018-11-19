@@ -27,7 +27,13 @@
         </tr>
         <tr>
             <td>Tahap</td>
-            <td><span class="label label-default">{{ $leave->stage->description }}</span></td>
+            <td>
+                @component('components._stage-description', [
+                'class' => $leave->stage->class_description, 
+                'description' => $leave->stage->description
+                ])
+                @endcomponent
+            </td>
         </tr>
         @if (!$leave->is_waiting_approval) 
         <tr>

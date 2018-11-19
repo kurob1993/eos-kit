@@ -1,5 +1,7 @@
 <p class="pull-right">{{$when}}</p>
 <p>{{$summary->attendanceQuotaType->text}} ({{$summary->duration}} menit)</p>
-<span class="label label-default">
-    {{$summary->stage->description}}
-</span>
+@component('components._stage-description', [
+    'class' => $summary->stage->class_description, 
+    'description' => $summary->stage->description
+])
+@endcomponent

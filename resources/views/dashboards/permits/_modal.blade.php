@@ -24,7 +24,13 @@
         </tr>
         <tr>
             <td>Tahap</td>
-            <td><span class="label label-default">{{ $permit->stage->description }}</span></td>
+            <td>
+                @component('components._stage-description', [
+                    'class' => $permit->stage->class_description, 
+                    'description' => $permit->stage->description
+                    ])
+                @endcomponent
+            </td>
         </tr>
         @if (!$permit->is_waiting_approval) 
         <tr>
