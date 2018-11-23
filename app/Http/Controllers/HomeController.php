@@ -286,11 +286,11 @@ class HomeController extends Controller
             break;
         }
 
-        if (!$approved->update($request->all() 
-            + ['status_id' => Status::approveStatus()->id])) {
+        $approved->status_id = Status::approveStatus()->id;
+        if (!$approved->save()) {
             // kembali lagi jika gagal
             return redirect()->back();
-        }
+        } 
 
         // tampilkan pesan bahwa telah berhasil menyetujui
         Session::flash("flash_notification", [

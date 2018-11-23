@@ -8,7 +8,7 @@
     <h4>Persetujuan Karyawan</h4>
     @include('layouts._flash')
       <!-- begin of dashboard nav-tabs  -->
-      <ul class="nav nav-tabs">
+      <ul class="nav nav-tabs nav-tabs-primary nav-justified nav-justified-mobile">
           <li class="active">
               <a href="#tab-leaves" data-toggle="tab" aria-expanded="true"> Cuti
                   @if ($countLeaveApprovals > 0) 
@@ -193,10 +193,12 @@
 </script>
 
 @include('layouts._modal-detail-script')
+@include('scripts._save-tab-state-script')
 
 @endpush
 
 @push('on-ready-scripts')
 EmployeePlugins.init(); 
 ModalDetailPlugins.init();
+TabStatePlugins.init();
 @endpush

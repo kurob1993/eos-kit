@@ -18,7 +18,8 @@
             <td>{{ $permit->permitType->text }}</td>
         </tr>
         <tr>
-            <td colspan="3"><img class="center-block img-responsive" 
+            <td colspan="3">
+                <img class="center-block img-responsive" 
                 src="{{ Storage::url($permit->attachment) }}" alt="">
             </td>
         </tr>

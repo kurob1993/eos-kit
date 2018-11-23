@@ -2,8 +2,11 @@
 
 namespace App\Observers;
 
+use Session;
 use App\Notifications\LeaveApprovalMessage;
 use App\Models\AbsenceApproval;
+use App\Models\AbsenceQuota;
+use App\Models\Absence;
 use App\Models\Stage;
 use App\Message;
 

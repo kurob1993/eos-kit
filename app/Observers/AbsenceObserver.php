@@ -134,6 +134,39 @@ class AbsenceObserver
         }
     }
 
+    public function updating(Absence $absence)
+    {
+        // hanya yang stage sent to sap dan merupakan cuti
+        if ($absence->is_waiting_approval && $absence->is_a_leave)
+        {
+            // mencari data kuota cuti yang dipakai
+            $absenceQuota = AbsenceQuota::activeAbsenceQuota($absence->personnel_no)
+                ->first();
+
+            // number = 12 deduction existing = 10 
+            // to be deducted = 4 TIDAK BISA
+            // to be deducted = 2 -> to be deducted = 2 BISA
+            // sum = deduction existing + to be deducted = 12
+            // if (sum > number)
+            // return false batalkan
+
+            // menghitung total deduction yang akan ditambahkan
+            $toBeDeducted = $absence->deduction + $absenceQuota->deduction;
+
+            // apakah total deduction yang akan ditambahkan melebihi number
+            if ($toBeDeducted > $absenceQuota->number)
+            {
+                Session::flash("flash_notification", [
+                    "level" => "danger",
+                    "message" => "Tidak dapat mengkonfirmasi data di SAP karena "
+                    . "total durasi pengajuan > total kuota cuti (Total kuota cuti :" . $absenceQuota->number . " "
+                    . "Total durasi pengajuan :" . $toBeDeducted . ").",
+                ]);
+                return false;
+            }
+        }
+    }
+
     public function updated(Absence $absence)
     {
         // apakah sudah selesai

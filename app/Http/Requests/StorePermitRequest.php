@@ -35,7 +35,9 @@ class StorePermitRequest extends FormRequest
             'permit_type' => 'required',
             'attachment' => [
                 'required',
-                'mimes:jpeg,jpg,png', 
+                'mimetypes:image/jpeg,image/png,application/pdf', 
+                'max:500',
+                
                 // new PermitHasAttachment(Input::get('permit_type'))
             ],
         ];

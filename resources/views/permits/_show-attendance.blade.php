@@ -34,8 +34,14 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3"><img class="center-block img-responsive" 
-                src="{{ Storage::url($permit->attachment) }}" alt="">
+            <td colspan="3">
+                @if( str_is('*pdf',$permit->attachment) )
+                    <a href="{{ Storage::url($permit->attachment) }}"
+                    class="btn btn-primary" target="_blank">Unduh</a>
+                @else
+                    <img class="center-block img-responsive" 
+                    src="{{ Storage::url($permit->attachment) }}" alt="">
+                @endif
             </td>
         </tr>
     </tbody>
