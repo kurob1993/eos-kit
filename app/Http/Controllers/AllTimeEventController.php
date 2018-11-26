@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\DataTables\AllTimeEventDataTable;
+use App\Models\Stage;
 
 class AllTimeEventController extends Controller
 {
 
     public function index(AllTimeEventDataTable $dataTable)
     {
-        return $dataTable->render('all_time_events.index');
+        $stages = Stage::all();
+
+        return $dataTable->render('all_time_events.index', [ "stages" => $stages ]);
     }
 
     public function create()

@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\DataTables\AllOvertimeDataTable;
+use App\Models\Stage;
 
 class AllOvertimeController extends Controller
 {
 
     public function index(AllOvertimeDataTable $dataTable)
     {
-        return $dataTable->render('all_overtimes.index');
+        $stages = Stage::all();
+
+        return $dataTable->render('all_overtimes.index', [ "stages" => $stages ]);
     }
 
     public function create()

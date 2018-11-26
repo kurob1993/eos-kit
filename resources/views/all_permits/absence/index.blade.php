@@ -5,14 +5,6 @@
 @component('layouts.personnel_service._page-container', ['page_header' => 'Izin Karyawan'])
 <div class="panel panel-prussian">
     <div class="panel-heading">
-        <div class="btn-group pull-right" data-toggle="buttons">
-            <label class="btn btn-warning btn-xs">
-                <input name="options" id="option1" checked="" type="radio"> Send to SAP
-            </label>
-            <label class="btn btn-success btn-xs active">
-                <input name="options" id="option2" type="radio"> <i class="fa fa-star"></i>
-            </label>
-        </div>
         <h4 class="panel-title">Pengajuan Izin Seluruh Karyawan (Absence)</h4>
     </div>
   @include('layouts._flash')
@@ -44,14 +36,16 @@
 <script src={{ url("/plugins/DataTables/Buttons/js/dataTables.buttons.min.js") }}></script>
 <script src={{ url("/plugins/DataTables/Buttons/js/buttons.bootstrap.min.js") }}></script>
 <script src={{ url("/vendor/datatables/buttons.server-side.js") }}></script>
+@endpush
+
+@push('custom-scripts')
+@include('scripts._select-filter-script', [ 'stages', $stages ])
+@include('scripts._button-submit-script')
 <!-- Generated scripts from DataTables -->
 {!! $dataTable->scripts() !!}
 @endpush
 
-@push('custom-scripts')
-@include('scripts._button-submit-script')
-@endpush
-
 @push('on-ready-scripts')
 ButtonSubmitPlugins.init(); 
+FilterPlugins.init();
 @endpush

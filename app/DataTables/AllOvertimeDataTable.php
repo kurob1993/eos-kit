@@ -16,6 +16,8 @@ class AllOvertimeDataTable extends DataTable
      */
     public function dataTable($query)
     {
+        $request = $this->request();
+
         return datatables($query)
             ->editColumn('id', function (AttendanceQuota $overtime){
                 return $overtime->plain_id;
@@ -67,7 +69,19 @@ class AllOvertimeDataTable extends DataTable
                     ]);
                 } 
             })
-            ->escapeColumns([]);
+            ->escapeColumns([])
+            ->filter(function ($query) use ($request) {
+                if ($request->has('stage_id')) {
+                    switch ($request->input('stage_id')) {
+                        case Stage::sentToSapStage()->id: $query->sentToSapOnly(); break;
+                        case Stage::waitingApprovalStage()->id: $query->waitingApprovalOnly(); break;
+                        case Stage::successStage()->id: $query->successOnly(); break;
+                        case Stage::failedStage()->id: $query->failedOnly(); break;
+                        case Stage::deniedStage()->id: $query->deniedOnly(); break;
+                    }
+                } else
+                    $query->sentToSapOnly();
+            }, true);
     }
 
     /**
@@ -98,7 +112,7 @@ class AllOvertimeDataTable extends DataTable
     {
         return $this->builder()
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->minifiedAjax('', 'data.stage_id = $("#select-filter option:selected").val();', [ ])
                     ->addAction(['width' => '80px'])
                     ->parameters($this->getBuilderParameters());
     }
@@ -106,13 +120,16 @@ class AllOvertimeDataTable extends DataTable
     public function getBuilderParameters()
     {
         return [
-            'dom' => 'Bfrtip',
+            'dom' =>    "<'row'<'col-sm-3'B><'col-sm-3'<'toolbar'>><'col-sm-3'l><'col-sm-3'f>>" .
+                        "<'row'<'col-sm-12'tr>>" .
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             'pageLength' => 50,
             'buttons' => ['excel'],
             'responsive' => true,
             "language" => [
                 'processing' => '<i class="fa fa-spinner fa-spin fa-fw"></i><span class="sr-only">Loading...</span> '
             ],
+            // 'columnDefs' => [ [ 'responsivePriority' => 1, 'targets' => 7 ], ],
             // 'buttons' => [ 'extend' => 'excel', 'exportOptions' => [ 'columns' => [ 'id', ] ] ], 'paging' => false, 'searching' => false, 'responsive' => [ 'details' => 'false' ], 
         ];
     }

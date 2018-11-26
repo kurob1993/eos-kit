@@ -47,5 +47,36 @@ trait ReceiveStage
         return $query->whereIn('stage_id', [
             Stage::waitingApprovalStage()->id,
             Stage::sentToSapStage()->id ]);
-    }    
+    }
+
+    public function scopeSentToSapOnly($query)
+    {
+        // mencari yang sent to sap
+        return $query->where('stage_id', Stage::sentToSapStage()->id);
+    }
+    
+    public function scopeWaitingApprovalOnly($query)
+    {
+        // mencari yang sent to sap
+        return $query->where('stage_id', Stage::waitingApprovalStage()->id);
+    }
+
+    public function scopeSuccessOnly($query)
+    {
+        // mencari yang sent to sap
+        return $query->where('stage_id', Stage::successStage()->id);
+    }
+
+    public function scopeDeniedOnly($query)
+    {
+        // mencari yang sent to sap
+        return $query->where('stage_id', Stage::deniedStage()->id);
+    }
+
+    public function scopeFailedOnly($query)
+    {
+        // mencari yang sent to sap
+        return $query->where('stage_id', Stage::failedStage()->id);
+    }
+
 }
