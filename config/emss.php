@@ -19,16 +19,24 @@ return [
   // modules yang ada di emss
   'modules' => [
     'leaves' => [
-      'text' => 'Cuti',      
+      'text' => 'Cuti',
+      'start_date'=> env('MODULES_LEAVES_STARTDATE', 'new Date(new Date().getFullYear(), new Date().getMonth(), 1)'),
+      'end_date' => env('MODULES_LEAVES_ENDDATE', 'new Date(new Date().getFullYear(), new Date().getMonth() + 4, 5)'),
     ],
     'permits' => [
-      'text' => 'Izin',      
+      'text' => 'Izin',
+      'start_date'=> env('MODULES_PERMITS_STARTDATE', 'new Date(new Date().getFullYear(), new Date().getMonth(), 1)'),
+      'end_date' => env('MODULES_PERMITS_ENDDATE', 'new Date(new Date().getFullYear(), new Date().getMonth() + 4, 5)'),      
     ],
     'overtimes' => [
-      'text' => 'Lembur',      
+      'text' => 'Lembur',
+      'start_date'=> env('MODULES_OVERTIMES_STARTDATE','-3d'),
+      'end_date' => env('MODULES_OVERTIMES_ENDDATE', 'new Date(new Date().getFullYear(), new Date().getMonth() + 4, 5)'),      
     ],
     'time_events' => [
-      'text' => 'Tidak Slash',      
+      'text' => 'Tidak Slash', 
+      'start_date'=> env('MODULES_TIME_EVENTS_STARTDATE', 'new Date(new Date().getFullYear(), new Date().getMonth(), 1)'),
+      'end_date' => env('MODULES_TIME_EVENTS_ENDDATE', 'new Date(new Date().getFullYear(), new Date().getMonth() + 4, 5)'),     
     ],
   ],
 

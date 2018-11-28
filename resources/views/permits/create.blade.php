@@ -46,7 +46,6 @@
 <link href={{ url( "/plugins/selectize/selectize.css") }} rel="stylesheet">
 <link href={{ url( "/plugins/selectize/selectize.bootstrap3.css") }} rel="stylesheet">
 <link href={{ url( "/plugins/parsley/src/parsley.css") }} rel="stylesheet" />
-<link href={{ url( "/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css") }} rel="stylesheet" />
 <!-- Pace -->
 <script src={{ url( "/plugins/pace/pace.min.js") }}></script>
 @endpush 
@@ -56,197 +55,16 @@
 <script src={{ url( "/plugins/bootstrap-select/bootstrap-select.min.js") }}></script>
 <script src={{ url( "/plugins/selectize/selectize.min.js") }}></script>
 <script src={{ url( "/plugins/parsley/dist/parsley.js") }}></script>
-<script src={{ url( "/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js") }}></script>
 @endpush 
 
 @push('custom-scripts')
-<script type="text/javascript">
-  (handleInlineDatePicker) = function() {
-    "use strict";
-    $("#datepicker-inline").datepicker({ });
-    $('#datepicker-inline').on('changeDate', function() {
-      $('#time_event_date').val(
-          $('#datepicker-inline').datepicker('getFormattedDate')
-      );
-    });    
-  },
-  (handleTimePicker) = function() {
-    "use strict";
-    $("#timepicker").timepicker({ })
-  },
-  (handleDateRangePicker = function() {
-  $("#datepicker-range").datepicker({
-    inputs: $("#datepicker-range-start, #datepicker-range-end"),
-    format: 'yyyy-mm-dd',
-      todayHighlight: true,
-      startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-      endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 4, 5),
-      // datesDisabled: ['2018-09-01'],    
-  });
-
-  var start = $("#datepicker-range-start");
-  var end = $("#datepicker-range-end");
-
-  function days_diff(s, e) {
-    var diff = new Date(e - s);
-    var days = diff / 1000 / 60 / 60 / 24 + 1;
-    return isNaN(days) ? 1 : days;
-  }
-
-  function today(number) {
-    var today = new Date();
-    var dd = today.getDate() + number;
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    if (dd < 10) {
-      dd = "0" + dd;
-    }
-    if (mm < 10) {
-      mm = "0" + mm;
-    }
-    return yyyy + "-" + mm + "-" + dd;
-  }
-
-  start.datepicker("update", today(0)),
-    end.datepicker("update", today(1)),
-    start.on("changeDate", function() {
-      $("#start_date").val($(this).datepicker("getFormattedDate"));
-      $("#deduction").val(
-        days_diff(start.datepicker("getUTCDate"), end.datepicker("getUTCDate"))
-      );
-    }),
-    end.on("changeDate", function() {
-      $("#end_date").val($(this).datepicker("getFormattedDate"));
-      $("#deduction").val(
-        days_diff(start.datepicker("getUTCDate"), end.datepicker("getUTCDate"))
-      );
-    });
-}),
-(handleSelectpicker = function() {
-  var bossOptions = {
-    persist: false,
-    valueField: "personnel_no",
-    labelField: "name",
-    searchField: ["name", "personnel_no"],
-    options: [ ],
-    render: {
-      item: function(item, escape) {
-        return (
-          "<div>" +
-          (item.personnel_no
-            ? '<span class="label label-default">' + escape(item.personnel_no) + "</span>&nbsp;"
-            : "") +
-          (item.name
-            ? '<span class="name">' + escape(item.name) + "</span>"
-            : "") +
-          "</div>"
-        );
-      },
-      option: function(item, escape) {
-        var label = item.personnel_no || item.name;
-        var caption = item.personnel_no ? item.name : null;
-        return (
-          "<div>" +
-          '<span class="label label-default">' +
-          escape(label) +
-          "</span>&nbsp;" +
-          (caption
-            ? '<span class="caption">' + escape(caption) + "</span>"
-            : "") +
-          "</div>"
-        );
-      }
-    },
-  };
-
-  $.ajax({
-  url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/minSuperintendentBoss',
-      type: 'GET',
-      dataType: 'json',
-      error: function() {},
-      success: function(res) {
-        var newOptions = [];
-        var o = {name: res.name, personnel_no: res.personnel_no};
-        newOptions.push(o);
-        bossOptions.options = newOptions;
-        var bossSelect = $(".boss-selectize").selectize(bossOptions);
-        var selectize = bossSelect[0].selectize;
-        selectize.setValue(res.personnel_no, false);
-    }
-  });
-  
-   @if (Auth::user()->employee()->first()->canDelegate())
-  
-  var subOptions = {
-    persist: false,
-    valueField: "name",
-    labelField: "personnel_no",
-    searchField: ["personnel_no", "name"],
-    options: [    ],
-    render: {
-      item: function(item, escape) {
-        return (
-          "<div>" +
-          (item.personnel_no
-            ? '<span class="label label-default">' + escape(item.personnel_no) + "</span>&nbsp;"
-            : "") +
-          (item.name
-            ? '<span class="name">' + escape(item.name) + "</span>"
-            : "") +
-          "</div>"
-        );
-      },
-      option: function(item, escape) {
-        var label = item.personnel_no || item.name;
-        var caption = item.personnel_no ? item.name : null;
-        return (
-          "<div>" +
-          '<span class="label label-default">' +
-          escape(label) +
-          "</span>&nbsp;" +
-          (caption
-            ? '<span class="caption">' + escape(caption) + "</span>"
-            : "") +
-          "</div>"
-        );
-      }
-    }
-  };
-
-  $.ajax({
-  url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/subordinates',
-      type: 'GET',
-      dataType: 'json',
-      error: function() {},
-      success: function(res) {
-        var newOptions = [];
-        for (var key in res) {
-          var o = {name: res[key].name, personnel_no: res[key].personnel_no};
-          newOptions.push(o);
-        }
-        subOptions.options = newOptions;
-        var subSelect = $(".sub-selectize").selectize(subOptions);
-        var selectize = subSelect[0].selectize;
-    }
-  });
-  
-  @endif
-
-}),
-
-(PermitPlugins = (function() {
-  "use strict";
-  return {
-    init: function() {
-      handleDateRangePicker(), handleSelectpicker(), 
-      handleTimePicker(), handleInlineDatePicker();
-    }
-  };
-})());
-
-</script>
+@include('scripts._daterange-picker-script', [
+  'start_date' => config('emss.modules.permits.start_date'),
+  'end_date'   => config('emss.modules.permits.end_date') 
+])
+@include('scripts._structdisp-select-script')
 @endpush 
-
 @push('on-ready-scripts') 
-PermitPlugins.init(); 
+DaterangePickerPlugins.init();
+StructdispSelectPlugins.init();
 @endpush

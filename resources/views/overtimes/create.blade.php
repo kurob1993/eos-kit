@@ -65,7 +65,7 @@
     format: 'yyyy-mm-dd',
     todayHighlight: true,
     startDate: '-3d',
-    endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 5),
+    endDate: {{ config('emss.modules.overtimes.end_date') }},
     // datesDisabled: ['2018-09-01'],
     });
   $('#datepicker-inline').on('changeDate', function() {
