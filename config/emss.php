@@ -31,4 +31,9 @@ return [
       'text' => 'Tidak Slash',      
     ],
   ],
+
+  // config di module personnel services
+  'personnel_service' => [
+    'page_length' => env('PERSONNEL_SERVICE_PAGELENGTH', 10),
+  ],
 ];

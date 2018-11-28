@@ -81,8 +81,7 @@ class AllLeaveDataTable extends DataTable
                         case Stage::failedStage()->id: $query->failedOnly(); break;
                         case Stage::deniedStage()->id: $query->deniedOnly(); break;
                     }
-                } else
-                    $query->sentToSapOnly();
+                }
             }, true);
     }
 
@@ -126,7 +125,7 @@ class AllLeaveDataTable extends DataTable
             'dom' =>    "<'row'<'col-sm-3'B><'col-sm-3'<'toolbar'>><'col-sm-3'l><'col-sm-3'f>>" .
                         "<'row'<'col-sm-12'tr>>" .
                         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-            'pageLength' => 50,
+            'pageLength' => config('emss.personnel_service.page_length'),
             'buttons' => ['excel'],
             'responsive' => true,
             "language" => [

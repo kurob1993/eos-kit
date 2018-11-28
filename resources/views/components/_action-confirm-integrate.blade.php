@@ -3,13 +3,14 @@
         'method' => 'post',
         'class' => 'visible-lg-inline js-confirm',
         'data-confirm' => 'Apakah data pengajuan ini sudah ada di SAP?',
-        'id' => 'confirm'
+        'id' => 'confirm-' . $model->id
     ])
 !!}
 
 {!! Form::button('<i class="fa fa-check js-button-submit"></i>', [
+        'type' => 'submit',
         'class' => 'btn btn-xs btn-info m-b-5',
-        'data-actiontype' => 'confirm'
+        'data-actiontype' => 'confirm-' . $model->id
     ]) 
 !!}
 
@@ -20,13 +21,14 @@
         'method' => 'post', 
         'class' => 'visible-lg-inline js-confirm',
         'data-confirm' => 'Apakah yakin akan mengirim data pengajuan ke SAP?',
-        'id' => 'integrate'
+        'id' => 'integrate-' . $model->id
     ]) 
 !!}
 
 {!! Form::button('<i class="fa fa-flash js-button-submit"></i>', [
+        'type' => 'submit',
         'class'=>'btn btn-xs btn-danger m-b-5',
-        'data-actiontype' => 'integrate'
+        'data-actiontype' => 'integrate-' . $model->id
     ])
 !!}
 

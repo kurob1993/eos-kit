@@ -20,7 +20,7 @@
         <p>Silahkan isi jenis izin yang akan Anda ajukan.</p>
         <br />
         <i class="fa fa-upload pull-left"></i>
-        <p>Silahkan unggah berkas lampiran yang bersesuaian dengan izin Anda (hanya gambar yang diperboleh untuk diunggah).</p>
+        <p>Silahkan unggah berkas lampiran yang bersesuaian dengan izin Anda (JPG/PNG/PDF maks. 500Kb).</p>
         <br />
         <i class="fa fa-book pull-left"></i>
         <p>Silahkan isi keterangan izin Anda.</p>
@@ -80,7 +80,7 @@
     format: 'yyyy-mm-dd',
       todayHighlight: true,
       startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-      endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 5),
+      endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 4, 5),
       // datesDisabled: ['2018-09-01'],    
   });
 
