@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\OrgText;
 
 class OrganizationController extends Controller
 {
 
     public function index()
     {
-        //
+        $paginated = OrgText::lastOrg()->paginate();
+
+        return $paginated;
     }
 
     /**
@@ -33,9 +36,16 @@ class OrganizationController extends Controller
         //
     }
 
-    public function show($ObjectID, $date)
+    public function show($ObjectID, $date = null)
     {
-        
+        if (is_null($date)) {
+            return OrgText::findByObjectID($ObjectID)
+                ->lastOrg()
+                ->first();
+        } else {
+            return OrgText::findByCompositeKey($ObjectID, $date)
+                ->first();
+        }
     }
 
     /**

@@ -40,3 +40,8 @@ Route::group(['prefix' => 'position', 'middleware' => 'api'], function() {
     Route::get('{personnel_no}', 'PositionController@show');
     Route::get('{personnel_no}/last', 'PositionController@last');
 });
+
+Route::group(['prefix' => 'organization', 'middleware' => 'api'], function() {
+    Route::get('/', 'OrganizationController@index');
+    Route::get('{ObjectID}/{date?}', 'OrganizationController@show');
+});
