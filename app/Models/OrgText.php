@@ -19,12 +19,31 @@ class OrgText extends Model
     public function scopeFindByCompositeKey($query, $o, $d)
     {
         $query->findByObjectID($o)
-            ->where('EndDate', '>',$d)
-            ->where('Startdate','<',$d);
+            ->where('EndDate', '>', $d)
+            ->where('Startdate', '<', $d);
     }
 
     public function scopeFindByObjectID($query, $o)
     {
-        $query->where('ObjectID',$o);
+        $query->where('ObjectID', $o);
+    }
+
+    public function scopeLastUk($query, $o, $d)
+    {
+        $query->where('Objectname', 'like', $o.'%');
+
+        if (is_null($d)) {
+            $query->where('EndDate', '9999-12-31');
+        } else {
+            $query->where('EndDate', '>', $d)
+                ->where('Startdate', '<', $d)->first();
+        }
+
+    }
+
+    public function scopeOldUk($query, $o)
+    {
+        $query->where('Objectname', 'like', $o.'%')
+              ->where('EndDate','<>', '9999-12-31');
     }
 }

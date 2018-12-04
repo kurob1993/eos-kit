@@ -81,4 +81,15 @@ class OrganizationController extends Controller
     {
         //
     }
+
+    public function unitkerja($unitkerja, $date = null)
+    {
+       return OrgText::lastUk($unitkerja, $date)->paginate();       
+    }
+
+    public function unitkerjaUk($unitkerja)
+    {
+       return OrgText::oldDiv($unitkerja)->paginate();       
+    }
+
 }
