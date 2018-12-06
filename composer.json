@@ -16,8 +16,8 @@
         "laravelcollective/html": "^5.4.0",
         "santigarcor/laratrust": "5.0.*",
         "viewflex/zoap": "^1.0",
-        "yajra/laravel-datatables-buttons": "^3.0",
-        "yajra/laravel-datatables-html": "3.0",
+        "yajra/laravel-datatables-buttons": "^4.0",
+        "yajra/laravel-datatables-html": "4.0",
         "yajra/laravel-datatables-oracle": "~8.0"
     },
     "require-dev": {
