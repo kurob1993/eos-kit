@@ -95,11 +95,9 @@
               </div>
           </div>
           <!-- end of overtimes tab  -->
-
       </div>
       <!-- begin of tab-content  -->
   </div>
-
 </div>
 
 <div class="modal fade" id="modal-dialog">
@@ -110,7 +108,6 @@
           <h4 class="modal-title">Persetujuan (ID: <span id="title-span"></span>)</h4>
         </div>
         <div class="modal-body">
-          
         </div>
       </div>
     </div>
@@ -123,11 +120,11 @@
 <!-- DataTables -->
 <link href={{ url("/plugins/DataTables/css/jquery.dataTables.min.css") }} rel="stylesheet" />
 <link href={{ url("/plugins/DataTables/Responsive/css/responsive.dataTables.min.css") }} rel="stylesheet" />
-  <!-- Selectize -->
-  <link href={{ url("/plugins/selectize/selectize.css") }} rel="stylesheet">
-  <link href={{ url("/plugins/selectize/selectize.bootstrap3.css") }} rel="stylesheet">
-  <!-- Pace -->    
-  <script src={{ url("/plugins/pace/pace.min.js") }}></script>
+<!-- Selectize -->
+<link href={{ url("/plugins/selectize/selectize.css") }} rel="stylesheet">
+<link href={{ url("/plugins/selectize/selectize.bootstrap3.css") }} rel="stylesheet">
+<!-- Pace -->    
+<script src={{ url("/plugins/pace/pace.min.js") }}></script>
 @endpush
 
 @push('plugin-scripts')
@@ -144,61 +141,22 @@
 @endpush
 
 @push('custom-scripts')
-<script type="text/javascript">
-	(handleConfirm = function(){
-		$(document.body).on('submit', '.js-confirm', function (e) {
-			var $el = $(this)
-			var text = $el.data('confirm') ? $el.data('confirm') : 'Anda yakin melakukan tindakan ini?'
-
-      // tampilkan pop up konfirmasi
-			var c = confirm(text);
-
-      // kondisi konfirmasi terkait tindakan
-      if (c) {
-        // menyimpan inputan catatan
-        notes = prompt('Silahkan tulis catatan:');
-        
-        // jika klik cancel batalkan submit
-        if (notes == null) {
-          
-          // batalkan submit
-          e.preventDefault();
-        } else {
-
-          // tambahkan data notes di dalam POST
-          var input = $('<input>').attr('type', 'hidden').attr('name', 'text').val(notes); 
-          $el.append($(input));
-
-          // kirimkan submit
-          return true;     
-        }
-      } else {
-
-        // batalkan submit
-        e.preventDefault();
-      } 
-
-		});	
-	}),
-
-	(EmployeePlugins = (function() {
-	  "use strict";
-	  return {
-	    init: function() {
-	      handleConfirm();
-	    }
-	  };
-	})());
-
+<script>
+if (typeof $ !== "undefined" && $.fn.dataTable) {
+    var all_settings = $($.fn.dataTable.tables()).DataTable().settings();
+    for (var i = 0, settings; (settings = all_settings[i]); ++i) {
+        if (settings.jqXHR)
+            settings.jqXHR.abort();
+    }
+}
 </script>
-
+@include('scripts._dashboard-script',  [ 'stages' => $stages, 'tableNames' => $tableNames ])
 @include('layouts._modal-detail-script')
 @include('scripts._save-tab-state-script')
-
 @endpush
 
 @push('on-ready-scripts')
-EmployeePlugins.init(); 
+DashboardPlugins.init(); 
 ModalDetailPlugins.init();
 TabStatePlugins.init();
 @endpush

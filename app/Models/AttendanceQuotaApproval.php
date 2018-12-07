@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Eloquent as Model;
 use App\Traits\ReceiveStatus;
+use App\Traits\ParentStage;
 
 class AttendanceQuotaApproval extends Model
 {
     use ReceiveStatus;
+    use ParentStage;
 
     public $fillable = [ 'attendance_quota_id', 'regno', 'sequence', 'status_id', 'text' ];
 

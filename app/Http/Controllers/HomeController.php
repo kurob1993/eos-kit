@@ -58,14 +58,24 @@ class HomeController extends Controller
                 'status:id,description', 
                 'absence.user:personnel_no,name', 
                 'absence.absenceType'
-                ])
-            ->get(['id', 'regno', 'absence_id', 'status_id', 'created_at', 'updated_at']);
+            ]);
+
+        if (is_numeric($request->input('stage_id')))
+            $leaveApprovals->whereStageId('absence', $request->input('stage_id'));
+        
+        $leaveApprovals = $leaveApprovals->get([
+            'id', 
+            'regno', 
+            'absence_id', 
+            'status_id', 
+            'created_at', 
+            'updated_at'
+        ]);
 
       // response untuk datatables absences approval
         if ($request->ajax()) {
 
-            return Datatables::of($leaveApprovals->sortBy('status.id')
-            )
+            return Datatables::of($leaveApprovals)
                 ->editColumn('summary', function ($leaveApproval) {                    
                     return view('dashboards.leaves._summary', [ 
                         'summary' => $leaveApproval,
@@ -105,8 +115,19 @@ class HomeController extends Controller
                 'status:id,description', 
                 'permit.user:personnel_no,name', 
                 'permit.permitType'
-                ])
-            ->get(['id', 'regno', 'absence_id', 'status_id', 'created_at', 'updated_at']);
+            ]);
+
+        if (is_numeric($request->input('stage_id')))
+            $absenceApprovals->whereStageId('permit', $request->input('stage_id'));
+
+        $absenceApprovals = $absenceApprovals->get([
+            'id', 
+            'regno', 
+            'absence_id', 
+            'status_id', 
+            'created_at', 
+            'updated_at'
+        ]);
 
         // ambil data persetujuan attendance, WARNING nested relationship eager loading
         $attendanceApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
@@ -114,17 +135,24 @@ class HomeController extends Controller
                 'status:id,description', 
                 'permit.user:personnel_no,name', 
                 'permit.permitType'
-                ])
-            ->get(['id', 'regno', 'attendance_id', 'status_id', 'created_at', 'updated_at']);
+            ]);
 
-        // merge collection
-        $permitApprovals = $attendanceApprovals->merge($absenceApprovals);            
+        if (is_numeric($request->input('stage_id')))
+            $attendanceApprovals->whereStageId('permit', $request->input('stage_id'));
+
+         $permitApprovals = $attendanceApprovals->get([
+            'id', 
+            'regno', 
+            'attendance_id', 
+            'status_id', 
+            'created_at', 
+            'updated_at'
+        ])->merge($absenceApprovals);
 
         // response untuk datatables absences approval
         if ($request->ajax()) {
 
-            return Datatables::of($permitApprovals->sortBy('permit.user.personnel_no')
-            ->sortBy('status.id'))
+            return Datatables::of($permitApprovals)
                 ->editColumn('summary', function ($permitApproval) {                    
                     return view('dashboards.permits._summary', [ 
                         'summary' => $permitApproval,
@@ -169,14 +197,24 @@ class HomeController extends Controller
                 'status:id,description', 
                 'timeEvent.user:personnel_no,name', 
                 'timeEvent.timeEventType'
-                ])
-            ->get(['id', 'regno', 'time_event_id', 'status_id', 'created_at', 'updated_at']);
+        ]);
+
+        if (is_numeric($request->input('stage_id')))
+            $timeEventApprovals->whereStageId('timeEvent', $request->input('stage_id'));
+
+        $timeEventApprovals = $timeEventApprovals->get([
+            'id', 
+            'regno', 
+            'time_event_id', 
+            'status_id', 
+            'created_at', 
+            'updated_at'
+        ]);
 
       // response untuk datatables absences approval
         if ($request->ajax()) {
 
-            return Datatables::of($timeEventApprovals->sortBy('status.id')
-            ->sortBy('timeEvent.user.personnel_no'))
+            return Datatables::of($timeEventApprovals)
                 ->editColumn('summary', function ($timeEventApproval) {                    
                     return view('dashboards.time_events._summary', [ 
                         'summary' => $timeEventApproval,
@@ -215,14 +253,24 @@ class HomeController extends Controller
                 'status:id,description',
                 'attendanceQuota.user:personnel_no,name', 
                 'attendanceQuota.overtimeReason'
-                ])
-                ->get(['id', 'regno', 'attendance_quota_id', 'status_id', 'created_at', 'updated_at']);
+            ]);
+                
+        if (is_numeric($request->input('stage_id')))
+            $overtimeApprovals->whereStageId('attendanceQuota', $request->input('stage_id'));
+
+        $overtimeApprovals = $overtimeApprovals->get([
+                'id', 
+                'regno', 
+                'attendance_quota_id', 
+                'status_id', 
+                'created_at', 
+                'updated_at'
+            ]);
 
         // response untuk datatables absences approval
         if ($request->ajax()) {
 
-            return Datatables::of($overtimeApprovals->sortBy('status.id')
-            ->sortBy('attendanceQuota.user.personnel_no'))
+            return Datatables::of($overtimeApprovals)
                 ->editColumn('summary', function ($overtimeApproval) {                    
                     return view('dashboards.overtimes._summary', [ 
                         'summary' => $overtimeApproval,
