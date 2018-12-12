@@ -6,13 +6,9 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Mail;
 use Laratrust\Traits\LaratrustUserTrait;
-use App\Models\AbsenceQuota;
-
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-use App\Book;
-use App\BorrowLog;
-use App\Exceptions\BookException;
+use App\Models\AbsenceQuota;
+use App\Models\StructDisp;
 
 class User extends Authenticatable
 {

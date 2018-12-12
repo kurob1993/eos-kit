@@ -38,5 +38,12 @@ trait PeriodDates
         ->orWhere(function ($query) use($e){ 
             $query->where('start_date', '<=', $e)->where('end_date', '>=', $e); 
         }); 
-    }    
+    }
+
+    public function scopeMonthYearPeriodOf($query, $m, $y, $p)
+    {
+        return $query->whereMonth('start_date', $m)
+            ->whereYear('start_date', $y)
+            ->where('personnel_no', $p);
+    }
 }

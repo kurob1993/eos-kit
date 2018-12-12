@@ -13,9 +13,47 @@ class Employee extends Model
     public function user()
     {
         // one-to-one relationship dengann User
-        return $this->belongsTo('App\User', 'personnel_no');
+        return $this->belongsTo('App\User', 'personnel_no', 'personnel_no');
+    }
+
+    public function absences()
+    {
+      // one-to-many relationship dengan Absence
+      return $this->hasMany('App\Models\Absence', 'personnel_no', 'personnel_no');
     }
     
+    public function nonLeaveAbsences()
+    {
+        // one-to-many relationship dengan Absence exclude leave
+        return $this->hasMany('App\Models\Absence', 'personnel_no', 'personnel_no')
+        ->excludeLeaves();
+    }
+    
+    public function leaves()
+    {
+      // one-to-many relationship dengan Absence leaves only
+      return $this->hasMany('App\Models\Absence', 'personnel_no', 'personnel_no')
+        ->leavesOnly();
+    }
+
+    public function timeEvents()
+    {
+      // one-to-many relationship dengan Time Event
+      return $this->hasMany('App\Models\TimeEvent', 'personnel_no', 'personnel_no');
+    }
+
+    public function absenceQuotas()
+    {
+      // one-to-many relationship dengan AbsenceQuota
+      return $this->hasMany('App\Models\AbsenceQuota', 'personnel_no', 'personnel_no');
+    }
+  
+    public function absenceApprovals()
+    {
+      // one-to-many relationship dengan AbsenceApproval
+      return $this->hasMany('App\Models\AbsenceApproval', 'regno', 'personnel_no');
+    }
+
     public function structDisp()
     {
       // one-to-many relationship dengan StructDisp
@@ -277,4 +315,15 @@ class Employee extends Model
         return $s->emp_hrp1000_s_short == '6200300001' 
             && $s->emp_hrp1000_o_short == '62003';
     }
+
+    public function getPermitsAttribute()
+    {
+        $absences = Absence::where('personnel_no', $this->personnel_no)
+            ->excludeLeaves()
+            ->get();
+
+        return Attendance::where('personnel_no', $this->personnel_no)
+            ->get()
+            ->merge($absences);
+    }  
 }

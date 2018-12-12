@@ -4,114 +4,117 @@
 <!-- begin #page-container -->
 @component('layouts.employee._page-container', ['page_header' => 'Employee Dashboard'])
 <div class="row">
-  <div class="col-lg-12 col-xl-9">
-    <h4>Persetujuan Karyawan</h4>
-    @include('layouts._flash')
-      <!-- begin of dashboard nav-tabs  -->
-      <ul class="nav nav-tabs nav-tabs-primary nav-justified nav-justified-mobile">
-          <li class="active">
-              <a href="#tab-leaves" data-toggle="tab" aria-expanded="true"> Cuti
-                  @if ($countLeaveApprovals > 0) 
-                  <span class="badge pull-right m-l-5">
-                      {{$countLeaveApprovals}} 
-                  </span>
-                  @endif
-              </a>
-          </li>
-          <li class="">
-              <a href="#tab-permits" data-toggle="tab" aria-expanded="true"> Izin 
-                  @if ($countPermitApprovals > 0) 
-                  <span class="badge pull-right m-l-5">
-                      {{$countPermitApprovals}} 
-                  </span>
-                  @endif
-              </a>
-          </li>
-          <li class="">
-              <a href="#tab-time-events" data-toggle="tab" aria-expanded="true"> Slash
-                  @if ($countTimeEventApprovals > 0) 
-                  <span class="badge pull-right m-l-5">
-                      {{$countTimeEventApprovals}} 
-                  </span>
-                  @endif                 
-              </a>
-          </li>
-          {{-- <li class="">
-              <a href="#tab-overtimes" data-toggle="tab" aria-expanded="true"> Lembur
-                  @if ($countOvertimeApprovals > 0) 
-                  <span class="badge pull-right m-l-5">
-                      {{$countOvertimeApprovals}} 
-                  </span>
-                  @endif 
-              </a>
-          </li> --}}
-      </ul>
-      <!-- end of dashboard nav-tabs  -->
+    <div class="col-lg-12 col-xl-9">
+        <h4>Persetujuan Karyawan</h4>
+        @include('layouts._flash')
+        <!-- begin of dashboard nav-tabs  -->
+        <ul class="nav nav-tabs nav-tabs-primary nav-justified nav-justified-mobile">
+            <li class="active">
+                <a href="#tab-leaves" data-toggle="tab" aria-expanded="true"> Cuti
+                    @if ($countLeaveApprovals > 0)
+                    <span class="badge pull-right m-l-5">
+                        {{$countLeaveApprovals}}
+                    </span>
+                    @endif
+                </a>
+            </li>
+            <li class="">
+                <a href="#tab-permits" data-toggle="tab" aria-expanded="true"> Izin
+                    @if ($countPermitApprovals > 0)
+                    <span class="badge pull-right m-l-5">
+                        {{$countPermitApprovals}}
+                    </span>
+                    @endif
+                </a>
+            </li>
+            <li class="">
+                <a href="#tab-time-events" data-toggle="tab" aria-expanded="true"> Slash
+                    @if ($countTimeEventApprovals > 0)
+                    <span class="badge pull-right m-l-5">
+                        {{$countTimeEventApprovals}}
+                    </span>
+                    @endif
+                </a>
+            </li>
+            {{-- <li class="">
+                <a href="#tab-overtimes" data-toggle="tab" aria-expanded="true"> Lembur
+                    @if ($countOvertimeApprovals > 0)
+                    <span class="badge pull-right m-l-5">
+                        {{$countOvertimeApprovals}}
+                    </span>
+                    @endif
+                </a>
+            </li> --}}
+        </ul>
+        <!-- end of dashboard nav-tabs  -->
 
-      <!-- begin of tab-content  -->
-      <div class="tab-content">
-          <!-- begin of leaves tab  -->
-          <div class="tab-pane fade active in" id="tab-leaves">
-              <div class="panel-body p-0">
-                  <p>
-                    {{-- <a class="btn btn-primary" 
-                      href="{{ route('dashboards.approve_all', ['approval' => 'leaves']) }}">
-                      Setujui Semua
-                    </a>
-                    <a class="btn btn-danger" 
-                      href="{{ route('dashboards.reject_all', ['approval' => 'leaves']) }}">
-                      Tolak Semua
-                    </a> --}}
-                  </p>
-                  <div class="table-responsive">
-                    {!! $leaveTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
-                  </div>
+        <!-- begin of tab-content  -->
+        <div class="tab-content">
+            <!-- begin of leaves tab  -->
+            <div class="tab-pane fade active in" id="tab-leaves">
+                <div class="panel-body p-0">
+                    <p>
+                        {{-- <a class="btn btn-primary" href="{{ route('dashboards.approve_all', ['approval' => 'leaves']) }}">
+                            Setujui Semua
+                        </a>
+                        <a class="btn btn-danger" href="{{ route('dashboards.reject_all', ['approval' => 'leaves']) }}">
+                            Tolak Semua
+                        </a> --}}
+                    </p>
+                    <div id="leave-chart" class="m-t-5 m-b-5">Fusionchart for leaves will be rendered here.</div>
+                    <div class="table-responsive">
+                        {!! $leaveTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+                    </div>
                 </div>
-          </div>
-          <!-- end of leaves tab  -->
+            </div>
+            <!-- end of leaves tab  -->
 
-          <!-- begin of permits tab  -->
-          <div class="tab-pane fade" id="tab-permits">
-              <div class="panel-body p-0">
-                  <div class="table-responsive">
-                    {!! $permitTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
-                  </div>
+            <!-- begin of permits tab  -->
+            <div class="tab-pane fade" id="tab-permits">
+                <div class="panel-body p-0">
+                    <div id="permit-chart" class="m-t-5 m-b-5">Fusionchart for permits will be rendered here.</div>
+                    <div class="table-responsive">
+                        {!! $permitTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+                    </div>
                 </div>
-          </div>
-          <!-- end of permits tab  -->
+            </div>
+            <!-- end of permits tab  -->
 
-          <!-- begin of time-events tab  -->
-          <div class="tab-pane fade" id="tab-time-events">
-              <div class="panel-body p-0">
-                {!! $timeEventTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
-              </div>
-          </div>
-          <!-- end of time-events tab  -->
+            <!-- begin of time-events tab  -->
+            <div class="tab-pane fade" id="tab-time-events">
+                <div class="panel-body p-0">
+                    <div id="time-event-chart" class="m-t-5 m-b-5">Fusionchart for time events will be rendered here.</div>
+                    <div class="table-responsive">
+                        {!! $timeEventTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+                    </div>
+                </div>
+            </div>
+            <!-- end of time-events tab  -->
 
-          <!-- begin of overtimes tab  -->
-          <div class="tab-pane fade" id="tab-overtimes">
-              <div class="panel-body p-0">
-                {!! $overtimeTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
-              </div>
-          </div>
-          <!-- end of overtimes tab  -->
-      </div>
-      <!-- begin of tab-content  -->
-  </div>
+            <!-- begin of overtimes tab  -->
+            <div class="tab-pane fade" id="tab-overtimes">
+                <div class="panel-body p-0">
+                    {!! $overtimeTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+                </div>
+            </div>
+            <!-- end of overtimes tab  -->
+        </div>
+        <!-- begin of tab-content  -->
+    </div>
 </div>
 
 <div class="modal fade" id="modal-dialog">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title">Persetujuan (ID: <span id="title-span"></span>)</h4>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Persetujuan (ID: <span id="title-span"></span>)</h4>
+            </div>
+            <div class="modal-body">
+            </div>
         </div>
-        <div class="modal-body">
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 @endcomponent
 <!-- end page container -->
 @endsection
@@ -123,11 +126,17 @@
 <!-- Selectize -->
 <link href={{ url("/plugins/selectize/selectize.css") }} rel="stylesheet">
 <link href={{ url("/plugins/selectize/selectize.bootstrap3.css") }} rel="stylesheet">
-<!-- Pace -->    
+<!-- Pace -->
 <script src={{ url("/plugins/pace/pace.min.js") }}></script>
 @endpush
 
 @push('plugin-scripts')
+<!-- Fusion Chart -->
+<script src="{{ url("/plugins/fusioncharts/js/fusioncharts.js") }}"></script>
+<script src="{{ url("/plugins/fusioncharts/js/themes/fusioncharts.theme.fusion.js") }}"></script>
+{!! $leaveChart->render() !!}
+{!! $permitChart->render() !!}
+{!! $timeEventChart->render() !!}
 <!-- Selectize -->
 <script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
 <!-- DataTables -->
@@ -141,22 +150,14 @@
 @endpush
 
 @push('custom-scripts')
-<script>
-if (typeof $ !== "undefined" && $.fn.dataTable) {
-    var all_settings = $($.fn.dataTable.tables()).DataTable().settings();
-    for (var i = 0, settings; (settings = all_settings[i]); ++i) {
-        if (settings.jqXHR)
-            settings.jqXHR.abort();
-    }
-}
-</script>
-@include('scripts._dashboard-script',  [ 'stages' => $stages, 'tableNames' => $tableNames ])
+@include('scripts._defer-ajax-dt-script')
+@include('scripts._dashboard-script', [ 'stages' => $stages, 'tableNames' => $tableNames ])
 @include('layouts._modal-detail-script')
 @include('scripts._save-tab-state-script')
 @endpush
 
 @push('on-ready-scripts')
-DashboardPlugins.init(); 
+DashboardPlugins.init();
 ModalDetailPlugins.init();
 TabStatePlugins.init();
 @endpush

@@ -57,7 +57,7 @@ class StructDisp extends Model
   
     public function scopeClosestBossOf($query, $p)
     {
-      // struct mencari atasan satu tingkat diaatas  
+      // struct mencari atasan satu tingkat di atas  
       return $query->structOf($p)->where('no', '2');
     }
 

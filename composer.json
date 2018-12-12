@@ -36,7 +36,8 @@
             "App\\": "app/"
         },
         "files": [
-            "app/Utils/helpers.php"
+            "app/Utils/helpers.php",
+            "app/Utils/fusioncharts.php"
         ]
     },
     "autoload-dev": {

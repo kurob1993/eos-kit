@@ -36,9 +36,111 @@ class HomeController extends Controller
 
     public function employeeDashboard($request, $htmlBuilder)
     {
-        return view('dashboards.employee');
+        $subordinates = Auth::user()->employee->subordinates();
+        $d = date('m');
+        $y = date('Y');
+        $dy = date('M Y');
+        $chartTitle = "";
+        $leaveChartTitle = "Pengajuan Cuti";
+        $permitChartTitle = "Pengajuan Izin";
+        $timeEventChartTitle = "Pengajuan Tidak Slash";
+        $chartOptions = [
+            "caption" => $chartTitle,
+            "subcaption" => $dy,
+            "xaxisname" => "NIK",
+            "yaxisname" => "Durasi",
+            "theme" => "fusion",
+            "baseFont" => "Karla",
+            "baseFontColor" => "#153957",
+            "outCnvBaseFont" => "Karla",
+        ];
+
+
+        $leaveChartData = [];
+        foreach ($subordinates as $subordinate) {
+            if ($subordinate->leaves->count() > 0) {
+                $absences = Absence::monthYearPeriodOf($d, $y, $subordinate->personnel_no) 
+                    ->leavesOnly() 
+                    ->get();
+
+                $x = 0;
+                foreach($absences as $absence) { $x += $absence->duration; }
+                $labelValue = [ "label" => (string) $subordinate->personnel_no, "value" => $x ];
+                array_push($leaveChartData, $labelValue);
+            }
+        }
+
+        $permitChartData = [];
+        foreach ($subordinates as $subordinate) {
+            if ($subordinate->permits->count() > 0) {
+                $absences = Absence::monthYearPeriodOf($d, $y, $subordinate->personnel_no) 
+                    ->excludeLeaves() 
+                    ->get();
+                $x = 0;
+                foreach($absences as $absence) { $x += $absence->duration; }
+                $attendances = Attendance::monthYearPeriodOf($d, $y, $subordinate->personnel_no) 
+                    ->get();
+                foreach($attendances as $attendance) { $x += $attendance->duration; }
+                $labelValue = [ "label" => (string) $subordinate->personnel_no, "value" => $x ];
+                array_push($permitChartData, $labelValue);                
+            }
+        }
+
+        $timeEventChartData = [];
+        foreach ($subordinates as $subordinate) {
+            if ($subordinate->timeEvents->count() > 0) {
+                $timeEvents = TimeEvent::monthYearPeriodOf($d, $y, $subordinate->personnel_no);
+                $labelValue = [ 
+                    "label" => (string) $subordinate->personnel_no, 
+                    "value" => $subordinate->timeEvents->count() 
+                ];
+                array_push($timeEventChartData, $labelValue);
+            }
+        }
+
+        $chartTitle = $leaveChartTitle;
+        $dataSource = [ "chart" => $chartOptions, "data" => $leaveChartData ];
+        $leaveChart = new \FusionCharts(
+            "column2d",
+            "leaveChart" ,
+            "100%",
+            300,
+            "leave-chart",
+            "json",
+            json_encode($dataSource)
+        );
+
+        $chartTitle = $permitChartTitle;
+        $dataSource = [ "chart" => $chartOptions, "data" => $permitChartData ];
+        $permitChart = new \FusionCharts(
+            "column2d",
+            "permitChart" ,
+            "100%",
+            300,
+            "permit-chart",
+            "json",
+            json_encode($dataSource)
+        );
+
+        $chartTitle = $timeEventChartTitle;
+        $dataSource = [ "chart" => $chartOptions, "data" => $timeEventChartData ];
+        $timeEventChart = new \FusionCharts(
+            "column2d",
+            "timeEventChart" ,
+            "100%",
+            300,
+            "time-event-chart",
+            "json",
+            json_encode($dataSource)
+        );
+
+        return view('dashboards.employee', compact(
+            'leaveChart',
+            'permitChart',
+            'timeEventChart'
+        ));
     }
-    
+
     public function basisDashboard()
     {
         return view('dashboards.basis');
@@ -55,20 +157,20 @@ class HomeController extends Controller
         $leaveApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
             ->leavesOnly()
             ->with([
-                'status:id,description', 
-                'absence.user:personnel_no,name', 
+                'status:id,description',
+                'absence.user:personnel_no,name',
                 'absence.absenceType'
             ]);
 
         if (is_numeric($request->input('stage_id')))
             $leaveApprovals->whereStageId('absence', $request->input('stage_id'));
-        
+
         $leaveApprovals = $leaveApprovals->get([
-            'id', 
-            'regno', 
-            'absence_id', 
-            'status_id', 
-            'created_at', 
+            'id',
+            'regno',
+            'absence_id',
+            'status_id',
+            'created_at',
             'updated_at'
         ]);
 
@@ -76,10 +178,10 @@ class HomeController extends Controller
         if ($request->ajax()) {
 
             return Datatables::of($leaveApprovals)
-                ->editColumn('summary', function ($leaveApproval) {                    
-                    return view('dashboards.leaves._summary', [ 
+                ->editColumn('summary', function ($leaveApproval) {
+                    return view('dashboards.leaves._summary', [
                         'summary' => $leaveApproval,
-                        'when' => $leaveApproval->created_at->format('d/m') 
+                        'when' => $leaveApproval->created_at->format('d/m')
                     ]);
                 })
                 ->editColumn('detail', function ($leaveApproval) {
@@ -99,7 +201,7 @@ class HomeController extends Controller
                             'id' => $leaveApproval->id,
                             ]
                         );
-                    }, 
+                    },
                 ])
                 ->escapeColumns([0,1])
                 ->make(true);
@@ -112,8 +214,8 @@ class HomeController extends Controller
         $absenceApprovals = AbsenceApproval::where('regno', Auth::user()->personnel_no)
             ->excludeLeaves()
             ->with([
-                'status:id,description', 
-                'permit.user:personnel_no,name', 
+                'status:id,description',
+                'permit.user:personnel_no,name',
                 'permit.permitType'
             ]);
 
@@ -121,19 +223,19 @@ class HomeController extends Controller
             $absenceApprovals->whereStageId('permit', $request->input('stage_id'));
 
         $absenceApprovals = $absenceApprovals->get([
-            'id', 
-            'regno', 
-            'absence_id', 
-            'status_id', 
-            'created_at', 
+            'id',
+            'regno',
+            'absence_id',
+            'status_id',
+            'created_at',
             'updated_at'
         ]);
 
         // ambil data persetujuan attendance, WARNING nested relationship eager loading
         $attendanceApprovals = AttendanceApproval::where('regno', Auth::user()->personnel_no)
             ->with([
-                'status:id,description', 
-                'permit.user:personnel_no,name', 
+                'status:id,description',
+                'permit.user:personnel_no,name',
                 'permit.permitType'
             ]);
 
@@ -141,11 +243,11 @@ class HomeController extends Controller
             $attendanceApprovals->whereStageId('permit', $request->input('stage_id'));
 
          $permitApprovals = $attendanceApprovals->get([
-            'id', 
-            'regno', 
-            'attendance_id', 
-            'status_id', 
-            'created_at', 
+            'id',
+            'regno',
+            'attendance_id',
+            'status_id',
+            'created_at',
             'updated_at'
         ])->merge($absenceApprovals);
 
@@ -153,8 +255,8 @@ class HomeController extends Controller
         if ($request->ajax()) {
 
             return Datatables::of($permitApprovals)
-                ->editColumn('summary', function ($permitApproval) {                    
-                    return view('dashboards.permits._summary', [ 
+                ->editColumn('summary', function ($permitApproval) {
+                    return view('dashboards.permits._summary', [
                         'summary' => $permitApproval,
                         'when' => $permitApproval->created_at->format('d/m')
                     ]);
@@ -181,7 +283,7 @@ class HomeController extends Controller
                             'approval' => $approval
                             ]
                         );
-                    }, 
+                    },
                 ])
                 ->escapeColumns([0,1])
                 ->make(true);
@@ -194,8 +296,8 @@ class HomeController extends Controller
         // ambil data persetujuan timeEvent, WARNING nested relationship eager loading
         $timeEventApprovals = TimeEventApproval::where('regno', Auth::user()->personnel_no)
             ->with([
-                'status:id,description', 
-                'timeEvent.user:personnel_no,name', 
+                'status:id,description',
+                'timeEvent.user:personnel_no,name',
                 'timeEvent.timeEventType'
         ]);
 
@@ -203,11 +305,11 @@ class HomeController extends Controller
             $timeEventApprovals->whereStageId('timeEvent', $request->input('stage_id'));
 
         $timeEventApprovals = $timeEventApprovals->get([
-            'id', 
-            'regno', 
-            'time_event_id', 
-            'status_id', 
-            'created_at', 
+            'id',
+            'regno',
+            'time_event_id',
+            'status_id',
+            'created_at',
             'updated_at'
         ]);
 
@@ -215,10 +317,10 @@ class HomeController extends Controller
         if ($request->ajax()) {
 
             return Datatables::of($timeEventApprovals)
-                ->editColumn('summary', function ($timeEventApproval) {                    
-                    return view('dashboards.time_events._summary', [ 
+                ->editColumn('summary', function ($timeEventApproval) {
+                    return view('dashboards.time_events._summary', [
                         'summary' => $timeEventApproval,
-                        'when' => $timeEventApproval->created_at->format('d/m') 
+                        'when' => $timeEventApproval->created_at->format('d/m')
                     ]);
                 })
                 ->editColumn('detail', function ($timeEventApproval) {
@@ -238,7 +340,7 @@ class HomeController extends Controller
                             'id' => $timeEventApproval->id,
                             ]
                         );
-                    }, 
+                    },
                 ])
                 ->escapeColumns([0,1])
                 ->make(true);
@@ -251,19 +353,19 @@ class HomeController extends Controller
         $overtimeApprovals = AttendanceQuotaApproval::where('regno', Auth::user()->personnel_no)
             ->with([
                 'status:id,description',
-                'attendanceQuota.user:personnel_no,name', 
+                'attendanceQuota.user:personnel_no,name',
                 'attendanceQuota.overtimeReason'
             ]);
-                
+
         if (is_numeric($request->input('stage_id')))
             $overtimeApprovals->whereStageId('attendanceQuota', $request->input('stage_id'));
 
         $overtimeApprovals = $overtimeApprovals->get([
-                'id', 
-                'regno', 
-                'attendance_quota_id', 
-                'status_id', 
-                'created_at', 
+                'id',
+                'regno',
+                'attendance_quota_id',
+                'status_id',
+                'created_at',
                 'updated_at'
             ]);
 
@@ -271,10 +373,10 @@ class HomeController extends Controller
         if ($request->ajax()) {
 
             return Datatables::of($overtimeApprovals)
-                ->editColumn('summary', function ($overtimeApproval) {                    
-                    return view('dashboards.overtimes._summary', [ 
+                ->editColumn('summary', function ($overtimeApproval) {
+                    return view('dashboards.overtimes._summary', [
                         'summary' => $overtimeApproval,
-                        'when' => $overtimeApproval->created_at->format('d/m') 
+                        'when' => $overtimeApproval->created_at->format('d/m')
                     ]);
                 })
                 ->editColumn('detail', function ($overtimeApproval) {
@@ -285,7 +387,7 @@ class HomeController extends Controller
                 ->editColumn('approver', function ($overtimeApproval) {
                     $approvals = $overtimeApproval->attendanceQuota->attendanceQuotaApproval;
                     $a = '';
-                    
+
                     foreach ($approvals as $approval) {
                         $a = $a . view('layouts._personnel-no-with-name', [
                             'personnel_no' => $approval->employee->personnel_no,
@@ -301,7 +403,7 @@ class HomeController extends Controller
                             'id' => $overtimeApproval->id,
                             ]
                         );
-                    }, 
+                    },
                 ])
                 ->escapeColumns([0,1])
                 ->make(true);
@@ -312,25 +414,25 @@ class HomeController extends Controller
     {
         // poor database design
         switch ($approval) {
-            case 'leave': 
-                $approved = AbsenceApproval::find($id); 
+            case 'leave':
+                $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.leaves.text');
             break;
-            case 'absence': 
+            case 'absence':
                 $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
             break;
-            case 'attendance': 
+            case 'attendance':
                 $approved = AttendanceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
             break;
-            case 'time_event': 
+            case 'time_event':
                 $approved = TimeEventApproval::find($id);
                 $moduleText = config('emss.modules.time_events.text');
             break;
-            case 'overtime': 
+            case 'overtime':
                 $approved = AttendanceQuotaApproval::find($id);
-                $moduleText = config('emss.modules.overtimes.text'); 
+                $moduleText = config('emss.modules.overtimes.text');
             break;
         }
 
@@ -338,7 +440,7 @@ class HomeController extends Controller
         if (!$approved->save()) {
             // kembali lagi jika gagal
             return redirect()->back();
-        } 
+        }
 
         // tampilkan pesan bahwa telah berhasil menyetujui
         Session::flash("flash_notification", [
@@ -354,29 +456,29 @@ class HomeController extends Controller
     {
         // poor database design
         switch ($approval) {
-            case 'leave': 
-                $approved = AbsenceApproval::find($id); 
+            case 'leave':
+                $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.leaves.text');
             break;
-            case 'absence': 
+            case 'absence':
                 $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
             break;
-            case 'attendance': 
+            case 'attendance':
                 $approved = AttendanceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
             break;
-            case 'time_event': 
+            case 'time_event':
                 $approved = TimeEventApproval::find($id);
                 $moduleText = config('emss.modules.time_events.text');
             break;
-            case 'overtime': 
+            case 'overtime':
                 $approved = AttendanceQuotaApproval::find($id);
-                $moduleText = config('emss.modules.overtimes.text'); 
+                $moduleText = config('emss.modules.overtimes.text');
             break;
         }
 
-        if (!$approved->update($request->all() 
+        if (!$approved->update($request->all()
             + ['status_id' => Status::rejectStatus()->id])) {
             // kembali lagi jika gagal
             return redirect()->back();
@@ -395,31 +497,31 @@ class HomeController extends Controller
     public function leaveSummary($id)
     {
         $leaveApproval = AbsenceApproval::find($id);
-        
+
         return view('dashboards.leaves._modal', [
-            'leave' => $leaveApproval->absence, 
+            'leave' => $leaveApproval->absence,
             'approve_url' => route('dashboards.approve', ['id' => $leaveApproval->id, 'approval' => 'leave']),
             'reject_url' => route('dashboards.reject', ['id' => $leaveApproval->id, 'approval' => 'leave']),
             'confirm_message' => "Yakin melakukan ",
-            ]);        
+            ]);
     }
 
     public function permitSummary($approval, $id)
     {
         // poor database design
         switch ($approval) {
-            case 'absence': 
-                $approved = AbsenceApproval::find($id); 
+            case 'absence':
+                $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.absences.text');
             break;
-            case 'attendance': 
+            case 'attendance':
                 $approved = AttendanceApproval::find($id);
                 $moduleText = config('emss.modules.attendances.text');
             break;
         }
 
         return view('dashboards.permits._modal', [
-            'permit' => $approved->permit, 
+            'permit' => $approved->permit,
             'approve_url' => route('dashboards.approve', ['id' => $approved->id, 'approval' => $approval]),
             'reject_url' => route('dashboards.reject', ['id' => $approved->id, 'approval' => $approval]),
             'confirm_message' => "Yakin melakukan ",
@@ -429,9 +531,9 @@ class HomeController extends Controller
     public function timeEventSummary($id)
     {
         $timeEventApproval = TimeEventApproval::find($id);
-        
+
         return view('dashboards.time_events._modal', [
-            'timeEvent' => $timeEventApproval->timeEvent, 
+            'timeEvent' => $timeEventApproval->timeEvent,
             'approve_url' => route('dashboards.approve', ['id' => $timeEventApproval->id, 'approval' => 'time_event']),
             'reject_url' => route('dashboards.reject', ['id' => $timeEventApproval->id, 'approval' => 'time_event']),
             'confirm_message' => "Yakin melakukan ",
@@ -441,9 +543,9 @@ class HomeController extends Controller
     public function overtimeSummary($id)
     {
         $overtimeApproval = AttendanceQuotaApproval::find($id);
-        
+
         return view('dashboards.overtimes._modal', [
-            'overtime' => $overtimeApproval->attendanceQuota, 
+            'overtime' => $overtimeApproval->attendanceQuota,
             'approve_url' => route('dashboards.approve', ['id' => $overtimeApproval->id, 'approval' => 'overtime']),
             'reject_url' => route('dashboards.reject', ['id' => $overtimeApproval->id, 'approval' => 'overtime']),
             'confirm_message' => "Yakin melakukan ",

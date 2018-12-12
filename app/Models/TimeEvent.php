@@ -63,6 +63,13 @@ class TimeEvent extends Model
         return $this->hasMany('App\Models\TimeEventApproval');
     }
 
+    public function scopeMonthYearPeriodOf($query, $m, $y, $p)
+    {
+        return $query->whereMonth('check_date', $m)
+            ->whereYear('check_date', $y)
+            ->where('personnel_no', $p);
+    }
+
     public function getPlainIdAttribute()
     {
         return 'time_event-' . $this->id;
