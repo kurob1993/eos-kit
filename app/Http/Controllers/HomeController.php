@@ -40,25 +40,10 @@ class HomeController extends Controller
         $d = date('m');
         $y = date('Y');
         $dy = date('M Y');
-        $chartTitle = "";
-        $leaveChartTitle = "Pengajuan Cuti";
-        $permitChartTitle = "Pengajuan Izin";
-        $timeEventChartTitle = "Pengajuan Tidak Slash";
-        $chartOptions = [
-            "caption" => $chartTitle,
-            "subcaption" => $dy,
-            "xaxisname" => "NIK",
-            "yaxisname" => "Durasi",
-            "theme" => "fusion",
-            "baseFont" => "Karla",
-            "baseFontColor" => "#153957",
-            "outCnvBaseFont" => "Karla",
-        ];
-
 
         $leaveChartData = [];
         foreach ($subordinates as $subordinate) {
-            if ($subordinate->leaves->count() > 0) {
+            if ($subordinate->currentPeriodLeaves->count() > 0) {
                 $absences = Absence::monthYearPeriodOf($d, $y, $subordinate->personnel_no) 
                     ->leavesOnly() 
                     ->get();
@@ -72,7 +57,7 @@ class HomeController extends Controller
 
         $permitChartData = [];
         foreach ($subordinates as $subordinate) {
-            if ($subordinate->permits->count() > 0) {
+            if ($subordinate->currentPeriodPermits->count() > 0) {
                 $absences = Absence::monthYearPeriodOf($d, $y, $subordinate->personnel_no) 
                     ->excludeLeaves() 
                     ->get();
@@ -88,7 +73,7 @@ class HomeController extends Controller
 
         $timeEventChartData = [];
         foreach ($subordinates as $subordinate) {
-            if ($subordinate->timeEvents->count() > 0) {
+            if ($subordinate->currentPeriodtimeEvents->count() > 0) {
                 $timeEvents = TimeEvent::monthYearPeriodOf($d, $y, $subordinate->personnel_no);
                 $labelValue = [ 
                     "label" => (string) $subordinate->personnel_no, 
@@ -98,7 +83,17 @@ class HomeController extends Controller
             }
         }
 
-        $chartTitle = $leaveChartTitle;
+        $chartOptions = [
+            "caption" => "Pengajuan Cuti",
+            "subcaption" => $dy,
+            "xaxisname" => "NIK",
+            "yaxisname" => "Durasi",
+            "theme" => "fusion",
+            "baseFont" => "Karla",
+            "baseFontColor" => "#153957",
+            "outCnvBaseFont" => "Karla",
+        ];
+
         $dataSource = [ "chart" => $chartOptions, "data" => $leaveChartData ];
         $leaveChart = new \FusionCharts(
             "column2d",
@@ -110,7 +105,17 @@ class HomeController extends Controller
             json_encode($dataSource)
         );
 
-        $chartTitle = $permitChartTitle;
+        $chartOptions = [
+            "caption" => "Pengajuan Izin",
+            "subcaption" => $dy,
+            "xaxisname" => "NIK",
+            "yaxisname" => "Durasi",
+            "theme" => "fusion",
+            "baseFont" => "Karla",
+            "baseFontColor" => "#153957",
+            "outCnvBaseFont" => "Karla",
+        ];
+
         $dataSource = [ "chart" => $chartOptions, "data" => $permitChartData ];
         $permitChart = new \FusionCharts(
             "column2d",
@@ -122,7 +127,17 @@ class HomeController extends Controller
             json_encode($dataSource)
         );
 
-        $chartTitle = $timeEventChartTitle;
+        $chartOptions = [
+            "caption" => "Pengajuan Tidak Slash",
+            "subcaption" => $dy,
+            "xaxisname" => "NIK",
+            "yaxisname" => "Durasi",
+            "theme" => "fusion",
+            "baseFont" => "Karla",
+            "baseFontColor" => "#153957",
+            "outCnvBaseFont" => "Karla",
+        ];
+
         $dataSource = [ "chart" => $chartOptions, "data" => $timeEventChartData ];
         $timeEventChart = new \FusionCharts(
             "column2d",

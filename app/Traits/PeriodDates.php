@@ -46,4 +46,10 @@ trait PeriodDates
             ->whereYear('start_date', $y)
             ->where('personnel_no', $p);
     }
+
+    public function scopeCurrentPeriod($query)
+    {
+        return $query->whereMonth('start_date', date('m'))
+            ->whereYear('start_date', date('Y'));
+    }
 }

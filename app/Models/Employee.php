@@ -21,6 +21,12 @@ class Employee extends Model
       // one-to-many relationship dengan Absence
       return $this->hasMany('App\Models\Absence', 'personnel_no', 'personnel_no');
     }
+
+    public function currentPeriodAbsences()
+    {
+        return $this->absences()
+            ->currentPeriod();
+    }
     
     public function nonLeaveAbsences()
     {
@@ -29,6 +35,12 @@ class Employee extends Model
         ->excludeLeaves();
     }
     
+    public function currentPeriodNonLeaveAbsences()
+    {
+        return $this->nonLeaveAbsences()
+            ->currentPeriod();
+    }
+
     public function leaves()
     {
       // one-to-many relationship dengan Absence leaves only
@@ -36,11 +48,23 @@ class Employee extends Model
         ->leavesOnly();
     }
 
+    public function currentPeriodLeaves()
+    {
+        return $this->leaves()
+            ->currentPeriod();
+    }    
+
     public function timeEvents()
     {
       // one-to-many relationship dengan Time Event
       return $this->hasMany('App\Models\TimeEvent', 'personnel_no', 'personnel_no');
     }
+
+    public function currentPeriodTimeEvents()
+    {
+        return $this->timeEvents()->whereMonth('check_date', date('m'))
+        ->whereYear('check_date', date('Y'));
+    }       
 
     public function absenceQuotas()
     {
@@ -325,5 +349,18 @@ class Employee extends Model
         return Attendance::where('personnel_no', $this->personnel_no)
             ->get()
             ->merge($absences);
-    }  
+    }
+
+    public function getCurrentPeriodPermitsAttribute()
+    {
+        $absences = Absence::where('personnel_no', $this->personnel_no)
+            ->excludeLeaves()
+            ->currentPeriod()
+            ->get();
+
+        return Attendance::where('personnel_no', $this->personnel_no)
+            ->currentPeriod()
+            ->get()
+            ->merge($absences);
+    }
 }
