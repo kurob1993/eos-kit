@@ -269,13 +269,15 @@ class Employee extends Model
         // menginisialisasi ulang atasan
         $this->bosses();
 
-        // mencari semua atasan
+        // mencari atasan struktural manager & atasan fungsional manager
         $s = $this->structDisp()->managerOf($this->personnel_no)->first();
+        $sf = $this->structDisp()->functionalManagerOf($this->personnel_no)->first();
+        $m = (is_null($s)) ? $sf : $s;
+        $manager = \App\Models\Employee::findByPersonnel($m->dirnik)->first();
 
         // mengembalikan Employee model
-        return ( is_null($s) || $this->isManager() ) ? 
-            [] : 
-            (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
+        return ( is_null($m) || $this->isManager() ) ? 
+            [] : $manager;
     }    
 
     public function generalManagerBoss()

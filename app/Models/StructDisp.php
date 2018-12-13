@@ -94,6 +94,17 @@ class StructDisp extends Model
           $query->where('esgrp', 'BS');
         });
     }
+
+    public function scopeFunctionalManagerOf($query, $p)
+    {
+      // struct mencari atasan manager
+      return $query
+        ->structOf($p)
+        ->whereHas('employeeBoss', function($query) {
+          $query->where('esgrp', 'BF');
+        });
+    }
+
     public function scopeGeneralManagerOf($query, $p)
     {
       // struct mencari atasan general manager
