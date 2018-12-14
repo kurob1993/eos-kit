@@ -10,7 +10,7 @@ class OrganizationController extends Controller
 
     public function index()
     {
-        $paginated = OrgText::lastOrg()->paginate();
+        $paginated = OrgText::lastOrg()->get();
 
         return $paginated;
     }
@@ -84,12 +84,12 @@ class OrganizationController extends Controller
 
     public function unitkerja($unitkerja, $date = null)
     {
-       return OrgText::lastUk($unitkerja, $date)->paginate();       
+       return OrgText::lastUk($unitkerja, $date)->get();       
     }
 
     public function unitkerjaUk($unitkerja)
     {
-       return OrgText::oldDiv($unitkerja)->paginate();       
+       return OrgText::oldDiv($unitkerja)->get();       
     }
 
 }
