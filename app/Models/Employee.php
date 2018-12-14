@@ -273,11 +273,14 @@ class Employee extends Model
         $s = $this->structDisp()->managerOf($this->personnel_no)->first();
         $sf = $this->structDisp()->functionalManagerOf($this->personnel_no)->first();
         $m = (is_null($s)) ? $sf : $s;
-        $manager = \App\Models\Employee::findByPersonnel($m->dirnik)->first();
 
         // mengembalikan Employee model
-        return ( is_null($m) || $this->isManager() ) ? 
-            [] : $manager;
+        if (is_null($m))
+            return [];
+        else if ($this->isManager()) {
+            $manager = \App\Models\Employee::findByPersonnel($m->dirnik)->first();
+            return $manager;
+        }
     }    
 
     public function generalManagerBoss()
