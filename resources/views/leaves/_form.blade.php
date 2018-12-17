@@ -104,7 +104,8 @@
     <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
       {!! Form::label('address', 'Alamat Selama Cuti') !!} 
       {!! Form::text('address', null, ['class'=>'form-control', 'placeholder'=>'Masukkan
-      alamat selama cuti', 'id'=>'address', 'data-parsley-required' => 'true']) !!}
+      alamat selama cuti', 'id'=>'address', 'data-parsley-required' => 'true',
+      'data-parsley-maxlength' => 100]) !!}
       {!! $errors->first('address', '
       <p class="help-block">:message</p>') !!}
     </div>

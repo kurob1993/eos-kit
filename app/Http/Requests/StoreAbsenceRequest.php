@@ -31,7 +31,7 @@ class StoreAbsenceRequest extends FormRequest
           'absence_type' => 'required',
           'deduction' => 'required',
           'note' => 'required|max:100',
-          'address' => 'required'
+          'address' => 'required|max:100'
         ];
     }
 }
