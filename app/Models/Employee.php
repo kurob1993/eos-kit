@@ -277,9 +277,8 @@ class Employee extends Model
         // mengembalikan Employee model
         if (is_null($m))
             return [];
-        else if ($this->isManager()) {
-            $manager = \App\Models\Employee::findByPersonnel($m->dirnik)->first();
-            return $manager;
+        else {
+            return \App\Models\Employee::findByPersonnel($m->dirnik)->first();
         }
     }    
 
