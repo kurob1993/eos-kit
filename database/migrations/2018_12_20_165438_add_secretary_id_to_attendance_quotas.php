@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTimeEventTypesTable extends Migration
+class AddSecretaryIdToAttendanceQuotas extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreateTimeEventTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('time_event_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('tet');
-            $table->string('description');
+        Schema::table('attendance_quotas', function (Blueprint $table) {
+            $table->unsignedInteger('secretary_id')->nullable();
         });
     }
 
@@ -27,6 +25,8 @@ class CreateTimeEventTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('time_event_types');
+        Schema::table('attendance_quotas', function (Blueprint $table) {
+            $table->dropColumn('secretary_id');
+        });
     }
 }

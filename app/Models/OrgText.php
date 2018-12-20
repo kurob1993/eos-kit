@@ -41,7 +41,7 @@ class OrgText extends Model
 
     }
 
-    public function scopeOldUk($query, $o)
+    public function scopeOldDiv($query, $o)
     {
         $query->where('Objectname', 'like', $o.'%')
               ->where('EndDate','<>', '9999-12-31');

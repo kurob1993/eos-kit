@@ -8,12 +8,49 @@ use Yajra\DataTables\Services\DataTable;
 class SecOvertimeDataTable extends DataTable
 {
 
-    protected $actions = ['print', 'excel', 'myCustomAction'];
-
     public function dataTable($query)
     {
+        $request = $this->request();
+
         return datatables($query)
-            ->addColumn('action', 'secovertime.action');
+            ->editColumn('id', function (Overtime $overtime){
+                return $overtime->plain_id;
+            })
+            ->editColumn('stage.description', function (Overtime $overtime) {
+                return '<span class="label label-' .$overtime->stage->class_description . '">' 
+                . $overtime->stage->description . '</span>';
+            })
+            ->editColumn('start_date', function (Overtime $overtime) {
+                return $overtime->formatted_start_date;
+            })
+            ->editColumn('end_date', function (Overtime $overtime) {
+                return $overtime->formatted_end_date;
+            })
+            ->editColumn('attendance_quota_approval', function (Overtime $overtime){
+                $approvals = $overtime->attendanceQuotaApproval;
+                $a = '';
+                foreach ($approvals as $approval)
+                    $a = $a . view('layouts._personnel-no-with-name', [
+                        'personnel_no' => $approval->regno,
+                        'employee_name' => $approval->employee->name
+                        ]) . '<br />';
+                return $a;
+            })
+            ->addColumn('duration', function(Overtime $overtime){
+                return $overtime->duration . ' menit';
+            })            
+            ->escapeColumns([])
+            ->filter(function ($query) use ($request) {
+                if ($request->has('stage_id')) {
+                    switch ($request->input('stage_id')) {
+                        case Stage::sentToSapStage()->id: $query->sentToSapOnly(); break;
+                        case Stage::waitingApprovalStage()->id: $query->waitingApprovalOnly(); break;
+                        case Stage::successStage()->id: $query->successOnly(); break;
+                        case Stage::failedStage()->id: $query->failedOnly(); break;
+                        case Stage::deniedStage()->id: $query->deniedOnly(); break;
+                    }
+                } 
+            }, true);
     }
 
     public function query(Overtime $model)
@@ -23,7 +60,7 @@ class SecOvertimeDataTable extends DataTable
             ->with([
                 'overtimeReason', 
                 'stage',
-                'user:personnel_no,name',
+                'employee:personnel_no,name',
                 'attendanceQuotaApproval'
                 ]
             );
@@ -38,17 +75,11 @@ class SecOvertimeDataTable extends DataTable
                     ->parameters($this->getBuilderParameters());
     }
 
-    public function myCustomAction()
-    {
-        return 'hello add action';
-    }
-
     public function getBuilderParameters()
     {
         return [
-            'dom' => 'Bfrtip',
+            'dom' => 'frtip',
             'pageLength' => 50,
-            'buttons'      => ['print', 'excel', 'myCustomAction'],
             'responsive' => true,
             "language" => [
                 'processing' => '<i class="fa fa-spinner fa-spin fa-fw"></i><span class="sr-only">Loading...</span> '
@@ -73,8 +104,8 @@ class SecOvertimeDataTable extends DataTable
                 'orderable' => false,
             ],
             [ 
-                'data' => 'user.name', 
-                'name' => 'user.name', 
+                'data' => 'employee.name', 
+                'name' => 'employee.name', 
                 'title' => 'Nama',
                 'orderable' => false,
             ],

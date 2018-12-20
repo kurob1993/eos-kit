@@ -21,6 +21,7 @@ Route::group(['prefix' => 'structdisp', 'middleware' => 'api'], function() {
     Route::get('/', 'StructDispController@index');
     Route::get('{empnik}', 'StructDispController@show');
     Route::get('{empnik}/subordinates', 'StructDispController@subordinates');
+    Route::get('{empnik}/foremanAndOperatorSubordinates', 'StructDispController@foremanAndOperatorSubordinates');
     Route::get('{empnik}/bosses', 'StructDispController@bosses');
     Route::get('{empnik}/closestBoss', 'StructDispController@closestBoss');
     Route::get('{empnik}/minSuperintendentBoss', 'StructDispController@minSuperintendentBoss');
@@ -44,6 +45,6 @@ Route::group(['prefix' => 'position', 'middleware' => 'api'], function() {
 Route::group(['prefix' => 'organization', 'middleware' => 'api'], function() {
     Route::get('/', 'OrganizationController@index');
     Route::get('ObjectID/{ObjectID}/{date?}', 'OrganizationController@show');
-    Route::get('level/{unitkerja}/{date?}', 'OrganizationController@unitkerja');
-    Route::get('old/{unitkerjaold}/{date?}', 'OrganizationController@unitkerjaold');
+    Route::get('level/{unitkerja?}/{date?}', 'OrganizationController@unitkerja');
+    Route::get('old/{unitkerjaold?}/{date?}', 'OrganizationController@unitkerjaold');
 });

@@ -2,26 +2,30 @@
 
 namespace App\Observers;
 
+use Session;
+use Illuminate\Support\Facades\Auth;
 use App\Models\AttendanceQuota;
 use App\Models\AttendanceQuotaApproval;
 use App\Models\AttendanceQuotaQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
+use App\Models\Employee;
 use App\Notifications\OvertimeSentToSapMessage;
 use App\Notifications\OvertimeDeletedMessage;
 use App\Role;
 use App\User;
-use Illuminate\Support\Facades\Auth;
-use Session;
 
 class AttendanceQuotaObserver
 {
     public function creating(AttendanceQuota $attendanceQuota)
     {
+        $personnel_no = (Auth::guard('secr')->check()) ? 
+            $attendanceQuota->personnel_no : Auth::user()->personnel_no;
+
         // apakah tanggal lembur sudah pernah dilakukan sebelumnya (intersection)
         // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
         // JIKA DENIED tidak termasuk intersected
-        $intersected = AttendanceQuota::where('personnel_no', Auth::user()->personnel_no)
+        $intersected = AttendanceQuota::where('personnel_no', $personnel_no)
             ->intersectWith($attendanceQuota->start_date, $attendanceQuota->end_date)
             ->first();
 
@@ -38,8 +42,11 @@ class AttendanceQuotaObserver
 
     public function created(AttendanceQuota $attendanceQuota)
     {
+        $personnel_no = (Auth::guard('secr')->check()) ? 
+            $attendanceQuota->personnel_no : Auth::user()->personnel_no;
+
         // karyawan yang membuat attendanceQuota
-        $employee = Auth::user()->employee()->first();
+        $employee = Employee::find($personnel_no);
 
         // mendapatkan flow_id untuk attendanceQuotas dari file config
         // mencari sequence pertama dari flow_id diatas
@@ -54,9 +61,14 @@ class AttendanceQuotaObserver
         $attendanceQuota->save();
 
         // mencari atasan & direktur dari karyawan yang mengajukan attendanceQuotas
-        $a = $employee->minSuperintendentBoss()->personnel_no;
-        $b = $employee->minManagerBoss()->personnel_no;
-        $c = $employee->generalManagerBoss()->personnel_no;
+        $a = ( $employee->minSuperintendentBoss() ) 
+            ? $employee->minSuperintendentBoss()->personnel_no : 0;
+        
+        $b = ( $employee->minManagerBoss() )
+            ? $employee->minManagerBoss()->personnel_no : 0;
+        
+        $c = ($employee->generalManagerBoss() )
+            ? $employee->generalManagerBoss()->personnel_no : 0;
 
         /***********************************************************************
         * Membuat record AttendanceQuotaApproval (aqa) dari skenario:

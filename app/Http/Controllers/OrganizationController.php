@@ -82,12 +82,12 @@ class OrganizationController extends Controller
         //
     }
 
-    public function unitkerja($unitkerja, $date = null)
+    public function unitkerja($unitkerja = null, $date = null)
     {
        return OrgText::lastUk($unitkerja, $date)->get();       
     }
 
-    public function unitkerjaUk($unitkerja)
+    public function unitkerjaold($unitkerja = null)
     {
        return OrgText::oldDiv($unitkerja)->get();       
     }

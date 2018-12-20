@@ -1,6 +1,6 @@
 <!DOCTYPE html> 
 <html> 
-<head> <title>Silahkan Login ke SSO</title> 
+<head> <title>403 Forbidden.</title> 
 <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css"> 
 
 <style> 
@@ -38,7 +38,7 @@
 <body> 
     <div class="container"> 
         <div class="content"> 
-            <div class="title">Silahkan login melalui SSO</div> 
+            <div class="title">403 Forbidden.</div> 
             <h5>Silahkan kembali ke <a href="http://sso.krakatausteel.com">SSO</a></h5>
         </div> 
     </div> 

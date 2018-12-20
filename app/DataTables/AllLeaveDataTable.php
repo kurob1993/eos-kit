@@ -57,8 +57,12 @@ class AllLeaveDataTable extends DataTable
                         'model' => $absence,
                         'integrate_url' => route('personnel_service.integrate', [
                             'id' => $absence->id, 'approval' => 'absence' ] ),
+
                         'confirm_url' => route('personnel_service.confirm', [
-                            'id' => $absence->id, 'approval' => 'absence' ] )
+                            'id' => $absence->id, 'approval' => 'absence' ] ),
+
+                        'delete_url' => route('personnel_service.delete', [
+                                'id' => $absence->id, 'approval' => 'absence' ] )
                     ]);
                 } else if ($absence->is_failed) {
                     // apakah stage-nya: failed

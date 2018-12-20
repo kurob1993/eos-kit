@@ -28,7 +28,7 @@ Route::get('a/{personnel_no}/{email}', 'Auth\LoginController@programaticallyEmpl
     ->name('login.a');
 
 // route for programatically secretary login to system
-Route::get('b/{cost_center}/{email}', 'Auth\LoginController@programaticallySecretaryLogin')
+Route::get('b/{email}', 'Auth\LoginController@programaticallySecretaryLogin')
     ->name('login.b');
 
 // route untuk user yang belum di set Role-nya
@@ -110,7 +110,7 @@ Route::group([
         ->name('personnel_service.integrate');
     Route::post('confirm/{approval}/{id}', 'PersonnelServiceController@confirm')
         ->name('personnel_service.confirm');
-        Route::post('delete/{approval}/{id}', 'PersonnelServiceController@delete')
+    Route::post('delete/{approval}/{id}', 'PersonnelServiceController@delete')
         ->name('personnel_service.delete');
 
     // route untuk manage daftar semua cuti
@@ -146,25 +146,24 @@ Route::group([
 // route untuk role secretary
 Route::group([
     'prefix' => 'secretary',
-    'middleware' => ['auth', 'role:secretary']], function (){
+    'middleware' => ['auth:secr', 'role:secretary']], function (){
 
     Route::get('', 'SecretaryController@index')
         ->name('secretary.index');
 
-    // route untuk leave
-    Route::get('leaves', 'SecretaryController@leave')
-        ->name('secretary.leaves.index');
-    // route untuk permit
-    Route::get('permits', 'SecretaryController@permit')
-        ->name('secretary.permits.index');
-    // route untuk time_event
-    Route::get('time_events', 'SecretaryController@time_event')
-        ->name('secretary.time_events.index');
     // route untuk overtime
     Route::get('overtimes', 'SecretaryController@overtime')
         ->name('secretary.overtimes.index');
     Route::get('overtimes/create', 'SecretaryController@createOvertime')
         ->name('secretary.overtimes.create');
+    Route::post('overtimes', 'SecretaryController@storeOvertime')
+        ->name('secretary.overtimes.store');
+
+        // route untuk travel
+    Route::get('travels', 'SecretaryController@travel')
+        ->name('secretary.travels.index');
+    Route::get('travels/create', 'SecretaryController@createTravel')
+        ->name('secretary.travels.create');
 });
 
 Route::get('/soap', 'SoapController@show');

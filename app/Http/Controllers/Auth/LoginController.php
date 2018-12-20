@@ -13,6 +13,7 @@ use App\User;
 use App\Role;
 use App\Models\StructDisp;
 use App\Models\Employee;
+use App\Models\Secretary;
 
 class LoginController extends Controller
 {
@@ -48,6 +49,14 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
     
+    public function redirectTo()
+    {
+        if (Auth::guard('secr')->check()) {
+            return '/secretary';
+        } else 
+            return '/';
+    }
+
     public function logout(Request $request)
     {
         // do the normal logout
@@ -111,8 +120,22 @@ class LoginController extends Controller
         return $this->sendLoginResponse($request);
     }
 
-    public function programaticallySecretaryLogin(Request $request, $cost_center, $email)
+    public function programaticallySecretaryLogin(Request $request, $email)
     {
+        $email = base64_decode($email);
 
+        try {
+            // find all the details
+            $user = Secretary::where('email', $email)->firstOrFail();
+
+        } catch (ModelNotFoundException $e) {
+            
+            return 'Secretary not found!';
+        }
+
+        // Programmatically login user
+        Auth::guard('secr')->login($user);
+
+        return $this->sendLoginResponse($request);
     }
 }

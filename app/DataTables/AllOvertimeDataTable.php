@@ -96,7 +96,7 @@ class AllOvertimeDataTable extends DataTable
             ->with([
                 'overtimeReason', 
                 'stage',
-                'user:personnel_no,name',
+                'employee:personnel_no,name',
                 'attendanceQuotaApproval'
                 ]
             );
@@ -155,8 +155,8 @@ class AllOvertimeDataTable extends DataTable
                 'orderable' => false,
             ],
             [ 
-                'data' => 'user.name', 
-                'name' => 'user.name', 
+                'data' => 'employee.name', 
+                'name' => 'employee.name', 
                 'title' => 'Nama',
                 'orderable' => false,
             ],

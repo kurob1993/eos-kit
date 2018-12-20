@@ -45,6 +45,11 @@ return [
             'driver' => 'token',
             'provider' => 'users',
         ],
+
+        'secr' => [
+            'driver' => 'session',
+            'provider' => 'secretaries'
+        ],
     ],
 
     /*
@@ -68,6 +73,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\User::class,
+        ],
+
+        'secretaries' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Secretary::class,
         ],
 
         // 'users' => [

@@ -33,6 +33,12 @@ class User extends Authenticatable
     return $this->hasMany('App\Models\AbsenceQuota', 'personnel_no', 'personnel_no');
   }
 
+  public function attendanceQuotas()
+  {
+    // one-to-many relationship dengan AttendanceQuota
+    return $this->hasMany('App\Models\AttendanceQuota', 'personnel_no', 'personnel_no');
+  }
+
   public function absenceApprovals()
   {
     // one-to-many relationship dengan AbsenceApproval

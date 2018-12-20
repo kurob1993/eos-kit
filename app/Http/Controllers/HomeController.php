@@ -21,12 +21,11 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
     }
 
     public function noRole()
     {
-        return view('layouts.no-role');
+        return view('errors.403');
     }
 
     public function index(Request $request, Builder $htmlBuilder)

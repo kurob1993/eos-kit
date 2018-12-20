@@ -66,6 +66,12 @@ class StructDisp extends Model
       // struct mencari bawahan-bawahan
       return $query->where('dirnik', $p)->where('no', '<>', '1');
     }
+
+    public function scopeForemanAndOperatorSubordinatesOf($query, $p)
+    {
+      return $query->subordinatesOf($p)
+        ->whereIn('emppersk', ['ES', 'EF', 'F']);
+    }
     
     public function scopeSubgroupStructOf($query, $s)
     {

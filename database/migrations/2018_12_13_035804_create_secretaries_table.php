@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateModelsMessagesTable extends Migration
+class CreateSecretariesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreateModelsMessagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('secretaries', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('from', FALSE, TRUE);
-            $table->integer('to', FALSE, TRUE);
-            $table->text('message');
+            $table->string('name');
+            $table->string('organization');
+            $table->string('email')->unique();
+            $table->unsignedInteger('boss', 10);
+            $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -29,6 +32,6 @@ class CreateModelsMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('models_messages');
+        Schema::dropIfExists('secretaries');
     }
 }

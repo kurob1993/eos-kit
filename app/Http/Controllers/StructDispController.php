@@ -53,6 +53,17 @@ class StructDispController extends Controller
             return [];
     }
 
+    public function foremanAndOperatorSubordinates($empnik)
+    {
+        // mencari seluruh semua bawahan
+        $employee = $this->findByPersonnel($empnik);
+
+        if (!is_null($employee))
+            return $employee->foremanAndOperatorSubordinates();
+        else
+            return [];
+    }
+
     public function bosses($empnik)
     {
         // mencari seluruh atasan

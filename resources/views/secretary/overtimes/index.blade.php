@@ -5,18 +5,11 @@
 @component('layouts.secretary._page-container', ['page_header' => 'Lembur Karyawan'])
 <div class="panel panel-prussian">
     <div class="panel-heading">
-        <div class="btn-group pull-right" data-toggle="buttons">
-            <label class="btn btn-warning btn-xs">
-                <input name="options" id="option1" checked="" type="radio"> Send to SAP
-            </label>
-            <label class="btn btn-success btn-xs active">
-                <input name="options" id="option2" type="radio"> <i class="fa fa-star"></i>
-            </label>
-        </div>
-        <h4 class="panel-title">Pengajuan Lembur Seluruh Karyawan</h4>
+        <h4 class="panel-title">Pengajuan Lembur Karyawan</h4>
     </div>
   @include('layouts._flash')
   <div class="panel-body">
+      <p> <a class="btn btn-primary" href="{{ route('secretary.overtimes.create') }}">Tambah</a> </p>
     <div class="table-responsive">
       {!! $dataTable->table(['class'=>'table table-striped display nowrap', 'width' => '100%']) !!}
     </div>
@@ -44,14 +37,12 @@
 <script src={{ url("/plugins/DataTables/Buttons/js/dataTables.buttons.min.js") }}></script>
 <script src={{ url("/plugins/DataTables/Buttons/js/buttons.bootstrap.min.js") }}></script>
 <script src={{ url("/vendor/datatables/buttons.server-side.js") }}></script>
+@endpush
+
+@push('custom-scripts')
 <!-- Generated scripts from DataTables -->
 {!! $dataTable->scripts() !!}
 @endpush
 
-@push('custom-scripts')
-@include('scripts._button-submit-script')
-@endpush
-
 @push('on-ready-scripts')
-ButtonSubmitPlugins.init(); 
 @endpush

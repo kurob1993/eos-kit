@@ -9,10 +9,9 @@
                             <img class="img-circle" src={{ Storage::url( 'default.png' ) }}> 
                         </div>
                         <div class="nav-profile-info">
-                            <small>{{ $secretary['personnel_no'] }}</small>
-                            <h5>{{ $secretary['name'] }}</h5>
+                            <h6>Sekretaris</h6>
+                            <h6>{{ $secretary['name'] }}</h6>
                             <h6 class="m-b-5">{{ $secretary['email'] }}</h6>
-                            <h6>Nama divisi disini</h6>
                         </div>
                     </li>
                 </ul>
@@ -24,9 +23,7 @@
     
                 @role('secretary')
                 <li class="has-sub"{{ 
-                    (  (Request::segment(1) == 'leaves') 
-                    || (Request::segment(1) == 'permits') 
-                    || (Request::segment(1) == 'time_events') 
+                    ( (Request::segment(1) == 'travels')
                     || (Request::segment(1) == 'overtimes')
                     )  ? 'active' : '' 
                     }}>
@@ -36,9 +33,7 @@
                             <span>Time Management</span>
                         </a>
                     <ul class="sub-menu">
-                        <li> <a href="{{ route('secretary.leaves.index') }}">Cuti</a> </li>
-                        <li> <a href="{{ route('secretary.permits.index') }}">Izin</a> </li>
-                        <li> <a href="{{ route('secretary.time_events.index') }}">Tidak Slash</a> </li>
+                        <li> <a href="{{ route('secretary.travels.index') }}">Perjalanan Dinas</a> </li>
                         <li> <a href="{{ route('secretary.overtimes.index') }}">Lembur</a> </li>
                     </ul>
                 </li>

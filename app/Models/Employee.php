@@ -16,6 +16,12 @@ class Employee extends Model
         return $this->belongsTo('App\User', 'personnel_no', 'personnel_no');
     }
 
+    public function attendanceQuotas()
+    {
+      // one-to-many relationship dengan AttendanceQuota
+      return $this->hasMany('App\Models\AttendanceQuota', 'personnel_no', 'personnel_no');
+    }
+
     public function absences()
     {
       // one-to-many relationship dengan Absence
@@ -212,6 +218,21 @@ class Employee extends Model
     {
         // mencari semua bawahan-bawahan
         $structs = \App\Models\StructDisp::subordinatesOf($this->personnel_no)->get();
+
+        // mengiterasi bawahan-bawahan dan membuat collection baru
+        $subordinates = $structs->map(function ($item, $key) {
+            // membuat & mengembalikan Employee masing-masing bawahan
+            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+        });
+
+        // mengembalikan collection of Employee
+        return $subordinates;
+    }
+
+    public function foremanAndOperatorSubordinates()
+    {
+        // mencari semua bawahan-bawahan
+        $structs = \App\Models\StructDisp::foremanAndOperatorSubordinatesOf($this->personnel_no)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {

@@ -13,7 +13,7 @@ class DebugController extends Controller
 {
     public function debug()
     {
-        dd(Auth::user()->toArray());
+        dd(Auth::guard('secr')->user()->toArray());
         // $encrypted = Crypt::encryptString('11725');
         // dd($encrypted);
 
