@@ -107,7 +107,7 @@ class AttendanceQuotaApprovalObserver
                     "level" => "danger",
                     "message" => "Tidak dapat melakukan persetujuan karena data persetujuan "
                     . "pada proses sebelumnya belum diselesaikan. "
-                    . $firstApproval->user->personnelNoWithName,
+                    . $firstApproval->employee->personnelNoWithName,
                 ]);
                 // batalkan persetujuan
                 return false;

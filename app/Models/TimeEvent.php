@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Stage;
 use App\Traits\ReceiveStage;
+use App\Traits\OfLoggedUser;
 
 class TimeEvent extends Model
 {
-    use ReceiveStage;
+    use ReceiveStage, OfLoggedUser;
 
     public $fillable = [
         'personnel_no',
@@ -32,6 +33,13 @@ class TimeEvent extends Model
     public static $rules = [
         
     ];
+
+    protected $periodDateFormat = 'd.m.Y';
+
+    public function getFormattedCheckDateAttribute()
+    {
+        return $this->check_date->format($this->periodDateFormat);
+    }
 
     public function user()
     {
@@ -73,10 +81,5 @@ class TimeEvent extends Model
     public function getPlainIdAttribute()
     {
         return 'time_event-' . $this->id;
-    }
-
-    public function getFormattedCheckDateAttribute()
-    {
-        return $this->check_date->format('d.m.Y');
     }
 }

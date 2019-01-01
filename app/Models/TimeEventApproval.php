@@ -5,11 +5,11 @@ namespace App\Models;
 use Eloquent as Model;
 use App\Traits\ReceiveStatus;
 use App\Traits\ParentStage;
+use App\Traits\OfLoggedUserApproval;
 
 class TimeEventApproval extends Model
 {
-    use ReceiveStatus;
-    use ParentStage;
+    use ReceiveStatus, ParentStage, OfLoggedUserApproval;
 
     public $fillable = [
         'time_event_id',

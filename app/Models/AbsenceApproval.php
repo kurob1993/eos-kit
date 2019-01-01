@@ -5,12 +5,12 @@ namespace App\Models;
 use Eloquent as Model;
 use App\Traits\ReceiveStatus;
 use App\Traits\ParentStage;
+use App\Traits\OfLoggedUserApproval;
 
 class AbsenceApproval extends Model
 {
-    use ReceiveStatus;
-    use ParentStage;
-
+    use ReceiveStatus, ParentStage, OfLoggedUserApproval;
+    
     public $fillable = [ 'absence_id', 'regno', 'sequence', 'status_id', 'text' ];
 
     protected $casts = [

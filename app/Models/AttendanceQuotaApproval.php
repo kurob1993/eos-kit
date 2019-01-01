@@ -5,11 +5,12 @@ namespace App\Models;
 use Eloquent as Model;
 use App\Traits\ReceiveStatus;
 use App\Traits\ParentStage;
+use App\Traits\OfLoggedUserApproval;
+use App\Traits\FormatDates;
 
 class AttendanceQuotaApproval extends Model
 {
-    use ReceiveStatus;
-    use ParentStage;
+    use ReceiveStatus, ParentStage, OfLoggedUserApproval, FormatDates;
 
     public $fillable = [ 'attendance_quota_id', 'regno', 'sequence', 'status_id', 'text' ];
 

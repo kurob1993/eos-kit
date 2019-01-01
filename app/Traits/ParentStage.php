@@ -13,4 +13,12 @@ trait ParentStage
             $query->where('stage_id', $s);
         });
     }
+
+    public function scopeWhereStageIsWaitingApproval($query, $r)
+    {
+        // Querying Relationship Existence
+        return $query->whereHas($r, function ($query) {
+            $query->waitingApprovalOnly();
+        });        
+    }
 }

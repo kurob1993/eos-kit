@@ -22,7 +22,7 @@ class AbsenceObserver
         if ($absence->isALeave) {
             // ambil kuota cuti berdasarkan tanggal mulai & berakhir cuti
             $absence_quota = AbsenceQuota::activeAbsenceQuotaOf(
-                Auth::user()->personnel_no, $absence->start_date, $absence->end_date)
+                $absence->personnel_no, $absence->start_date, $absence->end_date)
                 ->first();
     
             // apakah sisa cuti (balance)  kurang dari pengajuan (deduction)?
@@ -42,7 +42,7 @@ class AbsenceObserver
         // apakah tanggal absence sudah pernah dilakukan sebelumnya (intersection)
         // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
         // JIKA DENIED tidak termasuk intersected
-        $intersected = Absence::where('personnel_no', Auth::user()->personnel_no)
+        $intersected = Absence::where('personnel_no', $absence->personnel_no)
             ->intersectWith($absence->start_date, $absence->end_date)
             ->first();
             
@@ -60,12 +60,12 @@ class AbsenceObserver
     public function created(Absence $absence)
     {
         // karyawan yang membuat absence
-        $employee = Auth::user()->employee()->first();
+        $employee = $absence->employee()->first();
 
         if ($absence->isALeave) {
             // mendapatkan absence_type_id dari kuota cuti yang digunakan
             $absence_type_id = AbsenceQuota::activeAbsenceQuotaOf(
-                Auth::user()
+                $absence
                     ->personnel_no, $absence->start_date, $absence->end_date)
                     ->first()
                     ->absence_type_id;

@@ -8,6 +8,7 @@ use App\Models\AbsenceApproval;
 use App\Models\AbsenceQuota;
 use App\Models\Absence;
 use App\Models\Stage;
+use App\Models\Employee;
 use App\Message;
 
 class AbsenceApprovalObserver
@@ -24,7 +25,9 @@ class AbsenceApprovalObserver
       $from = $absenceApproval->user()->first();
       
       // to adalah karyawan yang mengajukan
-      $to = $absence->user()->first();      
+      $to = Employee::findByPersonnel($absence->personnel_no)
+        ->first()
+        ->user;
 
       // menyimpan catatan pengiriman pesan
       $message = new Message;

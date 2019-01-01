@@ -18,7 +18,7 @@ class LeaveController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
+        $absences = Absence::ofLoggedUser()
             ->LeavesOnly()
             ->with(['absenceType', 'stage'])
             ->get();

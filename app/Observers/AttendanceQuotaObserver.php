@@ -19,8 +19,7 @@ class AttendanceQuotaObserver
 {
     public function creating(AttendanceQuota $attendanceQuota)
     {
-        $personnel_no = (Auth::guard('secr')->check()) ? 
-            $attendanceQuota->personnel_no : Auth::user()->personnel_no;
+        $personnel_no = $attendanceQuota->personnel_no;
 
         // apakah tanggal lembur sudah pernah dilakukan sebelumnya (intersection)
         // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
@@ -42,8 +41,7 @@ class AttendanceQuotaObserver
 
     public function created(AttendanceQuota $attendanceQuota)
     {
-        $personnel_no = (Auth::guard('secr')->check()) ? 
-            $attendanceQuota->personnel_no : Auth::user()->personnel_no;
+        $personnel_no = $attendanceQuota->personnel_no;
 
         // karyawan yang membuat attendanceQuota
         $employee = Employee::find($personnel_no);

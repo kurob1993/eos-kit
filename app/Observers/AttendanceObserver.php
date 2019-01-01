@@ -21,7 +21,7 @@ class AttendanceObserver
         // apakah tanggal izin sudah pernah dilakukan sebelumnya (intersection)
         // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
         // JIKA DENIED tidak termasuk intersected
-        $intersected = Attendance::where('personnel_no', Auth::user()->personnel_no)
+        $intersected = Attendance::where('personnel_no', $attendance->personnel_no)
             ->intersectWith($attendance->start_date, $attendance->end_date)
             ->first();
 
@@ -39,7 +39,7 @@ class AttendanceObserver
     public function created(Attendance $attendance)
     {
         // karyawan yang membuat attendance
-        $employee = Auth::user()->employee()->first();
+        $employee = $attendance->employee;
 
         // mendapatkan flow_id untuk attendances dari file config
         // mencari sequence pertama dari flow_id diatas

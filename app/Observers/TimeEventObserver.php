@@ -19,7 +19,7 @@ class TimeEventObserver
     public function creating(TimeEvent $timeEvent)
     {
         // mencari pengajuan TimeEvent pada tanggal yang sama
-        $intersected = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
+        $intersected = TimeEvent::where('personnel_no', $timeEvent->personnel_no)
             ->where('check_date', $timeEvent->check_date)
             ->with(['timeEventType'])
             ->first();
@@ -44,7 +44,7 @@ class TimeEventObserver
     public function created(TimeEvent $timeEvent)
     {
         // karyawan yang membuat time_event
-        $employee = Auth::user()->employee()->first();
+        $employee = $timeEvent->employee;
 
         // mendapatkan flow_id untuk time_events dari file config
         // mencari sequence pertama dari flow_id diatas
