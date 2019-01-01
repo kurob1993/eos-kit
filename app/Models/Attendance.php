@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Stage;
 use App\Traits\PeriodDates;
 use App\Traits\ReceiveStage;
-
+use App\Traits\OfLoggedUser;
 
 class Attendance extends Model
 {
-    use PeriodDates, ReceiveStage;
+    use PeriodDates, ReceiveStage, OfLoggedUser;
 
     public $fillable = [
         'personnel_no',

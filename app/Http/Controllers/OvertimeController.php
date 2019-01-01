@@ -20,7 +20,7 @@ class OvertimeController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $overtimes = AttendanceQuota::where('personnel_no', Auth::user()->personnel_no)
+        $overtimes = AttendanceQuota::ofLoggedUser()
             ->with(['overtimeReason', 'stage'])
             ->get();
 

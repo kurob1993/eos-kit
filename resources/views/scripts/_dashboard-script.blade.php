@@ -29,19 +29,45 @@
         });
     }),
     (handleSelectFilterDashboard = function () {
-        function createSelectFilterHtml(tableId) {
-            var selectHtml = '<form method="post" data-tablename='+ tableId +' id="form-' + tableId + '"> ' +
-                '<select id="filter-' + tableId + '" data-tablename="'+ tableId +'" class="form-control"> ' +
-                '<option value="all" selected>All</option>' +
+        // membuat filter dan tombol approve & deny all
+        function createSelectFilterHtml(tableId, approval) {
+            var selectHtml = 
+                '<div class="col-md-6 col-xs-12 m-b-10">'
+                + '<div class="col-xs-6">'
+                + '<form data-confirm="Yakin menyetujui semua?" class="js-confirm" method="post" action="{{ route('dashboards.approve_all') }}">'
+                + '{{ @csrf_field() }}'
+                + '<input type="hidden" name="approval" value="' + approval + '">'
+                + '<button class="btn btn-primary btn-block">'
+                + '<i class="fa fa-check" aria-hidden="true"></i>&nbsp;Setujui semua</a>'
+                + '</button>'
+                + '</form>'
+                + '</div>'
+                + '<div class="col-xs-6">'
+                {{-- + '<form data-confirm="Yakin menolak semua?" class="js-confirm" method="post" action="{{ route('dashboards.reject_all') }}">'
+                + '{{ @csrf_field() }}'
+                + '<input type="hidden" name="approval" value="' + approval + '">'
+                + '<button class="btn btn-danger btn-block">'
+                + '<i class="fa fa-ban" aria-hidden="true"></i>&nbsp;Tolak semua</a>'
+                + '</button>'
+                + '</form>' --}}
+                + '</div>'
+                + '</div>'
+                + '<div class="col-md-6 col-xs-12">'
+                +' <form method="post" data-tablename='+ tableId +' id="form-' + tableId + '"> ' 
+                + '<select id="filter-' + tableId + '" data-tablename="'+ tableId +'" class="form-control"> ' 
+                + '<option value="all" selected>All</option>'
                 @foreach($stages as $stage)
-                '<option value="{{ $stage->id }}">{{ $stage->description }}</option>' +
+                + '<option value="{{ $stage->id }}">{{ $stage->description }}</option>'
                 @endforeach
-                '</select>';
+                + '</select></form>'
+                + '</div>';
+            // mengisi div.toolbar
             $('#' + tableId).prev().html(selectHtml);
         }
+
+        // menyimpan select filter di local storage
         @foreach($tableNames as $t)
-        createSelectFilterHtml('{{ $t }}');
-        localStorage.setItem('state-{{ $t }}', 'all');
+        createSelectFilterHtml('{{ $t['tableName'] }}', '{{ $t['approval'] }}');
         @endforeach
 
         // registrasi change handler untuk select-filter
@@ -61,6 +87,7 @@
             e.preventDefault();
         });
 
+        // function mencari local storage berdasarkan string atau regex
         function findLocalItems (query) {
             var i, results = [];
             for (i in localStorage) {

@@ -22,12 +22,12 @@ class PermitController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data izin dari attendances (elr) pada column alias
-        $attendances = Attendance::where('personnel_no', Auth::user()->personnel_no)
+        $attendances = Attendance::ofLoggedUser()
             ->with(['permitType', 'stage', 'permitApprovals'])
             ->get();
 
         // ambil data izin dari absences (elr) (kecuali 0100 & 0200) pada column alias
-        $absences = Absence::where('personnel_no', Auth::user()->personnel_no)
+        $absences = Absence::ofLoggedUser()
             ->excludeLeaves()
             ->with(['permitType', 'stage', 'permitApprovals'])
             ->get();

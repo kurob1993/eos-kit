@@ -50,9 +50,9 @@ Route::group([
         ->name('dashboards.approve');
     Route::post('reject/{approval}/{id}', 'HomeController@reject')
         ->name('dashboards.reject');
-    Route::post('approve_all/{approval}', 'HomeController@approveAll')
+    Route::post('approve_all', 'HomeController@approveAll')
         ->name('dashboards.approve_all');
-    Route::post('reject_all/{approval}', 'HomeController@rejectAll')
+    Route::post('reject_all', 'HomeController@rejectAll')
         ->name('dashboards.reject_all');
 
     // route untuk datatables masing-masing persetujuan
@@ -64,16 +64,6 @@ Route::group([
         ->name('dashboards.overtime_approval');
     Route::get('time_event_approval', 'HomeController@timeEventApproval')
         ->name('dashboards.time_event_approval');
-
-    // route untuk summary modal masing-masing persetujuan
-    Route::get('detail/leave/{id}', 'HomeController@leaveSummary')
-        ->name('dashboards.leave_summary');
-    Route::get('detail/time_event/{id}', 'HomeController@timeEventSummary')
-        ->name('dashboards.time_event_summary');
-    Route::get('detail/overtime/{id}', 'HomeController@overtimeSummary')
-        ->name('dashboards.overtime_summary');
-    Route::get('detail/permit/{approval}/{id}', 'HomeController@permitSummary')
-        ->name('dashboards.permit_summary');
 
     // route untuk leave
     Route::resource('leaves', 'LeaveController', ['except' => [

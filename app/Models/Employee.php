@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class Employee extends Model
 {
@@ -20,6 +21,12 @@ class Employee extends Model
     {
       // one-to-many relationship dengan AttendanceQuota
       return $this->hasMany('App\Models\AttendanceQuota', 'personnel_no', 'personnel_no');
+    }
+
+    public function attendances()
+    {
+        // one-to-many relationship dengan Attendance
+        return $this->hasMany('App\Models\Attendance', 'personnel_no', 'personnel_no');
     }
 
     public function absences()
@@ -130,6 +137,17 @@ class Employee extends Model
             $employee->position_name = $struct->emppostx;
             $employee->org_unit_name = $struct->emportx;
             $employee->save();
+
+            $user = \App\User::where('personnel_no', $p)->first();
+
+            if ( is_null($user) ) {
+                $user = new \App\User();
+                $user->personnel_no = $employee->personnel_no;
+                $user->name = $employee->name;
+                $user->email = Hash::make(str_random());
+                $user->password = Hash::make(str_random());
+                $user->save();
+            }
         }
 
         // kembalikan data Employee berdasarkan pencarian (terbaru)

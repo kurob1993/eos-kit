@@ -36,7 +36,7 @@
                     @endif
                 </a>
             </li>
-            {{-- <li class="">
+            <li class="">
                 <a href="#tab-overtimes" data-toggle="tab" aria-expanded="true"> Lembur
                     @if ($countOvertimeApprovals > 0)
                     <span class="badge pull-right m-l-5">
@@ -44,7 +44,7 @@
                     </span>
                     @endif
                 </a>
-            </li> --}}
+            </li>
         </ul>
         <!-- end of dashboard nav-tabs  -->
 
@@ -54,12 +54,8 @@
             <div class="tab-pane fade active in" id="tab-leaves">
                 <div class="panel-body p-0">
                     <p>
-                        {{-- <a class="btn btn-primary" href="{{ route('dashboards.approve_all', ['approval' => 'leaves']) }}">
-                            Setujui Semua
-                        </a>
-                        <a class="btn btn-danger" href="{{ route('dashboards.reject_all', ['approval' => 'leaves']) }}">
-                            Tolak Semua
-                        </a> --}}
+                        {{-- <a class="btn btn-primary" href="{{ route('dashboards.approve_all', ['approval' => 'leaves']) }}"> Setujui Semua </a>
+                        <a class="btn btn-danger" href="{{ route('dashboards.reject_all', ['approval' => 'leaves']) }}"> Tolak Semua </a> --}}
                     </p>
                     <div id="leave-chart" class="m-t-5 m-b-5">Fusionchart for leaves will be rendered here.</div>
                     <div class="table-responsive">
@@ -152,12 +148,10 @@
 @push('custom-scripts')
 @include('scripts._defer-ajax-dt-script')
 @include('scripts._dashboard-script', [ 'stages' => $stages, 'tableNames' => $tableNames ])
-@include('layouts._modal-detail-script')
 @include('scripts._save-tab-state-script')
 @endpush
 
 @push('on-ready-scripts')
 DashboardPlugins.init();
-ModalDetailPlugins.init();
 TabStatePlugins.init();
 @endpush

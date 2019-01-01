@@ -19,7 +19,7 @@ class TimeEventController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data tidak slash dari timeEvents untuk user tersebut
-        $timeEvents = TimeEvent::where('personnel_no', Auth::user()->personnel_no)
+        $timeEvents = TimeEvent::ofLoggedUser()
             ->with(['timeEventType', 'stage'])
             ->get();
 
