@@ -65,19 +65,12 @@ class AbsenceObserver
         if ($absence->isALeave) {
             // mendapatkan absence_type_id dari kuota cuti yang digunakan
             $absence_type_id = AbsenceQuota::activeAbsenceQuotaOf(
-<<<<<<< HEAD
                 $absence->personnel_no, 
                 $absence->start_date, 
                 $absence->end_date
             )
             ->first()
             ->absence_type_id;
-=======
-                $absence
-                    ->personnel_no, $absence->start_date, $absence->end_date)
-                    ->first()
-                    ->absence_type_id;
->>>>>>> e01f7d97fc9559049ba26d52d80726bd0b18c552
     
             // mengisi absence type dari server bukan dari request
             $absence->absence_type_id = $absence_type_id;
