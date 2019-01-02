@@ -55,9 +55,9 @@
                 + '<div class="col-md-6 col-xs-12">'
                 +' <form method="post" data-tablename='+ tableId +' id="form-' + tableId + '"> ' 
                 + '<select id="filter-' + tableId + '" data-tablename="'+ tableId +'" class="form-control"> ' 
-                + '<option value="all" selected>All</option>'
+                + '<option value="all">All</option>'
                 @foreach($stages as $stage)
-                + '<option value="{{ $stage->id }}">{{ $stage->description }}</option>'
+                + '<option value="{{ $stage->id }}" @if($stage->id == 1) selected @endif >{{ $stage->description }}</option>'
                 @endforeach
                 + '</select></form>'
                 + '</div>';

@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use Session;
 use App\Notifications\LeaveApprovalMessage;
+use App\Notifications\AbsenceApprovalCreatedMessage;
 use App\Models\AbsenceApproval;
 use App\Models\AbsenceQuota;
 use App\Models\Absence;
@@ -13,6 +14,17 @@ use App\Message;
 
 class AbsenceApprovalObserver
 {
+    public function created(AbsenceApproval $absenceApproval)
+    {
+        // to adalah karyawan yang mengajukan
+        $to = Employee::findByPersonnel($absenceApproval->regno)
+            ->first()
+            ->user;
+
+        // sistem mengirim email notifikasi
+        $to->notify(new AbsenceApprovalCreatedMessage($absenceApproval));
+    }
+
     public function updated(AbsenceApproval $absenceApproval)
     {
       // $flow_id  = config('emss.flows.absences');

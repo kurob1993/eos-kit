@@ -138,8 +138,8 @@ class Employee extends Model
             $employee->org_unit_name = $struct->emportx;
             $employee->save();
 
+            // jika tidak ada record user maka buatkan
             $user = \App\User::where('personnel_no', $p)->first();
-
             if ( is_null($user) ) {
                 $user = new \App\User();
                 $user->personnel_no = $employee->personnel_no;

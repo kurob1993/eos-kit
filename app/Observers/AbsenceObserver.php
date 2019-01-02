@@ -65,10 +65,12 @@ class AbsenceObserver
         if ($absence->isALeave) {
             // mendapatkan absence_type_id dari kuota cuti yang digunakan
             $absence_type_id = AbsenceQuota::activeAbsenceQuotaOf(
-                $absence
-                    ->personnel_no, $absence->start_date, $absence->end_date)
-                    ->first()
-                    ->absence_type_id;
+                $absence->personnel_no, 
+                $absence->start_date, 
+                $absence->end_date
+            )
+            ->first()
+            ->absence_type_id;
     
             // mengisi absence type dari server bukan dari request
             $absence->absence_type_id = $absence_type_id;
@@ -111,7 +113,7 @@ class AbsenceObserver
         // atau deputi (UTOMO NUGROHO)
         if ($employee->is_a_transfer_knowledge || !$closestBoss) {
             
-            // bypass regno menggunakan admin  dan sequence
+            // bypass regno menggunakan admin dan sequence
             $admin = Role::retrieveAdmin();
             $absence_approval->regno = $admin->personnel_no;
             $absence_approval->sequence = 1;

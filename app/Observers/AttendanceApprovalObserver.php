@@ -3,11 +3,24 @@
 namespace App\Observers;
 
 use App\Notifications\PermitApprovalMessage;
+use App\Notifications\AttendanceApprovalCreatedMessage;
 use App\Models\AttendanceApproval;
+use App\Models\Employee;
 use App\Message;
 
 class AttendanceApprovalObserver
 {
+    public function created(AttendanceApproval $attendanceApproval)
+    {
+        // to adalah karyawan yang mengajukan
+        $to = Employee::findByPersonnel($attendanceApproval->regno)
+            ->first()
+            ->user;
+
+        // sistem mengirim email notifikasi
+        $to->notify(new AttendanceApprovalCreatedMessage($attendanceApproval));
+    }
+    
     public function updated(AttendanceApproval $attendanceApproval)
     {
       // $flow_id  = config('emss.flows.attendances');

@@ -18,7 +18,7 @@ class CreateSecretariesTable extends Migration
             $table->string('name');
             $table->string('organization');
             $table->string('email')->unique();
-            $table->unsignedInteger('boss', 10);
+            $table->integer('boss');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
