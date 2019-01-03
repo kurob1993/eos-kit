@@ -69,7 +69,7 @@
         @foreach($tableNames as $t)
         createSelectFilterHtml('{{ $t['tableName'] }}', '{{ $t['approval'] }}');
         @endforeach
-
+        
         // registrasi change handler untuk select-filter
         $("[id^=filter-]").change(function () {
             // simpan state select di dalam local storage 
@@ -101,13 +101,23 @@
             return results;
         }
 
+        // mencari localStorage untuk state select
         var selectStates = findLocalItems('^state\-.+Table');
-        selectStates.forEach(function (item) {
-            var tableName = item.key.replace(/^state\-/, '');
-            $('#filter-'+tableName).val(item.val);
-            // re draw 
-            $('#form-'+tableName).submit();
-        })
+        if (selectStates.length == 0) {
+            @foreach($tableNames as $t)
+            localStorage.setItem('state-{{ $t['tableName'] }}', '1');
+            $('#form-{{ $t['tableName'] }}').submit();
+            @endforeach
+        } else {
+            selectStates.forEach(function (item) {
+                // mendapatkan tableId
+                var tableName = item.key.replace(/^state\-/, '');
+                // mengeset select berdasarkan tableId
+                $('#filter-'+tableName).val(item.val);
+                // re draw 
+                $('#form-'+tableName).submit();
+            })
+        }
     }),
     (DashboardPlugins = (function () {
         "use strict";

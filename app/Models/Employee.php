@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class Employee extends Model
 {
@@ -83,6 +84,16 @@ class Employee extends Model
     {
       // one-to-many relationship dengan AbsenceQuota
       return $this->hasMany('App\Models\AbsenceQuota', 'personnel_no', 'personnel_no');
+    }
+
+    public function getActiveAbsenceQuotaAttribute()
+    {
+        $now = Carbon::now()->toDateTimeString();
+        
+        return $this->absenceQuotas()
+            ->where('start_date', '<=', $now)
+            ->where('end_date', '>=', $now)
+            ->first();
     }
   
     public function absenceApprovals()

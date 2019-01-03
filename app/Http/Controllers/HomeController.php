@@ -40,19 +40,50 @@ class HomeController extends Controller
         $y = date('Y');
         $dy = date('M Y');
 
-        $leaveChartData = [];
+        $subordinates = Auth::user()->employee->subordinates();
+        $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
         foreach ($subordinates as $subordinate) {
-            if ($subordinate->currentPeriodLeaves->count() > 0) {
-                $absences = Absence::monthYearPeriodOf($d, $y, $subordinate->personnel_no)
-                    ->leavesOnly()
-                    ->get();
-
-                $x = 0;
-                foreach($absences as $absence) { $x += $absence->duration; }
-                $labelValue = [ "label" => (string) $subordinate->personnel_no, "value" => $x ];
-                array_push($leaveChartData, $labelValue);
-            }
+            array_push(
+                $leaveChartCat, 
+                array("label" => $subordinate->name)
+            );
+            array_push(
+                $leaveChartQuota,
+                array("value" => $subordinate->active_absence_quota->number)
+            );
+            array_push(
+                $leaveChartDeduction,
+                array("value" => $subordinate->active_absence_quota->deduction)
+            );
         }
+        $dataSource = [ 
+            "chart" => [
+                "caption" => "Tren Cuti Karyawan",
+                "xaxisname" => "Karyawan",
+                "yaxisname" => "Cuti Terpakai",
+                "theme" => "fusion",
+                "baseFont" => "Karla",
+                "baseFontColor" => "#153957",
+                "outCnvBaseFont" => "Karla",
+            ],
+            "categories" => [
+                [ "category" => $leaveChartCat ]
+            ],
+            "dataset" => [
+                [ "seriesname" => "Kuota", "data" => $leaveChartQuota ],
+                [ "seriesname" => "Terpakai", "data" => $leaveChartDeduction ]
+            ]
+        ];
+
+        $leaveChart = new \FusionCharts(
+            "overlappedbar2d",
+            "leaveChart" ,
+            "100%",
+            900,
+            "leave-chart",
+            "json",
+            json_encode($dataSource)
+        );        
 
         $permitChartData = [];
         foreach ($subordinates as $subordinate) {
@@ -65,7 +96,10 @@ class HomeController extends Controller
                 $attendances = Attendance::monthYearPeriodOf($d, $y, $subordinate->personnel_no)
                     ->get();
                 foreach($attendances as $attendance) { $x += $attendance->duration; }
-                $labelValue = [ "label" => (string) $subordinate->personnel_no, "value" => $x ];
+                $labelValue = [ 
+                    "label" => (string) $subordinate->name, 
+                    "value" => $x 
+                ];
                 array_push($permitChartData, $labelValue);
             }
         }
@@ -75,34 +109,12 @@ class HomeController extends Controller
             if ($subordinate->currentPeriodtimeEvents->count() > 0) {
                 $timeEvents = TimeEvent::monthYearPeriodOf($d, $y, $subordinate->personnel_no);
                 $labelValue = [
-                    "label" => (string) $subordinate->personnel_no,
+                    "label" => (string) $subordinate->name,
                     "value" => $subordinate->timeEvents->count()
                 ];
                 array_push($timeEventChartData, $labelValue);
             }
         }
-
-        $chartOptions = [
-            "caption" => "Pengajuan Cuti",
-            "subcaption" => $dy,
-            "xaxisname" => "NIK",
-            "yaxisname" => "Durasi",
-            "theme" => "fusion",
-            "baseFont" => "Karla",
-            "baseFontColor" => "#153957",
-            "outCnvBaseFont" => "Karla",
-        ];
-
-        $dataSource = [ "chart" => $chartOptions, "data" => $leaveChartData ];
-        $leaveChart = new \FusionCharts(
-            "column2d",
-            "leaveChart" ,
-            "100%",
-            300,
-            "leave-chart",
-            "json",
-            json_encode($dataSource)
-        );
 
         $chartOptions = [
             "caption" => "Pengajuan Izin",

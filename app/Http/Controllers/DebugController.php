@@ -13,7 +13,34 @@ class DebugController extends Controller
 {
     public function debug()
     {
-        dd(Auth::guard('secr')->user()->toArray());
+        $subordinates = Auth::user()->employee->subordinates();
+        $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
+        foreach ($subordinates as $subordinate) {
+            array_push(
+                $leaveChartCat, 
+                array("label" => $subordinate->personnelNoWithName)
+            );
+            array_push(
+                $leaveChartQuota,
+                array("value" => $subordinate->active_absence_quota->number)
+            );
+            array_push(
+                $leaveChartDeduction,
+                array("value" => $subordinate->active_absence_quota->deduction)
+            );
+        }
+        $dataSource = [ 
+            "categories" => [
+                "category" => $leaveChartCat
+            ],
+            "dataset" => [
+                [ "seriesname" => "Kuota", "data" => $leaveChartQuota ],
+                [ "seriesname" => "Terpakai", "data" => $leaveChartDeduction ]
+            ]
+        ];
+        echo json_encode($dataSource);
+
+        // dd(Auth::guard('secr')->user()->toArray());
         // $encrypted = Crypt::encryptString('11725');
         // dd($encrypted);
 
@@ -124,8 +151,8 @@ class DebugController extends Controller
         // // mencari data karyawan untuk user yang sudah login
         // var_dump(Auth::user()->employee()->first()->toArray());
 
-        // // mencari semua absences dengan global scope
-        // var_dump(\App\Models\Absence::get()->toArray());
+        // // mencari semua absences dengan global where('personnel_no', Auth::user()->personnel_no)ope
+        // var_dump(\App\Models\Absence::get()->toAwhere('personnel_no', Auth::user()->personnel_no)ay());
 
         // // mencari atasan satu tingkat di atas
         // $e = Auth::user()->employee()->first();

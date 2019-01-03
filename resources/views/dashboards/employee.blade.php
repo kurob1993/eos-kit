@@ -129,6 +129,8 @@
 @push('plugin-scripts')
 <!-- Fusion Chart -->
 <script src="{{ url("/plugins/fusioncharts/js/fusioncharts.js") }}"></script>
+<script src="{{ url("/plugins/fusioncharts/js/fusioncharts.charts.js") }}"></script>
+<script src="{{ url("/plugins/fusioncharts/js/fusioncharts.overlappedbar2d.js") }}"></script>
 <script src="{{ url("/plugins/fusioncharts/js/themes/fusioncharts.theme.fusion.js") }}"></script>
 {!! $leaveChart->render() !!}
 {!! $permitChart->render() !!}
