@@ -72,7 +72,14 @@ class StructDisp extends Model
       return $query->subordinatesOf($p)
         ->whereIn('emppersk', ['ES', 'EF', 'F']);
     }
+
+    public function scopeSuperintendentAndSupervisorSubordinatesOf($query, $p)
+    {
+      return $query->subordinatesOf($p)
+        ->whereIn('emppersk', ['CS', 'CF', 'DS', 'DF']);
+    }
     
+
     public function scopeSubgroupStructOf($query, $s)
     {
       // struct mencari berdasarkan subgroup

@@ -35,30 +35,33 @@ class HomeController extends Controller
 
     public function employeeDashboard($request, $htmlBuilder)
     {
-        $subordinates = Auth::user()->employee->subordinates();
         $d = date('m');
         $y = date('Y');
         $dy = date('M Y');
+        $subordinates = Auth::user()->employee->superintendentAndSupervisorSubordinates();
 
-        $subordinates = Auth::user()->employee->subordinates();
         $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
         foreach ($subordinates as $subordinate) {
             array_push(
                 $leaveChartCat, 
                 array("label" => $subordinate->name)
             );
+            $absence_quota = $subordinate->active_absence_quota;
+            $number = (is_null($absence_quota)) ? 0 : $absence_quota->number;
+            $deduction = (is_null($absence_quota)) ? 0 : $absence_quota->deduction;
             array_push(
                 $leaveChartQuota,
-                array("value" => $subordinate->active_absence_quota->number)
+                array("value" => $number)
             );
             array_push(
                 $leaveChartDeduction,
-                array("value" => $subordinate->active_absence_quota->deduction)
+                array("value" => $deduction)
             );
         }
         $dataSource = [ 
             "chart" => [
                 "caption" => "Tren Cuti Karyawan",
+                "subcaption" => "Bawahan Gol. C & D",
                 "xaxisname" => "Karyawan",
                 "yaxisname" => "Cuti Terpakai",
                 "theme" => "fusion",

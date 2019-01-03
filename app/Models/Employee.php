@@ -273,6 +273,21 @@ class Employee extends Model
         return $subordinates;
     }
 
+    public function superintendentAndSupervisorSubordinates()
+    {
+        // mencari semua bawahan-bawahan
+        $structs = \App\Models\StructDisp::superintendentAndSupervisorSubordinatesOf($this->personnel_no)->get();
+
+        // mengiterasi bawahan-bawahan dan membuat collection baru
+        $subordinates = $structs->map(function ($item, $key) {
+            // membuat & mengembalikan Employee masing-masing bawahan
+            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+        });
+
+        // mengembalikan collection of Employee
+        return $subordinates;
+    }
+
     public function bosses()
     {
         // mencari semua atasan

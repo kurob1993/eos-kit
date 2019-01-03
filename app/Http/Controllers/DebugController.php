@@ -13,20 +13,23 @@ class DebugController extends Controller
 {
     public function debug()
     {
-        $subordinates = Auth::user()->employee->subordinates();
+        $subordinates = Auth::user()->employee->superintendentAndSupervisorSubordinates();
         $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
         foreach ($subordinates as $subordinate) {
             array_push(
                 $leaveChartCat, 
                 array("label" => $subordinate->personnelNoWithName)
             );
+            $absence_quota = $subordinate->active_absence_quota;
+            $number = $deduction = (is_null($absence_quota)) ? 0 : $absence_quota;
+            
             array_push(
                 $leaveChartQuota,
-                array("value" => $subordinate->active_absence_quota->number)
+                array("value" => $number)
             );
             array_push(
                 $leaveChartDeduction,
-                array("value" => $subordinate->active_absence_quota->deduction)
+                array("value" => $deduction)
             );
         }
         $dataSource = [ 
