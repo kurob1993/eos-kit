@@ -78,6 +78,12 @@ class TimeEvent extends Model
             ->where('personnel_no', $p);
     }
 
+    public function scopeCurrentPeriod($query)
+    {
+        return $query->whereMonth('check_date', date('m'))
+            ->whereYear('check_date', date('Y'));
+    }
+
     public function getPlainIdAttribute()
     {
         return 'time_event-' . $this->id;

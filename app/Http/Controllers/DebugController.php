@@ -13,7 +13,7 @@ class DebugController extends Controller
 {
     public function debug()
     {
-        $subordinates = Auth::user()->employee->superintendentAndSupervisorSubordinates();
+        $subordinates = Auth::user()->employee->mgrSptSpvSubordinates();
         $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
         foreach ($subordinates as $subordinate) {
             array_push(

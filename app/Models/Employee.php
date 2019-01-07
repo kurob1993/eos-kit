@@ -41,14 +41,14 @@ class Employee extends Model
         return $this->absences()
             ->currentPeriod();
     }
-    
+
     public function nonLeaveAbsences()
     {
         // one-to-many relationship dengan Absence exclude leave
         return $this->hasMany('App\Models\Absence', 'personnel_no', 'personnel_no')
         ->excludeLeaves();
     }
-    
+
     public function currentPeriodNonLeaveAbsences()
     {
         return $this->nonLeaveAbsences()
@@ -66,7 +66,7 @@ class Employee extends Model
     {
         return $this->leaves()
             ->currentPeriod();
-    }    
+    }
 
     public function timeEvents()
     {
@@ -78,7 +78,7 @@ class Employee extends Model
     {
         return $this->timeEvents()->whereMonth('check_date', date('m'))
         ->whereYear('check_date', date('Y'));
-    }       
+    }
 
     public function absenceQuotas()
     {
@@ -89,13 +89,13 @@ class Employee extends Model
     public function getActiveAbsenceQuotaAttribute()
     {
         $now = Carbon::now()->toDateTimeString();
-        
+
         return $this->absenceQuotas()
             ->where('start_date', '<=', $now)
             ->where('end_date', '>=', $now)
             ->first();
     }
-  
+
     public function absenceApprovals()
     {
       // one-to-many relationship dengan AbsenceApproval
@@ -138,8 +138,8 @@ class Employee extends Model
             // jika tidak ditemukan di Employee buat baru
             if ( is_null($employee) ) {
                 $employee = new \App\Models\Employee();
-                $employee->personnel_no = $struct->empnik;    
-            } 
+                $employee->personnel_no = $struct->empnik;
+            }
 
             // buat baru / update perubahan employee
             $employee->name = $struct->empname;
@@ -193,7 +193,7 @@ class Employee extends Model
             $employee->org_unit_name = $item->emportx;
             $employee->save();
         });
-        
+
         // kembalikan data Employee berdasarkan pencarian (terbaru)
         return $query->where('cost_ctr', $c);
     }
@@ -223,7 +223,7 @@ class Employee extends Model
     public function allowedForOvertime()
     {
         // apakah boleh melakukan lembur?
-        return ( ($this->esgrp == 'ES') || ($this->esgrp == 'EF') 
+        return ( ($this->esgrp == 'ES') || ($this->esgrp == 'EF')
                  || ($this->esgrp == 'F') )
         ? true : false;
     }
@@ -273,10 +273,10 @@ class Employee extends Model
         return $subordinates;
     }
 
-    public function superintendentAndSupervisorSubordinates()
+    public function mgrSptSpvSubordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::superintendentAndSupervisorSubordinatesOf($this->personnel_no)->get();
+        $structs = \App\Models\StructDisp::mgrSptSpvOf($this->personnel_no)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
@@ -324,10 +324,10 @@ class Employee extends Model
         $s = $this->structDisp()->superintendentOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return ( is_null($s) || $this->isSuperintendent() ) ? 
-            [] : 
-            (\App\Models\Employee::findByPersonnel($s->dirnik)->first());        
-    }    
+        return ( is_null($s) || $this->isSuperintendent() ) ?
+            [] :
+            (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
+    }
 
     public function managerBoss()
     {
@@ -345,7 +345,7 @@ class Employee extends Model
         else {
             return \App\Models\Employee::findByPersonnel($m->dirnik)->first();
         }
-    }    
+    }
 
     public function generalManagerBoss()
     {
@@ -356,8 +356,8 @@ class Employee extends Model
         $s = $this->structDisp()->generalManagerOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return ( is_null($s) || $this->isGeneralManager() ) ? 
-            [] : 
+        return ( is_null($s) || $this->isGeneralManager() ) ?
+            [] :
             (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
     }
 
@@ -366,13 +366,13 @@ class Employee extends Model
         // mencari atasan dengan minimal level CS
         // apabila tidak ditemukan maka cari di level BS
         // apabila tidak ditemukan di level BS
-        // maka cari di level AS            
+        // maka cari di level AS
 
         if ($this->isSuperintendent() || $this->isManager() ) {
             return $this->closestBoss();
         } else {
             $superintendent = $this->superintendentBoss();
-        
+
             if (!$superintendent)
                 return $this->minManagerBoss();
             else
@@ -387,7 +387,7 @@ class Employee extends Model
         } else {
             // meneruskan recursive call dari atas
             $manager = $this->managerBoss();
-            
+
             if (!$manager)
                 return $this->generalManagerBoss();
             else
@@ -400,14 +400,63 @@ class Employee extends Model
       // menggabungkan personnel_no dan nama
       return $this->personnel_no . ' - ' . $this->name;
     }
-    
+
     public function getIsATransferKnowledgeAttribute()
     {
         $s = $this->structdisp()->selfStruct()->first();
 
-        return $s->emp_hrp1000_s_short == '6200300001' 
+        return $s->emp_hrp1000_s_short == '6200300001'
             && $s->emp_hrp1000_o_short == '62003';
     }
+
+    public function getLeaveTotalDurationHourAttribute()
+    {
+        $leaves = Absence::where('personnel_no', $this->personnel_no)
+            ->leavesOnly()
+            ->currentPeriod()
+            ->successOnly()
+            ->get();
+
+        return $leaves->sum(function ($leave){
+            return $leave->hourDuration;
+        });
+    }
+
+    public function getPermitTotalDurationHourAttribute()
+    {
+        $absences = Absence::where('personnel_no', $this->personnel_no)
+            ->excludeLeaves()
+            ->currentPeriod()
+            ->successOnly()
+            ->get();
+
+        $sum = $absences->sum(function ($absence){
+            return $absence->hourDuration;
+        });
+
+        $attendances = Attendance::where('personnel_no', $this->personnel_no)
+            ->currentPeriod()
+            ->successOnly()
+            ->get();
+
+        $sum += $attendances->sum(function ($attendance){
+            return $attendance->hourDuration;
+        });
+
+        return $sum;
+    }
+
+    public function getTimeEventTotalDurationAttribute()
+    {
+        $timeEvents = TimeEvent::where('personnel_no', $this->personnel_no)
+            ->currentPeriod()
+            ->successOnly()
+            ->get();
+
+        return $timeEvents->sum(function ($timeEvent){
+            return 1;
+        });
+    }    
 
     public function getPermitsAttribute()
     {

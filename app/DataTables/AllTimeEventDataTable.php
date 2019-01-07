@@ -50,7 +50,8 @@ class AllTimeEventDataTable extends DataTable
                     return view('components._action-confirm-integrate', [
                         'model' => $timeEvent,
                         'integrate_url' => route('personnel_service.integrate', ['id' => $timeEvent->id, 'approval' => 'time_event']),
-                        'confirm_url' => route('personnel_service.confirm', ['id' => $timeEvent->id, 'approval' => 'time_event'])
+                        'confirm_url' => route('personnel_service.confirm', ['id' => $timeEvent->id, 'approval' => 'time_event']),
+                        'delete_url' => route('personnel_service.delete', ['id' => $timeEvent->id, 'approval' => 'time_event' ] )
                     ]);
                 } else if ($timeEvent->isFailed) {
                     // apakah stage-nya: failed

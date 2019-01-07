@@ -61,7 +61,8 @@ class AllAbsencePermitDataTable extends DataTable
                     return view('components._action-confirm-integrate', [
                         'model' => $absence,
                         'integrate_url' => route('personnel_service.integrate', ['id' => $absence->id, 'approval' => 'absence']),
-                        'confirm_url' => route('personnel_service.confirm', ['id' => $absence->id, 'approval' => 'absence'])
+                        'confirm_url' => route('personnel_service.confirm', ['id' => $absence->id, 'approval' => 'absence']),
+                        'delete_url' => route('personnel_service.delete', ['id' => $absence->id, 'approval' => 'absence' ] )
                     ]);
                 } else if ($absence->isFailed) {
                     // apakah stage-nya: failed

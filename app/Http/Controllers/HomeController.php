@@ -35,11 +35,11 @@ class HomeController extends Controller
 
     public function employeeDashboard($request, $htmlBuilder)
     {
-        $d = date('m');
-        $y = date('Y');
-        $dy = date('M Y');
-        $subordinates = Auth::user()->employee->superintendentAndSupervisorSubordinates();
+        $d = date('m'); $y = date('Y'); $dy = date('M Y');
+        $employee = Auth::user()->employee;
+        $subordinates = $employee->mgrSptSpvSubordinates();
 
+        /** Leave Chart */
         $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
         foreach ($subordinates as $subordinate) {
             array_push(
@@ -60,10 +60,10 @@ class HomeController extends Controller
         }
         $dataSource = [ 
             "chart" => [
-                "caption" => "Tren Cuti Karyawan",
-                "subcaption" => "Bawahan Gol. C & D",
+                "caption" => "Cuti Karyawan " . $employee->org_unit_name,
+                "subcaption" => "Bawahan Gol. B, C, & D",
                 "xaxisname" => "Karyawan",
-                "yaxisname" => "Cuti Terpakai",
+                "yaxisname" => "Durasi cuti (hari)",
                 "theme" => "fusion",
                 "baseFont" => "Karla",
                 "baseFontColor" => "#153957",
@@ -78,89 +78,80 @@ class HomeController extends Controller
             ]
         ];
 
-        $leaveChart = new \FusionCharts(
-            "overlappedbar2d",
-            "leaveChart" ,
-            "100%",
-            900,
-            "leave-chart",
-            "json",
-            json_encode($dataSource)
-        );        
+        $leaveChart = new \FusionCharts( 
+            "overlappedbar2d", 
+            "leaveChart" , 
+            "100%", 
+            900, 
+            "leave-chart", 
+            "json", 
+            json_encode($dataSource) 
+        );
 
+        /** Permit Chart */
         $permitChartData = [];
         foreach ($subordinates as $subordinate) {
-            if ($subordinate->currentPeriodPermits->count() > 0) {
-                $absences = Absence::monthYearPeriodOf($d, $y, $subordinate->personnel_no)
-                    ->excludeLeaves()
-                    ->get();
-                $x = 0;
-                foreach($absences as $absence) { $x += $absence->duration; }
-                $attendances = Attendance::monthYearPeriodOf($d, $y, $subordinate->personnel_no)
-                    ->get();
-                foreach($attendances as $attendance) { $x += $attendance->duration; }
+            $totalDurationHour = $subordinate->permitTotalDurationHour;
+            if ($totalDurationHour > 0) {
                 $labelValue = [ 
                     "label" => (string) $subordinate->name, 
-                    "value" => $x 
+                    "value" => $totalDurationHour
                 ];
                 array_push($permitChartData, $labelValue);
             }
         }
+        $chartOptions = [ 
+            "caption" => "Izin Karyawan " . $employee->org_unit_name, 
+            "subcaption" => $dy, 
+            "xaxisname" => "Karyawan", 
+            "yaxisname" => "Total izin (jam)", 
+            "theme" => "fusion", 
+            "baseFont" => "Karla", 
+            "baseFontColor" => "#153957", 
+            "outCnvBaseFont" => "Karla", 
+        ];
+        $dataSource = [ "chart" => $chartOptions, "data" => $permitChartData ]; 
+        $permitChart = new \FusionCharts( 
+            "bar2d", 
+            "permitChart" , 
+            "100%", 
+            900, 
+            "permit-chart", 
+            "json", 
+            json_encode($dataSource) 
+        );
 
+        /** Time Event Chart */
         $timeEventChartData = [];
         foreach ($subordinates as $subordinate) {
-            if ($subordinate->currentPeriodtimeEvents->count() > 0) {
-                $timeEvents = TimeEvent::monthYearPeriodOf($d, $y, $subordinate->personnel_no);
+            $totalDuration = $subordinate->timeEventTotalDuration;
+            if ($totalDuration > 0) {
                 $labelValue = [
                     "label" => (string) $subordinate->name,
-                    "value" => $subordinate->timeEvents->count()
+                    "value" => $totalDuration
                 ];
                 array_push($timeEventChartData, $labelValue);
             }
         }
-
-        $chartOptions = [
-            "caption" => "Pengajuan Izin",
-            "subcaption" => $dy,
-            "xaxisname" => "NIK",
-            "yaxisname" => "Durasi",
-            "theme" => "fusion",
-            "baseFont" => "Karla",
-            "baseFontColor" => "#153957",
-            "outCnvBaseFont" => "Karla",
+        $chartOptions = [ 
+            "caption" => "Tidak Slash Karyawan " . $employee->org_unit_name, 
+            "subcaption" => $dy, 
+            "xaxisname" => "Karyawan", 
+            "yaxisname" => "Total tidak slash", 
+            "theme" => "fusion", 
+            "baseFont" => "Karla", 
+            "baseFontColor" => "#153957", 
+            "outCnvBaseFont" => "Karla", 
         ];
-
-        $dataSource = [ "chart" => $chartOptions, "data" => $permitChartData ];
-        $permitChart = new \FusionCharts(
-            "column2d",
-            "permitChart" ,
-            "100%",
-            300,
-            "permit-chart",
-            "json",
-            json_encode($dataSource)
-        );
-
-        $chartOptions = [
-            "caption" => "Pengajuan Tidak Slash",
-            "subcaption" => $dy,
-            "xaxisname" => "NIK",
-            "yaxisname" => "Durasi",
-            "theme" => "fusion",
-            "baseFont" => "Karla",
-            "baseFontColor" => "#153957",
-            "outCnvBaseFont" => "Karla",
-        ];
-
         $dataSource = [ "chart" => $chartOptions, "data" => $timeEventChartData ];
-        $timeEventChart = new \FusionCharts(
-            "column2d",
-            "timeEventChart" ,
-            "100%",
-            300,
-            "time-event-chart",
-            "json",
-            json_encode($dataSource)
+        $timeEventChart = new \FusionCharts( 
+            "bar2d", 
+            "timeEventChart" , 
+            "100%", 
+            900, 
+            "time-event-chart", 
+            "json", 
+            json_encode($dataSource) 
         );
 
         return view('dashboards.employee', compact(

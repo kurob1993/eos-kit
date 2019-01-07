@@ -56,7 +56,8 @@ class AllOvertimeDataTable extends DataTable
                     return view('components._action-confirm-integrate', [
                         'model' => $overtime,
                         'integrate_url' => route('personnel_service.integrate', ['id' => $overtime->id, 'approval' => 'overtime']),
-                        'confirm_url' => route('personnel_service.confirm', ['id' => $overtime->id, 'approval' => 'overtime'])
+                        'confirm_url' => route('personnel_service.confirm', ['id' => $overtime->id, 'approval' => 'overtime']),
+                        'delete_url' => route('personnel_service.delete', ['id' => $overtime->id, 'approval' => 'overtime'])
                     ]);
                 } else if ($overtime->isFailed) {
                     // apakah stage-nya: failed
