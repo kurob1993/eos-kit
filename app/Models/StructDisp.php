@@ -37,6 +37,14 @@ class StructDisp extends Model
         return $query->where('empkostl', $c);
     }
 
+    public function scopeFindByShortAbbrOrg($query, $abbr_org)
+    {
+        // struct untuk mencari by Abbreviasi Org
+        return $query
+            ->selfStruct()
+            ->where('emp_hrp1000_o_short', $abbr_org);
+    }
+
     public function scopeStructOf($query, $p)
     {
         // struct untuk personnel_no
@@ -79,7 +87,7 @@ class StructDisp extends Model
 
     public function scopeForemanAndOperatorSubordinatesOf($query, $p)
     {
-        return $query->subordinatesOf($p)->forOpr();
+        return $query->subordinatesOf($p)->ForemanAndOperator();
     }
 
     public function scopeMgrSptSpvOf($query, $p)

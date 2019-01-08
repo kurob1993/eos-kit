@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use App\Models\StructDisp;
 
 class StructDispController extends Controller
 {
@@ -39,6 +40,12 @@ class StructDispController extends Controller
     public function showByCostCenter($cost_center)
     {
         return Employee::findByCostCenter($cost_center)
+            ->get();
+    }
+
+    public function showByShortAbbrOrg($abbr_org)
+    {
+        return StructDisp::findByShortAbbrOrg($abbr_org)
             ->get();
     }
 

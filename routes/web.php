@@ -154,6 +154,8 @@ Route::group([
         ->name('secretary.travels.index');
     Route::get('travels/create', 'SecretaryController@createTravel')
         ->name('secretary.travels.create');
+    Route::post('travels', 'SecretaryController@storeTravels')
+        ->name('secretary.travels.store');
 });
 
 Route::get('/soap', 'SoapController@show');

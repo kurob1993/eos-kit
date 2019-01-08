@@ -28,6 +28,7 @@ Route::group(['prefix' => 'structdisp', 'middleware' => 'api'], function() {
     Route::get('{empnik}/minManagerBoss', 'StructDispController@minManagerBoss');
     Route::get('{empnik}/generalManagerBoss', 'StructDispController@generalManagerBoss');    
     Route::get('costCenter/{cost_center}', 'StructDispController@showByCostCenter');
+    Route::get('shortAbbrOrg/{abbr_org}', 'StructDispController@showByShortAbbrOrg');
 });
 
 Route::group(['prefix' => 'family', 'middleware' => 'api'], function() {
