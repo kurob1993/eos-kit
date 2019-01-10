@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Session;
+use Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Datatables;
@@ -16,6 +17,7 @@ use App\Models\Absence;
 use App\Models\Attendance;
 use App\Models\AttendanceQuota;
 use App\Models\TimeEvent;
+
 
 class HomeController extends Controller
 {
@@ -285,6 +287,16 @@ class HomeController extends Controller
             })
             ->addColumn('duration', function($aa){
                 return $aa->permit->duration . ' hari';
+            })
+            ->editColumn('permit.attachment', function ($aa){
+                if(str_is("*pdf",$aa->permit->attachment)){
+                    $x = '<a href="'.Storage::url($aa->permit->attachment).'"
+                    class="btn btn-primary" target="_blank">View</a>';
+                }else{
+                    $x = '<img class="center-block img-responsive" 
+                    src="'.Storage::url($aa->permit->attachment).'" alt="">';
+                }
+                return $x;
             })
             ->addColumn('action', function($aa){
                 if ($aa->permit->is_waiting_approval) {

@@ -13,4 +13,9 @@ class Secretary extends Authenticatable
     protected $guard = 'secr';
     protected $fillable = ['name', 'email', 'boss', 'password'];
     protected $hidden = ['password', 'remember_token'];
+
+    public function attendanceQuota()
+    {
+        return $this->hasMany('App\Models\AttendanceQuota');
+    }
 }

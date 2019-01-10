@@ -19,7 +19,8 @@ class AttendanceQuota extends Model
         'attendance_quota_type_id',
         'overtime_reason_id',
         'from',
-        'to'
+        'to',
+        'secretary_id'
     ];
 
     protected $casts = [
@@ -69,6 +70,11 @@ class AttendanceQuota extends Model
     {
         // many-to-one relationship dengan OvertimeReason
         return $this->belongsTo('App\Models\OvertimeReason');
+    }
+
+    public function secretary()
+    {
+        return $this->belongsTo('App\Models\Secretary');
     }
 
     public function getFirstApprovalAttribute()

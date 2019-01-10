@@ -179,7 +179,7 @@ class EmployeeDashboardComposer
             [
                 'data' => 'permit.permit_type.text',
                 'name' => 'permit.permit_type.text',
-                'title' => 'Jenis Cuti',
+                'title' => 'Jenis Izin',
                 'searchable' => false,
                 'orderable' => false,
             ],
@@ -199,6 +199,14 @@ class EmployeeDashboardComposer
                 'searchable' => false,
                 'orderable' => false,
             ],
+            [
+                'data' => 'permit.attachment',
+                'name' => 'permit.attachment',
+                'title' => 'Lampiran',
+                'searchable' => false,
+                'class' => 'none',
+                'orderable' => false,
+            ]
         ];
 
         $timeEventFields = [

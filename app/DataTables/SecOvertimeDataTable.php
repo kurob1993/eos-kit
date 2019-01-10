@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\AttendanceQuota as Overtime;
 use Yajra\DataTables\Services\DataTable;
+use Illuminate\Support\Facades\Auth;
 
 class SecOvertimeDataTable extends DataTable
 {
@@ -57,6 +58,7 @@ class SecOvertimeDataTable extends DataTable
     {
         // ambil semua data cuti user
         return $model->newQuery()
+            ->where('secretary_id', Auth::guard('secr')->user()->id)
             ->with([
                 'overtimeReason', 
                 'stage',
