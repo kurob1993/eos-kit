@@ -122,9 +122,9 @@
           }
         }
       };
-
+      
       $.ajax({
-      url: '{{ url('api/structdisp') }}/{{ Auth::guard('secr')->user()->boss }}/foremanAndOperatorSubordinates',
+      url: '{{ url('api/structdisp') }}/{{ $user }}/foremanAndOperatorSubordinates',
           type: 'GET',
           dataType: 'json',
           error: function() {},

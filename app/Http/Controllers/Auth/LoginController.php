@@ -133,7 +133,11 @@ class LoginController extends Controller
             return 'Secretary not found!';
         }
 
-        // Programmatically login user
+        if (!$user->hasRole('secretary')) {
+            $secretary = Role::where('name', 'secretary')->first();
+            $user->attachRole($secretary);
+        }
+        // Programmatically login user secretary
         Auth::guard('secr')->login($user);
 
         return $this->sendLoginResponse($request);

@@ -424,7 +424,8 @@ class HomeController extends Controller
                     return $aa->attendanceQuota->duration . ' menit';
                 })
                 ->addColumn('action', function(AttendanceQuotaApproval $aa){
-                    if ($aa->attendanceQuota->is_waiting_approval) {
+                    if ($aa->attendanceQuota->is_waiting_approval &&
+                    $aa->isWaiting) {
                         // apakah stage-nya: waiting approval
                         return view('components._action-approval', [
                             'model' => $aa,

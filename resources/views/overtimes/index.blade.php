@@ -5,7 +5,7 @@
 @component('layouts.employee._page-container', ['page_header' => 'Pengajuan Lembur'])
 <div class="panel panel-prussian">
   <div class="panel-heading">
-    <h4 class="panel-title">Daftar Lembur Saya</h4>
+    <h4 class="panel-title">{{ $lembur }}</h4>
   </div>
   @include('layouts._flash')
   <div class="panel-body">

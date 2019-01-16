@@ -20,7 +20,8 @@ class AttendanceQuota extends Model
         'overtime_reason_id',
         'from',
         'to',
-        'secretary_id'
+        'secretary_id',
+        'dirnik'
     ];
 
     protected $casts = [

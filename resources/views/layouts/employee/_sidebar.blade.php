@@ -48,9 +48,9 @@
                     <li class="{{ Request::segment(1)=='time_events' ? 'active' : '' }}">
                         <a href="{{ url('time_events') }}">Tidak Slash</a>
                     </li>
-                    {{-- <li class="{{ Request::segment(1)=='overtimes' ? 'active' : '' }}">
+                    <li class="{{ Request::segment(1)=='overtimes' ? 'active' : '' }}">
                         <a href="{{ url('overtimes') }}">Lembur</a>
-                    </li> --}}
+                    </li>
                     {{-- <li> <a href="#">Waktu Kerja</a> </li>
                     <li> <a href="#">Laporan Aktivitas</a> </li> --}}
                 </ul>

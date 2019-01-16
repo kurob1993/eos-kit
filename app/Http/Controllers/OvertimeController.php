@@ -19,10 +19,31 @@ class OvertimeController extends Controller
 {
     public function index(Request $request, Builder $htmlBuilder)
     {
-        // ambil data cuti untuk user tersebut
-        $overtimes = AttendanceQuota::ofLoggedUser()
-            ->with(['overtimeReason', 'stage'])
-            ->get();
+        $allowed = Auth::user()
+            ->employee
+            ->allowedToSubmitSubordinateOvertime();
+
+        if($allowed) {
+            $lembur ="Daftar Lembur Bawahan Saya";
+            $subordinates = Auth::user()
+                ->employee
+                ->foremanAndOperatorSubordinates();
+
+            $overtimes = collect();
+            foreach ($subordinates as $subordinate) {
+                $overtimes = $overtimes->merge(
+                    AttendanceQuota::where('personnel_no', $subordinate->personnel_no)
+                        ->with(['overtimeReason', 'stage'])
+                        ->get()
+                );
+            }
+        } else {
+            // ambil data cuti untuk user tersebut
+            $lembur ="Daftar Lembur Saya";
+            $overtimes = AttendanceQuota::ofLoggedUser()
+                ->with(['overtimeReason', 'stage'])
+                ->get();
+        }
 
         // response untuk datatables attendanceQuota
         if ($request->ajax()) {
@@ -82,33 +103,46 @@ class OvertimeController extends Controller
                 ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('overtimes.index')->with(compact('html', 'overtimes'));
+        return view('overtimes.index')->with(compact('html', 'overtimes','lembur'));
     }
 
     public function create()
     {
-        // mengecek apakah boleh mengajukan overtime
-        $allowedForOvertime = Auth::user()->employee->allowedForOvertime();
+        // user yang dapat melakukan pengajuan lembur
+        $user = Auth::user()->personnel_no;
 
-        // apakah tidak boleh mengajukan overtime?
-        if (!$allowedForOvertime) {
+        // alasan lembur
+        $overtime_reason = OvertimeReason::all('id', 'text')
+        ->mapWithKeys(function ($item) {
+            return [$item['id'] => $item['text']];
+        })
+        ->all();
+
+        // mengecek apakah boleh mengajukan overtime untuk bawahan
+        $allowed = Auth::user()
+            ->employee
+            ->allowedToSubmitSubordinateOvertime();
+
+        if ($allowed) {
+            // route untuk menyimpan from employee
+            $formRoute = route('overtimes.store');
+            $pageContainer = 'layouts.employee._page-container';
+            
+            // menampilkan view create overtime secretary
+            return view('overtimes.createas', 
+                compact('overtime_reason','user','formRoute','pageContainer')
+            );
+        } else {
+
             Session::flash("flash_notification", [
-                "level"   =>  "danger",
-                "message"=>"Mohon maaf, Anda tidak dapat mengajukan lembur " . 
-                "karena golongan Anda bukan ES/EF/F."
+                "level" => "danger",
+                "message" => "Mohon maaf, Anda tidak dapat mengajukan lembur. " . 
+                    "Silahkan hubungi Supervisor/Superintendent/Sekretaris Divisi " .
+                    "untuk mengajukan lembur Anda."
             ]);
             // batalkan view create dan kembali ke parent
-            return redirect()->route('overtimes.index');            
+            return redirect()->route('overtimes.index'); 
         }
-        
-        $overtimeReason = OvertimeReason::all('id', 'text')
-            ->mapWithKeys(function ($item) {
-                return [$item['id'] => $item['text']];
-            })
-            ->all();
-
-        // tampilkan view create
-        return view('overtimes.create', [ 'overtime_reason' => $overtimeReason ]);
     }
 
     public function store(StoreAttendanceQuotaRequest $request)
@@ -131,8 +165,8 @@ class OvertimeController extends Controller
 
         // membuat pengajuan lembur dengan menambahkan data personnel_no
         $absence = AttendanceQuota::create($request->all()
-             + ['personnel_no' => Auth::user()->personnel_no,
-                'end_date' => $end_date,
+             + [ 'dirnik' => Auth::user()->personnel_no,
+                 'end_date' => $end_date,
                 'attendance_quota_type_id' => AttendanceQuotaType::suratPerintahLembur()->id
                 ]);
 

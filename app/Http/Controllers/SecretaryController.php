@@ -33,14 +33,18 @@ class SecretaryController extends Controller
 
     public function createOvertime()
     {
-        $secretary = Auth::guard('secr')->user();
+        $formRoute = route('secretary.overtimes.store');
+        $user = Auth::guard('secr')->user()->boss;
         $overtime_reason = OvertimeReason::all('id', 'text')
             ->mapWithKeys(function ($item) {
                 return [$item['id'] => $item['text']];
             })
             ->all();
+        $pageContainer = 'layouts.secretary._page-container';
         
-        return view('secretary.overtimes.create', compact('secretary', 'overtime_reason'));
+        return view('overtimes.createas', 
+            compact('user', 'overtime_reason', 'formRoute', 'pageContainer')
+        );
     }
 
     public function createTravel()

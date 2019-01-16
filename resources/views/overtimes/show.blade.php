@@ -2,6 +2,10 @@
     data-id="{{ $overtime->plain_id }}">
     <tbody>
         <tr>
+            <td>Nama</td>
+        <td> {{ $overtime->employee->PersonnelNoWithName }}</td>
+        </tr>
+        <tr>
             <td>Mulai</td>
         <td> {{ $overtime->start_date->format('d F Y') }} {{ $overtime->from }}</td>
         </tr>
