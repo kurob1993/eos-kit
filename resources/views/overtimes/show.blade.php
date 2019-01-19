@@ -7,11 +7,11 @@
         </tr>
         <tr>
             <td>Mulai</td>
-        <td> {{ $overtime->start_date->format('d F Y') }} {{ $overtime->from }}</td>
+        <td> {{ $overtime->start_date }} </td>
         </tr>
         <tr>
             <td>Berakhir</td>
-            <td> {{ $overtime->end_date->format('d F Y') }} {{ $overtime->to }}</td>
+            <td> {{ $overtime->end_date }} </td>
         </tr>
         <tr>
             <td>Durasi</td>

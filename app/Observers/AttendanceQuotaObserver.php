@@ -33,7 +33,7 @@ class AttendanceQuotaObserver
                 "level" => "danger",
                 "message" => "Tidak dapat mengajukan lembur karena tanggal pengajuan "
                 . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
-                . $intersected->formattedPeriod . ").",
+                . $intersected->period . ").",
             ]);
             return false;
         }

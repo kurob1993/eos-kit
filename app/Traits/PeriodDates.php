@@ -21,6 +21,11 @@ trait PeriodDates
         return $this->formattedStartDate . '-' . $this->formattedEndDate;
     }
 
+    public function getPeriodAttribute()
+    {
+        return $this->start_date . '-' . $this->end_date;
+    }
+    
     public function getDurationAttribute()
     {
         return $this->end_date->diffInDays($this->start_date) + 1;

@@ -289,23 +289,9 @@ class EmployeeDashboardComposer
                 'orderable' => false,
             ],
             [ 
-                'data' => 'attendance_quota.from', 
-                'name' => 'attendance_quota.from', 
-                'title' => 'Jam Mulai',
-                'searchable' => false,
-                'orderable' => false,
-            ],
-            [ 
                 'data' => 'attendance_quota.end_date', 
                 'name' => 'attendance_quota.end_date', 
                 'title' => 'Berakhir',
-                'searchable' => false,
-                'orderable' => false,
-            ],
-            [ 
-                'data' => 'attendance_quota.to', 
-                'name' => 'attendance_quota.to', 
-                'title' => 'Jam Berakhir',
                 'searchable' => false,
                 'orderable' => false,
             ],

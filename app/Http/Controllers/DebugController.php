@@ -8,40 +8,70 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\StoreAbsenceRequest;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\AbsenceQuota;
 
 class DebugController extends Controller
 {
     public function debug()
-    {
-        $subordinates = Auth::user()->employee->mgrSptSpvSubordinates();
-        $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
-        foreach ($subordinates as $subordinate) {
-            array_push(
-                $leaveChartCat, 
-                array("label" => $subordinate->personnelNoWithName)
-            );
-            $absence_quota = $subordinate->active_absence_quota;
-            $number = $deduction = (is_null($absence_quota)) ? 0 : $absence_quota;
+    {   
+        $s = new \DateTime('2018-01-06 17:00:00');
+        $e = new \DateTime('2018-01-07 17:00:00');
+
+        $a = new \DateTime('2018-01-06 17:30:00'); // beririsan
+        $b = new \DateTime('2018-01-06 19:00:00'); // beririsan
+        
+        $x = new \DateTime('2018-01-05 05:00:00'); // tdk
+        $y = new \DateTime('2018-01-06 18:00:00');
+
+        $o = new \DateTime('2018-01-06 21:00:00'); // tdk
+        $p = new \DateTime('2018-01-07 20:00:00');
+
+        $u = new \DateTime('2018-01-06 00:00:00');
+        $v = new \DateTime('2018-01-07 19:00:00');
+
+        $sa = new \DateTime('2018-01-05 00:00:00');
+        $si = new \DateTime('2018-01-06 15:00:00');
+
+        $pa = new \DateTime('2018-01-07 20:00:00');
+        $pi = new \DateTime('2018-01-08 06:00:00');
+
+        $ki = $pa;
+        $ka = $pi;
+
+        if ( (($s>=$ki && $e<=$ka) || ($s<=$ki && $e>=$ki) || ($s<=$ka && $e>=$ka) ) )
+            echo "beririsan";
+        else
+            echo "tidak beririsan";
+
+        // $subordinates = Auth::user()->employee->mgrSptSpvSubordinates();
+        // $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
+        // foreach ($subordinates as $subordinate) {
+        //     array_push(
+        //         $leaveChartCat, 
+        //         array("label" => $subordinate->personnelNoWithName)
+        //     );
+        //     $absence_quota = $subordinate->active_absence_quota;
+        //     $number = $deduction = (is_null($absence_quota)) ? 0 : $absence_quota;
             
-            array_push(
-                $leaveChartQuota,
-                array("value" => $number)
-            );
-            array_push(
-                $leaveChartDeduction,
-                array("value" => $deduction)
-            );
-        }
-        $dataSource = [ 
-            "categories" => [
-                "category" => $leaveChartCat
-            ],
-            "dataset" => [
-                [ "seriesname" => "Kuota", "data" => $leaveChartQuota ],
-                [ "seriesname" => "Terpakai", "data" => $leaveChartDeduction ]
-            ]
-        ];
-        echo json_encode($dataSource);
+        //     array_push(
+        //         $leaveChartQuota,
+        //         array("value" => $number)
+        //     );
+        //     array_push(
+        //         $leaveChartDeduction,
+        //         array("value" => $deduction)
+        //     );
+        // }
+        // $dataSource = [ 
+        //     "categories" => [
+        //         "category" => $leaveChartCat
+        //     ],
+        //     "dataset" => [
+        //         [ "seriesname" => "Kuota", "data" => $leaveChartQuota ],
+        //         [ "seriesname" => "Terpakai", "data" => $leaveChartDeduction ]
+        //     ]
+        // ];
+        // echo json_encode($dataSource);
 
         // dd(Auth::guard('secr')->user()->toArray());
         // $encrypted = Crypt::encryptString('11725');

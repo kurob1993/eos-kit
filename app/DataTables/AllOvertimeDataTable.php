@@ -27,19 +27,29 @@ class AllOvertimeDataTable extends DataTable
                 . $overtime->stage->description . '</span>';
             })
             ->editColumn('start_date', function (AttendanceQuota $overtime) {
-                return $overtime->formatted_start_date;
+                return $overtime->start_date;
             })
             ->editColumn('end_date', function (AttendanceQuota $overtime) {
-                return $overtime->formatted_end_date;
+                return $overtime->end_date;
             })
             ->editColumn('attendance_quota_approval', function (AttendanceQuota $overtime){
                 $approvals = $overtime->attendanceQuotaApproval;
                 $a = '';
-                foreach ($approvals as $approval)
+                foreach ($approvals as $approval) {
+                    if ($approval->is_waiting)
+                        $a = $a . '<i class="fa fa-clock-o"></i>&nbsp;';
+                    else if ($approval->is_approved) {
+                        $a = $a . '<i class="fa fa-check text-success"></i>&nbsp;';
+                        $a = $a . $approval->updated_at . '&nbsp;';
+                    }
+                    else if ($approval->is_rejected)
+                        $a = $a . '<i class="fa fa-times text-danger"></i>&nbsp;';
+
                     $a = $a . view('layouts._personnel-no-with-name', [
                         'personnel_no' => $approval->regno,
                         'employee_name' => $approval->employee->name
                         ]) . '<br />';
+                }
                 return $a;
             })
             ->addColumn('duration', function(AttendanceQuota $overtime){
@@ -169,23 +179,9 @@ class AllOvertimeDataTable extends DataTable
                 'orderable' => false,
             ],
             [ 
-                'data' => 'from', 
-                'name' => 'from', 
-                'title' => 'Jam Mulai',
-                'searchable' => false,
-                'orderable' => false,
-            ],
-            [ 
                 'data' => 'end_date', 
                 'name' => 'end_date', 
                 'title' => 'Berakhir',
-                'searchable' => false,
-                'orderable' => false,
-            ],
-            [ 
-                'data' => 'to', 
-                'name' => 'to', 
-                'title' => 'Jam Berakhir',
                 'searchable' => false,
                 'orderable' => false,
             ],

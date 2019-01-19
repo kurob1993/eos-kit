@@ -395,10 +395,10 @@ class HomeController extends Controller
 
             return Datatables::of($overtimeApprovals)
                 ->editColumn('attendance_quota.start_date', function (AttendanceQuotaApproval $aa) {
-                    return $aa->attendanceQuota->formatted_start_date;
+                    return $aa->attendanceQuota->start_date;
                 })
                 ->editColumn('attendance_quota.end_date', function (AttendanceQuotaApproval $aa) {
-                    return $aa->attendanceQuota->formatted_end_date;
+                    return $aa->attendanceQuota->start_date;
                 })
                 ->editColumn('attendance_quota.attendance_quota_approval', function (AttendanceQuotaApproval $aa){
                     $approvals = $aa->attendanceQuota->attendanceQuotaApproval;
@@ -573,7 +573,7 @@ class HomeController extends Controller
         // tampilkan pesan bahwa telah berhasil setuju semua
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => sprintf("Berhasil menolak %s. Berhasil:%u & gagal:%u.",
+            "message" => sprintf("Berhasil Menyetujui %s. Berhasil:%u & gagal:%u.",
                 $moduleText, $success_count, $error_count)
         ]);
 

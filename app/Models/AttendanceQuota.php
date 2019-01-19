@@ -11,15 +11,13 @@ use App\Traits\OfLoggedUser;
 class AttendanceQuota extends Model
 {
     use PeriodDates, ReceiveStage, OfLoggedUser;
-    
+
     public $fillable = [
         'personnel_no',
         'start_date',
         'end_date',
         'attendance_quota_type_id',
         'overtime_reason_id',
-        'from',
-        'to',
         'secretary_id',
         'dirnik'
     ];
@@ -27,8 +25,8 @@ class AttendanceQuota extends Model
     protected $casts = [
         'id' => 'integer',
         'personnel_no' => 'integer',
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'start_date' => 'datetime:Y-m-d H:00',
+        'end_date' => 'datetime:Y-m-d H:00',
         'attendance_quota_type_id' => 'integer',
         'overtime_reason_id' => 'integer'
     ];
@@ -98,10 +96,31 @@ class AttendanceQuota extends Model
     public function getDurationAttribute()
     {
         $start = Carbon::createFromFormat('Y-m-d H:i:s', 
-            $this->start_date->format('Y-m-d') . ' '. $this->from);
+            $this->start_date);
         $end = Carbon::createFromFormat('Y-m-d H:i:s', 
-            $this->end_date->format('Y-m-d') . ' '. $this->to);
+            $this->end_date);
         
         return $end->diffInMinutes($start);
+    }
+
+    public function scopeIntersectWith($query, $s, $e)
+    {
+        // apakah ada data absence yang beririsan (intersection)
+        // SELECT id, personnel_no, start_date, end_date FROM absences
+        // WHERE (start_date <= $s AND end_date >= $s) 
+        // OR (start_date <= $e AND end_date >= $e)
+        // return $query->where()
+       //(($s>=$ki && $e<=$ka) || ($s<=$ki && $e>=$ki) || ($s<=$ka && $e>=$ka) )
+        return $query->where(function ($query) use($s, $e){ 
+            $query->where('start_date', '>=', $s)->where('end_date','<=', $e);
+        }) 
+        ->orWhere(function ($query) use($e, $s) { 
+            $query->where(function ($query) use($s) {
+                $query->where('start_date', '<=', $s)->where('end_date', '>=', $s);                
+            })
+            ->orWhere(function ($query) use($e) {
+                $query->where('start_date', '<=', $e)->where('end_date', '>=', $e); 
+            });      
+        });
     }
 }

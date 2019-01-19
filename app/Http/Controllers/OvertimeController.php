@@ -152,23 +152,36 @@ class OvertimeController extends Controller
             "level" => "success",
             "message" => "Berhasil menyimpan pengajuan lembur.",
         ]);
-
+        
+        // start date
+        $start_date = Carbon::createFromFormat('Y-m-d H:i', 
+            $request->input('start_date') . ' ' . $request->input('from'));
         // menghitung end_date berdasarkan day_assignment
         switch ($request->input('day_assignment')) {
             case '=':
-                $end_date = $request->input('start_date');
+                $end_date = $start_date;
             break;
             case '>':
-                $end_date = Carbon::parse($request->input('start_date'))->addDays(1);
+                $end_date = Carbon::create(
+                    $start_date->year, 
+                    $start_date->month,
+                    $start_date->day,
+                    substr($request->input('to'), 0, 2),
+                    substr($request->input('to'), 3, 2),
+                    0)
+                    ->addDays(1);
             break;
         }
 
         // membuat pengajuan lembur dengan menambahkan data personnel_no
-        $absence = AttendanceQuota::create($request->all()
-             + [ 'dirnik' => Auth::user()->personnel_no,
-                 'end_date' => $end_date,
-                'attendance_quota_type_id' => AttendanceQuotaType::suratPerintahLembur()->id
-                ]);
+        $overtime = new AttendanceQuota();
+        $overtime->personnel_no = $request->input('personnel_no');
+        $overtime->start_date = $start_date;
+        $overtime->end_date = $end_date;
+        $overtime->attendance_quota_type_id = AttendanceQuotaType::suratPerintahLembur()->id;
+        $overtime->overtime_reason_id = $request->input('overtime_reason_id');
+        $overtime->dirnik = Auth::user()->personnel_no;
+        $overtime->save();
 
         // kembali ke halaman index overtime
         return redirect()->route('overtimes.index');
