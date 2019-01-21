@@ -22,10 +22,10 @@ class SecOvertimeDataTable extends DataTable
                 . $overtime->stage->description . '</span>';
             })
             ->editColumn('start_date', function (Overtime $overtime) {
-                return $overtime->formatted_start_date;
+                return $overtime->start_date;
             })
             ->editColumn('end_date', function (Overtime $overtime) {
-                return $overtime->formatted_end_date;
+                return $overtime->end_date;
             })
             ->editColumn('attendance_quota_approval', function (Overtime $overtime){
                 $approvals = $overtime->attendanceQuotaApproval;
