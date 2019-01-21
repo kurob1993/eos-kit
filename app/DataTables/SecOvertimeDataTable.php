@@ -119,23 +119,9 @@ class SecOvertimeDataTable extends DataTable
                 'orderable' => false,
             ],
             [ 
-                'data' => 'from', 
-                'name' => 'from', 
-                'title' => 'Jam Mulai',
-                'searchable' => false,
-                'orderable' => false,
-            ],
-            [ 
                 'data' => 'end_date', 
                 'name' => 'end_date', 
                 'title' => 'Berakhir',
-                'searchable' => false,
-                'orderable' => false,
-            ],
-            [ 
-                'data' => 'to', 
-                'name' => 'to', 
-                'title' => 'Jam Berakhir',
                 'searchable' => false,
                 'orderable' => false,
             ],
