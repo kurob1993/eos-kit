@@ -159,7 +159,13 @@ class OvertimeController extends Controller
         // menghitung end_date berdasarkan day_assignment
         switch ($request->input('day_assignment')) {
             case '=':
-                $end_date = $start_date;
+                $end_date = Carbon::create(
+                    $start_date->year, 
+                    $start_date->month,
+                    $start_date->day,
+                    substr($request->input('to'), 0, 2),
+                    substr($request->input('to'), 3, 2),
+                    0);
             break;
             case '>':
                 $end_date = Carbon::create(
