@@ -398,7 +398,7 @@ class HomeController extends Controller
                     return $aa->attendanceQuota->start_date;
                 })
                 ->editColumn('attendance_quota.end_date', function (AttendanceQuotaApproval $aa) {
-                    return $aa->attendanceQuota->start_date;
+                    return $aa->attendanceQuota->end_date;
                 })
                 ->editColumn('attendance_quota.attendance_quota_approval', function (AttendanceQuotaApproval $aa){
                     $approvals = $aa->attendanceQuota->attendanceQuotaApproval;

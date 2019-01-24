@@ -25,7 +25,7 @@ class AttendanceObserver
             ->intersectWith($attendance->start_date, $attendance->end_date)
             ->first();
 
-        if ((sizeof($intersected) > 0) && !$attendance->is_denied) {
+        if ((sizeof($intersected) > 0) && !$intersected->is_denied) {
             Session::flash("flash_notification", [
                 "level" => "danger",
                 "message" => "Tidak dapat mengajukan izin karena tanggal pengajuan "

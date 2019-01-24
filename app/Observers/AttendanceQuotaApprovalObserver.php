@@ -28,11 +28,23 @@ class AttendanceQuotaApprovalObserver
         switch ($currentAqa->sequence) {
             case 1:
                 if ($currentAqa->is_approved) {
+                    
+                    // hitung jumlah persetujuan
+                    $count_of_aqa = $aq->attendanceQuotaApproval->count();
+                    
+                    // jika jumlah persetujuan hanya 1 maka langsung ubah stage
+                    if ($count_of_aqa == 1) {
+                        // NEED TO IMPLEMENT FLOW STAGE (send to SAP)
+                        $aq->stage_id = Stage::sentToSapStage()->id;
 
-                    // message history
-                    $messageAttribute = sprintf('Overtime partially approved from %s to %s',
-                        $from->personnelNoWithName, $to->personnelNoWithName);
-
+                        // message history
+                        $messageAttribute = sprintf('Overtime completely approved from %s to %s',
+                            $from->personnelNoWithName, $to->personnelNoWithName);                        
+                    } else {
+                        // message history
+                        $messageAttribute = sprintf('Overtime partially approved from %s to %s',
+                            $from->personnelNoWithName, $to->personnelNoWithName);
+                    }
                 } else if ($currentAqa->is_rejected) {
                     // batalkan persetujuan, ubah stage menjadi denied
                     $aq->stage_id = Stage::deniedStage()->id;
