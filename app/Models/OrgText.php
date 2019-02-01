@@ -28,6 +28,11 @@ class OrgText extends Model
         $query->where('ObjectID', $o);
     }
 
+    public function scopeFindByObjectabbr($query, $o)
+    {
+        $query->where('Objectabbr', $o);
+    }
+
     public function scopeLastUk($query, $o, $d)
     {
         $query->where('Objectname', 'like', $o.'%');

@@ -47,6 +47,18 @@ class OrganizationController extends Controller
                 ->first();
         }
     }
+    
+    public function showAbbr($Objectabbr, $date = null)
+    {
+        if (is_null($date)) {
+            return OrgText::findByObjectabbr($Objectabbr)
+                ->lastOrg()
+                ->first();
+        } else {
+            return OrgText::findByCompositeKey($Objectabbr, $date)
+                ->first();
+        }
+    }
 
     /**
      * Show the form for editing the specified resource.

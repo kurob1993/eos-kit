@@ -69,6 +69,15 @@ class User extends Authenticatable
     return $this->hasMany('App\Models\Family', 'PERNR', 'personnel_no');
   }
 
+  public function hasEmployeeRole()
+  {
+    $employeeRole = $this->roles->filter(function ($item, $key) {
+      return $item->name == 'employee';
+    });
+
+    return ($employeeRole->count() <> 1) ? false : true;
+  }
+
   public function getPersonnelNoWithNameAttribute()
   {
     // menggabungkan personnel_no dan nama

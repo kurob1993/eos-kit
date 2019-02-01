@@ -102,9 +102,9 @@ class LoginController extends Controller
                 $employee->org_unit_name = $structDisp->emportx;
                 $employee->save();
             }
-            
+
             // attach the role if not available
-            if (!$user->hasRole('employee')) {
+            if (!$user->hasEmployeeRole()) {
                 $employeeRole = Role::where('name', 'employee')->first();
                 $user->attachRole($employeeRole);
             }

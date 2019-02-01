@@ -46,6 +46,7 @@ Route::group(['prefix' => 'position', 'middleware' => 'api'], function() {
 Route::group(['prefix' => 'organization', 'middleware' => 'api'], function() {
     Route::get('/', 'OrganizationController@index');
     Route::get('ObjectID/{ObjectID}/{date?}', 'OrganizationController@show');
+    Route::get('Objectabbr/{Objectabbr}/{date?}', 'OrganizationController@showAbbr');
     Route::get('level/{unitkerja?}/{date?}', 'OrganizationController@unitkerja');
     Route::get('old/{unitkerjaold?}/{date?}', 'OrganizationController@unitkerjaold');
 });
