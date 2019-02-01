@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Traits;
+use Illuminate\Support\Facades\DB;
 
 trait PeriodDates
 {
@@ -56,10 +57,22 @@ trait PeriodDates
             ->whereYear('start_date', $y)
             ->where('personnel_no', $p);
     }
+    public function scopeMonthYearOf($query, $m, $y)
+    {
+        return $query->whereMonth('start_date', $m)
+            ->whereYear('start_date', $y);
+    }
 
     public function scopeCurrentPeriod($query)
     {
         return $query->whereMonth('start_date', date('m'))
             ->whereYear('start_date', date('Y'));
+    }
+
+    public function scopefoundYear($query)
+    {
+        $query->selectRaw('YEAR(start_date) as year')
+            ->orderBy(DB::raw('YEAR(start_date)'), 'desc')
+            ->groupBy( DB::raw('YEAR(start_date)') );        
     }
 }

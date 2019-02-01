@@ -39,10 +39,11 @@
 @endpush
 
 @push('custom-scripts')
-@include('scripts._select-filter-script', [ 'stages', $stages ])
+@include('scripts._select-filter-script', [ 'stages'=>$stages, 'foundYears'=>$foundYears])
 @include('scripts._button-submit-script')
 <!-- Generated scripts from DataTables -->
 {!! $dataTable->scripts() !!}
+@include('scripts._defer-ajax-dt-script')
 @endpush
 
 @push('on-ready-scripts')

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\DataTables\AllLeaveDataTable;
 use App\Models\Stage;
+use App\Models\Absence;
 
 class AllLeaveController extends Controller
 {
@@ -12,8 +13,11 @@ class AllLeaveController extends Controller
     public function index(AllLeaveDataTable $dataTable)
     {
         $stages = Stage::all();
-
-        return $dataTable->render('all_leaves.index', [ "stages" => $stages ]);
+        $foundYears = Absence::foundYear()->get();
+        
+        return $dataTable->render('all_leaves.index', 
+            [ "stages" => $stages, "foundYears" => $foundYears ]
+        );
     }
 
     public function create()

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\DataTables\AllOvertimeDataTable;
 use App\Models\Stage;
+use App\Models\AttendanceQuota;
 
 class AllOvertimeController extends Controller
 {
@@ -12,8 +13,10 @@ class AllOvertimeController extends Controller
     public function index(AllOvertimeDataTable $dataTable)
     {
         $stages = Stage::all();
+        $foundYears = AttendanceQuota::foundYear()->get();
 
-        return $dataTable->render('all_overtimes.index', [ "stages" => $stages ]);
+        return $dataTable->render('all_overtimes.index', 
+            [ "stages" => $stages, "foundYears" => $foundYears ]);
     }
 
     public function create()
