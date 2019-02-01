@@ -133,7 +133,7 @@ class LoginController extends Controller
             return 'Secretary not found!';
         }
 
-        if (!$user->hasRole('secretary')) {
+        if ( !$user->hasSecretaryRole() ) {
             $secretary = Role::where('name', 'secretary')->first();
             $user->attachRole($secretary);
         }
