@@ -126,14 +126,16 @@ class AllAbsencePermitDataTable extends DataTable
     public function getBuilderParameters()
     {
         return [
-            'dom' =>    "<'row'<'col-sm-3'B><'col-sm-3'<'toolbar'>><'col-sm-3'l><'col-sm-3'f>>" .
+            'dom' =>    "<'row'<'col-sm-1 pull-left'l> <'col-sm-2'<'monthperiod'>> <'col-sm-2'<'yearperiod'>> <'col-sm-2'<'toolbar'>> <'col-sm-1'B> <'col-sm-3 pull-right'f>>" .
                         "<'row'<'col-sm-12'tr>>" .
                         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             'pageLength' => config('emss.personnel_service.page_length'),
             'buttons' => ['excel'],
             'responsive' => true,
             "language" => [
-                'processing' => '<i class="fa fa-spinner fa-spin fa-fw"></i><span class="sr-only">Loading...</span> '
+                'processing' => '<i class="fa fa-spinner fa-spin fa-fw"></i><span class="sr-only">Loading...</span> ',
+                'lengthMenu' => '_MENU_',
+                'search' => '<i class="fa fa-search"></i>',
             ],
             // 'columnDefs' => [ [ 'responsivePriority' => 1, 'targets' => 7 ], ],
             // 'buttons' => [ 'extend' => 'excel', 'exportOptions' => [ 'columns' => [ 'id', ] ] ], 'paging' => false, 'searching' => false, 'responsive' => [ 'details' => 'false' ], 

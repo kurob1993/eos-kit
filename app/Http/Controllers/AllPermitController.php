@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\DataTables\AllAbsencePermitDataTable;
 use App\DataTables\AllAttendancePermitDataTable;
 use App\Models\Stage;
+use App\Models\Absence;
+use App\Models\Attendance;
 
 class AllPermitController extends Controller
 {
@@ -13,15 +15,17 @@ class AllPermitController extends Controller
     public function absence(AllAbsencePermitDataTable $dataTable)
     {
         $stages = Stage::all();
-
-        return $dataTable->render('all_permits.absence.index', [ "stages" => $stages ]);        
+        $foundYears = Absence::foundYear()->get();
+        return $dataTable->render('all_permits.absence.index', 
+            [ "stages" => $stages, "foundYears" => $foundYears ]);       
     }
 
     public function attendance(AllAttendancePermitDataTable $dataTable)
     {
         $stages = Stage::all();
-
-        return $dataTable->render('all_permits.attendance.index', [ "stages" => $stages ]);
+        $foundYears = Attendance::foundYear()->get();
+        return $dataTable->render('all_permits.attendance.index', 
+        [ "stages" => $stages, "foundYears" => $foundYears ]);   
     }
 
     public function index()
