@@ -98,12 +98,6 @@ class AllAbsenceQuotaDataTable extends DataTable
                 'orderable' => false,
             ],
             [ 
-                'data' => 'user.name', 
-                'name' => 'user.name', 
-                'title' => 'Nama',
-                'orderable' => false,
-            ],
-            [ 
                 'data' => 'start_date', 
                 'name' => 'start_date', 
                 'title' => 'Mulai',

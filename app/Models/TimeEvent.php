@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\Models\Stage;
 use App\Traits\ReceiveStage;
 use App\Traits\OfLoggedUser;
@@ -87,5 +88,18 @@ class TimeEvent extends Model
     public function getPlainIdAttribute()
     {
         return 'time_event-' . $this->id;
+    }
+
+    public function scopeMonthYearOf($query, $m, $y)
+    {
+        return $query->whereMonth('check_date', $m)
+            ->whereYear('check_date', $y);
+    }
+    
+    public function scopefoundYear($query)
+    {
+        $query->selectRaw('YEAR(check_date) as year')
+            ->orderBy(DB::raw('YEAR(check_date)'), 'desc')
+            ->groupBy( DB::raw('YEAR(check_date)') );        
     }
 }
