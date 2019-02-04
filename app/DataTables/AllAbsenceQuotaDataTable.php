@@ -30,6 +30,10 @@ class AllAbsenceQuotaDataTable extends DataTable
             })
             ->editColumn('end_deduction', function (AbsenceQuota $absenceQuota) {
                 return $absenceQuota->formatted_end_deduction;
+            })
+            ->editColumn('user.name', function (AbsenceQuota $absenceQuota) {
+                $nama = $absenceQuota->user()->first();
+                return $nama['name'];
             });
     }
 
