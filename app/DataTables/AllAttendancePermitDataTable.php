@@ -86,6 +86,9 @@ class AllAttendancePermitDataTable extends DataTable
                         case Stage::deniedStage()->id: $query->deniedOnly(); break;
                     }
                 } 
+                if ($request->has('month_id') && $request->has('year_id')) {
+                    $query->monthYearOf($request->input('month_id'),$request->input('year_id'))->get();
+                }
             }, true);
     }
 
@@ -117,7 +120,11 @@ class AllAttendancePermitDataTable extends DataTable
     {
         return $this->builder()
                     ->columns($this->getColumns())
-                    ->minifiedAjax('', 'data.stage_id = $("#select-filter option:selected").val();', [ ])
+                    ->minifiedAjax('', 
+                        'data.stage_id = $("#select-filter option:selected").val();
+                        data.month_id = $("#month-filter option:selected").val();
+                        data.year_id = $("#year-filter option:selected").val();', 
+                        [ ])
                     ->addAction(['width' => '80px'])
                     ->parameters($this->getBuilderParameters());
     }
