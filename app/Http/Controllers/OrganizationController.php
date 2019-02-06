@@ -48,13 +48,18 @@ class OrganizationController extends Controller
         }
     }
     
-    public function showAbbr($Objectabbr, $date = null)
+    public function showAbbr($Objectabbr = null, $date = null)
     {
-        if (is_null($date)) {
+        if (is_null($date) && is_null($Objectabbr)) {
+            return OrgText::lastOrg()->get();
+        }
+
+        if($Objectabbr && is_null($date) ){
             return OrgText::findByObjectabbr($Objectabbr)
-                ->lastOrg()
-                ->first();
-        } else {
+            ->get();
+        }
+
+        if($Objectabbr && $date){
             return OrgText::findByCompositeKey($Objectabbr, $date)
                 ->first();
         }

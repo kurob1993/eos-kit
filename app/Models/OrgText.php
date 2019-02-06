@@ -18,9 +18,9 @@ class OrgText extends Model
 
     public function scopeFindByCompositeKey($query, $o, $d)
     {
-        $query->findByObjectID($o)
-            ->where('EndDate', '>', $d)
-            ->where('Startdate', '<', $d);
+        $query->findByObjectabbr($o)
+            ->where('EndDate', '>=', $d)
+            ->where('Startdate', '<=', $d);
     }
 
     public function scopeFindByObjectID($query, $o)
