@@ -45,6 +45,12 @@ class AttendanceQuota extends Model
     {
         // many-to-one relationship dengan Employee
         return $this->belongsTo('App\Models\Employee', 'personnel_no', 'personnel_no');
+    }  
+
+    public function userDirnik()
+    {
+        // many-to-one relationship dengan Employee
+        return $this->belongsTo('App\User', 'dirnik', 'personnel_no');
     }    
 
     public function stage()

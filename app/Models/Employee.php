@@ -102,6 +102,12 @@ class Employee extends Model
       return $this->hasMany('App\Models\AbsenceApproval', 'regno', 'personnel_no');
     }
 
+    public function attendanceApprovals()
+    {
+      // one-to-many relationship dengan AttendanceApproval
+      return $this->hasMany('App\Models\AttendanceApproval', 'regno', 'personnel_no');
+    }
+
     public function structDisp()
     {
       // one-to-many relationship dengan StructDisp

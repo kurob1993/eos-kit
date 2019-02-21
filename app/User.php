@@ -83,4 +83,10 @@ class User extends Authenticatable
     // menggabungkan personnel_no dan nama
     return $this->personnel_no . ' - ' . $this->name;
   }
+
+  public function attendanceQuotaDirnik()
+  {
+      // many-to-one relationship dengan AttendanceQuota
+      return $this->hasMany('App\Models\AttendanceQuota', 'dirnik', 'personnel_no');
+  }
 }

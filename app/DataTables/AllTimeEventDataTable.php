@@ -35,7 +35,7 @@ class AllTimeEventDataTable extends DataTable
                 foreach ($approvals as $approval)
                     $a = $a . view('layouts._personnel-no-with-name', [
                         'personnel_no' => $approval->regno,
-                        'employee_name' => $approval->employee->name
+                        'employee_name' => $approval->employee['name']
                         ]) . '<br />';
                 return $a;
             })

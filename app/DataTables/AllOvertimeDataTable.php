@@ -22,12 +22,25 @@ class AllOvertimeDataTable extends DataTable
             ->editColumn('id', function (AttendanceQuota $overtime){
                 return $overtime->plain_id;
             })
+            ->editColumn('employee.name', function (AttendanceQuota $overtime){
+                return $overtime->employee['name'];
+            })
             ->editColumn('stage.description', function (AttendanceQuota $overtime) {
                 return '<span class="label label-' .$overtime->stage->class_description . '">' 
                 . $overtime->stage->description . '</span>';
             })
             ->editColumn('start_date', function (AttendanceQuota $overtime) {
                 return $overtime->start_date;
+            })
+            ->editColumn('secretary.name', function (AttendanceQuota $overtime) {
+                if($overtime->secretary){
+                    return $overtime->secretary->name.
+                        ' ('.$overtime->secretary->email.')';
+                }
+                return '<span class="label label-default">'.
+                            $overtime->userDirnik->personnel_no
+                        .'</span> '.
+                        $overtime->userDirnik->name;
             })
             ->editColumn('end_date', function (AttendanceQuota $overtime) {
                 return $overtime->end_date;
@@ -47,7 +60,7 @@ class AllOvertimeDataTable extends DataTable
 
                     $a = $a . view('layouts._personnel-no-with-name', [
                         'personnel_no' => $approval->regno,
-                        'employee_name' => $approval->employee->name
+                        'employee_name' => $approval->employee['name']
                         ]) . '<br />';
                 }
                 return $a;
@@ -111,7 +124,8 @@ class AllOvertimeDataTable extends DataTable
                 'overtimeReason', 
                 'stage',
                 'employee:personnel_no,name',
-                'attendanceQuotaApproval'
+                'attendanceQuotaApproval',
+                'secretary'
                 ]
             );
     }
@@ -221,6 +235,13 @@ class AllOvertimeDataTable extends DataTable
                 'data' => 'stage.description', 
                 'name' => 'stage.description', 
                 'title' => 'Tahap', 
+                'searchable' => false, 
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'secretary.name', 
+                'name' => 'secretary.name', 
+                'title' => 'Dibuat oleh', 
                 'searchable' => false, 
                 'orderable' => false,
             ],
