@@ -181,6 +181,7 @@ class HomeController extends Controller
             ->with([
                 'status:id,description',
                 'absence',
+                'absence.user',
                 'absence.stage',
                 'absence.employee:personnel_no,name',
                 'absence.absenceType',
@@ -199,6 +200,9 @@ class HomeController extends Controller
                 })
                 ->editColumn('absence.end_date', function (AbsenceApproval $aa) {
                     return $aa->absence->formatted_end_date;
+                })
+                ->editColumn('absence.user.name', function (AbsenceApproval $aa) {
+                    return $aa->absence->user['name'];
                 })
                 ->editColumn('absence.absence_approvals', function (AbsenceApproval $aa){
                     $approvals = $aa->absence->absenceApprovals;
@@ -238,6 +242,7 @@ class HomeController extends Controller
             ->with([
                 'status:id,description',
                 'permit',
+                'permit.user',
                 'permit.stage',
                 'permit.employee:personnel_no,name',
                 'permit.permitType',
@@ -274,6 +279,9 @@ class HomeController extends Controller
             })
             ->editColumn('permit.end_date', function ($aa) {
                 return $aa->permit->formatted_end_date;
+            })
+            ->editColumn('permit.user.name', function ($aa) {
+                return $aa->permit->user['name'];
             })
             ->editColumn('permit.permit_approvals', function ($aa){
                 $approvals = $aa->permit->permitApprovals;
@@ -327,6 +335,7 @@ class HomeController extends Controller
             ->with([
                 'status:id,description',
                 'timeEvent',
+                'timeEvent.user',
                 'timeEvent.stage',
                 'timeEvent.employee:personnel_no,name',
                 'timeEvent.timeEventType',
@@ -345,6 +354,9 @@ class HomeController extends Controller
                 })
                 ->editColumn('time_event.check_time', function (TimeEventApproval $aa) {
                     return $aa->timeEvent->check_time;
+                })
+                ->editColumn('time_event.user.name', function (TimeEventApproval $aa) {
+                    return $aa->timeEvent->user['name'];
                 })
                 ->editColumn('time_event.time_event_approvals', function (TimeEventApproval $aa){
                     $approvals = $aa->timeEvent->TimeEventApprovals;
@@ -380,6 +392,7 @@ class HomeController extends Controller
             ->with([
                 'status:id,description',
                 'attendanceQuota',
+                'attendanceQuota.user',
                 'attendanceQuota.stage',
                 'attendanceQuota.employee:personnel_no,name',
                 'attendanceQuota.attendanceQuotaType',
@@ -399,6 +412,9 @@ class HomeController extends Controller
                 })
                 ->editColumn('attendance_quota.end_date', function (AttendanceQuotaApproval $aa) {
                     return $aa->attendanceQuota->end_date;
+                })
+                ->editColumn('attendance_quota.user.name', function (AttendanceQuotaApproval $aa) {
+                    return $aa->attendanceQuota->user['name'];
                 })
                 ->editColumn('attendance_quota.attendance_quota_approval', function (AttendanceQuotaApproval $aa){
                     $approvals = $aa->attendanceQuota->attendanceQuotaApproval;

@@ -65,8 +65,8 @@ class EmployeeDashboardComposer
                 'orderable' => false,
             ],
             [
-                'data' => 'absence.employee.name',
-                'name' => 'absence.employee.name',
+                'data' => 'absence.user.name',
+                'name' => 'absence.user.name',
                 'title' => 'Nama',
                 'orderable' => false,
             ],
@@ -141,8 +141,8 @@ class EmployeeDashboardComposer
                 'orderable' => false,
             ],
             [
-                'data' => 'permit.employee.name',
-                'name' => 'permit.employee.name',
+                'data' => 'permit.user.name',
+                'name' => 'permit.user.name',
                 'title' => 'Nama',
                 'orderable' => false,
             ],
@@ -217,8 +217,8 @@ class EmployeeDashboardComposer
                 'orderable' => false,
             ],
             [
-                'data' => 'time_event.employee.name',
-                'name' => 'time_event.employee.name',
+                'data' => 'time_event.user.name',
+                'name' => 'time_event.user.name',
                 'title' => 'Nama',
                 'orderable' => false,
             ],
@@ -276,8 +276,8 @@ class EmployeeDashboardComposer
                 'orderable' => false,
             ],
             [ 
-                'data' => 'attendance_quota.employee.name', 
-                'name' => 'attendance_quota.employee.name', 
+                'data' => 'attendance_quota.user.name', 
+                'name' => 'attendance_quota.user.name', 
                 'title' => 'Nama',
                 'orderable' => false,
             ],
