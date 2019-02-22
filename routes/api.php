@@ -50,3 +50,17 @@ Route::group(['prefix' => 'organization', 'middleware' => 'api'], function() {
     Route::get('level/{unitkerja?}/{date?}', 'OrganizationController@unitkerja');
     Route::get('old/{unitkerjaold?}/{date?}', 'OrganizationController@unitkerjaold');
 });
+
+Route::group(['prefix' => 'zhrom0007', 'middleware' => 'api'], function() {
+    Route::get('/', 'Zhrom0007Controller@index');
+    Route::get('AbbrPosition/{AbbrPosition?}', 'Zhrom0007Controller@AbbrPosition');
+});
+
+Route::group(['prefix' => 'zhrom0012', 'middleware' => 'api'], function() {
+    Route::get('/', 'Zhrom0012Controller@index');
+    Route::get('nojabatan/{nojabatan?}', 'Zhrom0012Controller@nojabatan');
+});
+
+Route::group(['prefix' => 'zhrom0013', 'middleware' => 'api'], function() {
+    Route::get('nojabatan/{nojabatan?}', 'Zhrom0013Controller@nojabatan');
+});
