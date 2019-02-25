@@ -27,13 +27,23 @@ class SecOvertimeDataTable extends DataTable
             ->editColumn('end_date', function (Overtime $overtime) {
                 return $overtime->end_date;
             })
+            ->editColumn('secretary.name', function (Overtime $overtime) {
+                if($overtime->secretary){
+                    return $overtime->secretary->name.
+                        ' ('.$overtime->secretary->email.')';
+                }
+                return '<span class="label label-default">'.
+                            $overtime->userDirnik->personnel_no
+                        .'</span> '.
+                        $overtime->userDirnik->name;
+            })
             ->editColumn('attendance_quota_approval', function (Overtime $overtime){
                 $approvals = $overtime->attendanceQuotaApproval;
                 $a = '';
                 foreach ($approvals as $approval)
                     $a = $a . view('layouts._personnel-no-with-name', [
                         'personnel_no' => $approval->regno,
-                        'employee_name' => $approval->employee->name
+                        'employee_name' => $approval->employee['name']
                         ]) . '<br />';
                 return $a;
             })
@@ -152,6 +162,13 @@ class SecOvertimeDataTable extends DataTable
                 'data' => 'stage.description', 
                 'name' => 'stage.description', 
                 'title' => 'Tahap', 
+                'searchable' => false, 
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'secretary.name', 
+                'name' => 'secretary.name', 
+                'title' => 'Dibuat oleh', 
                 'searchable' => false, 
                 'orderable' => false,
             ],
