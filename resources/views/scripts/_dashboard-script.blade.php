@@ -119,11 +119,16 @@
             })
         }
     }),
+    (handleModalPengumuman = function () {
+        $('#pengumuman').modal('show');
+    }),
     (DashboardPlugins = (function () {
         "use strict";
         return {
             init: function () {
-                handleConfirm(), handleSelectFilterDashboard();
+                handleConfirm(), 
+                handleSelectFilterDashboard();
+                handleModalPengumuman();
             }
         };
     })());
