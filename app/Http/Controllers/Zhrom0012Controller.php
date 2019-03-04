@@ -17,6 +17,8 @@ class Zhrom0012Controller extends Controller
 
     public function nojabatan(Request $request, $nojabatan = null)
     {
-        return Zhrom0012::where('nojabatan',$nojabatan)->get();
+        $zhrom0012 = Zhrom0012::where('nojabatan',$nojabatan)->get();
+        $unique = $zhrom0012->unique('namakompetensi');
+        return $unique->values()->all();
     }
 }
