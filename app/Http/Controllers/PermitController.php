@@ -48,8 +48,8 @@ class PermitController extends Controller
                 ->editColumn('approver', function ($permit) {
                     // personnel_no dan name atasan
                     return view('layouts._personnel-no-with-name', [
-                        'personnel_no' => $permit->permitApprovals->first()->employee->personnel_no,
-                        'employee_name' => $permit->permitApprovals->first()->employee->name,
+                        'personnel_no' => $permit->permitApprovals->first()->employee['personnel_no'],
+                        'employee_name' => $permit->permitApprovals->first()->employee['name'],
                     ]);
                 })
                 ->setRowAttr([
