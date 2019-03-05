@@ -19,4 +19,35 @@ class Zhrom0007 extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public function transition()
+    {
+        return $this->belongsTo('App\Models\Transition','abbr_jobs','AbbrPosition');
+    }
+
+    public function scopeGetForSelect2($query,$request)
+    {           
+        $page = $request->page;
+        $resultCount = 25;
+        $offset = ($page - 1) * $resultCount;
+
+        $user = $query->where('AbbrPosition', 'like','%'.$request->term.'%')
+                ->orWhere('NameofPosition', 'like','%'.$request->term.'%')
+                ->get();
+
+        $results = $user
+        ->map(function ($value,$key) {
+            return [
+                'id' => $value->AbbrPosition, 
+                'text'=> $value->NameofPosition
+            ];
+        });
+
+        $count = $user->count();
+        $endCount = $offset + $resultCount;
+        $morePages = $count > $endCount;
+
+        $select2 = ['results'=>$results,'pagination'=>['more'=>$morePages]];
+        return response()->json($select2);
+    }
 }

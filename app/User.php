@@ -89,4 +89,8 @@ class User extends Authenticatable
       // many-to-one relationship dengan AttendanceQuota
       return $this->hasMany('App\Models\AttendanceQuota', 'dirnik', 'personnel_no');
   }
+  public function transition()
+  {
+      return $this->belongsTo('App\Model\Transition','personnel_no','personnel_no');
+  }
 }

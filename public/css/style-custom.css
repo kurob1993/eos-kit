@@ -1,4 +1,8 @@
 /***************** Custom CSS ***************/
+.select2 {
+  width:100%!important;
+}
+
 .btn.btn-success {
   color: #fff;
   background: #0b3c5d;
