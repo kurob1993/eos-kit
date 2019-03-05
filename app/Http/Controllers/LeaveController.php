@@ -37,8 +37,8 @@ class LeaveController extends Controller
                 ->editColumn('approver', function ($absence) {
                     // personnel_no dan name atasan
                     return view('layouts._personnel-no-with-name', [
-                        'personnel_no' => $absence->absenceApprovals->first()->employee['personnel_no'],
-                        'employee_name' => $absence->absenceApprovals->first()->employee['name'],
+                        'personnel_no' => $absence->absenceApprovals->first()->user['personnel_no'],
+                        'employee_name' => $absence->absenceApprovals->first()->user['name'],
                     ]);
                 })
                 ->setRowAttr([
