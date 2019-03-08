@@ -18,9 +18,7 @@ class AttendanceApprovalObserver
             ->user;
 
         // sistem mengirim email notifikasi
-        if($to->hasValidEmail){
-          $to->notify(new AttendanceApprovalCreatedMessage($attendanceApproval));
-        }
+        $to->notify(new AttendanceApprovalCreatedMessage($attendanceApproval));
     }
     
     public function updated(AttendanceApproval $attendanceApproval)
@@ -71,9 +69,7 @@ class AttendanceApprovalObserver
       $attendance->save();
 
       // sistem mengirim email notifikasi dari atasan ke
-      // karyawan yang mengajukan      
-      if($to->hasValidEmail){
-        $to->notify(new PermitApprovalMessage($from, $attendanceApproval));
-      }
+      // karyawan yang mengajukan         
+      $to->notify(new PermitApprovalMessage($from, $attendanceApproval));
     }
 }

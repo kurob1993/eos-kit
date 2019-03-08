@@ -151,9 +151,7 @@ class AttendanceQuotaObserver
             $to = $attendanceQuota->user()->first();
 
             // sistem mengirim email notifikasi
-            if($to->hasValidEmail){
-                $to->notify(new OvertimeSentToSapMessage($attendanceQuota));
-            }
+            $to->notify(new OvertimeSentToSapMessage($attendanceQuota));
         }
     }
 
@@ -166,8 +164,6 @@ class AttendanceQuotaObserver
             $approval->delete();
             // sistem mengirim notifikasi
         $to = $attendanceQuota->user;
-        if($to->hasValidEmail){
-            $to->notify(new OvertimeDeletedMessage($attendanceQuota));
-        }
+        $to->notify(new OvertimeDeletedMessage($attendanceQuota));
     }
 }
