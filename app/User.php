@@ -93,4 +93,14 @@ class User extends Authenticatable
   {
       return $this->belongsTo('App\Model\Transition','personnel_no','personnel_no');
   }
+
+  public function getHasValidEmailAttribute()
+  {
+    $email1 = str_is('*@krakatausteel.com', $this->email);
+    $email2 = str_is('*@mitra.krakatausteel.com', $this->email);
+    if($email1 || $email2){
+      return true;
+    }
+    return false;
+  }
 }
