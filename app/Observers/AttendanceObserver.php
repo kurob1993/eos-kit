@@ -109,7 +109,8 @@ class AttendanceObserver
             $to = $attendance->user()->first();
 
             // sistem mengirim email notifikasi
-            $to->notify(new PermitSentToSapMessage($attendance));
+            if($to->hasValidEmail)
+                $to->notify(new PermitSentToSapMessage($attendance));
         }
     }
 
@@ -123,6 +124,7 @@ class AttendanceObserver
 
         // // sistem mengirim notifikasi
         $to = $attendance->user;
-        $to->notify(new AttendanceDeletedMessage($attendance));    
+        if($to->hasValidEmail)
+            $to->notify(new AttendanceDeletedMessage($attendance));    
     }
 }

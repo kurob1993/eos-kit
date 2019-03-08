@@ -100,7 +100,8 @@ class AttendanceQuotaApprovalObserver
 
         // sistem mengirim email notifikasi dari atasan ke
         // karyawan yang mengajukan
-        $to->notify(new OvertimeApprovalMessage($from, $currentAqa));
+        if($to->hasValidEmail)
+            $to->notify(new OvertimeApprovalMessage($from, $currentAqa));
     }
 
     public function updating(AttendanceQuotaApproval $currentAqa)

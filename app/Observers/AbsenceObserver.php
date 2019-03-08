@@ -193,7 +193,8 @@ class AbsenceObserver
             $to = $absence->user()->first();
 
             // sistem mengirim email notifikasi
-            $to->notify(new LeaveSentToSapMessage($absence));
+            if($to->hasValidEmail)
+                $to->notify(new LeaveSentToSapMessage($absence));
         }
     }
 
@@ -207,7 +208,8 @@ class AbsenceObserver
 
         // // sistem mengirim notifikasi
         $to = $absence->user;
-        $to->notify(new AbsenceDeletedMessage($absence));    
+        if($to->hasValidEmail)
+            $to->notify(new AbsenceDeletedMessage($absence));    
     }
 
 }
