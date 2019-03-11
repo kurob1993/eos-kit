@@ -600,29 +600,38 @@ class Employee extends Model
         
     }
 
+    /**
+     * Menampilkan atasan minimal supperintenden 
+     * dengan pe;impahan
+     * 
+     * 1. Jika data adalah supperintenden atau manager
+     *    tampilkan atasan langsung
+     * 2. jika level atasan langsung tidak sama 
+     *    dengan C (Bukan supperintendent)
+     *    lempar ke minManagerBossWithDelegation
+     * 3. jika data superintendent null 
+     *          maka cari data superintendent di pelimpahan
+     *    jika tidak
+     *          tampilkan data superintendent    
+     * 4. jika data superintendent di pelimpahan null
+     *          maka tampilkan null 
+     */
     public function minSuperintendentBossWithDelegation()
     {
-        // mencari atasan dengan minimal level CS
-        // apabila tidak ditemukan maka cari di level BS
-        // apabila tidak ditemukan di level BS
-        // maka cari di level AS
-        // getSuperintendentTransition
-
         if ($this->isSuperintendent() || $this->isManager() ) {
             return $this->closestBoss();
         } else {
+            if( $this->getDirectBossLevel() !== 'C'){
+                return $this->minManagerBossWithDelegation();
+            }
+
             $superintendent = $this->superintendentBoss();
-
             if (!$superintendent){
-
                 $superintendentTransition = $this->getSuperintendentTransition();
-
                 if(!$superintendentTransition && !$superintendent){
                     return [];
                 }
-                
                 return $superintendentTransition;
-
             }else{
                 return $superintendent;
             }
@@ -652,4 +661,30 @@ class Employee extends Model
         }
     }
     
+    /**
+    * Menampilkan level organisasi atasan langsung 
+    * minimal superitendent ('C')
+    **/
+    public function getDirectBossLevel($nojabatan = null)
+    {
+        //no jabatan karyawan
+        if(is_null($nojabatan)){
+            $nojabatan = $this->structDisp->first()['emp_hrp1000_s_short'];
+        }
+        
+        //no jabatan boss
+        $directboss = Zhrom0013::where('nojabatan',$nojabatan)
+        ->orderBy('id','desc')
+        ->first()['nojabatanatasanlangsung'];
+
+        //level org
+        $cekLevl = Zhrom0007::where('AbbrPosition',$directboss)
+        ->orderBy('id','desc')
+        ->first()['LvlOrg'];
+        
+        if($cekLevl <= 'C'){
+            return $cekLevl;
+        }
+        return $this->getDirectBossLevel($directboss);
+    }
 }
