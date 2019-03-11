@@ -55,14 +55,14 @@ class TransitionController extends Controller
             'data' => 'abbr_jobs',
             'name' => 'abbr_jobs',
             'title' => 'Jabatan',
-            'searchable' => false,
+            'searchable' => true,
             'orderable' => false, 
             ])
         ->addColumn([
             'data' => 'personnel_no',
             'name' => 'personnel_no',
             'title' => 'Karyawan',
-            'searchable' => false,
+            'searchable' => true,
             'orderable' => false,
         ])
         ->addColumn([
