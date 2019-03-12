@@ -496,7 +496,7 @@ class Employee extends Model
             ->merge($absences);
     }
 
-    public function getMinSuperintendentJobs($nojabatan = null)
+    public function getSuperintendentJobs($nojabatan = null)
     {
         //no jabatan karyawan
         if(is_null($nojabatan)){
@@ -514,7 +514,7 @@ class Employee extends Model
         ->first()['LvlOrg'];
         
         if($cekLevl > 'C'){
-            return $this->getMinSuperintendentJobs($directboss);
+            return $this->getSuperintendentJobs($directboss);
         }
 
         if($cekLevl !== 'C'){
@@ -525,7 +525,7 @@ class Employee extends Model
         return ['job'=>$directboss, 'bos'=>$superintendent];
     }
 
-    public function getMinManagerJobs($nojabatan = null)
+    public function getManagerJobs($nojabatan = null)
     {
         //no jabatan karyawan
         if(is_null($nojabatan)){
@@ -543,7 +543,7 @@ class Employee extends Model
         ->first()['LvlOrg'];
         
         if($cekLevl > 'B'){
-            return $this->getMinManagerJobs($directboss);
+            return $this->getManagerJobs($directboss);
         }
         
         if($cekLevl !== 'B'){
@@ -554,48 +554,48 @@ class Employee extends Model
         return ['job'=>$directboss, 'bos'=>$manager];
     }
 
-    public function getSuperintendentTransition()
+    public function superintendentWithDelegation()
     {
         //get boss
-        $jobsBoss = $this->getMinSuperintendentJobs();
+        $jobsBoss = $this->getSuperintendentJobs();
 
         //tanggal sekarang
         $now = date('Y-m-d');
 
-        //cek data pengalihan
-        $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
-        ->where(function($query) use ($now){
-            $query->where('start_date','<=',$now)
-            ->where('end_date','>=',$now);
-        });
-
-        if($transition->count() !== 0 && !$jobsBoss['bos']){
-            return Employee::where('personnel_no',$transition->first()->personnel_no)->first();
+        if($jobsBoss['bos']){
+            return Employee::where('personnel_no',$jobsBoss['bos']['empnik'])->first();
         }else{
-            return [];
+            //cek data pengalihan
+            $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
+            ->where(function($query) use ($now){
+                $query->where('start_date','<=',$now)
+                ->where('end_date','>=',$now);
+            });
+            if($transition->count())
+                return Employee::where('personnel_no',$transition->first()->personnel_no)->first();
         }
         
     }
 
-    public function getManagerTransition()
+    public function managerWithDelegation()
     {
         //get boss
-        $jobsBoss = $this->getMinManagerJobs();
+        $jobsBoss = $this->getManagerJobs();
 
         //tanggal sekarang
         $now = date('Y-m-d');
 
-        //cek data pengalihan
-        $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
-        ->where(function($query) use ($now){
-            $query->where('start_date','<=',$now)
-            ->where('end_date','>=',$now);
-        });
-
-        if($transition->count() !== 0 && !$jobsBoss['bos']){
-            return Employee::where('personnel_no',$transition->first()->personnel_no)->first();
+        if($jobsBoss['bos']){
+            return Employee::where('personnel_no',$jobsBoss['bos']['empnik'])->first();
         }else{
-            return [];
+            //cek data pengalihan
+            $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
+            ->where(function($query) use ($now){
+                $query->where('start_date','<=',$now)
+                ->where('end_date','>=',$now);
+            });
+            if($transition->count())
+                return Employee::where('personnel_no',$transition->first()->personnel_no)->first();
         }
         
     }
@@ -616,75 +616,32 @@ class Employee extends Model
      * 4. jika data superintendent di pelimpahan null
      *          maka tampilkan null 
      */
-    public function minSuperintendentBossWithDelegation()
+    public function minSuperintendentWithDelegation()
     {
         if ($this->isSuperintendent() || $this->isManager() ) {
             return $this->closestBoss();
         } else {
-            if( $this->getDirectBossLevel() !== 'C'){
-                return $this->minManagerBossWithDelegation();
-            }
-
-            $superintendent = $this->superintendentBoss();
+            $superintendent = $this->superintendentWithDelegation();
             if (!$superintendent){
-                $superintendentTransition = $this->getSuperintendentTransition();
-                if(!$superintendentTransition && !$superintendent){
-                    return [];
-                }
-                return $superintendentTransition;
+                return $this->minManagerWithDelegation();
             }else{
                 return $superintendent;
             }
         }
     }
 
-    public function minManagerBossWithDelegation()
+    public function minManagerWithDelegation()
     {
         if ($this->isSuperintendent() || $this->isManager() ) {
             return $this->closestBoss();
         } else {
             // meneruskan recursive call dari atas
-            $manager = $this->managerBoss();
-            
+            $manager = $this->managerWithDelegation();
             if (!$manager){
-
-                $managerTransition = $this->getManagerTransition();
-
-                if(!$manager && !$managerTransition){
-                    return [];
-                }
-
-                return $managerTransition;
+                return $this->generalManagerBoss();
             }else{
                 return $manager;
             }
         }
-    }
-    
-    /**
-    * Menampilkan level organisasi atasan langsung 
-    * minimal superitendent ('C')
-    **/
-    public function getDirectBossLevel($nojabatan = null)
-    {
-        //no jabatan karyawan
-        if(is_null($nojabatan)){
-            $nojabatan = $this->structDisp->first()['emp_hrp1000_s_short'];
-        }
-        
-        //no jabatan boss
-        $directboss = Zhrom0013::where('nojabatan',$nojabatan)
-        ->orderBy('id','desc')
-        ->first()['nojabatanatasanlangsung'];
-
-        //level org
-        $cekLevl = Zhrom0007::where('AbbrPosition',$directboss)
-        ->orderBy('id','desc')
-        ->first()['LvlOrg'];
-        
-        if($cekLevl <= 'C'){
-            return $cekLevl;
-        }
-        return $this->getDirectBossLevel($directboss);
     }
 }
