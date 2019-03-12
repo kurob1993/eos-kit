@@ -126,13 +126,13 @@ class StructDispController extends Controller
             return [];
     }
 
-    public function minSuperintendentWithDelegation($empnik)
+    public function minSptBossWithDelegation($empnik)
     {
         // mencari atasan minimal golongan CS
         $employee = $this->findByPersonnel($empnik);
         
         if (!is_null($employee))
-            return $employee->minSuperintendentWithDelegation();
+            return $employee->minSptBossWithDelegation();
         else 
             return [];
     }
@@ -143,29 +143,40 @@ class StructDispController extends Controller
         $employee = $this->findByPersonnel($empnik);
         
         if (!is_null($employee))
-            return $employee->minManagerWithDelegation();
+            return $employee->minManagerBossWithDelegation();
         else 
             return [];
     }
 
-    public function superintendentWithDelegation($empnik)
+    public function sptBossWithDelegation($empnik)
     {
         // mencari atasan minimal golongan CS
         $employee = $this->findByPersonnel($empnik);
         
         if (!is_null($employee))
-            return $employee->superintendentWithDelegation();
+            return $employee->sptBossWithDelegation();
         else 
             return [];
     }
     
-    public function managerWithDelegation($empnik)
+    public function managerBossWithDelegation($empnik)
     {
         // mencari atasan minimal golongan BS
         $employee = $this->findByPersonnel($empnik);
         
         if (!is_null($employee))
-            return $employee->managerWithDelegation();
+            return $employee->managerBossWithDelegation();
+        else 
+            return [];
+    }
+
+    public function gmBossWithDelegation($empnik)
+    {
+        // mencari atasan minimal golongan BS
+        $employee = $this->findByPersonnel($empnik);
+        
+        if (!is_null($employee))
+            return $employee->gmBossWithDelegation();
         else 
             return [];
     }
