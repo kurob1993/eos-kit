@@ -131,7 +131,7 @@ class LeaveController extends Controller
 
         // membuat pengajuan cuti dengan menambahkan data personnel_no
         $absence = Absence::create($request->all()
-             + ['personnel_no' => Auth::user()->personnel_no]);
+            + ['personnel_no' => Auth::user()->personnel_no]);
 
         return redirect()->route('leaves.index');
     }

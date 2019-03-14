@@ -37,7 +37,7 @@
     };
   
     $.ajax({
-    url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/minSuperintendentBoss',
+    url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/minSptBossWithDelegation',
         type: 'GET',
         dataType: 'json',
         error: function() {},

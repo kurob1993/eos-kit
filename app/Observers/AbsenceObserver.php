@@ -45,8 +45,8 @@ class AbsenceObserver
         $intersected = Absence::where('personnel_no', $absence->personnel_no)
             ->intersectWith($absence->start_date, $absence->end_date)
             ->first();
-            
-        if ((sizeof($intersected) > 0) && !$intersected->is_denied ) {
+
+        if ( $intersected && !$intersected->is_denied ) {
             Session::flash("flash_notification", [
                 "level" => "danger",
                 "message" => "Tidak dapat melakukan pengajuan pada tanggal tersebut "
@@ -89,7 +89,9 @@ class AbsenceObserver
         $absence->save();
 
         // mencari atasan dari karyawan yang mengajukan absences
-        $closestBoss = $employee->minSuperintendentBoss();
+        // $closestBoss = $employee->minSuperintendentBoss();
+        // diganti ke minimal superintendent dengan delegasi/pengalihan
+        $closestBoss = $employee->minSptBossWithDelegation();
 
         // mencari direktur dari karyawan yang mengajukan absence
         $director = $employee->director();
