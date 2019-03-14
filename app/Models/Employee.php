@@ -681,7 +681,7 @@ class Employee extends Model
         } else {
             $superintendent = $this->sptBossWithDelegation();
             if (!$superintendent){
-                return $this->minManagerWithDelegation();
+                return $this->minManagerBossWithDelegation();
             }else{
                 return $superintendent;
             }
