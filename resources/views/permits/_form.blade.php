@@ -122,7 +122,7 @@
     <!-- This field is not sent via form -->
     <div class="form-group{{ $errors->has('approver') ? ' has-error' : '' }}">
         {!! Form::label('approver', 'Atasan') !!}
-        <select class="form-control boss-selectize">
+        <select class="form-control boss-selectize" required>
             <option value="" selected>Piilh Atasan</option>
           </select>
       </div>
