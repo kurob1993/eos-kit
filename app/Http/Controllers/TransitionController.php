@@ -68,7 +68,7 @@ class TransitionController extends Controller
         ->addColumn([
             'data' => 'start_date',
             'name' => 'start_date',
-            'title' => 'Tgl Muali',
+            'title' => 'Tgl Mulai',
             'class' => 'desktop',
             'searchable' => false,
             'orderable' => false,
