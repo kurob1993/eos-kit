@@ -7,7 +7,7 @@ use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Http\Requests\StoreTransitionRequest;
 use Illuminate\Http\Request;
-use App\Models\zhrom0007;
+use App\Models\Zhrom0007;
 use App\Models\StructDisp;
 use App\Models\Transition;
 
