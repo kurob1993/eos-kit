@@ -120,7 +120,7 @@
           </select>
       </div>
       <!-- end approver field -->
-{{--   
+  
       <!-- begin delegation field -->
       @if ($can_delegate)
       <div class="form-group">
@@ -132,7 +132,7 @@
       </div>
       @endif
       <!-- end delegation field -->
- --}}
+
     <!-- begin submit button -->
     <div class="form-group pull-right">
       {!! Form::submit('Kirim Pengajuan Cuti', ['class'=>'btn btn-primary']) !!}

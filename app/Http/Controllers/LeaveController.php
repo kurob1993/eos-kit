@@ -12,6 +12,8 @@ use Yajra\DataTables\Html\Builder;
 use App\Http\Requests\StoreAbsenceRequest;
 use App\Models\Absence;
 use App\Models\AbsenceQuota;
+use App\Models\StructDisp;
+use App\Models\Transition;
 
 class LeaveController extends Controller
 {
@@ -123,6 +125,9 @@ class LeaveController extends Controller
 
     public function store(StoreAbsenceRequest $request)
     {
+        
+        $this->delegation($request->all());
+        
         // tampilkan pesan bahwa telah berhasil mengajukan cuti
         Session::flash("flash_notification", [
             "level" => "success",
@@ -134,6 +139,20 @@ class LeaveController extends Controller
             + ['personnel_no' => Auth::user()->personnel_no]);
 
         return redirect()->route('leaves.index');
+    }
+
+    public function delegation($requestData)
+    {
+        // menyimpan data delegation
+        $user = StructDisp::where('empnik',$requestData['delegation'])->first();
+        $userLogin = Auth::user()->StructDisp->first();
+        
+        $transition = New Transition();
+        $transition->start_date = $requestData['start_date'];
+        $transition->end_date = $requestData['end_date'];
+        $transition->abbr_jobs = $userLogin->emp_hrp1000_s_short;
+        $transition->personnel_no = $user->empnik;
+        $transition->save();
     }
 
     public function show($id)
