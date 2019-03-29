@@ -21,7 +21,8 @@ class TransitionController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         $transition = Transition::where('actived_at','<>',null)
-        ->with(['zhrom0007','user'])->get();
+        ->with(['zhrom0007','user'])
+        ->orderBy('start_date','desc')->get();
 
         if ($request->ajax()) {
             return Datatables::of($transition)
