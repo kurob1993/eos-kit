@@ -159,8 +159,9 @@ class PermitController extends Controller
         ]);
 
         $requestData = $request->all();
-        
-        $this->delegation($requestData);
+        if( isset($requestData['delegation']) ){
+            $this->delegation($requestData);
+        }
 
         if (!empty($request->file('attachment'))) {
             $path = $request->file('attachment')->store('permits');

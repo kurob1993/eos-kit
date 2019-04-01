@@ -638,9 +638,7 @@ class HomeController extends Controller
 
                 $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
                 ->where('start_date',$start_date)
-                ->where('end_date',$end_date)->first();
-
-                $transition->actived_at = date('Y-m-d H:i:s');
+                ->where('end_date',$end_date);
             break;
             case 'absence':
                 $approved = AbsenceApproval::find($id)->absence;
@@ -651,9 +649,7 @@ class HomeController extends Controller
 
                 $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
                 ->where('start_date',$start_date)
-                ->where('end_date',$end_date)->first();
-
-                $transition->actived_at = date('Y-m-d H:i:s');
+                ->where('end_date',$end_date);
             break;
             case 'attendance':
                 $approved = AttendanceApproval::find($id)->attendance;
@@ -664,13 +660,11 @@ class HomeController extends Controller
 
                 $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
                 ->where('start_date',$start_date)
-                ->where('end_date',$end_date)->first();
-
-                $transition->actived_at = date('Y-m-d H:i:s');
+                ->where('end_date',$end_date);
             break;
         }
 
-        if(!$transition->save()){
+        if(!$transition->update(['actived_at'=>date('Y-m-d H:i:s')])){
             // tampilkan pesan bahwa telah berhasil menyetujui
             Session::flash("flash_notification", [
                 "level" => "warning",

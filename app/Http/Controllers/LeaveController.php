@@ -126,8 +126,11 @@ class LeaveController extends Controller
     public function store(StoreAbsenceRequest $request)
     {
         
-        $this->delegation($request->all());
-        
+        $requestData = $request->all();
+        if( isset($requestData['delegation']) ){
+            $this->delegation($requestData);
+        }
+
         // tampilkan pesan bahwa telah berhasil mengajukan cuti
         Session::flash("flash_notification", [
             "level" => "success",
