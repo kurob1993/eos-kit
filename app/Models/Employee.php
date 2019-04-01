@@ -591,21 +591,23 @@ class Employee extends Model
         //tanggal sekarang
         $now = date('Y-m-d');
 
-        if($jobsBoss['bos']){
-            return Employee::where('personnel_no',$jobsBoss['bos']['empnik'])->first();
+        //cek data pengalihan
+        $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
+        ->where(function($query) use ($now){
+            $query->where('start_date','<=',$now)
+            ->where('end_date','>=',$now);
+        })->where('actived_at','<>',null);
+
+        if($transition->count()){
+            $delegation = $transition->first();
+            return Employee::where('personnel_no',$delegation->personnel_no)->first();
         }else{
-            //cek data pengalihan
-            $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
-            ->where(function($query) use ($now){
-                $query->where('start_date','<=',$now)
-                ->where('end_date','>=',$now);
-            });
-            if($transition->count())
-                return Employee::where('personnel_no',$transition->first()->personnel_no)->first();
-                else
+            if($jobsBoss['bos']){
+                return Employee::where('personnel_no',$jobsBoss['bos']['empnik'])->first();
+            }else{
                 return [];
+            }
         }
-        
     }
 
     public function managerBossWithDelegation()
@@ -616,21 +618,23 @@ class Employee extends Model
         //tanggal sekarang
         $now = date('Y-m-d');
 
-        if($jobsBoss['bos']){
-            return Employee::where('personnel_no',$jobsBoss['bos']['empnik'])->first();
-        }else{
-            //cek data pengalihan
-            $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
-            ->where(function($query) use ($now){
-                $query->where('start_date','<=',$now)
-                ->where('end_date','>=',$now);
-            });
-            if($transition->count())
-                return Employee::where('personnel_no',$transition->first()->personnel_no)->first();
-            else
-                return [];
-        }
+        //cek data pengalihan
+        $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
+        ->where(function($query) use ($now){
+            $query->where('start_date','<=',$now)
+            ->where('end_date','>=',$now);
+        })->where('actived_at','<>',null);
         
+        if($transition->count()){
+            $delegation = $transition->first();
+            return Employee::where('personnel_no',$delegation->personnel_no)->first();
+        }else{
+            if($jobsBoss['bos']){
+                return Employee::where('personnel_no',$jobsBoss['bos']['empnik'])->first();
+            }else{
+                return [];
+            }
+        }
     }
 
     public function gmBossWithDelegation()
@@ -641,21 +645,23 @@ class Employee extends Model
         //tanggal sekarang
         $now = date('Y-m-d');
 
-        if($jobsBoss['bos']){
-            return Employee::where('personnel_no',$jobsBoss['bos']['empnik'])->first();
-        }else{
-            //cek data pengalihan
-            $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
-            ->where(function($query) use ($now){
-                $query->where('start_date','<=',$now)
-                ->where('end_date','>=',$now);
-            });
-            if($transition->count())
-                return Employee::where('personnel_no',$transition->first()->personnel_no)->first();
-            else
-                return [];
-        }
+        //cek data pengalihan
+        $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
+        ->where(function($query) use ($now){
+            $query->where('start_date','<=',$now)
+            ->where('end_date','>=',$now);
+        })->where('actived_at','<>',null);
         
+        if($transition->count()){
+            $delegation = $transition->first();
+            return Employee::where('personnel_no',$delegation->personnel_no)->first();
+        }else{
+            if($jobsBoss['bos']){
+                return Employee::where('personnel_no',$jobsBoss['bos']['empnik'])->first();
+            }else{
+                return [];
+            }
+        }
     }
 
     /**

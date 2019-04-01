@@ -15,6 +15,8 @@ use App\Models\AttendanceType;
 use App\Models\Absence;
 use App\Models\AbsenceType;
 use App\Http\Requests\StorePermitRequest;
+use App\Models\StructDisp;
+use App\Models\Transition;
 
 class PermitController extends Controller
 {
@@ -158,6 +160,8 @@ class PermitController extends Controller
 
         $requestData = $request->all();
         
+        $this->delegation($requestData);
+
         if (!empty($request->file('attachment'))) {
             $path = $request->file('attachment')->store('permits');
             $requestData['attachment'] = $path;
@@ -172,7 +176,7 @@ class PermitController extends Controller
             // membuat pengajuan izin dengan menambahkan data personnel_no
             Absence::create($requestData
                 + ['personnel_no' => Auth::user()->personnel_no,
-                   'absence_type_id' => $absence_type_id, ]);
+                    'absence_type_id' => $absence_type_id, ]);
                 
         } else if ($this->isAnAttendance($permitType)) {
 
@@ -180,7 +184,7 @@ class PermitController extends Controller
             // membuat pengajuan izin dengan menambahkan data personnel_no
             Attendance::create($requestData
                 + ['personnel_no' => Auth::user()->personnel_no,
-                   'attendance_type_id' => $attendance_type_id, ]);
+                    'attendance_type_id' => $attendance_type_id, ]);
                 
         } else {
 
@@ -188,6 +192,20 @@ class PermitController extends Controller
 
         // kembali ke index permits
         return redirect()->route('permits.index');
+    }
+
+    public function delegation($requestData)
+    {
+        // menyimpan data delegation
+        $user = StructDisp::where('empnik',$requestData['delegation'])->first();
+        $userLogin = Auth::user()->StructDisp->first();
+        
+        $transition = New Transition();
+        $transition->start_date = $requestData['start_date'];
+        $transition->end_date = $requestData['end_date'];
+        $transition->abbr_jobs = $userLogin->emp_hrp1000_s_short;
+        $transition->personnel_no = $user->empnik;
+        $transition->save();
     }
 
     public function showAbsence($id)

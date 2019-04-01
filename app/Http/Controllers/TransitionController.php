@@ -20,7 +20,8 @@ class TransitionController extends Controller
      */
     public function index(Request $request, Builder $htmlBuilder)
     {
-        $transition = Transition::with(['zhrom0007','user'])->get();
+        $transition = Transition::where('actived_at','<>',null)
+        ->with(['zhrom0007','user'])->get();
 
         if ($request->ajax()) {
             return Datatables::of($transition)
@@ -119,6 +120,7 @@ class TransitionController extends Controller
         $transition->personnel_no = $request->personnel_no;
         $transition->start_date = $start_date;
         $transition->end_date = $end_date;
+        $transition->actived_at = date('Y-m-d H:i:s');
         $transition->save();
 
         // batalkan view create dan kembali ke parent

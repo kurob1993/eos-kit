@@ -17,6 +17,7 @@ use App\Models\Absence;
 use App\Models\Attendance;
 use App\Models\AttendanceQuota;
 use App\Models\TimeEvent;
+use App\Models\Transition;
 
 
 class HomeController extends Controller
@@ -464,14 +465,20 @@ class HomeController extends Controller
             case 'leave':
                 $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.leaves.text');
+                // delegasi
+                $this->storeToDelegation($approval, $id);
             break;
             case 'absence':
                 $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
+                // delegasi
+                $this->storeToDelegation($approval, $id);
             break;
             case 'attendance':
                 $approved = AttendanceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
+                // delegasi
+                $this->storeToDelegation($approval, $id);
             break;
             case 'time_event':
                 $approved = TimeEventApproval::find($id);
@@ -617,5 +624,60 @@ class HomeController extends Controller
         );
 
         return $result;
+    }
+
+    public function storeToDelegation($module,$id)
+    {
+        switch ($module) {
+            case 'leave':
+                $approved = AbsenceApproval::find($id)->absence;
+
+                $start_date = $approved->start_date->toDateString();
+                $end_date = $approved->end_date->toDateString();
+                $strucdisp = $approved->employee->StructDisp->first();
+
+                $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
+                ->where('start_date',$start_date)
+                ->where('end_date',$end_date)->first();
+
+                $transition->actived_at = date('Y-m-d H:i:s');
+            break;
+            case 'absence':
+                $approved = AbsenceApproval::find($id)->absence;
+
+                $start_date = $approved->start_date->toDateString();
+                $end_date = $approved->end_date->toDateString();
+                $strucdisp = $approved->employee->StructDisp->first();
+
+                $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
+                ->where('start_date',$start_date)
+                ->where('end_date',$end_date)->first();
+
+                $transition->actived_at = date('Y-m-d H:i:s');
+            break;
+            case 'attendance':
+                $approved = AttendanceApproval::find($id)->attendance;
+
+                $start_date = $approved->start_date->toDateString();
+                $end_date = $approved->end_date->toDateString();
+                $strucdisp = $approved->employee->StructDisp->first();
+
+                $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
+                ->where('start_date',$start_date)
+                ->where('end_date',$end_date)->first();
+
+                $transition->actived_at = date('Y-m-d H:i:s');
+            break;
+        }
+
+        if(!$transition->save()){
+            // tampilkan pesan bahwa telah berhasil menyetujui
+            Session::flash("flash_notification", [
+                "level" => "warning",
+                "message" => "Gagal approve dikaarnakan data delegasi tidak dapat di simpan."
+            ]);
+
+            return redirect()->back();
+        }
     }
 }

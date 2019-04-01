@@ -52,11 +52,11 @@
       }
     });
     
-     @if (Auth::user()->employee()->first()->canDelegate())
+    @if (Auth::user()->employee()->first()->canDelegate())
     
     var subOptions = {
       persist: false,
-      valueField: "name",
+      valueField: "personnel_no",
       labelField: "personnel_no",
       searchField: ["personnel_no", "name"],
       options: [    ],

@@ -17,9 +17,13 @@ class TransitionObserver
 
         //cek data pengalihan
         $transition = Transition::where('abbr_jobs', $abbr_jobs)
-        ->where(function($query) use ($now){
-            $query->where('start_date','<=',$now)
-            ->where('end_date','>=',$now);
+        ->where(function($query) use ($transition){
+            $query->where('start_date','<=',$transition->start_date)
+            ->where('end_date','>=',$transition->start_date);
+        })
+        ->orWhere(function($query) use ($transition){
+            $query->where('start_date','<=',$transition->end_date)
+            ->where('end_date','>=',$transition->end_date);
         });
 
         if($transition->count() == 0){
