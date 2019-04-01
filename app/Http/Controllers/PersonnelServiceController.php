@@ -9,6 +9,7 @@ use App\Models\Attendance;
 use App\Models\AttendanceQuota;
 use App\Models\TimeEvent;
 use App\Models\Stage;
+use App\Models\Transition;
 
 class PersonnelServiceController extends Controller
 {
@@ -26,6 +27,9 @@ class PersonnelServiceController extends Controller
             break;
             case 'overtime':
                 $submission = AttendanceQuota::find($id);
+            break;
+            case 'delegation':
+                $submission = Transition::find($id);
             break;
         }
 

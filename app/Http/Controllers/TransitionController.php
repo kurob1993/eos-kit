@@ -41,6 +41,12 @@ class TransitionController extends Controller
                 .'</label>';
                 return $code.' '.$user['name'];
             })
+            ->addColumn('action', function($transition){
+                return view('components._action-delete',[
+                    'model'=>$transition,
+                    'delete_url' => route('personnel_service.delete', ['id' => $transition->id, 'approval' => 'delegation' ] )
+                ]);
+            })
             ->escapeColumns([0,1])
             ->make(true);
         }
@@ -79,6 +85,14 @@ class TransitionController extends Controller
             'data' => 'end_date',
             'name' => 'end_date',
             'title' => 'Tgl Selesai',
+            'class' => 'desktop',
+            'searchable' => false,
+            'orderable' => false,
+        ])
+        ->addColumn([
+            'data' => 'action',
+            'name' => 'action',
+            'title' => 'Aksi',
             'class' => 'desktop',
             'searchable' => false,
             'orderable' => false,

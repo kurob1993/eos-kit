@@ -47,7 +47,9 @@
 @endpush
 
 @push('custom-scripts')
+@include('scripts._button-submit-script')
 @endpush
 
 @push('on-ready-scripts')
+ButtonSubmitPlugins.init();
 @endpush

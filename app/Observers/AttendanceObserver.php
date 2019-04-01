@@ -13,6 +13,7 @@ use App\Role;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Session;
+use App\Models\Transition;
 
 class AttendanceObserver
 {
@@ -25,7 +26,7 @@ class AttendanceObserver
             ->intersectWith($attendance->start_date, $attendance->end_date)
             ->first();
 
-        if ((sizeof($intersected) > 0) && !$intersected->is_denied) {
+        if ($intersected && !$intersected->is_denied) {
             Session::flash("flash_notification", [
                 "level" => "danger",
                 "message" => "Tidak dapat mengajukan izin karena tanggal pengajuan "
@@ -115,6 +116,16 @@ class AttendanceObserver
 
     public function deleting(Attendance $attendance)
     {
+        // hapus delegasi
+        $user = User::where('personnel_no',$attendance->personnel_no)->first();
+        $abbr_jobs = $user->structDisp->first()->emp_hrp1000_s_short;
+        $start_date = $attendance->start_date;
+        $end_date = $attendance->end_date;
+
+        Transition::where('abbr_jobs',$abbr_jobs)
+        ->where('start_date',$start_date)
+        ->where('end_date',$end_date)->delete();
+
         $approvals = $attendance->attendanceApprovals;
         
         // hapus semua approval terkait attendance

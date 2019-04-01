@@ -13,6 +13,7 @@ use App\Models\AbsenceApproval;
 use App\Models\AbsenceQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
+use App\Models\Transition;
 
 class AbsenceObserver
 {
@@ -200,7 +201,17 @@ class AbsenceObserver
     }
 
     public function deleting(Absence $absence)
-    {
+    {   
+        // hapus delegasi
+        $user = User::where('personnel_no',$absence->personnel_no)->first();
+        $abbr_jobs = $user->structDisp->first()->emp_hrp1000_s_short;
+        $start_date = $absence->start_date;
+        $end_date = $absence->end_date;
+
+        Transition::where('abbr_jobs',$abbr_jobs)
+        ->where('start_date',$start_date)
+        ->where('end_date',$end_date)->delete();
+
         $approvals = $absence->absenceApprovals;
         
         // hapus semua approval terkait absence
