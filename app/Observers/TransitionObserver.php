@@ -21,7 +21,7 @@ class TransitionObserver
             $query->where('start_date','<=',$transition->start_date)
             ->where('end_date','>=',$transition->start_date);
         })
-        ->orWhere(function($query) use ($transition){
+        ->where(function($query) use ($transition){
             $query->where('start_date','<=',$transition->end_date)
             ->where('end_date','>=',$transition->end_date);
         });
