@@ -12,36 +12,78 @@ use App\Models\AbsenceQuota;
 
 class DebugController extends Controller
 {
+    public function link($nik,$nama,$email)
+    {
+        echo '<a href="'.'http://dev.emss.com/a/'.$nik.'/'.$email.'"> '.$nama.' </a> </br>';
+    }
+
+    public function sec($nama,$email)
+    {
+        echo '<a href="'.'http://dev.emss.com/b/'.$email.'"> '.$nama.' </a> </br>';
+    }
     public function debug()
     {   
-        $s = new \DateTime('2018-01-06 17:00:00');
-        $e = new \DateTime('2018-01-07 17:00:00');
+        $nik = base64_encode('11777');
+        $email = base64_encode('nena.restiana@krakatausteel.com');
+        $nama = 'nenea';
+        $this->link($nik,$nama,$email);
 
-        $a = new \DateTime('2018-01-06 17:30:00'); // beririsan
-        $b = new \DateTime('2018-01-06 19:00:00'); // beririsan
+        $nik = base64_encode('11725');
+        $email = base64_encode('rahmadhany.triastanto@krakatausteel.com');
+        $nama = 'rahmadhany';
+        $this->link($nik,$nama,$email);
+
+        $nik = base64_encode('10112');
+        $email = base64_encode('helmi.widiyarto@krakatausteel.com');
+        $nama = 'helmi';
+        $this->link($nik,$nama,$email);
+
+        $nik = base64_encode('8460');
+        $email = base64_encode('radenm.hartadi@krakatausteel.com');
+        $nama = 'radenm';
+        $this->link($nik,$nama,$email);
+
+        $nik = base64_encode('8123');
+        $email = base64_encode('trid.lelono@krakatausteel.com');
+        $nama = 'trid';
+        $this->link($nik,$nama,$email);
+
+        $nik = base64_encode('11713');
+        $email = base64_encode('yogi.suryandono@corp.krakatausteel.com');
+        $nama = 'yogi';
+        $this->link($nik,$nama,$email);
+
+        $email = base64_encode('divisi.fpd@krakatausteel.com');
+        $nama = 'divisi.fpd';
+        $this->sec($nama,$email);
+        // $s = new \DateTime('2018-01-06 17:00:00');
+        // $e = new \DateTime('2018-01-07 17:00:00');
+
+        // $a = new \DateTime('2018-01-06 17:30:00'); // beririsan
+        // $b = new \DateTime('2018-01-06 19:00:00'); // beririsan
         
-        $x = new \DateTime('2018-01-05 05:00:00'); // tdk
-        $y = new \DateTime('2018-01-06 18:00:00');
+        // $x = new \DateTime('2018-01-05 05:00:00'); // tdk
+        // $y = new \DateTime('2018-01-06 18:00:00');
 
-        $o = new \DateTime('2018-01-06 21:00:00'); // tdk
-        $p = new \DateTime('2018-01-07 20:00:00');
+        // $o = new \DateTime('2018-01-06 21:00:00'); // tdk
+        // $p = new \DateTime('2018-01-07 20:00:00');
 
-        $u = new \DateTime('2018-01-06 00:00:00');
-        $v = new \DateTime('2018-01-07 19:00:00');
+        // $u = new \DateTime('2018-01-06 00:00:00');
+        // $v = new \DateTime('2018-01-07 19:00:00');
 
-        $sa = new \DateTime('2018-01-05 00:00:00');
-        $si = new \DateTime('2018-01-06 15:00:00');
+        // $sa = new \DateTime('2018-01-05 00:00:00');
+        // $si = new \DateTime('2018-01-06 15:00:00');
 
-        $pa = new \DateTime('2018-01-07 20:00:00');
-        $pi = new \DateTime('2018-01-08 06:00:00');
+        // $pa = new \DateTime('2018-01-07 20:00:00');
+        // $pi = new \DateTime('2018-01-08 06:00:00');
 
-        $ki = $pa;
-        $ka = $pi;
+        // $ki = $pa;
+        // $ka = $pi;
 
-        if ( (($s>=$ki && $e<=$ka) || ($s<=$ki && $e>=$ki) || ($s<=$ka && $e>=$ka) ) )
-            echo "beririsan";
-        else
-            echo "tidak beririsan";
+        // if ( (($s>=$ki && $e<=$ka) || ($s<=$ki && $e>=$ki) || ($s<=$ka && $e>=$ka) ) )
+        //     echo "beririsan";
+        // else
+        //     echo "tidak beririsan";
 
         // $subordinates = Auth::user()->employee->mgrSptSpvSubordinates();
         // $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
