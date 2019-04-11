@@ -128,7 +128,7 @@
             init: function () {
                 handleConfirm(), 
                 handleSelectFilterDashboard();
-                handleModalPengumuman();
+                //handleModalPengumuman();
             }
         };
     })());
