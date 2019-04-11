@@ -24,7 +24,14 @@ class AbsenceObserver
             $absence_quota = AbsenceQuota::activeAbsenceQuotaOf(
                 $absence->personnel_no, $absence->start_date, $absence->end_date)
                 ->first();
-    
+            if(!$absence_quota){
+                Session::flash("flash_notification", [
+                    "level" => "danger",
+                    "message" => "Tidak dapat mengajukan cuti karena".
+                    "pengajuan cuti dilakukan pada dua periode yang berbeda"
+                ]);
+                return false;
+            }
             // apakah sisa cuti (balance)  kurang dari pengajuan (deduction)?
             if ($absence_quota->balance < $absence->deduction) {
                 Session::flash("flash_notification", [
