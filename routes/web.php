@@ -84,6 +84,9 @@ Route::group([
     // route untuk  overtime
     Route::resource('overtimes', 'OvertimeController', ['except' => [
         'destroy', 'update', 'edit']]);
+
+    // route untuk curriculum vitae
+    Route::resource('cvs', 'CVController', ['only' => 'index']);
 });
 
 // route untuk role personnel_service
