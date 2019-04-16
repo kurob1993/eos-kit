@@ -5,19 +5,13 @@ namespace App\Models\SAP;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\SapMasterData;
 use App\Traits\HasUserEmployeeRelationship;
-use Carbon\Carbon;
 
-class PersonalData extends Model
+class Training extends Model
 {
-	use SapMasterData, HasUserEmployeeRelationship;
+    use SapMasterData, HasUserEmployeeRelationship;
 
-	protected $table = 'it0002';
+    protected $table = 'train';
 	protected $primaryKey = 'ID';
 	public $incrementing = false;
 	public $timestamps = false;
-
-    public function getGbdatAttribute($value)
-	{
-		return Carbon::parse($value)->format('d M Y');
-	}	
 }

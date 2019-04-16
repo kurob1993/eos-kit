@@ -87,6 +87,9 @@ Route::group([
 
     // route untuk curriculum vitae
     Route::resource('cvs', 'CVController', ['only' => 'index']);
+
+    // route untuk wakers
+    Route::resource('wakers', 'WakerController', ['only' => 'index']);
 });
 
 // route untuk role personnel_service

@@ -117,7 +117,7 @@ class Employee extends Model
     public function families()
     {
       // one-to-many relationship dengan it0021
-      return $this->hasMany('App\Models\Family', 'PERNR', 'personnel_no');
+      return $this->hasMany('App\Models\SAP\Family', 'PERNR', 'personnel_no');
     }
 
     public function positions()

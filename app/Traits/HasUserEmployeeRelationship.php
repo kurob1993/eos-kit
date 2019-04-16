@@ -1,16 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Traits;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Family extends Model
+trait HasUserEmployeeRelationship
 {
-    protected $table = 'it0021';
-    protected $primaryKey = 'ID';
-    public $incrementing = false;
-    public $timestamps = false;
-
     public function user()
     {
       // many-to-one relationship

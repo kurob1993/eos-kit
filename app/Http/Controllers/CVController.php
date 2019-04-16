@@ -3,9 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\SAP\PersonalData;
 use Yajra\DataTables\Html\Builder;
-use Yajra\DataTables\DataTables;    
+use App\Models\SAP\Address;
+use App\Models\SAP\PersonalData;
+use App\Models\SAP\Family;
+use App\Models\SAP\Education;
+use App\Models\SAP\Training;
+use App\Models\SAP\InternalActivity;
+use App\Models\SAP\ExternalActivity;
+use App\Models\SAP\Other;
 
 class CVController extends Controller
 {
@@ -18,34 +24,86 @@ class CVController extends Controller
     {
         // ambil data personal data untuk user yang telah login
         $personalData = PersonalData::sapOfLoggedUser()
-            ->select([  'BEGDA', 'ENDDA', 'CNAME', 'GBDAT', 'GBORT', 
-                        'T502T_FATXT', 'T516T_KNFTX'])
+            ->select([
+                'BEGDA', 'ENDDA', 'CNAME', 'GBDAT', 'GBORT',
+                'T502T_FATXT', 'T516T_KNFTX'
+            ])
+            ->lastEndDate()
+            ->first();
+
+        // ambil data addresses untuk user yang telah login
+        $addresses = Address::sapOfLoggedUser()
+            ->select([
+                'T591S_STEXT', 'STRAS', 'LOCAT', 'ORT01', 'PSTLZ',
+                'ORT02', 'T005U_BEZEI'
+            ])
             ->get();
 
-        if ($request->ajax()) {
-            return DataTables::of($personalData)
-                ->make(true);
-        }
+        // ambil data families untuk user yang telah login
+        $families = Family::sapOfLoggedUser()
+            ->select([
+                'T591S_STEXT', 'FCNAM', 'FGBDT', 'FGBOT', 'FASEX',
+                'FASEX_DESC', 'KDZUG'
+            ])
+            ->get();
 
-        // disable paging, searching, details button but enable responsive
-        $htmlBuilder->parameters([
-            'paging' => false,
-            'searching' => false,
-            'responsive' => ['details' => false],
-        ]);
+        // ambil data educations untuk user yang telah login
+        $educations = Education::sapOfLoggedUser()
+            ->select([
+                'BEGDA', 'ENDDA', 'T517T_STEXT', 'INSTI', 'LANDX50', 
+                'T517X_FTEXT'
+            ])
+            ->get();
 
-        $html = $htmlBuilder->columns([
-            ['data' => 'BEGDA', 'name' => 'BEGDA', 'title' => 'Mulai'],
-            ['data' => 'ENDDA', 'name' => 'ENDDA', 'title' => 'Berakhir'],
-            ['data' => 'CNAME', 'name' => 'CNAME', 'title' => 'Nama'],
-            ['data' => 'GBDAT', 'name' => 'GBDAT', 'title' => 'Tanggal Lahir'],
-            ['data' => 'GBORT', 'name' => 'GBORT', 'title' => 'Tempat Lahir'],
-            ['data' => 'T502T_FATXT', 'name' => 'T502T_FATXT', 'title' => 'Status Nikah'],
-            ['data' => 'T516T_KNFTX', 'name' => 'T516T_KNFTX', 'title' => 'Agama'],
-        ]);
+        // ambil data trainings untuk user yang telah login
+        $trainings = Training::sapOfLoggedUser()
+            ->select([
+                'BEGDA', 'ENDDA', 'TRAIN'
+            ])
+            ->orderBy('BEGDA', 'DESC')
+            ->get();
+
+        // ambil data internalActivities untuk user yang telah login
+        $internalActivities = InternalActivity::sapOfLoggedUser()
+            ->select([
+                'BEGDA', 'ENDDA', 'T591S_STEXT', 'PTEXT_LINE1',
+                'PTEXT_LINE2'
+            ])
+            ->orderBy('BEGDA', 'DESC')
+            ->get();
+
+        // ambil data externalActivities untuk user yang telah login
+        $externalActivities = ExternalActivity::sapOfLoggedUser()
+            ->select([
+                'BEGDA', 'ENDDA', 'T591S_STEXT', 'ORGNM', 'ZZPOSISI',
+                'STRAS', 'ORT01'
+            ])
+            ->orderBy('BEGDA', 'DESC')
+            ->get();
+
+        // ambil data others untuk user yang telah login
+        $others = Other::sapOfLoggedUser()
+            ->select([
+                'BEGDA', 'ENDDA', 'T591S_STEXT', 'PTEXT_LINE1',
+                'PTEXT_LINE2', 'PTEXT_LINE3'
+            ])
+            ->orderBy('BEGDA', 'DESC')
+            ->get();
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('curriculum_vitaes.index')->with(compact('html', 'personalData'));
+        return view('curriculum_vitaes.index')
+            ->with(
+                compact(
+                    'personalData',
+                    'addresses',
+                    'families',
+                    'educations',
+                    'trainings',
+                    'internalActivities',
+                    'externalActivities',
+                    'others'
+                )
+            );
     }
 
     /**
