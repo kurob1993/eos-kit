@@ -26,7 +26,7 @@ class CVController extends Controller
         $personalData = PersonalData::sapOfLoggedUser()
             ->select([
                 'BEGDA', 'ENDDA', 'CNAME', 'GBDAT', 'GBORT',
-                'T502T_FATXT', 'T516T_KNFTX'
+                'T502T_FATXT', 'T516T_KNFTX', 'FAMDT', 'AEDTM'
             ])
             ->lastEndDate()
             ->first();
@@ -35,73 +35,87 @@ class CVController extends Controller
         $addresses = Address::sapOfLoggedUser()
             ->select([
                 'T591S_STEXT', 'STRAS', 'LOCAT', 'ORT01', 'PSTLZ',
-                'ORT02', 'T005U_BEZEI'
+                'ORT02', 'T005U_BEZEI', 'TELNR', 'AEDTM'
             ])
             ->get();
+        $lastUpdatedAddresses = Address::sapOfLoggedUser()
+            ->max('BEGDA');
 
         // ambil data families untuk user yang telah login
         $families = Family::sapOfLoggedUser()
             ->select([
                 'T591S_STEXT', 'FCNAM', 'FGBDT', 'FGBOT', 'FASEX',
-                'FASEX_DESC', 'KDZUG'
+                'FASEX_DESC', 'KDZUG', 'AEDTM'
             ])
             ->get();
+        $lastUpdatedFamilies = Family::sapOfLoggedUser()
+            ->max('BEGDA');
 
         // ambil data educations untuk user yang telah login
         $educations = Education::sapOfLoggedUser()
             ->select([
                 'BEGDA', 'ENDDA', 'T517T_STEXT', 'INSTI', 'LANDX50', 
-                'T517X_FTEXT'
+                'T517X_FTEXT', 'AEDTM'
             ])
             ->get();
+        $lastUpdatedEducations = Education::sapOfLoggedUser()
+            ->max('BEGDA');
 
         // ambil data trainings untuk user yang telah login
         $trainings = Training::sapOfLoggedUser()
             ->select([
-                'BEGDA', 'ENDDA', 'TRAIN'
+                'BEGDA', 'ENDDA', 'TRAIN', 'AEDTM'
             ])
             ->orderBy('BEGDA', 'DESC')
             ->get();
+        $lastUpdatedTrainings = Training::sapOfLoggedUser()
+            ->max('BEGDA');
 
         // ambil data internalActivities untuk user yang telah login
         $internalActivities = InternalActivity::sapOfLoggedUser()
             ->select([
                 'BEGDA', 'ENDDA', 'T591S_STEXT', 'PTEXT_LINE1',
-                'PTEXT_LINE2'
+                'PTEXT_LINE2', 'AEDTM'
             ])
             ->orderBy('BEGDA', 'DESC')
             ->get();
+        $lastUpdatedInternalActivities = Training::sapOfLoggedUser()
+            ->max('BEGDA');
 
         // ambil data externalActivities untuk user yang telah login
         $externalActivities = ExternalActivity::sapOfLoggedUser()
             ->select([
                 'BEGDA', 'ENDDA', 'T591S_STEXT', 'ORGNM', 'ZZPOSISI',
-                'STRAS', 'ORT01'
+                'STRAS', 'ORT01', 'AEDTM'
             ])
             ->orderBy('BEGDA', 'DESC')
             ->get();
+        $lastUpdatedExternalActivities = Training::sapOfLoggedUser()
+            ->max('BEGDA');
 
         // ambil data others untuk user yang telah login
         $others = Other::sapOfLoggedUser()
             ->select([
                 'BEGDA', 'ENDDA', 'T591S_STEXT', 'PTEXT_LINE1',
-                'PTEXT_LINE2', 'PTEXT_LINE3'
+                'PTEXT_LINE2', 'PTEXT_LINE3', 'AEDTM'
             ])
             ->orderBy('BEGDA', 'DESC')
             ->get();
+        $lastUpdatedOthers = Training::sapOfLoggedUser()
+            ->max('BEGDA');
 
         // tampilkan view index dengan tambahan script html DataTables
         return view('curriculum_vitaes.index')
             ->with(
                 compact(
                     'personalData',
-                    'addresses',
-                    'families',
-                    'educations',
-                    'trainings',
-                    'internalActivities',
-                    'externalActivities',
-                    'others'
+                    'addresses', 'lastUpdatedAddresses',
+                    'families', 'lastUpdatedFamilies',
+                    'educations', 'lastUpdatedEducations',
+                    'trainings', 'lastUpdatedTrainings',
+                    'internalActivities', 'lastUpdatedInternalActivities',
+                    'externalActivities', 'lastUpdatedExternalActivities',
+                    'others', 'lastUpdatedOthers'
                 )
             );
     }

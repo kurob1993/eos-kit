@@ -19,5 +19,10 @@ class PersonalData extends Model
     public function getGbdatAttribute($value)
 	{
 		return Carbon::parse($value)->format('d M Y');
-	}	
+	}
+
+	public function getFamdtAttribute($value)
+	{
+		return Carbon::parse($value)->format('d M Y');
+	}
 }

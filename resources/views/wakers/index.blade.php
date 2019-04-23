@@ -41,9 +41,9 @@
 @endpush
 
 @push('custom-scripts')
-
+@include('scripts._select-filter-month-script')
 @endpush
 
 @push('on-ready-scripts') 
-
+FilterPlugins.init();
 @endpush

@@ -43,40 +43,49 @@
             <!-- begin of personal-data tab  -->
             <div class="tab-pane fade active in" id="tab-personal-data">
                 <div class="panel-body p-0">
-                    <div class="media media">
+                    <h3 class="m-t-10 m-b-0">Data Pribadi</h3>
+                    <small>Terakhir diubah di SAP: {{ $personalData->AEDTM }}</small>
+                    <div class="m-t-10 media media">
                         <div class="media-body">
-                            <h3 class="m-t-10">Data Pribadi</h3>
                             <dl class="dl-horizontal">
                                 <dt>Nama</dt>
                                 <dd class="m-b-10">{{ $personalData->CNAME }}</dd>
                                 <dt>Tempat, Tanggal Lahir</dt>
                                 <dd class="m-b-10">{{ $personalData->GBORT }}, {{ $personalData->GBDAT }}</dd>
                                 <dt>Status Nikah</dt>
-                                <dd class="m-b-10">{{ $personalData->T502T_FATXT }}</dd>
+                                <dd class="m-b-10">{{ $personalData->T502T_FATXT }} - {{ $personalData->FAMDT }}</dd>
                                 <dt>Agama</dt>
                                 <dd class="m-b-10">{{ $personalData->T516T_KNFTX }}</dd>
                             </dl>
                         </div>
                     </div>
+
+                    <h3 class="m-t-10 m-b-0">Alamat</h3>
+                    <small>Terakhir diubah di SAP: {{ $lastUpdatedAddresses }}</small>
                     <div class="media media">
                         <div class="media-body">
-                            <h3 class="m-t-10">Alamat</h3>
                             <dl class="dl-horizontal">
                                 @foreach ($addresses as $address)
                                 <dt>{{ $address->T591S_STEXT }}</dt>
-                                <dd class="m-b-10">
+                                <dd>
                                     {{ $address->STRAS }},
                                     {{ $address->LOCAT }},
                                     {{ $address->ORT01 }},
                                     {{ $address->PSTLZ }}
                                 </dd>
+                                <dt></dt>
+                                <dd class="m-b-10">
+                                    <i class="fa fa-phone"></i>&nbsp;{{ $address->TELNR }}
+                                </dd>
                                 @endforeach
                             </dl>
                         </div>
                     </div>
+
+                    <h3 class="m-t-10 m-b-0">Keluarga</h3>
+                    <small>Terakhir diubah di SAP: {{ $lastUpdatedFamilies }}</small>
                     <div class="media media">
                         <div class="media-body">
-                            <h3 class="m-t-10">Keluarga</h3>
                             <dl class="dl-horizontal">
                                 @foreach ($families as $family)
                                 <dt>{{ $family->T591S_STEXT }}</dt>
@@ -109,9 +118,10 @@
             <!-- begin of educations tab  -->
             <div class="tab-pane fade" id="tab-educations">
                 <div class="panel-body p-0">
+                    <h3 class="m-t-10 m-b-0">Pendidikan</h3>
+                    <small>Terakhir diubah di SAP: {{ $lastUpdatedEducations }}</small>
                     <div class="media media">
                         <div class="media-body">
-                            <h3 class="m-t-10">Pendidikan</h3>
                             <dl class="dl-horizontal">
                                 @foreach ($educations as $education)
                                 <dt>{{ $education->T517T_STEXT }}</dt>
@@ -128,9 +138,10 @@
                             </dl>
                         </div>
                     </div>
+                    <h3 class="m-t-10 m-b-0">Pelatihan</h3>
+                    <small>Terakhir diubah di SAP: {{ $lastUpdatedTrainings }}</small>                    
                     <div class="media media">
                         <div class="media-body">
-                            <h3 class="m-t-10">Pelatihan</h3>
                             <dl class="dl-horizontal">
                                 @foreach ($trainings as $training)
                                 <dt>{{ $training->BEGDA }} - {{ $training->ENDDA }}</dt>
@@ -148,9 +159,10 @@
             <!-- begin of activities tab  -->
             <div class="tab-pane fade" id="tab-activities">
                 <div class="panel-body p-0">
+                    <h3 class="m-t-10 m-b-0">Aktivitas Internal</h3>
+                    <small>Terakhir diubah di SAP: {{ $lastUpdatedInternalActivities }}</small>                       
                     <div class="media media">
                         <div class="media-body">
-                            <h3 class="m-t-10">Aktivitas Internal</h3>
                             <dl class="dl-horizontal">
                                 @foreach ($internalActivities as $internalActivity)
                                 <dt>{{ $internalActivity->BEGDA }} - {{ $internalActivity->ENDDA }}</dt>
@@ -164,9 +176,10 @@
                             </dl>
                         </div>
                     </div>
+                    <h3 class="m-t-10 m-b-0">Aktivitas Eksternal</h3>
+                    <small>Terakhir diubah di SAP: {{ $lastUpdatedExternalActivities }}</small>                       
                     <div class="media media">
                         <div class="media-body">
-                            <h3 class="m-t-10">Aktivitas Eksternal</h3>
                             <dl class="dl-horizontal">
                                 @foreach ($externalActivities as $externalActivity)
                                 <dt>{{ $externalActivity->BEGDA }} - {{ $externalActivity->ENDDA }}</dt>
@@ -180,10 +193,10 @@
                             </dl>
                         </div>
                     </div>
-
+                    <h3 class="m-t-10 m-b-0">Aktivitas Lainnya</h3>
+                    <small>Terakhir diubah di SAP: {{ $lastUpdatedOthers }}</small>                       
                     <div class="media media">
                         <div class="media-body">
-                            <h3 class="m-t-10">Aktivitas Lainnya</h3>
                             <dl class="dl-horizontal">
                                 @foreach ($others as $other)
                                 <dt>{{ $other->BEGDA }} - {{ $other->ENDDA }}</dt>
@@ -223,9 +236,9 @@
 @endpush
 
 @push('custom-scripts')
-
+@include('scripts._save-tab-state-script')
 @endpush
 
 @push('on-ready-scripts')
-
+TabStatePlugins.init();
 @endpush

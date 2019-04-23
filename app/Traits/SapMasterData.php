@@ -7,6 +7,8 @@ use Carbon\Carbon;
 
 trait SapMasterData
 {
+    protected $simple_date_format = 'd/m/y';
+
     public function scopeSapOfLoggedUser($query)
     {
         $query->where('PERNR', Auth::user()->personnel_no);
@@ -19,10 +21,11 @@ trait SapMasterData
     
     public function getBegdaAttribute($value)
 	{
-		return Carbon::parse($value)->format('d/m/y');
-	}
+		return Carbon::parse($value)->format($this->simple_date_format);
+    }
+    
 	public function getEnddaAttribute($value)
 	{
-		return Carbon::parse($value)->format('d/m/y');
-	}    
+		return Carbon::parse($value)->format($this->simple_date_format);
+    }    
 }
