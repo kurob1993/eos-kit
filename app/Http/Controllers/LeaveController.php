@@ -35,11 +35,14 @@ class LeaveController extends Controller
                     ]);
                 })
                 ->editColumn('approver', function ($absence) {
-                    // personnel_no dan name atasan
-                    return view('layouts._personnel-no-with-name', [
-                        'personnel_no' => $absence->absenceApprovals->first()->user['personnel_no'],
-                        'employee_name' => $absence->absenceApprovals->first()->user['name'],
-                    ]);
+                    $approvals = $absence->absenceApprovals;
+                    $a = '';
+                    foreach ($approvals as $approval)
+                        $a = $a . view('layouts._personnel-no-with-name', [
+                            'personnel_no' => $approval->regno,
+                            'employee_name' => $approval->employee['name']
+                            ]) . '<br />';
+                    return $a;
                 })
                 ->setRowAttr([
                     // href untuk dipasang di setiap tr
