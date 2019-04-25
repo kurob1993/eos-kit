@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SI_ABSENCE" targetNamespace="http://HCM_ABSENCE" 
+    xmlns:p1="http://HCM_ABSENCE" 
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:documentation/>
+    <wsp:UsingPolicy wsdl:required="false"/>
+    <wsp:Policy wsu:Id="OP_SI_ABSENCE"/>
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://HCM_ABSENCE" 
+            xmlns="http://HCM_ABSENCE" 
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:element name="MT_ABSENCE" type="DT_ABSENCE"/>
+            <xsd:complexType name="DT_ABSENCE">
+                <xsd:annotation>
+                    <xsd:appinfo source="http://sap.com/xi/VersionID">c40156bc867111e88ec4000000539256</xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="HCM_ABSENCE" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:appinfo source="http://sap.com/xi/TextID">d1aa332575c811e89a7e28d24409c09b</xsd:appinfo>
+                        </xsd:annotation>
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="REQNO" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">e08aa3a0867311e8933e28d24409c09b</xsd:appinfo>
+                                        <xsd:documentation>Request Number</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="PERNR" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">d1aa332475c811e8abd128d24409c09b</xsd:appinfo>
+                                        <xsd:documentation>Personnel Number</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="SUBTY" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">ead4c59a75c811e8a72428d24409c09b</xsd:appinfo>
+                                        <xsd:documentation>Subtype</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="SUBTY_TEXT" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">0673d56175c911e88e3128d24409c09b</xsd:appinfo>
+                                        <xsd:documentation>Subtype Text</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="ENDDA" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">231c815475c911e8ad2d28d24409c09b</xsd:appinfo>
+                                        <xsd:documentation>End Date</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="BEGDA" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">231c815575c911e8c14428d24409c09b</xsd:appinfo>
+                                        <xsd:documentation>Start Date</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="MT_ABSENCE">
+        <wsdl:documentation/>
+        <wsdl:part name="MT_ABSENCE" element="p1:MT_ABSENCE"/>
+    </wsdl:message>
+    <wsdl:portType name="SI_ABSENCE">
+        <wsdl:documentation/>
+        <wsdl:operation name="SI_ABSENCE">
+            <wsdl:documentation/>
+            <wsp:Policy>
+                <wsp:PolicyReference URI="#OP_SI_ABSENCE"/>
+            </wsp:Policy>
+            <wsdl:input message="p1:MT_ABSENCE"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SI_ABSENCEBinding" type="p1:SI_ABSENCE">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" 
+            xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+        <wsdl:operation name="SI_ABSENCE">
+            <soap:operation soapAction="http://sap.com/xi/WebService/soap1.1" 
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+            <wsdl:input>
+                <soap:body use="literal" 
+                    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SI_ABSENCEService">
+        <wsdl:port name="SI_ABSENCEPort" binding="p1:SI_ABSENCEBinding">
+            <soap:address location="http://10.10.3.97:50200/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=WEB_SAP&amp;Interface=http%3A%2F%2FHCM_ABSENCE%5ESI_ABSENCE&amp;QualityOfService=ExactlyOnce" 
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

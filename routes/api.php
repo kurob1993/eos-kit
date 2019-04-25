@@ -64,3 +64,8 @@ Route::group(['prefix' => 'zhrom0012', 'middleware' => 'api'], function() {
 Route::group(['prefix' => 'zhrom0013', 'middleware' => 'api'], function() {
     Route::get('nojabatan/{nojabatan?}', 'Zhrom0013Controller@nojabatan');
 });
+
+Route::group(['prefix' => 'sap', 'middleware' => 'api'], function() {
+    Route::any('absenceQuota', 'AbsenceQuotaSoapController@index');
+    Route::any('absence', 'AbsenceSoapController@index');
+});
