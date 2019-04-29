@@ -49,9 +49,7 @@ class WakerController extends Controller
             'searching' => false,
             'paging' => false,
             'responsive' => ['details' => true],
-            'dom' =>    "<'row'<'col-sm-2'<'monthperiod'>> <'col-sm-2'<'yearperiod'>>>" .
-                "<'row'<'col-sm-12'tr>>" .
-                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            'dom' =>  "<'form-inline'<'monthperiod form-group m-r-10'><'yearperiod form-group m-r-10'>>trip",  
             "language" => [
                 'processing' => '<i class="fa fa-spinner fa-spin fa-fw"></i><span class="sr-only">Loading...</span> ',
                 'lengthMenu' => '_MENU_',
