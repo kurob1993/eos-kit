@@ -3,20 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Absence;
 
 class AbsenceSoapController extends Controller
 {
     public function index()
-    {
-        $data= (object) array(
-            'HCM_ABSENCE' => array(
-                'REQNO'=> '2',
-                'PERNR'=> '11725',
-                'SUBTY'=> '2001',
-                'SUBTY_TEXT'=> 'absence',
-                'ENDDA'=> '02.05.2019',
-                'BEGDA'=> '26.04.2019'
-            )
+    {        
+        
+        $absence = Absence::where('absence_type_id','1')
+        ->where('stage_id','2')
+        ->limit(1)->get();
+        
+        $data = array();
+        foreach ($absence as $key => $value) {
+            $ab = array(
+                'REQNO'=> "$value->id",
+                'PERNR'=> "$value->personnel_no",
+                'SUBTY'=> $value->absenceType->subtype,
+                'SUBTY_TEXT'=> $value->absenceType->text,
+                'ENDDA'=> $value->end_date->format('Ymd'),
+                'BEGDA'=> $value->start_date->format('Ymd')
+            );
+            array_push($data,$ab);
+        }
+
+        $data = (object) array(
+            'HCM_ABSENCE' => $data
         );
 
         $url = '../public/wsdl/SI_ABSENCE.WSDL';
@@ -30,13 +42,11 @@ class AbsenceSoapController extends Controller
 
         try {
             $client = new \SoapClient($url, $options); 
-            $res    = $client->SI_ABSENCE($data);
+            $client->SI_ABSENCE($data);
         }
         catch(Exception $e) {
             die($e->getMessage());
         }
 
-        var_dump($res);
-        die;
     }
 }
