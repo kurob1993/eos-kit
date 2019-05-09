@@ -71,3 +71,9 @@ Route::group(['prefix' => 'personalData', 'middleware' => 'api'], function() {
     Route::get('/', 'It002Controller@index');
     Route::get('{PERNR}', 'It002Controller@show');
 });
+
+
+Route::group(['prefix' => 'personalEmail', 'middleware' => 'api'], function() {
+    Route::get('/', 'EmployeeEmailController@index');
+    Route::get('{personnel_no}', 'EmployeeEmailController@show');
+});
