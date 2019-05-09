@@ -9,7 +9,7 @@
         <!-- begin of dashboard nav-tabs  -->
         <ul class="nav nav-tabs nav-tabs-primary nav-justified nav-justified-mobile">
             <li class="active">
-                <a href="#tab-personal-data" data-toggle="tab" aria-expanded="true"> Data Pribadi
+                <a href="#tab-personal-data" data-toggle="tab" aria-expanded="true"> Pribadi
                     @if (false)
                     <span class="badge pull-right m-l-5">
                         <h5>Data Pribadi</h5>
@@ -33,6 +33,11 @@
 
                     </span>
                     @endif
+                </a>
+            </li>
+            <li class="">
+                <a href="#tab-download" data-toggle="tab" aria-expanded="true">
+                    <i class="fa fa-download"></i>
                 </a>
             </li>
         </ul>
@@ -61,11 +66,11 @@
                     </div>
 
                     <h3 class="m-t-10 m-b-0">Alamat</h3>
-                    <small>Terakhir diubah di SAP: {{ $lastUpdatedAddresses }}</small>
+                    <small>Terakhir diubah di SAP: {{ $addresses['last_updated'] }}</small>
                     <div class="media media">
                         <div class="media-body">
                             <dl class="dl-horizontal">
-                                @foreach ($addresses as $address)
+                                @foreach ($addresses['data'] as $address)
                                 <dt>{{ $address->T591S_STEXT }}</dt>
                                 <dd>
                                     {{ $address->STRAS }},
@@ -83,11 +88,11 @@
                     </div>
 
                     <h3 class="m-t-10 m-b-0">Keluarga</h3>
-                    <small>Terakhir diubah di SAP: {{ $lastUpdatedFamilies }}</small>
+                    <small>Terakhir diubah di SAP: {{ $families['last_updated'] }}</small>
                     <div class="media media">
                         <div class="media-body">
                             <dl class="dl-horizontal">
-                                @foreach ($families as $family)
+                                @foreach ($families['data'] as $family)
                                 <dt>{{ $family->T591S_STEXT }}</dt>
                                 <dd>
                                     @if ($family->FASEX == 1) <i class="fa fa-male"></i> @endif
@@ -119,11 +124,11 @@
             <div class="tab-pane fade" id="tab-educations">
                 <div class="panel-body p-0">
                     <h3 class="m-t-10 m-b-0">Pendidikan</h3>
-                    <small>Terakhir diubah di SAP: {{ $lastUpdatedEducations }}</small>
+                    <small>Terakhir diubah di SAP: {{ $educations['last_updated'] }}</small>
                     <div class="media media">
                         <div class="media-body">
                             <dl class="dl-horizontal">
-                                @foreach ($educations as $education)
+                                @foreach ($educations['data'] as $education)
                                 <dt>{{ $education->T517T_STEXT }}</dt>
                                 <dd>
                                     {{ $education->T517X_FTEXT }} -
@@ -139,19 +144,19 @@
                         </div>
                     </div>
                     <h3 class="m-t-10 m-b-0">Pelatihan</h3>
-                    <small>Terakhir diubah di SAP: {{ $lastUpdatedTrainings }}</small>                    
+                    <small>Terakhir diubah di SAP: {{ $trainings['last_updated'] }}</small>
                     <div class="media media">
-                        <div class="media-body">
-                            <dl class="dl-horizontal">
-                                @foreach ($trainings as $training)
-                                <dt>{{ $training->BEGDA }} - {{ $training->ENDDA }}</dt>
-                                <dd class="m-b-10">
-                                    {{ $training->TRAIN }}
-                                </dd>
-                                @endforeach
-                            </dl>
+                            <div class="media-body">
+                                <dl class="dl-horizontal">
+                                    @foreach ($trainings['data'] as $training)
+                                    <dt>{{ $training->BEGDA }} - {{ $training->ENDDA }}</dt>
+                                    <dd class="m-b-10">
+                                        {{ $training->TRAIN }}
+                                    </dd>
+                                    @endforeach
+                                </dl>
+                            </div>
                         </div>
-                    </div>
                 </div>
             </div>
             <!-- end of educations tab  -->
@@ -160,11 +165,11 @@
             <div class="tab-pane fade" id="tab-activities">
                 <div class="panel-body p-0">
                     <h3 class="m-t-10 m-b-0">Aktivitas Internal</h3>
-                    <small>Terakhir diubah di SAP: {{ $lastUpdatedInternalActivities }}</small>                       
+                    <small>Terakhir diubah di SAP: {{ $internalActivities['last_updated'] }}</small>
                     <div class="media media">
                         <div class="media-body">
                             <dl class="dl-horizontal">
-                                @foreach ($internalActivities as $internalActivity)
+                                @foreach ($internalActivities['data'] as $internalActivity)
                                 <dt>{{ $internalActivity->BEGDA }} - {{ $internalActivity->ENDDA }}</dt>
                                 <dd><b>{{ $internalActivity->T591S_STEXT }}</b></dd>
                                 <dt></dt>
@@ -177,11 +182,11 @@
                         </div>
                     </div>
                     <h3 class="m-t-10 m-b-0">Aktivitas Eksternal</h3>
-                    <small>Terakhir diubah di SAP: {{ $lastUpdatedExternalActivities }}</small>                       
+                    <small>Terakhir diubah di SAP: {{ $externalActivities['last_updated'] }}</small>
                     <div class="media media">
                         <div class="media-body">
                             <dl class="dl-horizontal">
-                                @foreach ($externalActivities as $externalActivity)
+                                @foreach ($externalActivities['data'] as $externalActivity)
                                 <dt>{{ $externalActivity->BEGDA }} - {{ $externalActivity->ENDDA }}</dt>
                                 <dd><b>{{ $externalActivity->ZZPOSISI }}</b></dd>
                                 <dt></dt>
@@ -194,11 +199,11 @@
                         </div>
                     </div>
                     <h3 class="m-t-10 m-b-0">Aktivitas Lainnya</h3>
-                    <small>Terakhir diubah di SAP: {{ $lastUpdatedOthers }}</small>                       
+                    <small>Terakhir diubah di SAP: {{ $others['last_updated'] }}</small>
                     <div class="media media">
                         <div class="media-body">
                             <dl class="dl-horizontal">
-                                @foreach ($others as $other)
+                                @foreach ($others['data'] as $other)
                                 <dt>{{ $other->BEGDA }} - {{ $other->ENDDA }}</dt>
                                 <dd><b>{{ $other->T591S_STEXT }}</b></dd>
                                 <dt></dt>
@@ -213,6 +218,14 @@
                 </div>
             </div>
             <!-- end of activities tab  -->
+
+            <!-- begin of download tab  -->
+            <div class="tab-pane fade active in" id="tab-download">
+                <div class="panel-body p-0">
+
+                </div>
+            </div>
+            <!-- end of download tab  -->
         </div>
         <!-- begin of tab-content  -->
     </div>
@@ -228,6 +241,24 @@
 <link href={{ url("/plugins/selectize/selectize.bootstrap3.css") }} rel="stylesheet">
 <!-- Pace -->
 <script src={{ url("/plugins/pace/pace.min.js") }}></script>
+<style>
+/*   
+Template Name: Color Admin - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.4
+Version: 1.7.0
+Author: Sean Ngu
+Website: http://www.seantheme.com/color-admin-v1.7/admin/
+*/
+@media print {
+    .content,.page-header-fixed,body {
+        padding: 0!important;
+        margin: 0!important
+    }
+
+    .header,.sidebar,.theme-panel {
+        display: none!important
+    }
+}
+</style>
 @endpush
 
 @push('plugin-scripts')

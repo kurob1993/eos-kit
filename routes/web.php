@@ -87,7 +87,7 @@ Route::group([
 
     // route untuk curriculum vitae
     Route::resource('cvs', 'CVController', ['only' => 'index']);
-    Route::get('cvs/donwload', 'CVController@download');
+    Route::get('cvs/download', 'CVController@download');
 
     // route untuk wakers
     Route::resource('wakers', 'WakerController', ['only' => 'index']);

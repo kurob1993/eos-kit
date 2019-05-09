@@ -123,7 +123,7 @@ class Employee extends Model
     public function positions()
     {
       // one-to-many relationship dengan it0001
-      return $this->hasMany('App\Models\Position', 'PERNR', 'personnel_no');
+      return $this->hasMany('App\Models\SAP\Position', 'PERNR', 'personnel_no');
     }
 
     public function scopeFindByPersonnel($query, $p)
