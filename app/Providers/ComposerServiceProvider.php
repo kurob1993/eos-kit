@@ -26,6 +26,10 @@ class ComposerServiceProvider extends ServiceProvider
         // view composer untuk dashboards.employee
         View::composer('dashboards.employee', 
             'App\Http\ViewComposers\EmployeeDashboardComposer');
+
+        // view composer untuk dashboards.approval
+        View::composer('dashboards.approval', 
+            'App\Http\ViewComposers\EmployeeApprovalComposer');
    }
 
     /**

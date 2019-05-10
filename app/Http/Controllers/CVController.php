@@ -13,6 +13,7 @@ use App\Models\SAP\InternalActivity;
 use App\Models\SAP\ExternalActivity;
 use App\Models\SAP\Other;
 use App\Models\SAP\Position;
+use Illuminate\Support\Facades\Storage;
 
 class CVController extends Controller
 {
@@ -23,8 +24,8 @@ class CVController extends Controller
         // ambil data position untuk user yang telah login
         $this->cvs['position'] = Position::sapOfLoggedUser()
             ->select([
-                'BEGDA', 'ENDDA', 'PERSK', 'T503T_PTEXT', 
-                'HRP1000_O_STEXT', 'HRP1000_S_SHORT', 'HRP1000_S_STEXT', 
+                'BEGDA', 'ENDDA', 'PERNR', 'PERSK', 'T503T_PTEXT',
+                'HRP1000_O_STEXT', 'HRP1000_S_SHORT', 'HRP1000_S_STEXT',
             ])
             ->lastEndDate()
             ->first();
@@ -61,7 +62,7 @@ class CVController extends Controller
         // ambil data educations untuk user yang telah login
         $this->cvs['educations']['data'] = Education::sapOfLoggedUser()
             ->select([
-                'BEGDA', 'ENDDA', 'T517T_STEXT', 'INSTI', 'LANDX50', 
+                'BEGDA', 'ENDDA', 'T517T_STEXT', 'INSTI', 'LANDX50',
                 'T517X_FTEXT', 'AEDTM'
             ])
             ->get();
@@ -86,7 +87,7 @@ class CVController extends Controller
             ])
             ->orderBy('BEGDA', 'DESC')
             ->get();
-        $this->cvs['internalActivities']['last_updated'] = Training::sapOfLoggedUser()
+        $this->cvs['internalActivities']['last_updated'] = InternalActivity::sapOfLoggedUser()
             ->max('BEGDA');
 
         // ambil data externalActivities untuk user yang telah login
@@ -97,7 +98,7 @@ class CVController extends Controller
             ])
             ->orderBy('BEGDA', 'DESC')
             ->get();
-        $this->cvs['externalActivities']['last_updated'] = Training::sapOfLoggedUser()
+        $this->cvs['externalActivities']['last_updated'] = ExternalActivity::sapOfLoggedUser()
             ->max('BEGDA');
 
         // ambil data others untuk user yang telah login
@@ -108,7 +109,7 @@ class CVController extends Controller
             ])
             ->orderBy('BEGDA', 'DESC')
             ->get();
-        $this->cvs['others']['last_updated'] = Training::sapOfLoggedUser()
+        $this->cvs['others']['last_updated'] = Other::sapOfLoggedUser()
             ->max('BEGDA');
     }
 
@@ -120,15 +121,17 @@ class CVController extends Controller
         extract($cvs, EXTR_PREFIX_SAME, "wddx");
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('curriculum_vitaes.index', compact(
-            'personalData',
-            'addresses',
-            'families',
-            'educations',
-            'trainings',
-            'internalActivities',
-            'externalActivities',
-            'others'
+        return view(
+            'curriculum_vitaes.index',
+            compact(
+                'personalData',
+                'addresses',
+                'families',
+                'educations',
+                'trainings',
+                'internalActivities',
+                'externalActivities',
+                'others'
             )
         );
     }
@@ -140,17 +143,25 @@ class CVController extends Controller
         $cvs = $this->cvs;
         extract($cvs, EXTR_PREFIX_SAME, "wddx");
 
+        if (Storage::disk('public')->exists('pic/' . $position->PERNR . '.jpg'))
+            $picture = asset('storage/pic/' . $position->PERNR . '.jpg');
+        else
+            $picture = Storage::url('default.png');
+
         // tampilkan view index dengan tambahan script html DataTables
-        return view('curriculum_vitaes.download', compact(
-            'position',
-            'personalData',
-            'addresses',
-            'families',
-            'educations',
-            'trainings',
-            'internalActivities',
-            'externalActivities',
-            'others'
+        return view(
+            'curriculum_vitaes.download',
+            compact(
+                'position',
+                'personalData',
+                'addresses',
+                'families',
+                'educations',
+                'trainings',
+                'internalActivities',
+                'externalActivities',
+                'others',
+                'picture'
             )
         );
     }

@@ -36,7 +36,7 @@
                 </a>
             </li>
             <li class="">
-                <a href="#tab-download" data-toggle="tab" aria-expanded="true">
+            <a href="{{ route('cvs.download') }}" target="_blank">
                     <i class="fa fa-download"></i>
                 </a>
             </li>
@@ -220,11 +220,7 @@
             <!-- end of activities tab  -->
 
             <!-- begin of download tab  -->
-            <div class="tab-pane fade active in" id="tab-download">
-                <div class="panel-body p-0">
 
-                </div>
-            </div>
             <!-- end of download tab  -->
         </div>
         <!-- begin of tab-content  -->

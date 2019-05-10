@@ -44,6 +44,10 @@ Route::group([
 
     // route untuk default home --> dashboard
     Route::get('/', 'HomeController@index')->name('dashboards.employee');
+    Route::post('/', 'HomeController@index')->name('dashboard.employee.filter');
+
+    // route untuk halaman approval
+    Route::get('/approval', 'HomeController@approval')->name('dashboards.approval');
 
     // route untuk persetujuan di dashboard
     Route::post('approve/{approval}/{id}', 'HomeController@approve')
@@ -87,7 +91,7 @@ Route::group([
 
     // route untuk curriculum vitae
     Route::resource('cvs', 'CVController', ['only' => 'index']);
-    Route::get('cvs/download', 'CVController@download');
+    Route::get('cvs/download', 'CVController@download')->name('cvs.download');
 
     // route untuk wakers
     Route::resource('wakers', 'WakerController', ['only' => 'index']);

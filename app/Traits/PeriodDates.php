@@ -53,8 +53,7 @@ trait PeriodDates
 
     public function scopeMonthYearPeriodOf($query, $m, $y, $p)
     {
-        return $query->whereMonth('start_date', $m)
-            ->whereYear('start_date', $y)
+        return $query->monthYearOf($m, $y)
             ->where('personnel_no', $p);
     }
     public function scopeMonthYearOf($query, $m, $y)
@@ -69,10 +68,22 @@ trait PeriodDates
             ->whereYear('start_date', date('Y'));
     }
 
+    public function scopeCurrentYearPeriod($query)
+    {
+        return $query->whereYear('start_date', date('Y'));
+    }
+
     public function scopefoundYear($query)
     {
         $query->selectRaw('YEAR(start_date) as year')
             ->orderBy(DB::raw('YEAR(start_date)'), 'desc')
             ->groupBy( DB::raw('YEAR(start_date)') );        
+    }
+
+    public function scopefoundMonth($query)
+    {
+        $query->selectRaw('MONTH(start_date) as month')
+            ->orderBy(DB::raw('MONTH(start_date)'), 'desc')
+            ->groupBy( DB::raw('MONTH(start_date)') );        
     }
 }

@@ -102,4 +102,9 @@ class TimeEvent extends Model
             ->orderBy(DB::raw('YEAR(check_date)'), 'desc')
             ->groupBy( DB::raw('YEAR(check_date)') );        
     }
+
+    public function scopeCurrentYearPeriod($query)
+    {
+        return $query->whereYear('check_date', date('Y'));
+    }    
 }

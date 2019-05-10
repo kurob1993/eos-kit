@@ -11,10 +11,16 @@
             @role('employee')
             <li class="{{ Route::current()->getName() == 'dashboards.employee' ? 'active' : '' }}">
                 <a href="{{ route('dashboards.employee') }}">
-                    <i class="fa fa-inbox"></i>
+                    <i class="fa fa-dashboard"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
+            <li class="{{ Route::current()->getName() == 'dashboards.approval' ? 'active' : '' }}">
+                <a href="{{ route('dashboards.approval') }}">
+                    <i class="fa fa-check-circle"></i>
+                    <span>Approval</span>
+                </a>
+            </li>            
             <li class="has-sub {{ (
                 (Request::segment(1) == 'cvs') || (Request::segment(1) == 'organizations') 
                     || (Request::segment(1) == 'administrations')) ? 'active' : '' 

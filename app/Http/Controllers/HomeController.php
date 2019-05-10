@@ -17,7 +17,8 @@ use App\Models\Absence;
 use App\Models\Attendance;
 use App\Models\AttendanceQuota;
 use App\Models\TimeEvent;
-
+use Illuminate\Foundation\Auth\User;
+use App\Models\Employee;
 
 class HomeController extends Controller
 {
@@ -35,131 +36,192 @@ class HomeController extends Controller
         return $this->employeeDashboard($request, $htmlBuilder);
     }
 
-    public function employeeDashboard($request, $htmlBuilder)
+    public function approval()
     {
+        return view('dashboards.approval');
+    }
+
+    public function employeeDashboard(Request $request)
+    {
+        $logged = Auth::user()->employee;
         $d = date('m'); $y = date('Y'); $dy = date('M Y');
-        $employee = Auth::user()->employee;
-        $subordinates = $employee->mgrSptSpvSubordinates();
 
-        /** Leave Chart */
-        $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
+        $ofmonth = $request->has('ofmonth') ? $request->ofmonth : intval(date('m'));
+        $ofyear = $request->has('ofyear') ? $request->ofyear : date('Y');
+        $ofboss = $request->has('ofboss') ? 
+            Employee::find($request->ofboss) : 
+            Employee::find($logged->personnel_no);
+
+        $subordinatesBoss = $logged->closestStructuralSubordinates();
+        $subordinatesBoss->prepend($logged);
+
+        // $subordinates = $logged->oneTwoDirectSubordinates();
+
+        // if ($employee->isGeneralManager())
+        //     $subcaption = "Bawahan Gol. A & B";
+        // else if ($employee->isManager())
+        //     $subcaption = "Bawahan Gol. B, C, & D";
+
+
+        /** Overtime Chart */
+        $oFYears = AttendanceQuota::foundYear()->get();
+        $oFMonths = AttendanceQuota::foundMonth()->get();
+
+        $subordinates = $ofboss->foremanAndOperatorSubordinates();
+
+        $overtimeChartData = [];
         foreach ($subordinates as $subordinate) {
-            array_push(
-                $leaveChartCat, 
-                array("label" => $subordinate->name)
-            );
-            $absence_quota = $subordinate->active_absence_quota;
-            $number = (is_null($absence_quota)) ? 0 : $absence_quota->number;
-            $deduction = (is_null($absence_quota)) ? 0 : $absence_quota->deduction;
-            array_push(
-                $leaveChartQuota,
-                array("value" => $number)
-            );
-            array_push(
-                $leaveChartDeduction,
-                array("value" => $deduction)
-            );
-        }
-        $dataSource = [ 
-            "chart" => [
-                "caption" => "Cuti Karyawan " . $employee->org_unit_name,
-                "subcaption" => "Bawahan Gol. B, C, & D",
-                "xaxisname" => "Karyawan",
-                "yaxisname" => "Durasi cuti (hari)",
-                "theme" => "fusion",
-                "baseFont" => "Karla",
-                "baseFontColor" => "#153957",
-                "outCnvBaseFont" => "Karla",
-            ],
-            "categories" => [
-                [ "category" => $leaveChartCat ]
-            ],
-            "dataset" => [
-                [ "seriesname" => "Kuota", "data" => $leaveChartQuota ],
-                [ "seriesname" => "Terpakai", "data" => $leaveChartDeduction ]
-            ]
-        ];
-
-        $leaveChart = new \FusionCharts( 
-            "overlappedbar2d", 
-            "leaveChart" , 
-            "100%", 
-            900, 
-            "leave-chart", 
-            "json", 
-            json_encode($dataSource) 
-        );
-
-        /** Permit Chart */
-        $permitChartData = [];
-        foreach ($subordinates as $subordinate) {
-            $totalDurationHour = $subordinate->permitTotalDurationHour;
-            if ($totalDurationHour > 0) {
-                $labelValue = [ 
-                    "label" => (string) $subordinate->name, 
-                    "value" => $totalDurationHour
-                ];
-                array_push($permitChartData, $labelValue);
-            }
-        }
-        $chartOptions = [ 
-            "caption" => "Izin Karyawan " . $employee->org_unit_name, 
-            "subcaption" => $dy, 
-            "xaxisname" => "Karyawan", 
-            "yaxisname" => "Total izin (jam)", 
-            "theme" => "fusion", 
-            "baseFont" => "Karla", 
-            "baseFontColor" => "#153957", 
-            "outCnvBaseFont" => "Karla", 
-        ];
-        $dataSource = [ "chart" => $chartOptions, "data" => $permitChartData ]; 
-        $permitChart = new \FusionCharts( 
-            "bar2d", 
-            "permitChart" , 
-            "100%", 
-            900, 
-            "permit-chart", 
-            "json", 
-            json_encode($dataSource) 
-        );
-
-        /** Time Event Chart */
-        $timeEventChartData = [];
-        foreach ($subordinates as $subordinate) {
-            $totalDuration = $subordinate->timeEventTotalDuration;
-            if ($totalDuration > 0) {
+            $totalDuration = $subordinate->overtimeTotalDurationHour($ofmonth, $ofyear);
+            if ($subordinate->allowedForOvertime()) {
                 $labelValue = [
                     "label" => (string) $subordinate->name,
                     "value" => $totalDuration
                 ];
-                array_push($timeEventChartData, $labelValue);
+                array_push($overtimeChartData, $labelValue);
             }
         }
         $chartOptions = [ 
-            "caption" => "Tidak Slash Karyawan " . $employee->org_unit_name, 
+            "caption" => "Lembur Karyawan " . $ofboss->org_unit_name, 
             "subcaption" => $dy, 
             "xaxisname" => "Karyawan", 
-            "yaxisname" => "Total tidak slash", 
+            "yaxisname" => "Total lembur (jam)", 
             "theme" => "fusion", 
             "baseFont" => "Karla", 
             "baseFontColor" => "#153957", 
             "outCnvBaseFont" => "Karla", 
         ];
-        $dataSource = [ "chart" => $chartOptions, "data" => $timeEventChartData ];
-        $timeEventChart = new \FusionCharts( 
+        $dataSource = [ "chart" => $chartOptions, "data" => $overtimeChartData ];
+        $overtimeChart = new \FusionCharts( 
             "bar2d", 
-            "timeEventChart" , 
+            "overtimeChart" , 
             "100%", 
-            900, 
-            "time-event-chart", 
+            $subordinates->count() * 20, 
+            "overtime-chart", 
             "json", 
             json_encode($dataSource) 
         );
 
+        // /** Leave Chart */
+        // $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
+        // foreach ($subordinates as $subordinate) {
+        //     array_push(
+        //         $leaveChartCat, 
+        //         array("label" => $subordinate->name)
+        //     );
+        //     $absence_quota = $subordinate->active_absence_quota;
+        //     $number = (is_null($absence_quota)) ? 0 : $absence_quota->number;
+        //     $deduction = (is_null($absence_quota)) ? 0 : $absence_quota->deduction;
+        //     array_push(
+        //         $leaveChartQuota,
+        //         array("value" => $number)
+        //     );
+        //     array_push(
+        //         $leaveChartDeduction,
+        //         array("value" => $deduction)
+        //     );
+        // }
+        // $dataSource = [ 
+        //     "chart" => [
+        //         "caption" => "Cuti Karyawan " . $employee->org_unit_name,
+        //         "subcaption" => $subcaption,
+        //         "xaxisname" => "Karyawan",
+        //         "yaxisname" => "Durasi cuti (hari)",
+        //         "theme" => "fusion",
+        //         "baseFont" => "Karla",
+        //         "baseFontColor" => "#153957",
+        //         "outCnvBaseFont" => "Karla",
+        //     ],
+        //     "categories" => [
+        //         [ "category" => $leaveChartCat ]
+        //     ],
+        //     "dataset" => [
+        //         [ "seriesname" => "Kuota", "data" => $leaveChartQuota ],
+        //         [ "seriesname" => "Terpakai", "data" => $leaveChartDeduction ]
+        //     ]
+        // ];
+
+        // $leaveChart = new \FusionCharts( 
+        //     "overlappedbar2d", 
+        //     "leaveChart" , 
+        //     "100%", 
+        //     900, 
+        //     "leave-chart", 
+        //     "json", 
+        //     json_encode($dataSource) 
+        // );
+
+        // /** Permit Chart */
+        // $permitChartData = [];
+        // foreach ($subordinates as $subordinate) {
+        //     $totalDurationHour = $subordinate->permitTotalDurationHour;
+        //         $labelValue = [ 
+        //             "label" => (string) $subordinate->name, 
+        //             "value" => $totalDurationHour
+        //         ];
+        //         array_push($permitChartData, $labelValue);
+        // }
+
+        // $chartOptions = [ 
+        //     "caption" => "Izin Karyawan " . $employee->org_unit_name, 
+        //     "subcaption" => $dy, 
+        //     "xaxisname" => "Karyawan", 
+        //     "yaxisname" => "Total izin (jam)", 
+        //     "theme" => "fusion", 
+        //     "baseFont" => "Karla", 
+        //     "baseFontColor" => "#153957", 
+        //     "outCnvBaseFont" => "Karla", 
+        // ];
+        // $dataSource = [ "chart" => $chartOptions, "data" => $permitChartData ]; 
+        // $permitChart = new \FusionCharts( 
+        //     "bar2d", 
+        //     "permitChart" , 
+        //     "100%", 
+        //     900, 
+        //     "permit-chart", 
+        //     "json", 
+        //     json_encode($dataSource) 
+        // );
+
+        // /** Time Event Chart */
+        // $timeEventChartData = [];
+        // foreach ($subordinates as $subordinate) {
+        //     $totalDuration = $subordinate->timeEventTotalDuration;
+        //         $labelValue = [
+        //             "label" => (string) $subordinate->name,
+        //             "value" => $totalDuration
+        //         ];
+        //         array_push($timeEventChartData, $labelValue);
+        // }
+        // $chartOptions = [ 
+        //     "caption" => "Tidak Slash Karyawan " . $employee->org_unit_name, 
+        //     "subcaption" => $dy, 
+        //     "xaxisname" => "Karyawan", 
+        //     "yaxisname" => "Total tidak slash", 
+        //     "theme" => "fusion", 
+        //     "baseFont" => "Karla", 
+        //     "baseFontColor" => "#153957", 
+        //     "outCnvBaseFont" => "Karla", 
+        // ];
+        // $dataSource = [ "chart" => $chartOptions, "data" => $timeEventChartData ];
+        // $timeEventChart = new \FusionCharts( 
+        //     "bar2d", 
+        //     "timeEventChart" , 
+        //     "100%", 
+        //     900, 
+        //     "time-event-chart", 
+        //     "json", 
+        //     json_encode($dataSource) 
+        // );
+
         return view('dashboards.employee', compact(
+            'ofboss',
+            'ofyear', 'oFYears',
+            'ofmonth', 'oFMonths',
+            'subordinatesBoss',
             'leaveChart',
             'permitChart',
-            'timeEventChart'
+            'timeEventChart',
+            'overtimeChart'
         ));
     }
 

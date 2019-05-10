@@ -11,38 +11,18 @@
         <ul class="nav nav-tabs nav-tabs-primary nav-justified nav-justified-mobile">
             <li class="active">
                 <a href="#tab-leaves" data-toggle="tab" aria-expanded="true"> Cuti
-                    @if ($countLeaveApprovals > 0)
-                    <span class="badge pull-right m-l-5">
-                        {{$countLeaveApprovals}}
-                    </span>
-                    @endif
                 </a>
             </li>
             <li class="">
                 <a href="#tab-permits" data-toggle="tab" aria-expanded="true"> Izin
-                    @if ($countPermitApprovals > 0)
-                    <span class="badge pull-right m-l-5">
-                        {{$countPermitApprovals}}
-                    </span>
-                    @endif
                 </a>
             </li>
             <li class="">
                 <a href="#tab-time-events" data-toggle="tab" aria-expanded="true"> Slash
-                    @if ($countTimeEventApprovals > 0)
-                    <span class="badge pull-right m-l-5">
-                        {{$countTimeEventApprovals}}
-                    </span>
-                    @endif
                 </a>
             </li>
             <li class="">
                 <a href="#tab-overtimes" data-toggle="tab" aria-expanded="true"> Lembur
-                    @if ($countOvertimeApprovals > 0)
-                    <span class="badge pull-right m-l-5">
-                        {{$countOvertimeApprovals}}
-                    </span>
-                    @endif
                 </a>
             </li>
         </ul>
@@ -53,14 +33,7 @@
             <!-- begin of leaves tab  -->
             <div class="tab-pane fade active in" id="tab-leaves">
                 <div class="panel-body p-0">
-                    <p>
-                        {{-- <a class="btn btn-primary" href="{{ route('dashboards.approve_all', ['approval' => 'leaves']) }}"> Setujui Semua </a>
-                        <a class="btn btn-danger" href="{{ route('dashboards.reject_all', ['approval' => 'leaves']) }}"> Tolak Semua </a> --}}
-                    </p>
                     <div id="leave-chart" class="m-t-5 m-b-5">Fusionchart for leaves will be rendered here.</div>
-                    <div class="table-responsive">
-                        {!! $leaveTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
-                    </div>
                 </div>
             </div>
             <!-- end of leaves tab  -->
@@ -69,9 +42,6 @@
             <div class="tab-pane fade" id="tab-permits">
                 <div class="panel-body p-0">
                     <div id="permit-chart" class="m-t-5 m-b-5">Fusionchart for permits will be rendered here.</div>
-                    <div class="table-responsive">
-                        {!! $permitTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
-                    </div>
                 </div>
             </div>
             <!-- end of permits tab  -->
@@ -79,9 +49,7 @@
             <!-- begin of time-events tab  -->
             <div class="tab-pane fade" id="tab-time-events">
                 <div class="panel-body p-0">
-                    <div id="time-event-chart" class="m-t-5 m-b-5">Fusionchart for time events will be rendered here.</div>
-                    <div class="table-responsive">
-                        {!! $timeEventTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+                    <div id="time-event-chart" class="m-t-5 m-b-5">Fusionchart for time events will be rendered here.
                     </div>
                 </div>
             </div>
@@ -90,7 +58,63 @@
             <!-- begin of overtimes tab  -->
             <div class="tab-pane fade" id="tab-overtimes">
                 <div class="panel-body p-0">
-                    {!! $overtimeTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+                    <form method="post" id="form-overtime" action="{{ route('dashboard.employee.filter') }}">
+                        {{ csrf_field() }}
+                        <div class="col-md-6 col-xs-12">
+                            <div class="form-group">
+                                <label for="filter-boss">Atasan</label>
+                                <select name="ofboss" id="filter-boss" 
+                                    class="form-control" onchange="this.form.submit()">
+                                    @foreach ($subordinatesBoss as $boss)
+                                    <option value="{{ $boss->personnel_no }}"
+                                        @if ($ofboss->personnel_no == $boss->personnel_no) selected="" @endif >
+                                        {{ $boss->name }} - {{ $boss->org_unit_name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="filter-overtime-month">Bulan</label>
+                                <select name="ofmonth" id="filter-overtime-month" 
+                                    class="form-control" onchange="this.form.submit()">
+                                    @foreach ($oFMonths as $y)
+                                    <option value="{{ $y->month }}" 
+                                        @if ($ofmonth == $y->month) selected="" @endif>
+                                        {{ $y->month }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>                                                
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="filter-overtime-year">Tahun</label>
+                                <select name="ofyear" id="filter-overtime-year" 
+                                    class="form-control" onchange="this.form.submit()">
+                                    @foreach ($oFYears as $y)
+                                    <option value="{{ $y->year }}" 
+                                        @if ($ofyear == $y->year) selected="" @endif>
+                                        {{ $y->year }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="checkbox">
+                                        <label></label>
+                                        <label>
+                                            <input type="checkbox" value="">
+                                            0 Jam
+                                        </label>
+                                    </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="overtime-chart" class="m-t-5 m-b-5">Fusionchart for overtimes will be rendered here.</div>
                 </div>
             </div>
             <!-- end of overtimes tab  -->
@@ -116,7 +140,7 @@
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Keluar</button>
                         </div>
                     </div>
-                </div>  
+                </div>
             </div>
             <!-- end Modal pengumuman-->
 
@@ -125,18 +149,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">Persetujuan (ID: <span id="title-span"></span>)</h4>
-            </div>
-            <div class="modal-body">
-            </div>
-        </div>
-    </div>
-</div>
 @endcomponent
 <!-- end page container -->
 @endsection
@@ -158,28 +170,19 @@
 <script src="{{ url("/plugins/fusioncharts/js/fusioncharts.charts.js") }}"></script>
 <script src="{{ url("/plugins/fusioncharts/js/fusioncharts.overlappedbar2d.js") }}"></script>
 <script src="{{ url("/plugins/fusioncharts/js/themes/fusioncharts.theme.fusion.js") }}"></script>
-{!! $leaveChart->render() !!}
+{{-- {!! $leaveChart->render() !!}
 {!! $permitChart->render() !!}
-{!! $timeEventChart->render() !!}
+{!! $timeEventChart->render() !!} --}}
+{!! $overtimeChart->render() !!}
 <!-- Selectize -->
 <script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
-<!-- DataTables -->
-<script src={{ url("/plugins/DataTables/js/jquery.dataTables.min.js") }}></script>
-<script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
-<!-- Generated scripts from DataTables -->
-{!! $leaveTable->scripts() !!}
-{!! $permitTable->scripts() !!}
-{!! $overtimeTable->scripts() !!}
-{!! $timeEventTable->scripts() !!}
 @endpush
 
 @push('custom-scripts')
 @include('scripts._defer-ajax-dt-script')
-@include('scripts._dashboard-script', [ 'stages' => $stages, 'tableNames' => $tableNames ])
 @include('scripts._save-tab-state-script')
 @endpush
 
 @push('on-ready-scripts')
-DashboardPlugins.init();
 TabStatePlugins.init();
 @endpush
