@@ -67,54 +67,55 @@
                                     class="form-control" onchange="this.form.submit()">
                                     @foreach ($subordinatesBoss as $boss)
                                     <option value="{{ $boss->personnel_no }}"
-                                        @if ($ofboss->personnel_no == $boss->personnel_no) selected="" @endif >
+                                        @if ($ofBoss->personnel_no == $boss->personnel_no) selected="" @endif >
                                         {{ $boss->name }} - {{ $boss->org_unit_name }}
                                     </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="filter-overtime-month">Bulan</label>
                                 <select name="ofmonth" id="filter-overtime-month" 
                                     class="form-control" onchange="this.form.submit()">
-                                    @foreach ($oFMonths as $y)
-                                    <option value="{{ $y->month }}" 
-                                        @if ($ofmonth == $y->month) selected="" @endif>
-                                        {{ $y->month }}
+                                    @foreach ($ofMonths as $m)
+                                    <option value="{{ $m->month }}" 
+                                        @if ($ofMonth == $m->month) selected="" @endif>
+                                        {{ date("F", mktime(0, 0, 0, $m->month, 1)) }}
                                     </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>                                                
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="filter-overtime-year">Tahun</label>
                                 <select name="ofyear" id="filter-overtime-year" 
                                     class="form-control" onchange="this.form.submit()">
-                                    @foreach ($oFYears as $y)
+                                    @foreach ($ofYears as $y)
                                     <option value="{{ $y->year }}" 
-                                        @if ($ofyear == $y->year) selected="" @endif>
+                                        @if ($ofYear == $y->year) selected="" @endif>
                                         {{ $y->year }}
                                     </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        {{-- <div class="col-md-2">
                             <div class="form-group">
-                                <div class="checkbox">
-                                        <label></label>
-                                        <label>
-                                            <input type="checkbox" value="">
-                                            0 Jam
-                                        </label>
-                                    </div>
+                                <label for="filter-overtime-year">Total Jam</label>
+                                <select name="ofhour" id="filter-overtime-hour"
+                                    class="form-control" onchange="this.form.submit()">
+                                    <option value="1">> 0 jam</option>
+                                    <option value="2">Semua</option>
+                                </select>
                             </div>
-                        </div>
+                        </div> --}}
                     </form>
-                    <div id="overtime-chart" class="m-t-5 m-b-5">Fusionchart for overtimes will be rendered here.</div>
+                    <div id="overtime-chart" class="m-t-5 m-b-5">
+                        Fusionchart for overtimes will be rendered here.
+                    </div>
                 </div>
             </div>
             <!-- end of overtimes tab  -->
@@ -170,9 +171,9 @@
 <script src="{{ url("/plugins/fusioncharts/js/fusioncharts.charts.js") }}"></script>
 <script src="{{ url("/plugins/fusioncharts/js/fusioncharts.overlappedbar2d.js") }}"></script>
 <script src="{{ url("/plugins/fusioncharts/js/themes/fusioncharts.theme.fusion.js") }}"></script>
-{{-- {!! $leaveChart->render() !!}
+{!! $leaveChart->render() !!}
 {!! $permitChart->render() !!}
-{!! $timeEventChart->render() !!} --}}
+{!! $timeEventChart->render() !!}
 {!! $overtimeChart->render() !!}
 <!-- Selectize -->
 <script src={{ url("/plugins/selectize/selectize.min.js") }}></script>

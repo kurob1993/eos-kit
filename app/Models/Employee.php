@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Employee extends Model
 {
@@ -592,6 +593,30 @@ class Employee extends Model
         });
 
         return $sum / 60;
+    }
+
+    public function successOvertimeFoundMonth()
+    {
+        $o = AttendanceQuota::where('personnel_no', $this->personnel_no)
+            ->successOnly()
+            ->selectRaw('MONTH(start_date) as month')
+            ->orderBy(DB::raw('MONTH(start_date)'), 'desc')
+            ->groupBy(DB::raw('MONTH(start_date)'))
+            ->get();
+        
+        return $o->map(function ($item, $key) { return $item->month; });
+    }
+
+    public function successOvertimeFoundYear()
+    {
+        $o = AttendanceQuota::where('personnel_no', $this->personnel_no)
+            ->successOnly()
+            ->selectRaw('YEAR(start_date) as year')
+            ->orderBy(DB::raw('YEAR(start_date)'), 'desc')
+            ->groupBy(DB::raw('YEAR(start_date)'))   
+            ->get();
+
+        return $o->map(function ($item, $key) { return $item->year; });
     }
 
     public function getPermitsAttribute()
