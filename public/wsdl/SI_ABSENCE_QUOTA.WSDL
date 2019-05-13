@@ -83,6 +83,18 @@
                                         <xsd:documentation>Error Description</xsd:documentation>
                                     </xsd:annotation>
                                 </xsd:element>
+                                <xsd:element name="BEGDA" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">1143324b713f11e98120c04a002b4762</xsd:appinfo>
+                                        <xsd:documentation>Start Date</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="ENDDA" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">11436201713f11e9cfebc04a002b4762</xsd:appinfo>
+                                        <xsd:documentation>End Date</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
                             </xsd:sequence>
                         </xsd:complexType>
                     </xsd:element>

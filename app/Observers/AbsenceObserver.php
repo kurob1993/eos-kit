@@ -181,20 +181,28 @@ class AbsenceObserver
         // apakah sudah selesai
         if ($absence->isSuccess) {
 
+            /** bagian  ini di komen di karenakan penambahan 
+             *  dan pengurangan kuota cuti diprosess mealalui XI SAP
+             *  Dari sini
+            */
+
             // jika absence adalah cuti maka lakukan penambahan deduction
-            if ($absence->is_a_leave) {
-                // mencari data kuota cuti yang dipakai
-                $absenceQuota = AbsenceQuota::activeAbsenceQuota($absence->personnel_no)
-                    ->first();
+            // if ($absence->is_a_leave) {
+                // // mencari data kuota cuti yang dipakai
+                // $absenceQuota = AbsenceQuota::activeAbsenceQuota($absence->personnel_no)
+                //     ->first();
     
-                // menambah pemakaian cuti pada periode tersebut
-                // seharusnya ada tabel history (many to many)
-                // pemakaian cuti berkorelasi dengan absence quota
-                $absenceQuota->deduction += $absence->deduction;
+                // // menambah pemakaian cuti pada periode tersebut
+                // // seharusnya ada tabel history (many to many)
+                // // pemakaian cuti berkorelasi dengan absence quota
+                // $absenceQuota->deduction += $absence->deduction;
     
-                // simpan data kuota cuti
-                $absenceQuota->save();
-            }
+                // // simpan data kuota cuti
+                // $absenceQuota->save();
+                
+            // }
+
+            /** Sampai sini */
 
             // to adalah karyawan yang mengajukan
             $to = $absence->user()->first();

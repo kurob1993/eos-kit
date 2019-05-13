@@ -10,8 +10,8 @@ class AbsenceSoapController extends Controller
     public function index()
     {        
         
-        $absence = Absence::where('absence_type_id','1')
-        ->where('stage_id','2')
+        $absence = Absence::where('stage_id','2')
+        ->where('sendtosap_at', null)
         ->limit(1)->get();
         
         $data = array();
