@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Session;
 use Storage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\AbsenceApproval;
@@ -15,143 +14,63 @@ use App\Models\AttendanceQuotaApproval;
 use App\Models\Status;
 use App\Models\Absence;
 use App\Models\Attendance;
-use App\Models\AttendanceQuota as Overtime;
-use App\Models\TimeEvent;
-use App\Models\Employee;
-use App\Models\AbsenceQuota;
 
 class HomeController extends Controller
 {
     public function __construct()
-    { }
-
-    public function noRole()
     {
-        return view('errors.403');
-    }
 
-    public function index(Request $request, Builder $htmlBuilder)
-    {
-        return $this->employeeDashboard($request, $htmlBuilder);
-    }
-
-    public function approval()
-    {
-        return view('dashboards.approval');
-    }
-
-    public function leaveDashboard(Request $request)
-    {
-        // diri sendiri yang telah login
-        $logged = Auth::user()->employee;
-
-        // bawahan yang memiliki bawahan? haha
-        $subordinatesBoss = $logged->closestStructuralSubordinates();
-
-        // masukkan diri sendiri pada last position
-        $subordinatesBoss->push($logged);
-
-        // default themes for chart
-        $chartThemes = [
-            "theme" => "fusion",
-            "baseFont" => "Karla",
-            "baseFontColor" => "#153957",
-            "outCnvBaseFont" => "Karla",
-        ];
-
-        $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
-
-        $lfSubordinates = $logged->subordinates()
-            ->pluck('personnel_no', 'name');
-
-        // mencari data lembur untuk bawahan dari atasan yang telah dipilih
-        $leaveChartData = AbsenceQuota::select(['personnel_no', 'number', 'deduction'])
-            ->whereIn('personnel_no', $lfSubordinates)
-            ->with('employee:personnel_no,name')
-            ->quotaNow()
-            ->orderByRaw('deduction DESC')
-            ->get();
-            
-        $leaveChartCat = $leaveChartData->map(function ($item, $key) {
-            return  ["label" => $item->personnel_no . ' - ' . $item->employee->name ];
-        });
-
-        $leaveChartQuota = $leaveChartData->map(function ($item, $key) {
-            return  ["value" => $item->number];
-        });
-        $leaveChartDeduction = $leaveChartData->map(function ($item, $key) {
-            return ["value" => $item->deduction];
-        });
-
-        $ofMonth = date('m');
-
-        $chartOptions = [
-            "caption" => "Cuti Karyawan " . $logged->org_unit_name,
-            "subcaption" => date("F", mktime(0, 0, 0, $ofMonth, 1)) . ' ' . date("Y"),
-            "xaxisname" => "Karyawan",
-            "yaxisname" => "Durasi cuti (hari)",
-        ];
-        $dataSource = [
-            "chart" => array_merge($chartOptions, $chartThemes),
-            "categories" => [["category" => $leaveChartCat]],
-            "dataset" => [
-                ["seriesname" => "Kuota", "data" => $leaveChartQuota],
-                ["seriesname" => "Terpakai", "data" => $leaveChartDeduction]
-            ]
-        ];
-
-        return response()->json($dataSource);
     }
 
     public function employeeDashboard(Request $request)
     {
-        // diri sendiri yang telah login
-        $logged = Auth::user()->employee;
+        // // diri sendiri yang telah login
+        // $logged = Auth::user()->employee;
 
-        // bawahan yang memiliki bawahan? haha
-        $subordinatesBoss = $logged->closestStructuralSubordinates();
+        // // bawahan yang memiliki bawahan? haha
+        // $subordinatesBoss = $logged->closestStructuralSubordinates();
 
-        // masukkan diri sendiri pada last position
-        $subordinatesBoss->push($logged);
+        // // masukkan diri sendiri pada last position
+        // $subordinatesBoss->push($logged);
 
-        // default themes for chart
-        $chartThemes = [
-            "theme" => "fusion",
-            "baseFont" => "Karla",
-            "baseFontColor" => "#153957",
-            "outCnvBaseFont" => "Karla",
-        ];
+        // // default themes for chart
+        // $chartThemes = [
+        //     "theme" => "fusion",
+        //     "baseFont" => "Karla",
+        //     "baseFontColor" => "#153957",
+        //     "outCnvBaseFont" => "Karla",
+        // ];
 
-        // /******************** Start of Overtime Chart ********************/
-        // value untuk select filter atasan
-        $ofBoss = $request->has('ofBoss') ?
-            Employee::find($request->ofBoss) : $subordinatesBoss->first();
+        // // /******************** Start of Overtime Chart ********************/
+        // // value untuk select filter atasan
+        // $ofBoss = $request->has('ofBoss') ?
+        //     Employee::find($request->ofBoss) : $subordinatesBoss->first();
 
-        // mencari bawahan yang bisa lembur
-        $ofSubordinates = $ofBoss->foremanAndOperatorSubordinates()
-            ->pluck('personnel_no', 'name');
+        // // mencari bawahan yang bisa lembur
+        // $ofSubordinates = $ofBoss->foremanAndOperatorSubordinates()
+        //     ->pluck('personnel_no', 'name');
 
-        // mencari bulan-bulan yang valid untuk select filter
-        $ofMonths = Overtime::selectRaw('month(start_date) as month')
-            ->whereIn('personnel_no', $ofSubordinates)
-            ->successOnly()
-            ->groupBy('month')
-            ->orderByRaw('month DESC')
-            ->get();
+        // // mencari bulan-bulan yang valid untuk select filter
+        // $ofMonths = Overtime::selectRaw('month(start_date) as month')
+        //     ->whereIn('personnel_no', $ofSubordinates)
+        //     ->successOnly()
+        //     ->groupBy('month')
+        //     ->orderByRaw('month DESC')
+        //     ->get();
 
-        // mencari tahun-tahun yang valid untuk select filter
-        $ofYears = Overtime::selectRaw('year(start_date) as year')
-            ->whereIn('personnel_no', $ofSubordinates)
-            ->successOnly()
-            ->groupBy('year')
-            ->orderByRaw('year DESC')
-            ->get();
+        // // mencari tahun-tahun yang valid untuk select filter
+        // $ofYears = Overtime::selectRaw('year(start_date) as year')
+        //     ->whereIn('personnel_no', $ofSubordinates)
+        //     ->successOnly()
+        //     ->groupBy('year')
+        //     ->orderByRaw('year DESC')
+        //     ->get();
 
-        // single value untuk select filter
-        $ofMonth = $request->has('ofmonth') ?
-            $request->ofmonth : ($ofMonths->isNotEmpty() ? $ofMonths->first()->month : date('m'));
-        $ofYear = $request->has('ofyear') ?
-            $request->ofyear : ($ofYears->isNotEmpty() ? $ofYears->first()->year : date('Y'));
+        // // single value untuk select filter
+        // $ofMonth = $request->has('ofmonth') ?
+        //     $request->ofmonth : ($ofMonths->isNotEmpty() ? $ofMonths->first()->month : date('m'));
+        // $ofYear = $request->has('ofyear') ?
+        //     $request->ofyear : ($ofYears->isNotEmpty() ? $ofYears->first()->year : date('Y'));
 
         // // konversi angka bulan ke nama bulan
         // $ofMonthName = date("F", mktime(0, 0, 0, $ofMonth, 1));
@@ -259,18 +178,34 @@ class HomeController extends Controller
         // );
         // /******************** End of Time Event Chart *****************/
 
-        return view('dashboards.employee', compact(
-            'ofBoss',
-            'ofYear',
-            'ofYears',
-            'ofMonth',
-            'ofMonths',
-            'subordinatesBoss'
-            // 'leaveChart',
-            // 'permitChart',
-            // 'timeEventChart',
-            // 'overtimeChart'
-        ));
+        return view('dashboards.employee');
+        // return view('dashboards.employee', compact(
+        //     'lfBoss',
+        //     'lfYear',
+        //     'lfYears',
+        //     'lfMonth',
+        //     'lfMonths',
+        //     'subordinatesBoss',
+        // 'leaveChart',
+        // 'permitChart',
+        // 'timeEventChart',
+        // 'overtimeChart'
+        // ));
+    }
+
+    public function noRole()
+    {
+        return view('errors.403');
+    }
+
+    public function index(Request $request, Builder $htmlBuilder)
+    {
+        return $this->employeeDashboard($request, $htmlBuilder);
+    }
+
+    public function approval()
+    {
+        return view('dashboards.approval');
     }
 
     public function basisDashboard()

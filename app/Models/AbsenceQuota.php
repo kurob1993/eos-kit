@@ -68,6 +68,17 @@ class AbsenceQuota extends Model
             ->where('end_date', '>=', $now);
     }
 
+    public function scopeQuotaOf($query, $s, $e)
+    {
+        return $query->where(function($query) use ($s){
+            $query->where('start_date','<=',$s)
+            ->where('end_date','>=',$s);
+        })
+        ->where(function($query) use ($e){
+            $query->where('start_date','<=',$e)
+            ->where('end_date','>=',$e);
+        });        
+    }
 
     public function scopeActiveAbsenceQuota($query, $p)
     {
@@ -79,14 +90,7 @@ class AbsenceQuota extends Model
     {
       // mencari apakah ada kuota cuti untuk rentang tanggal
         return $query->where('personnel_no', '=' , $p)
-        ->where(function($query) use ($s){
-            $query->where('start_date','<=',$s)
-            ->where('end_date','>=',$s);
-        })
-        ->where(function($query) use ($e){
-            $query->where('start_date','<=',$e)
-            ->where('end_date','>=',$e);
-        });
+            ->quotaOf($s, $e);
     }
 
     public function getPlainIdAttribute()

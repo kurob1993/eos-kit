@@ -5,7 +5,7 @@
 @component('layouts.employee._page-container', ['page_header' => 'Employee Dashboard'])
 <div class="row">
     <div class="col-lg-12 col-xl-9">
-        <h4>Persetujuan Karyawan</h4>
+        <h4>Dashboard</h4>
         @include('layouts._flash')
         <!-- begin of dashboard nav-tabs  -->
         <ul class="nav nav-tabs nav-tabs-primary nav-justified nav-justified-mobile">
@@ -33,6 +33,44 @@
             <!-- begin of leaves tab  -->
             <div class="tab-pane fade active in" id="tab-leaves">
                 <div class="panel-body p-0">
+                        {{ csrf_field() }}
+                        <div class="col-md-6 col-xs-12">
+                            <div class="form-group">
+                                <label for="filter-leave-boss">Atasan</label>
+                                <select name="lfboss" id="filter-leave-boss"
+                                    class="form-control" onchange="leaveChartClickHandler()">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="filter-overtime-month">Bulan</label>
+                                <select name="lfmonth" id="filter-leave-month"
+                                    class="form-control" onchange="leaveChartClickHandler()">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="filter-leave-year">Tahun</label>
+                                <select name="lfyear" id="filter-leave-year"
+                                    class="form-control" onchange="leaveChartClickHandler()">
+
+                                </select>
+                            </div>
+                        </div>
+                        {{-- <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="filter-leave-day">Total Cuti</label>
+                                <select name="lfday" id="filter-leave-day"
+                                    class="form-control" onchange="">
+                                    <option value="1">> 0 hari</option>
+                                    <option value="2">Semua</option>
+                                </select>
+                            </div>
+                        </div> --}}
                     <div id="leave-chart" class="m-t-5 m-b-5">Fusionchart for leaves will be rendered here.</div>
                 </div>
             </div>
@@ -58,12 +96,12 @@
             <!-- begin of overtimes tab  -->
             <div class="tab-pane fade" id="tab-overtimes">
                 <div class="panel-body p-0">
-                    <form method="post" id="form-overtime" action="{{ route('dashboard.employee.filter') }}">
+                    {{-- <form method="post" id="form-overtime" action="{{ route('dashboard.employee.filter') }}">
                         {{ csrf_field() }}
                         <div class="col-md-6 col-xs-12">
                             <div class="form-group">
                                 <label for="filter-boss">Atasan</label>
-                                <select name="ofboss" id="filter-boss" 
+                                <select name="ofboss" id="filter-boss"
                                     class="form-control" onchange="this.form.submit()">
                                     @foreach ($subordinatesBoss as $boss)
                                     <option value="{{ $boss->personnel_no }}"
@@ -77,24 +115,24 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="filter-overtime-month">Bulan</label>
-                                <select name="ofmonth" id="filter-overtime-month" 
+                                <select name="ofmonth" id="filter-overtime-month"
                                     class="form-control" onchange="this.form.submit()">
                                     @foreach ($ofMonths as $m)
-                                    <option value="{{ $m->month }}" 
+                                    <option value="{{ $m->month }}"
                                         @if ($ofMonth == $m->month) selected="" @endif>
                                         {{ date("F", mktime(0, 0, 0, $m->month, 1)) }}
                                     </option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div>                                                
+                        </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="filter-overtime-year">Tahun</label>
-                                <select name="ofyear" id="filter-overtime-year" 
+                                <select name="ofyear" id="filter-overtime-year"
                                     class="form-control" onchange="this.form.submit()">
                                     @foreach ($ofYears as $y)
-                                    <option value="{{ $y->year }}" 
+                                    <option value="{{ $y->year }}"
                                         @if ($ofYear == $y->year) selected="" @endif>
                                         {{ $y->year }}
                                     </option>
@@ -102,7 +140,7 @@
                                 </select>
                             </div>
                         </div>
-                        {{-- <div class="col-md-2">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="filter-overtime-year">Total Jam</label>
                                 <select name="ofhour" id="filter-overtime-hour"
@@ -111,8 +149,8 @@
                                     <option value="2">Semua</option>
                                 </select>
                             </div>
-                        </div> --}}
-                    </form>
+                        </div>
+                    </form> --}}
                     <div id="overtime-chart" class="m-t-5 m-b-5">
                         Fusionchart for overtimes will be rendered here.
                     </div>

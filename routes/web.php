@@ -42,11 +42,14 @@ Route::group([
     // route untuk halaman help
     Route::resource('help', 'HelpController');
 
-    // route untuk default home --> dashboard
+    // route untuk default home
     Route::get('/', 'HomeController@index')->name('dashboards.employee');
-    Route::post('/', 'HomeController@index')->name('dashboard.employee.filter');
-    Route::get('/dashboards/employee/leave', 'HomeController@leaveDashboard')
+    
+    // route untuk dashboard
+    Route::get('/employee/leave', 'Dashboard\Employee\LeaveController@leaveChart')
         ->name('dashboards.employee.leave');
+    Route::get('/employee/leave/filter', 'Dashboard\Employee\LeaveController@leaveFilter')
+        ->name('dashboards.employee.leave.filter');
 
     // route untuk halaman approval
     Route::get('/approval', 'HomeController@approval')->name('dashboards.approval');
