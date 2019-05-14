@@ -45,6 +45,8 @@ Route::group([
     // route untuk default home --> dashboard
     Route::get('/', 'HomeController@index')->name('dashboards.employee');
     Route::post('/', 'HomeController@index')->name('dashboard.employee.filter');
+    Route::get('/dashboards/employee/leave', 'HomeController@leaveDashboard')
+        ->name('dashboards.employee.leave');
 
     // route untuk halaman approval
     Route::get('/approval', 'HomeController@approval')->name('dashboards.approval');

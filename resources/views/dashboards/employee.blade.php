@@ -171,10 +171,10 @@
 <script src="{{ url("/plugins/fusioncharts/js/fusioncharts.charts.js") }}"></script>
 <script src="{{ url("/plugins/fusioncharts/js/fusioncharts.overlappedbar2d.js") }}"></script>
 <script src="{{ url("/plugins/fusioncharts/js/themes/fusioncharts.theme.fusion.js") }}"></script>
-{!! $leaveChart->render() !!}
-{!! $permitChart->render() !!}
-{!! $timeEventChart->render() !!}
-{!! $overtimeChart->render() !!}
+{{-- {!! $leaveChart->render() !!} --}}
+{{-- {!! $permitChart->render() !!} --}}
+{{-- {!! $timeEventChart->render() !!} --}}
+{{-- {!! $overtimeChart->render() !!} --}}
 <!-- Selectize -->
 <script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
 @endpush
@@ -182,6 +182,7 @@
 @push('custom-scripts')
 @include('scripts._defer-ajax-dt-script')
 @include('scripts._save-tab-state-script')
+@include('scripts.dashboards.employee.leave')
 @endpush
 
 @push('on-ready-scripts')
