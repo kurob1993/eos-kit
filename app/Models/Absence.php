@@ -75,6 +75,12 @@ class Absence extends Model
         return $this->hasMany('App\Models\AbsenceApproval');
     }
 
+    public function absenceSapResponse()
+    {
+        // many-to-one relationship dengan AbsenceSapResponse
+        return $this->hasMany('App\Models\AbsenceSapResponse','reqno');
+    }
+
     public function permitType()
     {
         // column aliasing untuk absence_type

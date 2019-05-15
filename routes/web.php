@@ -122,6 +122,9 @@ Route::group([
 
     // route untuk manage daftar semua lembur
     Route::resource('all_overtimes', 'AllOvertimeController', ['only' => ['index']]);
+
+    //route untuk manage data yang dikirim ke sap
+    Route::resource('sendtosap', 'SendToSapController');
 });
 
 // route untuk role basis
