@@ -2,46 +2,17 @@
 
 namespace App\Http\Controllers\Dashboard\Employee;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Models\Employee;
 use App\Models\AbsenceQuota;
 use App\Models\Absence;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class LeaveController extends Controller
+class LeaveController extends DashboardController
 {
-    protected $user, $subordinates, $chartThemes;
     protected $lfmonths, $lfyears, $lfboss, $lfsubordinatesboss, $lfsubordinates;
 
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            // user yang sedang login
-            $this->user = Auth::user()->employee;
-
-            // bawahan dari user yang sedang login
-            $this->subordinates = $this->user->subordinates()
-                ->pluck('personnel_no', 'name');
-
-            // konfigurasi fusionchart default
-            $this->chartThemes = [
-                "theme" => "fusion",
-                "baseFont" => "Karla",
-                "baseFontColor" => "#153957",
-                "outCnvBaseFont" => "Karla",
-            ];
-
-            return $next($request);
-        });
-    }
-
-    public function monthNumToText($num)
-    {
-        return date("F", mktime(0, 0, 0, $num, 1));
-    }
-
-    protected function leaveSubBoss(Request $request)
+    protected function subBoss(Request $request)
     {
         // bawahan yang memiliki bawahan? haha
         // option value untuk select bawahan dari orang yang sedang login
@@ -61,7 +32,7 @@ class LeaveController extends Controller
         $this->lfsubordinates = $this->lfboss->subordinates();
     }
 
-    public function leaveFilter(Request $request)
+    public function filter(Request $request)
     {
         // mencari bulan-bulan yang valid untuk select filter
         $months = collect();
@@ -84,7 +55,7 @@ class LeaveController extends Controller
             ->get();
 
         // inisialisasi bawahan dari atasan terpilih
-        $this->leaveSubBoss($request);
+        $this->subBoss($request);
 
         return response()
             ->json([
@@ -94,7 +65,7 @@ class LeaveController extends Controller
             ]);
     }
 
-    public function leaveChart(Request $request)
+    public function chart(Request $request)
     {
         // bulan dan tahun yang telah dipilih
         $lfmonth = $request->has('lfmonth') ?
@@ -105,7 +76,7 @@ class LeaveController extends Controller
                 $this->lfyears->first()->year : date('Y'));
 
         // inisialisasi bawahan dari atasan terpilih
-        $this->leaveSubBoss($request);
+        $this->subBoss($request);
 
         // mencari data lembur untuk bawahan sesuai parameter di atas
         $absenceQuotas = AbsenceQuota::select(['personnel_no', 'number', 'deduction'])

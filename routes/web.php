@@ -46,12 +46,27 @@ Route::group([
     Route::get('/', 'HomeController@index')->name('dashboards.employee');
     
     // route untuk dashboard
-    Route::get('/employee/leave', 'Dashboard\Employee\LeaveController@leaveChart')
+    Route::get('/employee/leave', 'Dashboard\Employee\LeaveController@chart')
         ->name('dashboards.employee.leave');
-    Route::get('/employee/leave/filter', 'Dashboard\Employee\LeaveController@leaveFilter')
+    Route::get('/employee/leave/filter', 'Dashboard\Employee\LeaveController@filter')
         ->name('dashboards.employee.leave.filter');
 
-    // route untuk halaman approval
+    Route::get('/employee/overtime', 'Dashboard\Employee\OvertimeController@chart')
+        ->name('dashboards.employee.overtime');
+    Route::get('/employee/overtime/filter', 'Dashboard\Employee\OvertimeController@filter')
+        ->name('dashboards.employee.overtime.filter');
+
+    Route::get('/employee/permit', 'Dashboard\Employee\PermitController@chart')
+        ->name('dashboards.employee.permit');
+    Route::get('/employee/permit/filter', 'Dashboard\Employee\PermitController@filter')
+        ->name('dashboards.employee.permit.filter');
+
+    Route::get('/employee/time_event', 'Dashboard\Employee\TimeEventController@chart')
+        ->name('dashboards.employee.time_event');
+    Route::get('/employee/time_event/filter', 'Dashboard\Employee\TimeEventController@filter')
+        ->name('dashboards.employee.time_event.filter');
+
+        // route untuk halaman approval
     Route::get('/approval', 'HomeController@approval')->name('dashboards.approval');
 
     // route untuk persetujuan di dashboard

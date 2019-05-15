@@ -34,12 +34,12 @@
                     <li class="{{ Request::segment(1)=='cvs' ? 'active' : '' }}"> 
                         <a href="{{ url('cvs') }}">Curriculum Vitae</a> 
                     </li>
-                    <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 
+                    {{-- <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 
                         <a href="#">Organisasi</a> 
                     </li>
                     <li class="{{ Request::segment(1)=='administrations' ? 'active' : '' }}"> 
                         <a href="#">Administrasi</a> 
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
             <li class="has-sub {{ (
