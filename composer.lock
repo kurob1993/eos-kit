@@ -1538,13 +1538,13 @@
                 "shasum": ""
             },
             "require": {
-                "ext-fileinfo": "*",
                 "php": ">=5.5.9"
             },
             "conflict": {
                 "league/flysystem-sftp": "<1.0.6"
             },
             "require-dev": {
+                "ext-fileinfo": "*",
                 "phpspec/phpspec": "^3.4",
                 "phpunit/phpunit": "^5.7.10"
             },
@@ -1605,6 +1605,7 @@
                 "sftp",
                 "storage"
             ],
+<<<<<<< HEAD
             "time": "2019-03-30T13:22:34+00:00"
         },
         {
@@ -1619,12 +1620,32 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/d79ee01175c6a5e93f2a873dcda1b755b7570076",
                 "reference": "d79ee01175c6a5e93f2a873dcda1b755b7570076",
+=======
+            "time": "2018-08-22T07:45:22+00:00"
+        },
+        {
+            "name": "maatwebsite/excel",
+            "version": "3.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
+                "reference": "d5e51dca5ed845c1ce605a7a1d9882d5b57e270d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/d5e51dca5ed845c1ce605a7a1d9882d5b57e270d",
+                "reference": "d5e51dca5ed845c1ce605a7a1d9882d5b57e270d",
+>>>>>>> hci
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
+<<<<<<< HEAD
                 "illuminate/support": "5.5.*|5.6.*|5.7.*|5.8.*",
                 "opis/closure": "^3.1",
+=======
+                "illuminate/support": "5.5.* || 5.6.* || 5.7.*",
+>>>>>>> hci
                 "php": "^7.0",
                 "phpoffice/phpspreadsheet": "^1.6"
             },
@@ -1673,7 +1694,11 @@
                 "php",
                 "phpspreadsheet"
             ],
+<<<<<<< HEAD
             "time": "2019-05-08T12:05:59+00:00"
+=======
+            "time": "2019-01-30T19:01:33+00:00"
+>>>>>>> hci
         },
         {
             "name": "markbaker/complex",
@@ -2070,6 +2095,7 @@
                 "php"
             ],
             "time": "2019-02-16T20:54:15+00:00"
+<<<<<<< HEAD
         },
         {
             "name": "opis/closure",
@@ -2131,6 +2157,8 @@
                 "serialize"
             ],
             "time": "2019-05-05T12:50:25+00:00"
+=======
+>>>>>>> hci
         },
         {
             "name": "paragonie/random_compat",

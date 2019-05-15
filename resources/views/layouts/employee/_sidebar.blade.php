@@ -11,27 +11,41 @@
             @role('employee')
             <li class="{{ Route::current()->getName() == 'dashboards.employee' ? 'active' : '' }}">
                 <a href="{{ route('dashboards.employee') }}">
-                    <i class="fa fa-inbox"></i>
+                    <i class="fa fa-dashboard"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
-            {{-- <li class="has-sub">
+            <li class="{{ Route::current()->getName() == 'dashboards.approval' ? 'active' : '' }}">
+                <a href="{{ route('dashboards.approval') }}">
+                    <i class="fa fa-check-circle"></i>
+                    <span>Approval</span>
+                </a>
+            </li>            
+            <li class="has-sub {{ (
+                (Request::segment(1) == 'cvs') || (Request::segment(1) == 'organizations') 
+                    || (Request::segment(1) == 'administrations')) ? 'active' : '' 
+                }}">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>
                         <i class="icon-user"></i>
                         <span>Personnel Admin</span>
                     </a>
                 <ul class="sub-menu">
-                    <li> <a href="#">Curriculum Vitae</a> </li>
-                    <li> <a href="#">Data Karyawan</a> </li>
-                    <li> <a href="#">Organisasi</a> </li>
-                    <li> <a href="#">Tugas Pokok Fungsi</a> </li>
+                    <li class="{{ Request::segment(1)=='cvs' ? 'active' : '' }}"> 
+                        <a href="{{ url('cvs') }}">Curriculum Vitae</a> 
+                    </li>
+                    {{-- <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 
+                        <a href="#">Organisasi</a> 
+                    </li>
+                    <li class="{{ Request::segment(1)=='administrations' ? 'active' : '' }}"> 
+                        <a href="#">Administrasi</a> 
+                    </li> --}}
                 </ul>
-            </li> --}}
+            </li>
             <li class="has-sub {{ (
             (Request::segment(1) == 'leaves') || (Request::segment(1) == 'permits') 
                 || (Request::segment(1) == 'time_events') || (Request::segment(1) == 'overtimes') 
-                ) ? 'active' : '' 
+                || (Request::segment(1) == 'wakers') ) ? 'active' : '' 
             }}">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>
@@ -51,8 +65,10 @@
                     <li class="{{ Request::segment(1)=='overtimes' ? 'active' : '' }}">
                         <a href="{{ url('overtimes') }}">Lembur</a>
                     </li>
-                    {{-- <li> <a href="#">Waktu Kerja</a> </li>
-                    <li> <a href="#">Laporan Aktivitas</a> </li> --}}
+                    <li class="{{ Request::segment(1)=='wakers' ? 'active' : '' }}"> 
+                        <a href="{{ url('wakers') }}">Waktu Kerja</a> 
+                    </li>
+                    {{-- <li> <a href="#">Laporan Aktivitas</a> </li> --}}
                 </ul>
             </li>
             {{-- <li class="has-sub">

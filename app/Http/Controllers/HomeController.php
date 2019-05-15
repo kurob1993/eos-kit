@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Session;
 use Storage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\AbsenceApproval;
@@ -15,14 +14,17 @@ use App\Models\AttendanceQuotaApproval;
 use App\Models\Status;
 use App\Models\Absence;
 use App\Models\Attendance;
-use App\Models\AttendanceQuota;
-use App\Models\TimeEvent;
-
 
 class HomeController extends Controller
 {
     public function __construct()
     {
+
+    }
+
+    public function employeeDashboard(Request $request)
+    {
+        return view('dashboards.employee');
     }
 
     public function noRole()
@@ -35,132 +37,9 @@ class HomeController extends Controller
         return $this->employeeDashboard($request, $htmlBuilder);
     }
 
-    public function employeeDashboard($request, $htmlBuilder)
+    public function approval()
     {
-        $d = date('m'); $y = date('Y'); $dy = date('M Y');
-        $employee = Auth::user()->employee;
-        $subordinates = $employee->mgrSptSpvSubordinates();
-
-        /** Leave Chart */
-        $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];
-        foreach ($subordinates as $subordinate) {
-            array_push(
-                $leaveChartCat, 
-                array("label" => $subordinate->name)
-            );
-            $absence_quota = $subordinate->active_absence_quota;
-            $number = (is_null($absence_quota)) ? 0 : $absence_quota->number;
-            $deduction = (is_null($absence_quota)) ? 0 : $absence_quota->deduction;
-            array_push(
-                $leaveChartQuota,
-                array("value" => $number)
-            );
-            array_push(
-                $leaveChartDeduction,
-                array("value" => $deduction)
-            );
-        }
-        $dataSource = [ 
-            "chart" => [
-                "caption" => "Cuti Karyawan " . $employee->org_unit_name,
-                "subcaption" => "Bawahan Gol. B, C, & D",
-                "xaxisname" => "Karyawan",
-                "yaxisname" => "Durasi cuti (hari)",
-                "theme" => "fusion",
-                "baseFont" => "Karla",
-                "baseFontColor" => "#153957",
-                "outCnvBaseFont" => "Karla",
-            ],
-            "categories" => [
-                [ "category" => $leaveChartCat ]
-            ],
-            "dataset" => [
-                [ "seriesname" => "Kuota", "data" => $leaveChartQuota ],
-                [ "seriesname" => "Terpakai", "data" => $leaveChartDeduction ]
-            ]
-        ];
-
-        $leaveChart = new \FusionCharts( 
-            "overlappedbar2d", 
-            "leaveChart" , 
-            "100%", 
-            900, 
-            "leave-chart", 
-            "json", 
-            json_encode($dataSource) 
-        );
-
-        /** Permit Chart */
-        $permitChartData = [];
-        foreach ($subordinates as $subordinate) {
-            $totalDurationHour = $subordinate->permitTotalDurationHour;
-            if ($totalDurationHour > 0) {
-                $labelValue = [ 
-                    "label" => (string) $subordinate->name, 
-                    "value" => $totalDurationHour
-                ];
-                array_push($permitChartData, $labelValue);
-            }
-        }
-        $chartOptions = [ 
-            "caption" => "Izin Karyawan " . $employee->org_unit_name, 
-            "subcaption" => $dy, 
-            "xaxisname" => "Karyawan", 
-            "yaxisname" => "Total izin (jam)", 
-            "theme" => "fusion", 
-            "baseFont" => "Karla", 
-            "baseFontColor" => "#153957", 
-            "outCnvBaseFont" => "Karla", 
-        ];
-        $dataSource = [ "chart" => $chartOptions, "data" => $permitChartData ]; 
-        $permitChart = new \FusionCharts( 
-            "bar2d", 
-            "permitChart" , 
-            "100%", 
-            900, 
-            "permit-chart", 
-            "json", 
-            json_encode($dataSource) 
-        );
-
-        /** Time Event Chart */
-        $timeEventChartData = [];
-        foreach ($subordinates as $subordinate) {
-            $totalDuration = $subordinate->timeEventTotalDuration;
-            if ($totalDuration > 0) {
-                $labelValue = [
-                    "label" => (string) $subordinate->name,
-                    "value" => $totalDuration
-                ];
-                array_push($timeEventChartData, $labelValue);
-            }
-        }
-        $chartOptions = [ 
-            "caption" => "Tidak Slash Karyawan " . $employee->org_unit_name, 
-            "subcaption" => $dy, 
-            "xaxisname" => "Karyawan", 
-            "yaxisname" => "Total tidak slash", 
-            "theme" => "fusion", 
-            "baseFont" => "Karla", 
-            "baseFontColor" => "#153957", 
-            "outCnvBaseFont" => "Karla", 
-        ];
-        $dataSource = [ "chart" => $chartOptions, "data" => $timeEventChartData ];
-        $timeEventChart = new \FusionCharts( 
-            "bar2d", 
-            "timeEventChart" , 
-            "100%", 
-            900, 
-            "time-event-chart", 
-            "json", 
-            json_encode($dataSource) 
-        );
-
-        return view('dashboards.employee', compact(
-            'leaveChart',
-            'permitChart',
-            'timeEventChart'
-        ));
+        return view('dashboards.approval');
     }
 
     public function basisDashboard()
@@ -191,7 +70,7 @@ class HomeController extends Controller
         if (is_numeric($request->input('stage_id')))
             $leaveApprovals->whereStageId('absence', $request->input('stage_id'));
 
-      // response untuk datatables absences approval
+        // response untuk datatables absences approval
         if ($request->ajax()) {
 
             return Datatables::of($leaveApprovals)
@@ -204,28 +83,30 @@ class HomeController extends Controller
                 ->editColumn('absence.user.name', function (AbsenceApproval $aa) {
                     return $aa->absence->user['name'];
                 })
-                ->editColumn('absence.absence_approvals', function (AbsenceApproval $aa){
+                ->editColumn('absence.absence_approvals', function (AbsenceApproval $aa) {
                     $approvals = $aa->absence->absenceApprovals;
                     $a = '';
                     foreach ($approvals as $approval)
                         $a = $a . view('layouts._personnel-no-with-name', [
                             'personnel_no' => $approval->regno,
                             'employee_name' => $approval->employee->name
-                            ]) . '<br />';
+                        ]) . '<br />';
                     return $a;
                 })
-                ->addColumn('duration', function(AbsenceApproval $aa){
+                ->addColumn('duration', function (AbsenceApproval $aa) {
                     return $aa->absence->duration . ' hari';
                 })
-                ->addColumn('action', function(AbsenceApproval $aa){
+                ->addColumn('action', function (AbsenceApproval $aa) {
                     if ($aa->absence->is_waiting_approval) {
                         // apakah stage-nya: waiting approval
                         return view('components._action-approval', [
                             'model' => $aa,
                             'approve_url' => route('dashboards.approve', [
-                                'id' => $aa->id, 'approval' => 'leave' ] ),
+                                'id' => $aa->id, 'approval' => 'leave'
+                            ]),
                             'reject_url' => route('dashboards.reject', [
-                                'id' => $aa->id, 'approval' => 'leave' ] ),
+                                'id' => $aa->id, 'approval' => 'leave'
+                            ]),
                         ]);
                     }
                 })
@@ -268,62 +149,64 @@ class HomeController extends Controller
         if (is_numeric($request->input('stage_id')))
             $attendanceApprovals->whereStageId('permit', $request->input('stage_id'));
 
-         $permitApprovals = $attendanceApprovals->get()->merge($absenceApprovals);
+        $permitApprovals = $attendanceApprovals->get()->merge($absenceApprovals);
 
         // response untuk datatables permits approval
         if ($request->ajax()) {
 
             return Datatables::of($permitApprovals)
-            ->editColumn('permit.start_date', function ($aa) {
-                return $aa->permit->formatted_start_date;
-            })
-            ->editColumn('permit.end_date', function ($aa) {
-                return $aa->permit->formatted_end_date;
-            })
-            ->editColumn('permit.user.name', function ($aa) {
-                return $aa->permit->user['name'];
-            })
-            ->editColumn('permit.permit_approvals', function ($aa){
-                $approvals = $aa->permit->permitApprovals;
-                $a = '';
-                foreach ($approvals as $approval)
-                    $a = $a . view('layouts._personnel-no-with-name', [
-                        'personnel_no' => $approval->regno,
-                        'employee_name' => $approval->employee->name
+                ->editColumn('permit.start_date', function ($aa) {
+                    return $aa->permit->formatted_start_date;
+                })
+                ->editColumn('permit.end_date', function ($aa) {
+                    return $aa->permit->formatted_end_date;
+                })
+                ->editColumn('permit.user.name', function ($aa) {
+                    return $aa->permit->user['name'];
+                })
+                ->editColumn('permit.permit_approvals', function ($aa) {
+                    $approvals = $aa->permit->permitApprovals;
+                    $a = '';
+                    foreach ($approvals as $approval)
+                        $a = $a . view('layouts._personnel-no-with-name', [
+                            'personnel_no' => $approval->regno,
+                            'employee_name' => $approval->employee->name
                         ]) . '<br />';
-                return $a;
-            })
-            ->addColumn('duration', function($aa){
-                return $aa->permit->duration . ' hari';
-            })
-            ->editColumn('permit.attachment', function ($aa){
-                if(str_is("*pdf",$aa->permit->attachment)){
-                    $x = '<a href="'.Storage::url($aa->permit->attachment).'"
+                    return $a;
+                })
+                ->addColumn('duration', function ($aa) {
+                    return $aa->permit->duration . ' hari';
+                })
+                ->editColumn('permit.attachment', function ($aa) {
+                    if (str_is("*pdf", $aa->permit->attachment)) {
+                        $x = '<a href="' . Storage::url($aa->permit->attachment) . '"
                     class="btn btn-primary" target="_blank">View</a>';
-                }else{
-                    $x = '<img class="center-block img-responsive" 
-                    src="'.Storage::url($aa->permit->attachment).'" alt="">';
-                }
-                return $x;
-            })
-            ->addColumn('action', function($aa){
-                if ($aa->permit->is_waiting_approval) {
-                    if ($aa->permit instanceof Absence)
-                        $approval = 'absence';
-                    else if ($aa->permit instanceof Attendance)
-                        $approval = 'attendance';
-                    // apakah stage-nya: waiting approval
-                    return view('components._action-approval', [
-                        'model' => $aa,
-                        'approve_url' => route('dashboards.approve', [
-                            'id' => $aa->id, 'approval' => $approval ] ),
-                        'reject_url' => route('dashboards.reject', [
-                            'id' => $aa->id, 'approval' => $approval ] ),
-                    ]);
-                }
-            })
-            ->escapeColumns([])
-            ->make(true);
+                    } else {
+                        $x = '<img class="center-block img-responsive"
+                    src="' . Storage::url($aa->permit->attachment) . '" alt="">';
+                    }
+                    return $x;
+                })
+                ->addColumn('action', function ($aa) {
+                    if ($aa->permit->is_waiting_approval) {
+                        if ($aa->permit instanceof Absence)
+                            $approval = 'absence';
+                        else if ($aa->permit instanceof Attendance)
+                            $approval = 'attendance';
+                        // apakah stage-nya: waiting approval
+                        return view('components._action-approval', [
+                            'model' => $aa,
+                            'approve_url' => route('dashboards.approve', [
+                                'id' => $aa->id, 'approval' => $approval
+                            ]),
+                            'reject_url' => route('dashboards.reject', [
+                                'id' => $aa->id, 'approval' => $approval
+                            ]),
+                        ]);
+                    }
+                })
+                ->escapeColumns([])
+                ->make(true);
         }
     }
 
@@ -340,12 +223,12 @@ class HomeController extends Controller
                 'timeEvent.employee:personnel_no,name',
                 'timeEvent.timeEventType',
                 'timeEvent.timeEventApprovals',
-        ]);
+            ]);
 
         if (is_numeric($request->input('stage_id')))
             $timeEventApprovals->whereStageId('timeEvent', $request->input('stage_id'));
 
-      // response untuk datatables absences approval
+        // response untuk datatables absences approval
         if ($request->ajax()) {
 
             return Datatables::of($timeEventApprovals)
@@ -358,25 +241,27 @@ class HomeController extends Controller
                 ->editColumn('time_event.user.name', function (TimeEventApproval $aa) {
                     return $aa->timeEvent->user['name'];
                 })
-                ->editColumn('time_event.time_event_approvals', function (TimeEventApproval $aa){
+                ->editColumn('time_event.time_event_approvals', function (TimeEventApproval $aa) {
                     $approvals = $aa->timeEvent->TimeEventApprovals;
                     $a = '';
                     foreach ($approvals as $approval)
                         $a = $a . view('layouts._personnel-no-with-name', [
                             'personnel_no' => $approval->regno,
                             'employee_name' => $approval->employee->name
-                            ]) . '<br />';
+                        ]) . '<br />';
                     return $a;
                 })
-                ->addColumn('action', function(TimeEventApproval $aa){
+                ->addColumn('action', function (TimeEventApproval $aa) {
                     if ($aa->timeEvent->is_waiting_approval) {
                         // apakah stage-nya: waiting approval
                         return view('components._action-approval', [
                             'model' => $aa,
                             'approve_url' => route('dashboards.approve', [
-                                'id' => $aa->id, 'approval' => 'time_event' ] ),
+                                'id' => $aa->id, 'approval' => 'time_event'
+                            ]),
                             'reject_url' => route('dashboards.reject', [
-                                'id' => $aa->id, 'approval' => 'time_event' ] ),
+                                'id' => $aa->id, 'approval' => 'time_event'
+                            ]),
                         ]);
                     }
                 })
@@ -416,7 +301,7 @@ class HomeController extends Controller
                 ->editColumn('attendance_quota.user.name', function (AttendanceQuotaApproval $aa) {
                     return $aa->attendanceQuota->user['name'];
                 })
-                ->editColumn('attendance_quota.attendance_quota_approval', function (AttendanceQuotaApproval $aa){
+                ->editColumn('attendance_quota.attendance_quota_approval', function (AttendanceQuotaApproval $aa) {
                     $approvals = $aa->attendanceQuota->attendanceQuotaApproval;
                     $a = '';
                     foreach ($approvals as $approval) {
@@ -425,30 +310,33 @@ class HomeController extends Controller
                         else if ($approval->is_approved) {
                             $a = $a . '<i class="fa fa-check text-success"></i>&nbsp;';
                             $a = $a . $approval->updated_at . '&nbsp;';
-                        }
-                        else if ($approval->is_rejected)
+                        } else if ($approval->is_rejected)
                             $a = $a . '<i class="fa fa-times text-danger"></i>&nbsp;';
 
                         $a = $a . view('layouts._personnel-no-with-name', [
                             'personnel_no' => $approval->regno,
                             'employee_name' => $approval->employee->name
-                            ]) . '<br />';
+                        ]) . '<br />';
                     }
                     return $a;
                 })
-                ->addColumn('duration', function(AttendanceQuotaApproval $aa){
+                ->addColumn('duration', function (AttendanceQuotaApproval $aa) {
                     return $aa->attendanceQuota->duration . ' menit';
                 })
-                ->addColumn('action', function(AttendanceQuotaApproval $aa){
-                    if ($aa->attendanceQuota->is_waiting_approval &&
-                    $aa->isWaiting) {
+                ->addColumn('action', function (AttendanceQuotaApproval $aa) {
+                    if (
+                        $aa->attendanceQuota->is_waiting_approval &&
+                        $aa->isWaiting
+                    ) {
                         // apakah stage-nya: waiting approval
                         return view('components._action-approval', [
                             'model' => $aa,
                             'approve_url' => route('dashboards.approve', [
-                                'id' => $aa->id, 'approval' => 'overtime' ] ),
+                                'id' => $aa->id, 'approval' => 'overtime'
+                            ]),
                             'reject_url' => route('dashboards.reject', [
-                                'id' => $aa->id, 'approval' => 'overtime' ] ),
+                                'id' => $aa->id, 'approval' => 'overtime'
+                            ]),
                         ]);
                     }
                 })
@@ -464,23 +352,23 @@ class HomeController extends Controller
             case 'leave':
                 $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.leaves.text');
-            break;
+                break;
             case 'absence':
                 $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
-            break;
+                break;
             case 'attendance':
                 $approved = AttendanceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
-            break;
+                break;
             case 'time_event':
                 $approved = TimeEventApproval::find($id);
                 $moduleText = config('emss.modules.time_events.text');
-            break;
+                break;
             case 'overtime':
                 $approved = AttendanceQuotaApproval::find($id);
                 $moduleText = config('emss.modules.overtimes.text');
-            break;
+                break;
         }
 
         $approved->status_id = Status::approveStatus()->id;
@@ -506,23 +394,23 @@ class HomeController extends Controller
             case 'leave':
                 $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.leaves.text');
-            break;
+                break;
             case 'absence':
                 $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
-            break;
+                break;
             case 'attendance':
                 $approved = AttendanceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
-            break;
+                break;
             case 'time_event':
                 $approved = TimeEventApproval::find($id);
                 $moduleText = config('emss.modules.time_events.text');
-            break;
+                break;
             case 'overtime':
                 $approved = AttendanceQuotaApproval::find($id);
                 $moduleText = config('emss.modules.overtimes.text');
-            break;
+                break;
         }
 
         if (!$approved->update($request->all()
@@ -551,7 +439,7 @@ class HomeController extends Controller
                     ->leavesOnly()
                     ->get();
                 $moduleText = config('emss.modules.leaves.text');
-            break;
+                break;
             case 'permit':
                 $approvals = AbsenceApproval::ofLoggedUser()
                     ->whereStageIsWaitingApproval('absence')
@@ -561,26 +449,26 @@ class HomeController extends Controller
                     ->get()
                     ->merge($approvals);
                 $moduleText = config('emss.modules.permits.text');
-            break;
+                break;
             case 'time_event':
                 $approvals = TimeEventApproval::ofLoggedUser()
                     ->whereStageIsWaitingApproval('timeEvent')
                     ->get();
                 $moduleText = config('emss.modules.time_events.text');
-            break;
+                break;
             case 'overtime':
                 $approvals = AttendanceQuotaApproval::ofLoggedUser()
                     ->whereStageIsWaitingApproval('attendanceQuota')
                     ->get();
                 $moduleText = config('emss.modules.overtimes.text');
-            break;
+                break;
         }
 
         // counter untuk berhasil dan tidak berhasil
         $success_count = $error_count = 0;
 
         // Ubah status persetujuan dari collection
-        $approvals->each(function ($a) use ( &$success_count, &$error_count, $text, $status_id ) {
+        $approvals->each(function ($a) use (&$success_count, &$error_count, $text, $status_id) {
             $a->status_id = $status_id;
             $a->text = $text;
             ($a->save()) ? $success_count++ : $error_count++;
@@ -589,12 +477,16 @@ class HomeController extends Controller
         // tampilkan pesan bahwa telah berhasil setuju semua
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => sprintf("Berhasil Menyetujui %s. Berhasil:%u & gagal:%u.",
-                $moduleText, $success_count, $error_count)
+            "message" => sprintf(
+                "Berhasil Menyetujui %s. Berhasil:%u & gagal:%u.",
+                $moduleText,
+                $success_count,
+                $error_count
+            )
         ]);
 
         // kembali lagi ke dashboard employee
-        return redirect()->route('dashboards.employee');          
+        return redirect()->route('dashboards.employee');
     }
 
     public function approveAll(Request $request)

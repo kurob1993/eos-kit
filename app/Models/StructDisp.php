@@ -31,6 +31,46 @@ class StructDisp extends Model
         return $this->belongsTo('\App\Models\Employee', 'dirnik', 'personnel_no');
     }
 
+    public function scopeGmMgrSpt($query)
+    {
+        return $query->whereIn('emppersk', ['AS,', 'AF', 'BS', 'BF', 'CS', 'CF']);
+    }
+
+    public function scopeGmMgr($query)
+    {
+        return $query->whereIn('emppersk', ['AS,', 'AF', 'BS', 'BF']);
+    }
+
+    public function scopeMgrSptSpv($query)
+    {
+        return $query->whereIn('emppersk', ['BS', 'BF', 'CS', 'CF', 'DS', 'DF']);
+    }
+
+    public function scopeForemanAndOperator($query)
+    {
+        return $query->whereIn('emppersk', ['ES', 'EF', 'F']);
+    }
+
+    public function scopeSuperintendent($query, $emppersk = 'all')
+    {
+        if ($emppersk == 'structural')
+            return $query->whereIn('emppersk', ['CS']);
+        elseif ($emppersk == 'functional')
+            return $query->whereIn('emppersk', ['CF']);
+        else
+            return $query->whereIn('emppersk', ['CS', 'CF']);
+    }
+
+    public function scopeManager($query, $emppersk = 'all')
+    {
+        if ($emppersk == 'structural')
+            return $query->whereIn('emppersk', ['BS']);
+        elseif ($emppersk == 'functional')
+            return $query->whereIn('emppersk', ['BF']);
+        else
+            return $query->whereIn('emppersk', ['BS', 'BF']);
+    }
+
     public function scopeCostCenterOf($query, $c)
     {
         // struct untuk mencari by cost center
@@ -69,20 +109,65 @@ class StructDisp extends Model
         return $query->structOf($p)->where('no', '2');
     }
 
+    /**************  Start of subordinates function **************/
+    public function scopeTwoOnly($query)
+    {
+        $query->where('no', '2');
+    }
+
+    public function scopeTwoAndThreeOnly($query)
+    {
+        $query->where(function ($query){ $query->where('no', '2')->orWhere('no', '3'); });
+    }
+
     public function scopeSubordinatesOf($query, $p)
     {
         // struct mencari bawahan-bawahan
         return $query->where('dirnik', $p)->where('no', '<>', '1');
     }
 
-    public function scopeMgrSptSpv($query)
+    public function scopeClosestSubordinatesOf($query, $p, $emppersk = 'all')
     {
-        return $query->whereIn('emppersk', ['BS', 'BF', 'CS', 'CF', 'DS', 'DF']);
+        // struct mencari bawahan langsung yang struktural/fungsional/semua
+        if ($emppersk == 'structural') {
+            return $query->subordinatesOf($p)
+                ->twoOnly()
+                ->where('emppersk', 'LIKE', '%S');
+        } elseif ($emppersk == 'functional') {
+            return $query->subordinatesOf($p)
+                ->twoOnly()
+                ->where('emppersk', 'LIKE', '%F');
+        } else {
+            return $query->subordinatesOf($p)
+                ->twoOnly();
+        }
     }
 
-    public function scopeForemanAndOperator($query)
+    public function scopeOneTwoDirectSubordinatesOf($query, $p, $emppersk = 'all')
     {
-        return $query->whereIn('emppersk', ['ES', 'EF', 'F']);
+        // struct mencari bawahan 1 & 2 tingkat dibawah yang struktural/fungsional/all
+        if ($emppersk == 'structural') {
+            return $query->subordinatesOf($p)
+                ->twoAndThreeOnly()
+                ->where('emppersk', 'LIKE', '%S');
+        } elseif ($emppersk == 'functional') {
+            return $query->subordinatesOf($p)
+                ->twoAndThreeOnly()
+                ->where('emppersk', 'LIKE', '%F');
+        } else {
+            return $query->subordinatesOf($p)
+                ->where('no', '2');
+        }        
+    }
+
+    public function scopeSuperintendentSubordinatesOf($query, $p, $emppersk = 'all')
+    {
+        return $query->subordinatesOf($p)->superintendent($emppersk);
+    }
+
+    public function scopeManagerSubordinatesOf($query, $p, $emppersk = 'all')
+    {
+        return $query->subordinatesOf($p)->manager($emppersk);
     }
 
     public function scopeForemanAndOperatorSubordinatesOf($query, $p)
@@ -90,11 +175,23 @@ class StructDisp extends Model
         return $query->subordinatesOf($p)->ForemanAndOperator();
     }
 
-    public function scopeMgrSptSpvOf($query, $p)
+    public function scopeGmMgrSubordinatesOf($query, $p)
+    {
+        return $query->subordinatesSubordinatesOf($p)->gmMgr();
+    }
+
+    public function scopeGmMgrSptSubordinatesOf($query, $p)
+    {
+        return $query->subordinatesOf($p)->gmMgrSpt();
+    }
+
+    public function scopeMgrSptSpvSubordinatesOf($query, $p)
     {
         return $query->subordinatesOf($p)->mgrSptSpv();
     }
+    /************** End of subordinate function ************* */
 
+    /************** Start of boss function ************* */
     public function scopeSubgroupStructOf($query, $s)
     {
         // struct mencari berdasarkan subgroup
@@ -142,4 +239,5 @@ class StructDisp extends Model
                 $query->where('esgrp', 'AS');
             });
     }
+    /************** End of boss function ************* */
 }

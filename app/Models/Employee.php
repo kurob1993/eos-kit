@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Employee extends Model
 {
@@ -117,13 +118,13 @@ class Employee extends Model
     public function families()
     {
       // one-to-many relationship dengan it0021
-      return $this->hasMany('App\Models\Family', 'PERNR', 'personnel_no');
+      return $this->hasMany('App\Models\SAP\Family', 'PERNR', 'personnel_no');
     }
 
     public function positions()
     {
       // one-to-many relationship dengan it0001
-      return $this->hasMany('App\Models\Position', 'PERNR', 'personnel_no');
+      return $this->hasMany('App\Models\SAP\Position', 'PERNR', 'personnel_no');
     }
 
     public function scopeFindByPersonnel($query, $p)
@@ -257,6 +258,51 @@ class Employee extends Model
             ->first();
     }
 
+    public function closestSubordinates()
+    {
+        // mencari semua bawahan-bawahan
+        $structs = \App\Models\StructDisp::closestSubordinatesOf($this->personnel_no)->get();
+
+        // mengiterasi bawahan-bawahan dan membuat collection baru
+        $subordinates = $structs->map(function ($item, $key) {
+            // membuat & mengembalikan Employee masing-masing bawahan
+            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+        });
+
+        // mengembalikan collection of Employee
+        return $subordinates;
+    }
+
+    public function closestStructuralSubordinates()
+    {
+        // mencari semua bawahan-bawahan
+        $structs = \App\Models\StructDisp::closestSubordinatesOf($this->personnel_no, 'structural')->get();
+
+        // mengiterasi bawahan-bawahan dan membuat collection baru
+        $subordinates = $structs->map(function ($item, $key) {
+            // membuat & mengembalikan Employee masing-masing bawahan
+            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+        });
+
+        // mengembalikan collection of Employee
+        return $subordinates;
+    }    
+
+    public function oneTwoDirectSubordinates()
+    {
+        // mencari semua bawahan-bawahan
+        $structs = \App\Models\StructDisp::oneTwoDirectSubordinatesOf($this->personnel_no)->get();
+
+        // mengiterasi bawahan-bawahan dan membuat collection baru
+        $subordinates = $structs->map(function ($item, $key) {
+            // membuat & mengembalikan Employee masing-masing bawahan
+            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+        });
+
+        // mengembalikan collection of Employee
+        return $subordinates;
+    }    
+
     public function subordinates()
     {
         // mencari semua bawahan-bawahan
@@ -290,7 +336,67 @@ class Employee extends Model
     public function mgrSptSpvSubordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::mgrSptSpvOf($this->personnel_no)->get();
+        $structs = \App\Models\StructDisp::mgrSptSpvSubordinatesOf($this->personnel_no)->get();
+
+        // mengiterasi bawahan-bawahan dan membuat collection baru
+        $subordinates = $structs->map(function ($item, $key) {
+            // membuat & mengembalikan Employee masing-masing bawahan
+            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+        });
+
+        // mengembalikan collection of Employee
+        return $subordinates;
+    }
+
+    public function gmMgrSptSubordinates()
+    {
+        // mencari semua bawahan-bawahan
+        $structs = \App\Models\StructDisp::gmMgrSptSubordinatesOf($this->personnel_no)->get();
+
+        // mengiterasi bawahan-bawahan dan membuat collection baru
+        $subordinates = $structs->map(function ($item, $key) {
+            // membuat & mengembalikan Employee masing-masing bawahan
+            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+        });
+
+        // mengembalikan collection of Employee
+        return $subordinates;
+    }
+
+    public function gmMgrSubordinates()
+    {
+        // mencari semua bawahan-bawahan
+        $structs = \App\Models\StructDisp::gmMgrSubordinatesOf($this->personnel_no)->get();
+
+        // mengiterasi bawahan-bawahan dan membuat collection baru
+        $subordinates = $structs->map(function ($item, $key) {
+            // membuat & mengembalikan Employee masing-masing bawahan
+            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+        });
+
+        // mengembalikan collection of Employee
+        return $subordinates;
+    }
+
+    public function superintendentSubordinates()
+    {
+        // mencari semua bawahan-bawahan
+        $structs = \App\Models\StructDisp::superintendentSubordinatesOf($this->personnel_no, true)->get();
+
+        // mengiterasi bawahan-bawahan dan membuat collection baru
+        $subordinates = $structs->map(function ($item, $key) {
+            // membuat & mengembalikan Employee masing-masing bawahan
+            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+        });
+
+        // mengembalikan collection of Employee
+        return $subordinates;
+    }
+
+    public function managerSubordinates()
+    {
+        // mencari semua bawahan-bawahan
+        $structs = \App\Models\StructDisp::managerSubordinatesOf($this->personnel_no, true)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
@@ -440,7 +546,7 @@ class Employee extends Model
     {
         $absences = Absence::where('personnel_no', $this->personnel_no)
             ->excludeLeaves()
-            ->currentPeriod()
+            ->currentYearPeriod()
             ->successOnly()
             ->get();
 
@@ -449,7 +555,7 @@ class Employee extends Model
         });
 
         $attendances = Attendance::where('personnel_no', $this->personnel_no)
-            ->currentPeriod()
+            ->currentYearPeriod()
             ->successOnly()
             ->get();
 
@@ -462,15 +568,56 @@ class Employee extends Model
 
     public function getTimeEventTotalDurationAttribute()
     {
+        $sum = 0;
         $timeEvents = TimeEvent::where('personnel_no', $this->personnel_no)
-            ->currentPeriod()
+            ->currentYearPeriod()
             ->successOnly()
             ->get();
 
-        return $timeEvents->sum(function ($timeEvent){
+        $sum += $timeEvents->sum(function ($timeEvent){
             return 1;
         });
+
+        return $sum;
     }    
+
+    public function overtimeTotalDurationHour($month, $year)
+    {
+        $sum = 0;
+        $overtimes = AttendanceQuota::monthYearPeriodOf($month, $year, $this->personnel_no)
+            ->successOnly()
+            ->get();
+
+        $sum += $overtimes->sum(function ($overtime){
+            return $overtime->hourDuration;
+        });
+
+        return $sum / 60;
+    }
+
+    public function successOvertimeFoundMonth()
+    {
+        $o = AttendanceQuota::where('personnel_no', $this->personnel_no)
+            ->successOnly()
+            ->selectRaw('MONTH(start_date) as month')
+            ->orderBy(DB::raw('MONTH(start_date)'), 'desc')
+            ->groupBy(DB::raw('MONTH(start_date)'))
+            ->get();
+        
+        return $o->map(function ($item, $key) { return $item->month; });
+    }
+
+    public function successOvertimeFoundYear()
+    {
+        $o = AttendanceQuota::where('personnel_no', $this->personnel_no)
+            ->successOnly()
+            ->selectRaw('YEAR(start_date) as year')
+            ->orderBy(DB::raw('YEAR(start_date)'), 'desc')
+            ->groupBy(DB::raw('YEAR(start_date)'))   
+            ->get();
+
+        return $o->map(function ($item, $key) { return $item->year; });
+    }
 
     public function getPermitsAttribute()
     {

@@ -60,13 +60,29 @@ class AbsenceQuota extends Model
         return $this->number - $this->deduction;
     }
 
-    public function scopeActiveAbsenceQuota($query, $p)
+    public function scopeQuotaNow($query)
     {
         $now = Carbon::now()->toDateTimeString();
-        
-      // mencari apakah ada kuota cuti untuk hari ini
-      return $query->where('start_date', '<=', $now)
-        ->where('end_date', '>=', $now)
+
+        return $query->where('start_date', '<=', $now)
+            ->where('end_date', '>=', $now);
+    }
+
+    public function scopeQuotaOf($query, $s, $e)
+    {
+        return $query->where(function($query) use ($s){
+            $query->where('start_date','<=',$s)
+            ->where('end_date','>=',$s);
+        })
+        ->where(function($query) use ($e){
+            $query->where('start_date','<=',$e)
+            ->where('end_date','>=',$e);
+        });        
+    }
+
+    public function scopeActiveAbsenceQuota($query, $p)
+    {
+       return $query->quotaNow()
         ->where('personnel_no', '=' , $p);
     }
 
@@ -74,14 +90,7 @@ class AbsenceQuota extends Model
     {
       // mencari apakah ada kuota cuti untuk rentang tanggal
         return $query->where('personnel_no', '=' , $p)
-        ->where(function($query) use ($s){
-            $query->where('start_date','<=',$s)
-            ->where('end_date','>=',$s);
-        })
-        ->where(function($query) use ($e){
-            $query->where('start_date','<=',$e)
-            ->where('end_date','>=',$e);
-        });
+            ->quotaOf($s, $e);
     }
 
     public function getPlainIdAttribute()
