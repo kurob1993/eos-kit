@@ -15,13 +15,19 @@ class StructDispController extends Controller
             ->first();
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $paginated = \App\Models\StructDisp::selfStruct()->paginate();
-        $paginated->transform(function ($item, $key) {
-            return Employee::findByPersonnel($item->empnik)->first();
-        });
+        $per_page = isset($request->per_page) ? $request->per_page : 15;
 
+        $paginated = \App\Models\StructDisp::select(
+            'empnik as personnel_no',
+            'empname as name',
+            'emppersk as esgrp',
+            'empkostl as cost_ctr',
+            'emppostx as position_name',
+            'emportx as org_unit_name',
+            'emp_hrp1000_o_short as kode_unit'
+            )->selfStruct()->paginate($per_page);
         return $paginated;
     }
 
