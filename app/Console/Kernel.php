@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $client = new Client(['base_uri' => url('') ]);
+            $client = new Client(['base_uri' => config('app.url') ]);
             $client->request('GET', '/api/sap/absence');
         })->everyMinute();
     }
