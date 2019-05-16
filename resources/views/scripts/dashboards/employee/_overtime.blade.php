@@ -46,7 +46,8 @@
         })
         .done(function (data) {
             overtimeJson = data;
-            overtimeChartHeight = overtimeJson.data.length * 22;
+            l = overtimeJson.data.length;
+            overtimeChartHeight = ( l > 13) ? l * 30 : 400;            
             overtimeChart = new FusionCharts({
                 type: "bar2d",
                 renderAt: "overtime-chart",

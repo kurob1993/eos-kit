@@ -46,7 +46,8 @@
         })
         .done(function (data) {
             timeEventJson = data;
-            timeEventChartHeight = timeEventJson.data.length * 42;
+            l = timeEventJson.data.length;
+            timeEventChartHeight = ( l > 13) ? l * 30 : 400;            
             timeEventChart = new FusionCharts({
                 type: "bar2d",
                 renderAt: "time-event-chart",

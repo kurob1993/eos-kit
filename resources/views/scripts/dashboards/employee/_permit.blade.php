@@ -47,7 +47,8 @@
         })
         .done(function (data) {
             permitJson = data;
-            permitChartHeight = permitJson.data.length * 22;
+            l = permitJson.data.length;
+            permitChartHeight = ( l > 13) ? l * 30 : 400;             
             permitChart = new FusionCharts({
                 type: "bar2d",
                 renderAt: "permit-chart",

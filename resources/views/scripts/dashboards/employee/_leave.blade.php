@@ -47,7 +47,8 @@
         })
         .done(function (data) {
             leaveJson = data;
-            leaveChartHeight = leaveJson.dataset[0].data.length * 22;
+            l = leaveJson.dataset[0].data.length;
+            leaveChartHeight = ( l > 13) ? l * 30 : 400;
             leaveChart = new FusionCharts({
                 type: "overlappedbar2d",
                 renderAt: "leave-chart",
