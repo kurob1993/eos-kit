@@ -70,7 +70,7 @@
                                 </select>
                             </div>
                         </div> --}}
-                    <div id="leave-chart" class="m-t-5 m-b-5">Fusionchart for leaves will be rendered here.</div>
+                    <div id="leave-chart" class="m-t-5 m-b-5"></div>
                 </div>
             </div>
             <!-- end of leaves tab  -->
@@ -115,7 +115,7 @@
                                         </select>
                                     </div>
                                 </div> --}}
-                    <div id="permit-chart" class="m-t-5 m-b-5">Fusionchart for permits will be rendered here.</div>
+                    <div id="permit-chart" class="m-t-5 m-b-5"></div>
                 </div>
             </div>
             <!-- end of permits tab  -->
@@ -157,7 +157,7 @@
                                         </select>
                                     </div>
                                 </div> --}}
-                    <div id="time-event-chart" class="m-t-5 m-b-5">Fusionchart for time events will be rendered here.
+                    <div id="time-event-chart" class="m-t-5 m-b-5">
                     </div>
                 </div>
             </div>
@@ -201,7 +201,7 @@
                             </div>
                         </div> --}}
                     <div id="overtime-chart" class="m-t-5 m-b-5">
-                        Fusionchart for overtimes will be rendered here.
+                        
                     </div>
                 </div>
             </div>

@@ -38,7 +38,6 @@ Route::group(['prefix' => 'family', 'middleware' => 'api'], function() {
     Route::get('{personnel_no}/children', 'FamilyController@children');
 });
 
-
 Route::group(['prefix' => 'position', 'middleware' => 'api'], function() {
     Route::get('{personnel_no}', 'PositionController@show');
     Route::get('{personnel_no}/last', 'PositionController@last');
@@ -66,12 +65,10 @@ Route::group(['prefix' => 'zhrom0013', 'middleware' => 'api'], function() {
     Route::get('nojabatan/{nojabatan?}', 'Zhrom0013Controller@nojabatan');
 });
 
-
 Route::group(['prefix' => 'personalData', 'middleware' => 'api'], function() {
     Route::get('/', 'It002Controller@index');
     Route::get('{PERNR}', 'It002Controller@show');
 });
-
 
 Route::group(['prefix' => 'personalEmail', 'middleware' => 'api'], function() {
     Route::get('/', 'EmployeeEmailController@index');

@@ -159,26 +159,26 @@ class DebugController extends Controller
         // var_dump(\App\Models\Employee::where('personnel_no', 10291)->first());
 
         // // mencari atasan dari personnel_no
-        // $bosses = \App\Models\StructDisp::closestBossOf('10112');
+        // $bosses = \App\Models\SAP\StructDisp::closestBossOf('10112');
         // dd($bosses->first()->toArray());
 
         //    // mencari atasan superintendent
-        //     $bosses = \App\Models\StructDisp::SuperintendentOf('11777');
+        //     $bosses = \App\Models\SAP\StructDisp::SuperintendentOf('11777');
         //     dd($bosses->get()->toArray());
 
         // // mencari atasan dari GM
-        // $bosses = \App\Models\StructDisp::closestBossOf('10233');
+        // $bosses = \App\Models\SAP\StructDisp::closestBossOf('10233');
         // dd($bosses->first());
         // var_dump(\App\Models\Employee::where('personnel_no', 10233)
         //     ->first()
         //     ->closestBoss());        
 
         // // mencari atasan-atasan dari personnel_no
-        // $bosses = \App\Models\StructDisp::BossesOf('11725');
+        // $bosses = \App\Models\SAP\StructDisp::BossesOf('11725');
         // var_dump($bosses->toArray());
 
         // // mencari karyawan berdasarkan golongan
-        // $subgroup_struct = \App\Models\StructDisp::subgroupStructOf('ES');
+        // $subgroup_struct = \App\Models\SAP\StructDisp::subgroupStructOf('ES');
         // var_dump($subgroup_struct->toArray());
     
         // // mencari data karyawan untuk user yang sudah login

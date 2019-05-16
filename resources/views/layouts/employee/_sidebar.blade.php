@@ -9,8 +9,8 @@
             <li class="nav-header">Navigation</li>
 
             @role('employee')
-            <li class="{{ Route::current()->getName() == 'dashboards.employee' ? 'active' : '' }}">
-                <a href="{{ route('dashboards.employee') }}">
+            <li class="{{ Route::current()->getName() == 'dashboard.index' ? 'active' : '' }}">
+                <a href="{{ route('dashboard.index') }}">
                     <i class="fa fa-dashboard"></i>
                     <span>Dashboard</span>
                 </a>

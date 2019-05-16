@@ -32,7 +32,7 @@
                 @endrole 
     
                 <li class="">
-                    <a href="{{ route('dashboards.employee') }}" >
+                    <a href="{{ route('home') }}" >
                         <i class="fa fa-sign-out"></i>
                         <span>Kembali ke HCI</span>
                     </a>

@@ -57,6 +57,9 @@
                 "events": {
                     "rendered": function (eventObj, dataObj) {
                         overtimeChartRendered = true;
+                    },
+                    "noDataToDisplay": function (eventObj) {
+                        $('#overtime-chart').text('Tidak ada data yang ditemukan.');
                     }
                 }                
             }).render();

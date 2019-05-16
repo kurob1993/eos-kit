@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employee;
-use App\Models\StructDisp;
+use App\Models\SAP\StructDisp;
 
 class StructDispController extends Controller
 {
@@ -19,7 +20,7 @@ class StructDispController extends Controller
     {
         $per_page = isset($request->per_page) ? $request->per_page : 15;
 
-        $paginated = \App\Models\StructDisp::select(
+        $paginated = StructDisp::select(
             'empnik as personnel_no',
             'empname as name',
             'emppersk as esgrp',

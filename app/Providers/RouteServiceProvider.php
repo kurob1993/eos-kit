@@ -39,7 +39,13 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapEmployeeRoutes();
+
+        $this->mapSecretaryRoutes();
+
+        $this->mapPersonnelServiceRoutes();
+
+        $this->mapBasisRoutes();
     }
 
     /**
@@ -67,7 +73,50 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
              ->middleware('api')
-             ->namespace($this->namespace)
+             ->namespace('App\Http\Controllers\API')
              ->group(base_path('routes/api.php'));
     }
+
+    protected function mapEmployeeRoutes()
+    {
+        Route::group([
+            'middleware' => ['web', 'auth', 'role:employee'],
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/employee.php');
+        });
+    }
+
+    protected function mapSecretaryRoutes()
+    {
+        Route::group([
+            'prefix' => 'secretary',
+            'middleware' => ['web', 'auth:secr', 'role:secretary'],
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/secretary.php');
+        });
+    }
+
+    protected function mapPersonnelServiceRoutes()
+    {
+        Route::group([
+            'prefix' => 'personnel_service',
+            'middleware' => ['web', 'auth', 'role:personnel_service'],
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/personnel_service.php');
+        });        
+    }
+
+    protected function mapBasisRoutes()
+    {
+        Route::group([
+            'prefix' => 'basis',
+            'middleware' => ['web', 'auth', 'role:basis'],
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/basis.php');
+        });        
+    }    
 }

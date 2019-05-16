@@ -57,6 +57,9 @@
                 "events": {
                     "rendered": function (eventObj, dataObj) {
                         timeEventChartRendered = true;
+                    },
+                    "noDataToDisplay": function (eventObj) {
+                        $('#time-event-chart').text('Tidak ada data yang ditemukan.');
                     }
                 }                
             }).render();

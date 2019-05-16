@@ -216,6 +216,9 @@
 @endpush
 
 @push('custom-scripts')
+<script>
+    window.print();
+</script>
 @endpush
 
 @push('on-ready-scripts')

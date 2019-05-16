@@ -58,6 +58,9 @@
                 "events": {
                     "rendered": function (eventObj, dataObj) {
                         permitChartRendered = true;
+                    },
+                    "noDataToDisplay": function (eventObj) {
+                        $('#permit-chart').text('Tidak ada data yang ditemukan.');
                     }
                 }                
             }).render();

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Session;
-use Illuminate\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

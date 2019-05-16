@@ -83,7 +83,7 @@ class Handler extends ExceptionHandler
         }
 
         return response()
-            ->view('layouts.unauthenticated', [], 200)
+            ->view('layouts.unauthenticated', [], 401)
             ->header('Content-Type', 'text/html');
     }
 }

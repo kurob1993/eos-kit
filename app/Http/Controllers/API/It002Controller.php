@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
-use App\Models\It002;
+use App\Http\Controllers\Controller;
+use App\Models\SAP\It002;
 
 class It002Controller extends Controller
 {
@@ -16,7 +16,7 @@ class It002Controller extends Controller
 
     public function index()
     {
-        $paginated = \App\Models\It002::selfStruct()->paginate();
+        $paginated = It002::selfStruct()->paginate();
         $paginated->transform(function ($item, $key) {
             return It002::findByPersonnel($item->PERNR)->first();
         });
@@ -27,7 +27,7 @@ class It002Controller extends Controller
     public function show($PERNR)
     {
         // menampilkan informasi karyawan
-        $employee =  \App\Models\It002::where('PERNR',$PERNR )->where('ENDDA','9999-12-31')->get();
+        $employee =  It002::where('PERNR',$PERNR )->where('ENDDA','9999-12-31')->get();
 
         if (!is_null($employee))
             return $employee;

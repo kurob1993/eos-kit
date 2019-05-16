@@ -20,7 +20,7 @@ class RedirectIfAuthenticated
         if (Auth::guard('secr')->check()) {
             return redirect()->route('secretary.index');
         } else if (Auth::check()) {
-            return redirect()->route('dashboards.employee');
+            return redirect()->route('home');
         }
 
         return $next($request);

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
@@ -39,36 +38,16 @@ class DashboardController extends Controller
 
     public function index()
     {
-        //
+        return view('dashboards.employee');
     }
 
-    public function create()
+    public function basisDashboard()
     {
-        //
+        return view('dashboards.basis');
     }
 
-    public function store(Request $request)
+    public function personnelServiceDashboard()
     {
-        //
-    }
-
-    public function show($id)
-    {
-        //
-    }
-
-    public function edit($id)
-    {
-        //
-    }
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    public function destroy($id)
-    {
-        //
+        return view('dashboards.personnel_service');
     }
 }

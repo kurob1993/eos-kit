@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use Laratrust\Traits\LaratrustUserTrait;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\AbsenceQuota;
-use App\Models\StructDisp;
+use App\Models\SAP\StructDisp;
 
 class User extends Authenticatable
 {
@@ -54,7 +54,7 @@ class User extends Authenticatable
   public function structDisp()
   {
     // one-to-many relationship dengan StructDisp
-    return $this->hasMany('App\Models\StructDisp', 'empnik', 'personnel_no');
+    return $this->hasMany('App\Models\SAP\StructDisp', 'empnik', 'personnel_no');
   }
 
   public function activeAbsenceQuota()

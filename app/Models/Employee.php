@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\SAP\StructDisp;
+use App\Models\SAP\StructDir;
+use App\User;
+use App\Models\Absence;
+use App\Models\Attendance;
+use App\Models\AttendanceQuota;
+use App\Models\TimeEvent;
 
 class Employee extends Model
 {
@@ -112,7 +119,7 @@ class Employee extends Model
     public function structDisp()
     {
       // one-to-many relationship dengan StructDisp
-      return $this->hasMany('App\Models\StructDisp', 'empnik', 'personnel_no');
+      return $this->hasMany('App\Models\SAP\StructDisp', 'empnik', 'personnel_no');
     }
 
     public function families()
@@ -130,7 +137,7 @@ class Employee extends Model
     public function scopeFindByPersonnel($query, $p)
     {
         // mencari data StructDisp pada diri sendiri (no == 1)
-        $struct = \App\Models\StructDisp::structOf($p)
+        $struct = StructDisp::structOf($p)
             ->selfStruct()
             ->first();
 
@@ -144,7 +151,7 @@ class Employee extends Model
 
             // jika tidak ditemukan di Employee buat baru
             if ( is_null($employee) ) {
-                $employee = new \App\Models\Employee();
+                $employee = new Employee();
                 $employee->personnel_no = $struct->empnik;
             }
 
@@ -157,9 +164,9 @@ class Employee extends Model
             $employee->save();
 
             // jika tidak ada record user maka buatkan
-            $user = \App\User::where('personnel_no', $p)->first();
+            $user = User::where('personnel_no', $p)->first();
             if ( is_null($user) ) {
-                $user = new \App\User();
+                $user = new User();
                 $user->personnel_no = $employee->personnel_no;
                 $user->name = $employee->name;
                 $user->email = Hash::make(str_random());
@@ -176,7 +183,7 @@ class Employee extends Model
     public function scopeFindByCostCenter($query, $c)
     {
         // mencari data StructDisp pada diri sendiri (no == 1)
-        $struct = \App\Models\StructDisp::selfStruct()
+        $struct = SAP\StructDisp::selfStruct()
             ->costCenterOf($c)
             ->get();
 
@@ -188,7 +195,7 @@ class Employee extends Model
 
             // jika tidak ditemukan di Employee buat baru
             if ( is_null($employee) ) {
-                $employee = new \App\Models\Employee();
+                $employee = new Employee();
                 $employee->personnel_no = $item->empnik;
             }
 
@@ -218,6 +225,16 @@ class Employee extends Model
     public function isGeneralManager()
     {
         return (substr($this->esgrp, 0, 1) == 'A') ? true : false;
+    }
+
+    public function isStructuralGeneralManager()
+    {
+        return ($this->esgrp == 'AS') ? true : false;
+    }
+
+    public function isStructuralManager()
+    {
+        return ($this->esgrp == 'BS') ? true : false;
     }
 
     public function canDelegate()
@@ -253,7 +270,7 @@ class Employee extends Model
         $sShort = substr($s->emp_hrp1000_s_short, 0, 1);
 
         // mengembalikan StructDir untuk employee ini
-        return \App\Models\StructDir::whereRaw('SUBSTR(emp_hrp1000_s_short, 1, 1) = ?', [$oShort])
+        return StructDir::whereRaw('SUBSTR(emp_hrp1000_s_short, 1, 1) = ?', [$oShort])
             ->whereRaw('SUBSTR(emp_hrp1000_o_short, 1, 1) = ?', [$sShort])
             ->first();
     }
@@ -261,12 +278,12 @@ class Employee extends Model
     public function closestSubordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::closestSubordinatesOf($this->personnel_no)->get();
+        $structs = StructDisp::closestSubordinatesOf($this->personnel_no)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+            return Employee::findByPersonnel($item->empnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -276,12 +293,12 @@ class Employee extends Model
     public function closestStructuralSubordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::closestSubordinatesOf($this->personnel_no, 'structural')->get();
+        $structs = StructDisp::closestSubordinatesOf($this->personnel_no, 'structural')->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+            return Employee::findByPersonnel($item->empnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -291,12 +308,12 @@ class Employee extends Model
     public function oneTwoDirectSubordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::oneTwoDirectSubordinatesOf($this->personnel_no)->get();
+        $structs = StructDisp::oneTwoDirectSubordinatesOf($this->personnel_no)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+            return Employee::findByPersonnel($item->empnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -306,12 +323,12 @@ class Employee extends Model
     public function subordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::subordinatesOf($this->personnel_no)->get();
+        $structs = StructDisp::subordinatesOf($this->personnel_no)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+            return Employee::findByPersonnel($item->empnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -321,12 +338,12 @@ class Employee extends Model
     public function foremanAndOperatorSubordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::foremanAndOperatorSubordinatesOf($this->personnel_no)->get();
+        $structs = StructDisp::foremanAndOperatorSubordinatesOf($this->personnel_no)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+            return Employee::findByPersonnel($item->empnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -336,12 +353,12 @@ class Employee extends Model
     public function mgrSptSpvSubordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::mgrSptSpvSubordinatesOf($this->personnel_no)->get();
+        $structs = StructDisp::mgrSptSpvSubordinatesOf($this->personnel_no)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+            return Employee::findByPersonnel($item->empnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -351,12 +368,12 @@ class Employee extends Model
     public function gmMgrSptSubordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::gmMgrSptSubordinatesOf($this->personnel_no)->get();
+        $structs = StructDisp::gmMgrSptSubordinatesOf($this->personnel_no)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+            return Employee::findByPersonnel($item->empnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -366,12 +383,12 @@ class Employee extends Model
     public function gmMgrSubordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::gmMgrSubordinatesOf($this->personnel_no)->get();
+        $structs = StructDisp::gmMgrSubordinatesOf($this->personnel_no)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+            return Employee::findByPersonnel($item->empnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -381,12 +398,12 @@ class Employee extends Model
     public function superintendentSubordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::superintendentSubordinatesOf($this->personnel_no, true)->get();
+        $structs = StructDisp::superintendentSubordinatesOf($this->personnel_no, true)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+            return Employee::findByPersonnel($item->empnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -396,12 +413,12 @@ class Employee extends Model
     public function managerSubordinates()
     {
         // mencari semua bawahan-bawahan
-        $structs = \App\Models\StructDisp::managerSubordinatesOf($this->personnel_no, true)->get();
+        $structs = StructDisp::managerSubordinatesOf($this->personnel_no, true)->get();
 
         // mengiterasi bawahan-bawahan dan membuat collection baru
         $subordinates = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing bawahan
-            return \App\Models\Employee::findByPersonnel($item->empnik)->first();
+            return Employee::findByPersonnel($item->empnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -416,7 +433,7 @@ class Employee extends Model
         // mengiterasi atasan-atasan dan membuat collection baru
         $bosses = $structs->map(function ($item, $key) {
             // membuat & mengembalikan Employee masing-masing atasan
-            return \App\Models\Employee::findByPersonnel($item->dirnik)->first();
+            return Employee::findByPersonnel($item->dirnik)->first();
         });
 
         // mengembalikan collection of Employee
@@ -432,7 +449,7 @@ class Employee extends Model
         $s = $this->structDisp()->closestBossOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return (is_null($s)) ? [] : (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
+        return (is_null($s)) ? [] : (Employee::findByPersonnel($s->dirnik)->first());
     }
 
     public function superintendentBoss()
@@ -446,7 +463,7 @@ class Employee extends Model
         // mengembalikan Employee model
         return ( is_null($s) || $this->isSuperintendent() ) ?
             [] :
-            (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
+            (Employee::findByPersonnel($s->dirnik)->first());
     }
 
     public function managerBoss()
@@ -463,7 +480,7 @@ class Employee extends Model
         if (is_null($m))
             return [];
         else {
-            return \App\Models\Employee::findByPersonnel($m->dirnik)->first();
+            return Employee::findByPersonnel($m->dirnik)->first();
         }
     }
 
@@ -478,7 +495,7 @@ class Employee extends Model
         // mengembalikan Employee model
         return ( is_null($s) || $this->isGeneralManager() ) ?
             [] :
-            (\App\Models\Employee::findByPersonnel($s->dirnik)->first());
+            (Employee::findByPersonnel($s->dirnik)->first());
     }
 
     public function minSuperintendentBoss()

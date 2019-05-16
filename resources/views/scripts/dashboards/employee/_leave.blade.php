@@ -58,6 +58,9 @@
                 "events": {
                     "rendered": function (eventObj, dataObj) {
                         leaveChartRendered = true;
+                    },
+                    "noDataToDisplay": function (eventObj) {
+                        $('#leave-chart').text('Tidak ada data yang ditemukan.');
                     }
                 }                
             }).render();

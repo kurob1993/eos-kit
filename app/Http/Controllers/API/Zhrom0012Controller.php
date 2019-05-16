@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
-use App\Models\Zhrom0012;
+use App\Http\Controllers\Controller;
+use App\Models\SAP\Zhrom0012;
 
 class Zhrom0012Controller extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $namakompetensi = Zhrom0012::select('namakompetensi')
             ->groupBy('namakompetensi')
@@ -15,7 +15,7 @@ class Zhrom0012Controller extends Controller
         return $namakompetensi;
     }
 
-    public function nojabatan(Request $request, $nojabatan = null)
+    public function nojabatan($nojabatan = null)
     {
         $zhrom0012 = Zhrom0012::where('nojabatan',$nojabatan)->get();
         $unique = $zhrom0012->unique('namakompetensi');

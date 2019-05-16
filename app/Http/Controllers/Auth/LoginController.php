@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Role;
-use App\Models\StructDisp;
+use App\Models\SAP\StructDisp;
 use App\Models\Employee;
 use App\Models\Secretary;
 
