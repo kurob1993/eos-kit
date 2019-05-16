@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
@@ -46,10 +47,10 @@ class SendToSapController extends Controller
                 }) 
                 ->addColumn('desc', function($absence){
                     $status = $absence->absenceSapResponse;
-                    return $status->count() > 0 ? $status->first()->desc : ' - ';
+                    return $status->count() > 0 ? $status->last()->desc : ' - ';
                 }) 
                 ->addColumn('action', function($absence){
-                    return '-';
+                    return view('sendtosap._action-button',$absence);
                 }) 
                 ->escapeColumns([0,1,2])
                 ->make(true);
@@ -180,7 +181,16 @@ class SendToSapController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $absence = Absence::find($id);
+        $absence->stage_id = 4;
+        $absence->save();
+
+        Session::flash("flash_notification", [
+            "level" => "success",
+            "message" => "Data berhasil di Failed",
+        ]);
+
+        return redirect()->back();
     }
 
     /**

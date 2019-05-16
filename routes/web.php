@@ -124,7 +124,7 @@ Route::group([
     Route::resource('all_overtimes', 'AllOvertimeController', ['only' => ['index']]);
 
     //route untuk manage data yang dikirim ke sap
-    Route::resource('sendtosap', 'SendToSapController');
+    Route::resource('sendtosap', 'SendToSapController')->parameters(['sendtosap' => 'id']);
 });
 
 // route untuk role basis
@@ -160,5 +160,3 @@ Route::group([
     Route::post('travels', 'SecretaryController@storeTravels')
         ->name('secretary.travels.store');
 });
-
-Route::get('/soap', 'SoapController@show');

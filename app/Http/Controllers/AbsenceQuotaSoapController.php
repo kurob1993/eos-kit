@@ -9,7 +9,7 @@ class AbsenceQuotaSoapController extends Controller
 {
     public function index()
     {
-        $server = new \SoapServer('../public/wsdl/SI_ABSENCE_QUOTA.WSDL');
+        $server = new \SoapServer(config('sapsoap.absence_quota.url'));
         $server->setClass( SapSoapController::class );
         $server->handle();
     }

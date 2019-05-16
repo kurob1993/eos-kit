@@ -31,7 +31,7 @@ class AbsenceSoapController extends Controller
             'HCM_ABSENCE' => $data
         );
 
-        $url = '../public/wsdl/SI_ABSENCE.WSDL';
+        $url = config('sapsoap.absence.url');
         $options = array(
             'login' => 'SAPWEBAPP',
             'password' => '1234567',
