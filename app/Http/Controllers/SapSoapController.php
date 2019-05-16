@@ -18,12 +18,12 @@ class SapSoapController extends Controller
                 $this->gagal($value);
             }
 
-            if($value->STATUS == 1 && ($value->SUBTY == '10' || $value->SUBTY == '20')){
-                $this->cuti($value);
-            }
-
-            if($value->STATUS == 1 && ($value->SUBTY !== '10' || $value->SUBTY !== '20') ){
-                $this->izin($value);
+            if($value->STATUS == 1){
+                if($value->SUBTY == '10' || $value->SUBTY == '20'){
+                    $this->cuti($value);
+                }else{
+                    $this->izin($value);
+                }
             }
 
             if($value->STATUS == 2){
@@ -110,14 +110,17 @@ class SapSoapController extends Controller
         $AbsenceQuota = AbsenceQuota::where('personnel_no', $pernr)
         ->where('start_date',$begda)
         ->where('end_date',$endda)
-        ->where('deduction','<', $deduction)
-        ->first();
+        ->where('deduction','<', $deduction);
 
-        $AbsenceQuota->start_deduction = $desta;
-        $AbsenceQuota->end_deduction = $deend;
-        $AbsenceQuota->number = $number;
-        $AbsenceQuota->deduction = $deduction;
-        $AbsenceQuota->save();
+        if($AbsenceQuota->count()){
+            $AbsenceQuota = $AbsenceQuota->first();
+            $AbsenceQuota->start_deduction = $desta;
+            $AbsenceQuota->end_deduction = $deend;
+            $AbsenceQuota->number = $number;
+            $AbsenceQuota->deduction = $deduction;
+            $AbsenceQuota->save();
+        }
+        
     }
 
     public function kuotaBaru($value)
