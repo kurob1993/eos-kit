@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () {
             $client = new Client(['base_uri' => url('') ]);
-            $client->request('GET', '/api/ssap/absence');
+            $client->request('GET', '/api/sap/absence');
         })->everyMinute();
     }
 
