@@ -12,6 +12,6 @@
     {{ method_field('PATCH') }}
     <button class="btn btn-primary btn-xs m-2">
         <span class="fa fa-recycle"></span>
-        Reset Data
+        Proses Ulang
     </button>
 </form>

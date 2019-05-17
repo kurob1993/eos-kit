@@ -197,7 +197,7 @@ class SendToSapController extends Controller
 
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Reset data berhasil.",
+            "message" => "Data berhasil dimasukan ke dalam antrian untuk di preoses ulang.",
         ]);
 
         return redirect()->back();
