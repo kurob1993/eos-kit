@@ -22,6 +22,16 @@ class SendToSapController extends Controller
         $absence = Absence::where('stage_id','2')
         ->where('sendtosap_at','<>',null);
 
+        if(isset($request->search['value'])){
+            $absence->where('personnel_no','like', '%' . $request->search['value'] .'%' )
+            ->orWhereHas('user', function ($query) use ($request) {
+                $query->where('name','like', '%' . $request->search['value'] .'%');
+            })
+            ->orWhereHas('absenceSapResponse', function ($query) use ($request) {
+                $query->where('desc','like', '%' . $request->search['value'] .'%');
+            });
+        }
+        
         // response untuk datatables absences
         if ($request->ajax()) {
 
@@ -73,15 +83,15 @@ class SendToSapController extends Controller
                 'name' => 'id',
                 'title' => 'ID',
                 'class' => 'desktop',
-                'searchable' => true,
+                'searchable' => false,
                 'orderable' => false,
                 ])
             ->addColumn([
                 'data' => 'name',
-                'name' => 'name',
+                'name' => 'absences.name',
                 'title' => 'NAME',
                 'class' => 'desktop',
-                'searchable' => true,
+                'searchable' => false,
                 'orderable' => false,
             ])
             ->addColumn([
@@ -89,7 +99,7 @@ class SendToSapController extends Controller
                 'name' => 'absence_type_id',
                 'title' => 'TYPE',
                 'class' => 'desktop',
-                'searchable' => true,
+                'searchable' => false,
                 'orderable' => false,
             ])
             ->addColumn([
@@ -182,12 +192,12 @@ class SendToSapController extends Controller
     public function update(Request $request, $id)
     {
         $absence = Absence::find($id);
-        $absence->stage_id = 4;
+        $absence->sendtosap_at = null;
         $absence->save();
 
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Data berhasil di Failed",
+            "message" => "Reset data berhasil.",
         ]);
 
         return redirect()->back();
@@ -201,6 +211,15 @@ class SendToSapController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $absence = Absence::find($id);
+        $absence->stage_id = 4;
+        $absence->save();
+
+        Session::flash("flash_notification", [
+            "level" => "success",
+            "message" => "Data berhasil di Failed",
+        ]);
+
+        return redirect()->back();
     }
 }
