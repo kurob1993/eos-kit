@@ -23,13 +23,15 @@ class SendToSapController extends Controller
         ->where('sendtosap_at','<>',null);
 
         if(isset($request->search['value'])){
-            $absence->where('personnel_no','like', '%' . $request->search['value'] .'%' )
-            ->orWhereHas('user', function ($query) use ($request) {
-                $query->where('name','like', '%' . $request->search['value'] .'%');
-            })
-            ->orWhereHas('absenceSapResponse', function ($query) use ($request) {
-                $query->where('desc','like', '%' . $request->search['value'] .'%');
-            });
+            $absence->where(function($query) use ($request) {
+                $query->orWhere('personnel_no','like', '%' . $request->search['value'] .'%' )
+                ->orWhereHas('user', function ($query) use ($request) {
+                    $query->where('name','like', '%' . $request->search['value'] .'%');
+                })
+                ->orWhereHas('absenceSapResponse', function ($query) use ($request) {
+                    $query->where('desc','like', '%' . $request->search['value'] .'%');
+                });
+            })->toSql();
         }
         
         // response untuk datatables absences
