@@ -27,6 +27,7 @@
                         <li> <a href="{{ route('all_time_events.index') }}">Tidak Slash</a> </li>
                         <li> <a href="{{ route('all_overtimes.index') }}">Lembur</a> </li>
                         <li> <a href="{{ route('all_absence_quotas.index') }}">Kuota Cuti</a> </li>
+                        <li> <a href="{{ route('sendtosap.index') }}">Send To SAP</a> </li>
                     </ul>
                 </li>
                 @endrole 

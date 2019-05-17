@@ -14,6 +14,8 @@ class DebugController extends Controller
 {
     public function debug()
     {   
+        dd( config('sapsoap.absence.url') );
+
         $s = new \DateTime('2018-01-06 17:00:00');
         $e = new \DateTime('2018-01-07 17:00:00');
 

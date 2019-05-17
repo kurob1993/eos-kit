@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SI_ABSENCE_QUOTA" targetNamespace="http://HCM_ABSENCE" 
+    xmlns:p1="http://HCM_ABSENCE" 
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:documentation/>
+    <wsp:UsingPolicy wsdl:required="false"/>
+    <wsp:Policy wsu:Id="OP_SI_ABSENCE_QUOTA"/>
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://HCM_ABSENCE" 
+            xmlns="http://HCM_ABSENCE" 
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:element name="MT_ABSENCE_QUOTA" type="DT_ABSENCE_QUOTA"/>
+            <xsd:complexType name="DT_ABSENCE_QUOTA">
+                <xsd:annotation>
+                    <xsd:appinfo source="http://sap.com/xi/VersionID">edd0eaa38bc611e88a46000000539256</xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="HCM_ABSENCE_QUOTA" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:appinfo source="http://sap.com/xi/TextID">c122742b785911e8ab671803737ad342</xsd:appinfo>
+                        </xsd:annotation>
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="REQNO" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">5efeca9d867411e8ce6728d24409c09b</xsd:appinfo>
+                                        <xsd:documentation>Request Number</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="PERNR" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">64707fdf785911e8ceab1803737ad342</xsd:appinfo>
+                                        <xsd:documentation>Personnel Number</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="STATUS" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">5995167a867411e8ba2828d24409c09b</xsd:appinfo>
+                                        <xsd:documentation>0 Gagal 1 Berhasil 2 Mass</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="SUBTY" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">64707fe0785911e8bf9b1803737ad342</xsd:appinfo>
+                                        <xsd:documentation>Subtype</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="KTART" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">64707fe4785911e88c481803737ad342</xsd:appinfo>
+                                        <xsd:documentation>Absence Quota Type</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="ANZHL" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">64707fe5785911e8c0751803737ad342</xsd:appinfo>
+                                        <xsd:documentation>Number of Employee Time Quota</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="KVERB" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">64707fe6785911e899d61803737ad342</xsd:appinfo>
+                                        <xsd:documentation>Deduction of Employee Time Quota</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="DESTA" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">64707fe7785911e8b3d01803737ad342</xsd:appinfo>
+                                        <xsd:documentation>Start Date for Quota Deduction</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="DEEND" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">64707fe8785911e8941c1803737ad342</xsd:appinfo>
+                                        <xsd:documentation>Quota Deduction to</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="DESC" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">034cb40c8bc911e88dca28d24409c09b</xsd:appinfo>
+                                        <xsd:documentation>Error Description</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="BEGDA" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">1143324b713f11e98120c04a002b4762</xsd:appinfo>
+                                        <xsd:documentation>Start Date</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="ENDDA" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">11436201713f11e9cfebc04a002b4762</xsd:appinfo>
+                                        <xsd:documentation>End Date</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="MT_ABSENCE_QUOTA">
+        <wsdl:documentation/>
+        <wsdl:part name="MT_ABSENCE_QUOTA" element="p1:MT_ABSENCE_QUOTA"/>
+    </wsdl:message>
+
+    <wsdl:portType name="SI_ABSENCE_QUOTA">
+        <wsdl:documentation/>
+        <wsdl:operation name="SI_ABSENCE_QUOTA">
+            <wsdl:documentation/>
+            <wsp:Policy>
+                <wsp:PolicyReference URI="#OP_SI_ABSENCE_QUOTA"/>
+            </wsp:Policy>
+            <wsdl:input message="p1:MT_ABSENCE_QUOTA"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    
+    <wsdl:binding name="SI_ABSENCE_QUOTABinding" type="p1:SI_ABSENCE_QUOTA">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" 
+            xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+        <wsdl:operation name="SI_ABSENCE_QUOTA">
+            <soap:operation soapAction="http://sap.com/xi/WebService/soap1.1" 
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+            <wsdl:input>
+                <soap:body use="literal" 
+                    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    
+    <wsdl:service name="SI_ABSENCE_QUOTAService">
+        <wsdl:port name="SI_ABSENCE_QUOTAPort" binding="p1:SI_ABSENCE_QUOTABinding">
+            <soap:address location="http://10.10.10.222:8000/api/sap/absenceQuota?WSDL" 
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

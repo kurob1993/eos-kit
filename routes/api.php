@@ -74,3 +74,8 @@ Route::group(['prefix' => 'personalEmail', 'middleware' => 'api'], function() {
     Route::get('/', 'EmployeeEmailController@index');
     Route::get('{personnel_no}', 'EmployeeEmailController@show');
 });
+
+Route::group(['prefix' => 'sap', 'middleware' => 'api'], function() {
+    Route::any('absenceQuota', 'AbsenceQuotaSoapController@index');
+    Route::any('absence', 'AbsenceSoapController@index');
+});

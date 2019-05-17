@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use GuzzleHttp\Client;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,8 +25,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->call(function () {
+            $url = config('sapsoap.absence.api');
+            $client = new Client(['base_uri' => url('') ]);
+            $client->request('GET', $url);
+        })->everyMinute();
     }
 
     /**
