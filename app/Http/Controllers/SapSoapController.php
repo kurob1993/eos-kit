@@ -74,7 +74,7 @@ class SapSoapController extends Controller
         $sap->endda = $endda;
         $sap->save();
 
-        $this->UpdateAbsenceQuota($pernr,$begda,$endda,$desta,$deend,$number,$deduction);
+        $this->UpdateAbsenceQuota($value);
         $this->UpdateAbsence($reqno);
     }
 
@@ -100,26 +100,42 @@ class SapSoapController extends Controller
         $absence->save();
     }
 
-    public function UpdateAbsenceQuota($pernr,$begda,$endda,$desta,$deend,$number,$deduction)
+    public function UpdateAbsenceQuota($value)
     {
-        // jika data yang dikim dari sap status 1
+        $pernr = $value->PERNR*1;
+        $desta = date('Y-m-d', strtotime($value->DESTA) );
+        $deend = date('Y-m-d', strtotime($value->DEEND) );
+        $begda = date('Y-m-d', strtotime($value->BEGDA) );
+        $endda = date('Y-m-d', strtotime($value->ENDDA) );
+        $number = $value->ANZHL*1;
+        $deduction = $value->KVERB*1;
 
-        // jika dedution yang ada di DB lebih kecil
-        // dari data yang dikirim oleh sap
-        // maka update data
+        if($value->SUBTY == 10){
+            $absenType = 1;
+        }
+        if($value->SUBTY == 20){
+            $absenType = 2;
+        }
+
         $AbsenceQuota = AbsenceQuota::where('personnel_no', $pernr)
         ->where('start_date',$begda)
-        ->where('end_date',$endda)
-        ->where('deduction','<', $deduction);
+        ->where('end_date',$endda);
 
         if($AbsenceQuota->count()){
             $AbsenceQuota = $AbsenceQuota->first();
-            $AbsenceQuota->start_deduction = $desta;
-            $AbsenceQuota->end_deduction = $deend;
-            $AbsenceQuota->number = $number;
-            $AbsenceQuota->deduction = $deduction;
-            $AbsenceQuota->save();
+        }else{
+            $AbsenceQuota = new AbsenceQuota();
         }
+
+        $AbsenceQuota->personnel_no = $pernr;
+        $AbsenceQuota->start_date = $begda;
+        $AbsenceQuota->end_date = $endda;
+        $AbsenceQuota->absence_type_id = $absenType;
+        $AbsenceQuota->start_deduction = $desta;
+        $AbsenceQuota->end_deduction = $deend;
+        $AbsenceQuota->number = $number;
+        $AbsenceQuota->deduction = $deduction;
+        $AbsenceQuota->save();
         
     }
 
