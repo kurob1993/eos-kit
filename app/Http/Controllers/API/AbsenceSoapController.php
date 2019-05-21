@@ -13,10 +13,14 @@ class AbsenceSoapController extends Controller
         
         $absence = Absence::where('stage_id','2')
         ->where('sendtosap_at', null)
-        ->limit(1)->get();
+        ->limit(1);
         
+        if($absence->count() == 0){
+            dd('Tidak Ada Data');
+        }
+
         $data = array();
-        foreach ($absence as $key => $value) {
+        foreach ($absence->get() as $key => $value) {
             $ab = array(
                 'REQNO'=> "$value->id",
                 'PERNR'=> "$value->personnel_no",
