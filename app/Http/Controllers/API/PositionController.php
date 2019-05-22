@@ -27,12 +27,8 @@ class PositionController extends Controller
 
     public function last($personnel_no)
     {
-        $positions = $this->findPositionByPersonnel($personnel_no);
-    
-        $last = $positions->filter(function ($value, $key) {
-            return $value->ENDDA == '9999-12-31';
-        });
+        $positions = $this->findPositionByPersonnel($personnel_no)->last();
         
-        return $last->pop();
+        return $positions;
     }
 }
