@@ -79,3 +79,7 @@ Route::group(['prefix' => 'sap', 'middleware' => 'api'], function() {
     Route::any('absenceQuota', 'AbsenceQuotaSoapController@index');
     Route::any('absence', 'AbsenceSoapController@index');
 });
+
+Route::group(['prefix' => 'personalAddress', 'middleware' => 'api'], function(){
+    Route::get('{PERNR}', 'AddressController@show');
+});
