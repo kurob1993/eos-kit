@@ -13,7 +13,8 @@ class TimeEventSentToSapMessage extends Notification implements ShouldQueue
 {
     use Queueable;
     public $timeEvent;
-
+    public $tries = 5;
+    
     public function __construct(TimeEvent $timeEvent)
     {
         $this->timeEvent = $timeEvent;

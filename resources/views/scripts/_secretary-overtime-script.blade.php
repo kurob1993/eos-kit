@@ -62,7 +62,7 @@
           };
 
           $.ajax({
-          url: '{{ url('api/structdisp') }}/' + value + '/minManagerBoss',
+          url: '{{ url('api/structdisp') }}/' + value + '/minManagerBossWithDelegation',
               type: 'GET',
               dataType: 'json',
               error: function() {},
@@ -79,7 +79,7 @@
           });
 
           $.ajax({
-          url: '{{ url('api/structdisp') }}/' + value + '/minSuperintendentBoss',
+          url: '{{ url('api/structdisp') }}/' + value + '/minSptBossWithDelegation',
               type: 'GET',
               dataType: 'json',
               error: function() {},

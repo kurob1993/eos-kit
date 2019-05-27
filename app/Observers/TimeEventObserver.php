@@ -59,7 +59,7 @@ class TimeEventObserver
         $timeEvent->save();
 
         // mencari atasan dari karyawan yang mengajukan time_events
-        $supeintendentBoss = $employee->minSuperintendentBoss();
+        $supeintendentBoss = $employee->minSptBossWithDelegation();
 
         // mencari direktur dari karyawan yang mengajukan time_event
         $director = $employee->director();

@@ -26,6 +26,13 @@ Route::group(['prefix' => 'structdisp', 'middleware' => 'api'], function() {
     Route::get('{empnik}/closestBoss', 'StructDispController@closestBoss');
     Route::get('{empnik}/minSuperintendentBoss', 'StructDispController@minSuperintendentBoss');
     Route::get('{empnik}/minManagerBoss', 'StructDispController@minManagerBoss');
+
+    Route::get('{empnik}/minSptBossWithDelegation', 'StructDispController@minSptBossWithDelegation');
+    Route::get('{empnik}/minManagerBossWithDelegation', 'StructDispController@minManagerBossWithDelegation');
+    Route::get('{empnik}/sptBossWithDelegation', 'StructDispController@sptBossWithDelegation');
+    Route::get('{empnik}/managerBossWithDelegation', 'StructDispController@managerBossWithDelegation');
+    Route::get('{empnik}/gmBossWithDelegation', 'StructDispController@gmBossWithDelegation');
+    
     Route::get('{empnik}/generalManagerBoss', 'StructDispController@generalManagerBoss');    
     Route::get('costCenter/{cost_center}', 'StructDispController@showByCostCenter');
     Route::get('shortAbbrOrg/{abbr_org}', 'StructDispController@showByShortAbbrOrg');

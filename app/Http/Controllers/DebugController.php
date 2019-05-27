@@ -12,6 +12,15 @@ use App\Models\AbsenceQuota;
 
 class DebugController extends Controller
 {
+    public function link($nik,$nama,$email)
+    {
+        echo '<a href="'.'http://dev.emss.com/a/'.$nik.'/'.$email.'"> '.$nama.' </a> </br>';
+    }
+
+    public function sec($nama,$email)
+    {
+        echo '<a href="'.'http://dev.emss.com/b/'.$email.'"> '.$nama.' </a> </br>';
+    }
     public function debug()
     {   
         dd( config('sapsoap.absence.url') );
@@ -22,28 +31,28 @@ class DebugController extends Controller
         $a = new \DateTime('2018-01-06 17:30:00'); // beririsan
         $b = new \DateTime('2018-01-06 19:00:00'); // beririsan
         
-        $x = new \DateTime('2018-01-05 05:00:00'); // tdk
-        $y = new \DateTime('2018-01-06 18:00:00');
+        // $x = new \DateTime('2018-01-05 05:00:00'); // tdk
+        // $y = new \DateTime('2018-01-06 18:00:00');
 
-        $o = new \DateTime('2018-01-06 21:00:00'); // tdk
-        $p = new \DateTime('2018-01-07 20:00:00');
+        // $o = new \DateTime('2018-01-06 21:00:00'); // tdk
+        // $p = new \DateTime('2018-01-07 20:00:00');
 
-        $u = new \DateTime('2018-01-06 00:00:00');
-        $v = new \DateTime('2018-01-07 19:00:00');
+        // $u = new \DateTime('2018-01-06 00:00:00');
+        // $v = new \DateTime('2018-01-07 19:00:00');
 
-        $sa = new \DateTime('2018-01-05 00:00:00');
-        $si = new \DateTime('2018-01-06 15:00:00');
+        // $sa = new \DateTime('2018-01-05 00:00:00');
+        // $si = new \DateTime('2018-01-06 15:00:00');
 
-        $pa = new \DateTime('2018-01-07 20:00:00');
-        $pi = new \DateTime('2018-01-08 06:00:00');
+        // $pa = new \DateTime('2018-01-07 20:00:00');
+        // $pi = new \DateTime('2018-01-08 06:00:00');
 
-        $ki = $pa;
-        $ka = $pi;
+        // $ki = $pa;
+        // $ka = $pi;
 
-        if ( (($s>=$ki && $e<=$ka) || ($s<=$ki && $e>=$ki) || ($s<=$ka && $e>=$ka) ) )
-            echo "beririsan";
-        else
-            echo "tidak beririsan";
+        // if ( (($s>=$ki && $e<=$ka) || ($s<=$ki && $e>=$ki) || ($s<=$ka && $e>=$ka) ) )
+        //     echo "beririsan";
+        // else
+        //     echo "tidak beririsan";
 
         // $subordinates = Auth::user()->employee->mgrSptSpvSubordinates();
         // $leaveChartDeduction = $leaveChartQuota = $leaveChartCat = [];

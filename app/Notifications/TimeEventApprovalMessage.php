@@ -15,7 +15,8 @@ class TimeEventApprovalMessage extends Notification implements ShouldQueue
     public $approved;
     public $fromUser;
     public $timeEventApproval;
-
+    public $tries = 5;
+    
     public function __construct(User $user, TimeEventApproval $timeEventApproval)
     {
         $this->fromUser = $user;

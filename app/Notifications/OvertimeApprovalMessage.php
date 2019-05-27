@@ -15,7 +15,8 @@ class OvertimeApprovalMessage extends Notification implements ShouldQueue
     public $approved;
     public $fromUser;
     public $attendanceApproval;
-
+    public $tries = 5;
+    
     public function __construct(User $user, AttendanceQuotaApproval $attendanceApproval)
     {
         $this->fromUser = $user;

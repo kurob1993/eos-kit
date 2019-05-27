@@ -13,6 +13,7 @@ use App\Role;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Session;
+use App\Models\Transition;
 
 class AttendanceObserver
 {
@@ -115,6 +116,16 @@ class AttendanceObserver
 
     public function deleting(Attendance $attendance)
     {
+        // hapus delegasi
+        $user = User::where('personnel_no',$attendance->personnel_no)->first();
+        $abbr_jobs = $user->structDisp->first()->emp_hrp1000_s_short;
+        $start_date = $attendance->start_date;
+        $end_date = $attendance->end_date;
+
+        Transition::where('abbr_jobs',$abbr_jobs)
+        ->where('start_date',$start_date)
+        ->where('end_date',$end_date)->delete();
+
         $approvals = $attendance->attendanceApprovals;
         
         // hapus semua approval terkait attendance

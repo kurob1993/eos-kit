@@ -13,7 +13,8 @@ class OvertimeSentToSapMessage extends Notification implements ShouldQueue
 {
     use Queueable;
     public $overtime;
-
+    public $tries = 5;
+    
     public function __construct(AttendanceQuota $overtime)
     {
         $this->overtime = $overtime;
