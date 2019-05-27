@@ -12,7 +12,7 @@ use Yajra\DataTables\Html\Builder;
 use App\Http\Requests\StoreAbsenceRequest;
 use App\Models\Absence;
 use App\Models\AbsenceQuota;
-use App\Models\StructDisp;
+use App\Models\SAP\StructDisp;
 use App\Models\Transition;
 
 class LeaveController extends Controller

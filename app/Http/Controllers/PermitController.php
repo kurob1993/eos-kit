@@ -15,7 +15,7 @@ use App\Models\AttendanceType;
 use App\Models\Absence;
 use App\Models\AbsenceType;
 use App\Http\Requests\StorePermitRequest;
-use App\Models\StructDisp;
+use App\Models\SAP\StructDisp;
 use App\Models\Transition;
 
 class PermitController extends Controller
