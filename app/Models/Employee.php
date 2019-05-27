@@ -13,6 +13,8 @@ use App\Models\Absence;
 use App\Models\Attendance;
 use App\Models\AttendanceQuota;
 use App\Models\TimeEvent;
+use App\Models\SAP\Zhrom0013;
+use App\Models\SAP\Zhrom0007;
 
 class Employee extends Model
 {
@@ -846,30 +848,23 @@ class Employee extends Model
      */
     public function minSptBossWithDelegation()
     {
-        if ($this->isSuperintendent() || $this->isManager() ) {
-            return $this->closestBoss();
-        } else {
-            $superintendent = $this->sptBossWithDelegation();
-            if (!$superintendent){
-                return $this->minManagerBossWithDelegation();
-            }else{
-                return $superintendent;
-            }
+        $superintendent = $this->sptBossWithDelegation();
+        if (!$superintendent){
+            return $this->minManagerBossWithDelegation();
+        }else{
+            return $superintendent;
         }
     }
 
     public function minManagerBossWithDelegation()
     {
-        if ($this->isSuperintendent() || $this->isManager() ) {
-            return $this->closestBoss();
-        } else {
-            // meneruskan recursive call dari atas
-            $manager = $this->managerBossWithDelegation();
-            if (!$manager){
-                return $this->generalManagerBoss();
-            }else{
-                return $manager;
-            }
+        // meneruskan recursive call dari atas
+        $manager = $this->managerBossWithDelegation();
+        return $manager;
+        if (!$manager){
+            return $this->generalManagerBoss();
+        }else{
+            return $manager;
         }
     }
 }

@@ -8,7 +8,7 @@ class Transition extends Model
 {
     public function zhrom0007()
     {
-        return $this->hasMany('App\Models\Zhrom0007','AbbrPosition','abbr_jobs');
+        return $this->hasMany('App\Models\SAP\Zhrom0007','AbbrPosition','abbr_jobs');
     }
 
     public function user()

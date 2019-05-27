@@ -495,51 +495,64 @@ class ApprovalController extends Controller
 
     public function storeToDelegation($module,$id)
     {
+        $approved = null;
         switch ($module) {
             case 'leave':
-                $approved = AbsenceApproval::find($id)->absence;
+                $approved = AttendanceApproval::find($id);
+                if($approved){
+                    $approved =  $approved->attendance;
+                    $start_date = $approved->start_date->toDateString();
+                    $end_date = $approved->end_date->toDateString();
+                    $strucdisp = $approved->employee->StructDisp->first();
 
-                $start_date = $approved->start_date->toDateString();
-                $end_date = $approved->end_date->toDateString();
-                $strucdisp = $approved->employee->StructDisp->first();
+                    $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
+                        ->where('start_date',$start_date)
+                        ->where('end_date',$end_date);
+                }
+                break;
 
-                $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
-                ->where('start_date',$start_date)
-                ->where('end_date',$end_date);
-            break;
             case 'absence':
-                $approved = AbsenceApproval::find($id)->absence;
+                $approved = AttendanceApproval::find($id);
+                if($approved){
+                    $approved =  $approved->attendance;
+                    $start_date = $approved->start_date->toDateString();
+                    $end_date = $approved->end_date->toDateString();
+                    $strucdisp = $approved->employee->StructDisp->first();
 
-                $start_date = $approved->start_date->toDateString();
-                $end_date = $approved->end_date->toDateString();
-                $strucdisp = $approved->employee->StructDisp->first();
+                    $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
+                        ->where('start_date',$start_date)
+                        ->where('end_date',$end_date);
+                }
+                break;
 
-                $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
-                ->where('start_date',$start_date)
-                ->where('end_date',$end_date);
-            break;
             case 'attendance':
-                $approved = AttendanceApproval::find($id)->attendance;
+                $approved = AttendanceApproval::find($id);
+                if($approved){
+                    $approved =  $approved->attendance;
+                    $start_date = $approved->start_date->toDateString();
+                    $end_date = $approved->end_date->toDateString();
+                    $strucdisp = $approved->employee->StructDisp->first();
 
-                $start_date = $approved->start_date->toDateString();
-                $end_date = $approved->end_date->toDateString();
-                $strucdisp = $approved->employee->StructDisp->first();
-
-                $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
-                ->where('start_date',$start_date)
-                ->where('end_date',$end_date);
-            break;
+                    $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
+                        ->where('start_date',$start_date)
+                        ->where('end_date',$end_date);
+                }
+                break;
+            
+            default:
+                # code...
+                break;
         }
 
-        if(!$transition->update(['actived_at'=>date('Y-m-d H:i:s')])){
+        if(!$approved){
             // tampilkan pesan bahwa telah berhasil menyetujui
             Session::flash("flash_notification", [
                 "level" => "warning",
-                "message" => "Gagal approve dikaarnakan data delegasi tidak dapat di simpan."
+                "message" => "Gagal approve dikarnakan data delegasi tidak dapat di simpan."
             ]);
-
             return redirect()->back();
         }
+        $transition->update(['actived_at'=>date('Y-m-d H:i:s')]);
     }
     
     public function storeToDelegationForAll($module,$data){
