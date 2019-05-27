@@ -81,5 +81,5 @@ Route::group(['prefix' => 'sap', 'middleware' => 'api'], function() {
 });
 
 Route::group(['prefix' => 'personalAddress', 'middleware' => 'api'], function(){
-    Route::get('{PERNR}', 'AddressController@show');
+    Route::get('{PERNR}/{ANSSA?}', 'AddressController@show');
 });

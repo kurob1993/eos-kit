@@ -8,10 +8,12 @@ use App\Models\SAP\Address;
 
 class AddressController extends Controller
 {
-    public function show($PERNR)
+    public function show($PERNR,$ANSSA = 6)
     {
         // menampilkan informasi alamat adan no telp
-        $employee =  Address::where('PERNR',$PERNR )->get();
+        $employee =  Address::where('PERNR',$PERNR )
+            ->where('ANSSA',$ANSSA)
+            ->first();
 
         if (!is_null($employee))
             return $employee;
