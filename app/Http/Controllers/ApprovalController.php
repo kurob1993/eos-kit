@@ -11,6 +11,7 @@ use App\Models\AttendanceQuotaApproval;
 use App\Models\Status;
 use App\Models\Absence;
 use App\Models\Attendance;
+use App\Models\Transition;
 use Session;
 use Storage;
 
@@ -322,14 +323,20 @@ class ApprovalController extends Controller
             case 'leave':
                 $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.leaves.text');
+                // delegasi
+                $this->storeToDelegation($approval, $id);
                 break;
             case 'absence':
                 $approved = AbsenceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
+                // delegasi
+                $this->storeToDelegation($approval, $id);
                 break;
             case 'attendance':
                 $approved = AttendanceApproval::find($id);
                 $moduleText = config('emss.modules.permits.text');
+                // delegasi
+                $this->storeToDelegation($approval, $id);
                 break;
             case 'time_event':
                 $approved = TimeEventApproval::find($id);
@@ -409,15 +416,20 @@ class ApprovalController extends Controller
                     ->leavesOnly()
                     ->get();
                 $moduleText = config('emss.modules.leaves.text');
+                $this->storeToDelegationForAll('leave',$approvals);
                 break;
             case 'permit':
                 $approvals = AbsenceApproval::ofLoggedUser()
                     ->whereStageIsWaitingApproval('absence')
                     ->get();
+                $this->storeToDelegationForAll('absence',$approvals);
+
                 $approvals = AttendanceApproval::ofLoggedUser()
                     ->whereStageIsWaitingApproval('attendance')
                     ->get()
                     ->merge($approvals);
+                $this->storeToDelegationForAll('attendance',$approvals);
+
                 $moduleText = config('emss.modules.permits.text');
                 break;
             case 'time_event':
@@ -479,5 +491,60 @@ class ApprovalController extends Controller
         );
 
         return $result;
+    }
+
+    public function storeToDelegation($module,$id)
+    {
+        switch ($module) {
+            case 'leave':
+                $approved = AbsenceApproval::find($id)->absence;
+
+                $start_date = $approved->start_date->toDateString();
+                $end_date = $approved->end_date->toDateString();
+                $strucdisp = $approved->employee->StructDisp->first();
+
+                $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
+                ->where('start_date',$start_date)
+                ->where('end_date',$end_date);
+            break;
+            case 'absence':
+                $approved = AbsenceApproval::find($id)->absence;
+
+                $start_date = $approved->start_date->toDateString();
+                $end_date = $approved->end_date->toDateString();
+                $strucdisp = $approved->employee->StructDisp->first();
+
+                $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
+                ->where('start_date',$start_date)
+                ->where('end_date',$end_date);
+            break;
+            case 'attendance':
+                $approved = AttendanceApproval::find($id)->attendance;
+
+                $start_date = $approved->start_date->toDateString();
+                $end_date = $approved->end_date->toDateString();
+                $strucdisp = $approved->employee->StructDisp->first();
+
+                $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
+                ->where('start_date',$start_date)
+                ->where('end_date',$end_date);
+            break;
+        }
+
+        if(!$transition->update(['actived_at'=>date('Y-m-d H:i:s')])){
+            // tampilkan pesan bahwa telah berhasil menyetujui
+            Session::flash("flash_notification", [
+                "level" => "warning",
+                "message" => "Gagal approve dikaarnakan data delegasi tidak dapat di simpan."
+            ]);
+
+            return redirect()->back();
+        }
+    }
+    
+    public function storeToDelegationForAll($module,$data){
+        foreach ($data as $key => $value) {
+           $this->storeToDelegation($module,$value->id);
+        }
     }
 }
