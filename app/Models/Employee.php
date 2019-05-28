@@ -860,7 +860,6 @@ class Employee extends Model
     {
         // meneruskan recursive call dari atas
         $manager = $this->managerBossWithDelegation();
-        return $manager;
         if (!$manager){
             return $this->generalManagerBoss();
         }else{
