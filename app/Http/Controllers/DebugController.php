@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\StoreAbsenceRequest;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\AbsenceQuota;
+use App\Models\SAP\Zhrom0013;
 
 class DebugController extends Controller
 {
@@ -23,7 +24,10 @@ class DebugController extends Controller
     }
     public function debug()
     {   
-        dd( config('sapsoap.absence.url') );
+        $zhrom13 = Zhrom0013::where('nojabatan', 'like','%2252323001%')
+        ->orWhere('namajabatan', 'like','%2252323001%')
+        ->get();
+        dd( $zhrom13 );
 
         $s = new \DateTime('2018-01-06 17:00:00');
         $e = new \DateTime('2018-01-07 17:00:00');
