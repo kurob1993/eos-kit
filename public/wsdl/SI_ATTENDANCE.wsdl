@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SI_ATTENDANCE" targetNamespace="http://HCM_ATTENDANCE" 
+    xmlns:p1="http://HCM_ATTENDANCE" 
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:documentation/>
+    <wsp:UsingPolicy wsdl:required="true"/>
+    <wsp:Policy wsu:Id="OP_SI_ATTENDANCE"/>
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://HCM_ATTENDANCE" 
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+            xmlns="http://HCM_ATTENDANCE">
+            <xsd:element name="MT_ATTENDANCE_RESPONSE" type="DT_ATTENDANCE_RESPONSE"/>
+            <xsd:element name="MT_ATTENDANCE" type="DT_ATTENDANCE"/>
+            <xsd:complexType name="DT_ATTENDANCE">
+                <xsd:annotation>
+                    <xsd:appinfo source="http://sap.com/xi/VersionID">f6e5fa4c7d2e11e9a0b40000018cc21e</xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="HCM_ATTENDANCE" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:appinfo source="http://sap.com/xi/TextID">8e31e9027d2f11e994b7ef0b7f000101</xsd:appinfo>
+                        </xsd:annotation>
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="REQNO" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">8e31e8fd7d2f11e9c5cbef0b7f000101</xsd:appinfo>
+                                        <xsd:documentation>Personnel Number</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="PERNR" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">8e31c9a77d2f11e9a414ef0b7f000101</xsd:appinfo>
+                                        <xsd:documentation>Request Number</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="SUBTY_TEXT" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">8e31e8fe7d2f11e9b0c9ef0b7f000101</xsd:appinfo>
+                                        <xsd:documentation>Subtype</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="SUBTY" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">8e31e9007d2f11e9c7e1ef0b7f000101</xsd:appinfo>
+                                        <xsd:documentation>Subtype Text</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="ENDDA" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">8e31e8ff7d2f11e9ac9def0b7f000101</xsd:appinfo>
+                                        <xsd:documentation>End Date</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="BEGDA" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">8e31e9017d2f11e9af48ef0b7f000101</xsd:appinfo>
+                                        <xsd:documentation>Start Date</xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="DT_ATTENDANCE_RESPONSE">
+                <xsd:annotation>
+                    <xsd:appinfo source="http://sap.com/xi/VersionID">e3008ce97d3011e99f470000018cc21e</xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="RESPONSE" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:appinfo source="http://sap.com/xi/TextID">56b715857d3211e98e3cef0b7f000101</xsd:appinfo>
+                        </xsd:annotation>
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="REQNO" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">56b715827d3211e99e5bef0b7f000101</xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="PERNR" type="xsd:string" minOccurs="0"/>
+                                <xsd:element name="STATUS" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">56b715837d3211e9caecef0b7f000101</xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="DESC" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo source="http://sap.com/xi/TextID">56b715847d3211e9c066ef0b7f000101</xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="MT_ATTENDANCE">
+        <wsdl:documentation/>
+        <wsdl:part name="MT_ATTENDANCE" element="p1:MT_ATTENDANCE"/>
+    </wsdl:message>
+    <wsdl:message name="MT_ATTENDANCE_RESPONSE">
+        <wsdl:documentation/>
+        <wsdl:part name="MT_ATTENDANCE_RESPONSE" element="p1:MT_ATTENDANCE_RESPONSE"/>
+    </wsdl:message>
+    <wsdl:portType name="SI_ATTENDANCE">
+        <wsdl:documentation/>
+        <wsdl:operation name="SI_ATTENDANCE">
+            <wsdl:documentation/>
+            <wsp:Policy>
+                <wsp:PolicyReference URI="#OP_SI_ATTENDANCE"/>
+            </wsp:Policy>
+            <wsdl:input message="p1:MT_ATTENDANCE"/>
+            <wsdl:output message="p1:MT_ATTENDANCE_RESPONSE"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SI_ATTENDANCEBinding" type="p1:SI_ATTENDANCE">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" 
+            xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+        <wsdl:operation name="SI_ATTENDANCE">
+            <soap:operation soapAction="http://sap.com/xi/WebService/soap1.1" 
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+            <wsdl:input>
+                <soap:body use="literal" 
+                    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" 
+                    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SI_ATTENDANCEService">
+        <wsdl:port name="SI_ATTENDANCEPort" binding="p1:SI_ATTENDANCEBinding">
+            <soap:address location="http://10.10.3.99:50200/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=WEB_SAP&amp;Interface=http%3A%2F%2FHCM_ATTENDANCE%5ESI_ATTENDANCE" 
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
