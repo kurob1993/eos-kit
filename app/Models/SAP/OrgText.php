@@ -11,6 +11,11 @@ class OrgText extends Model
     public $incrementing = false;
     public $timestamps = false;
 
+    public function orgUnit()
+    {
+        return $this->belongsTo('App\Models\SAP\OrgUnit','ObjectID','ObjectID');
+    }
+
     public function scopeLastOrg($query)
     {
         $query->where('EndDate', '9999-12-31');
