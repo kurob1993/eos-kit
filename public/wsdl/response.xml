@@ -1,0 +1,4 @@
+<SOAPEnvelope xmlns:SOAP="http://schemas.xmlsoap.org/soap/envelope/">
+<SOAPBody>
+<ns0MT_ATTENDANCE_RESPONSE xmlns:ns0="http://HCM_ATTENDANCE"><RESPONSE><REQNO>0000000001</REQNO><PERNR>00000001</PERNR><STATUS>0</STATUS><DESC>Insert cannot be made due to collision</DESC></RESPONSE></ns0MT_ATTENDANCE_RESPONSE></SOAPBody>
+</SOAPEnvelope>

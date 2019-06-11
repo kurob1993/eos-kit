@@ -19,7 +19,7 @@ class AttendanceSoapController extends Controller
 
         $data = array(
             'REQNO' => 1,
-            'PERNR' => 1,
+            'PERNR' => 2,
             'SUBTY_TEXT' => 'Training (internal)',
             'SUBTY' => '0110',
             'ENDDA' => '20190501',
@@ -54,17 +54,22 @@ class AttendanceSoapController extends Controller
         try {
             $client = new \SoapClient($url, $options); 
             $client->SI_ATTENDANCE($data);
+            $xml_string = $client->__getLastResponse();
 
-            $xml_string = htmlentities($client->__getLastResponse());
-            // $xml = simplexml_load_string($xml_string);
-            // $json = json_encode($xml);
-            // $array = json_decode($json,TRUE);
-            // $xml_string = htmlentities($client->__getLastResponse());
-            $xmlObject = simplexml_load_string($xml_string);
-            echo $xml_string;
+            $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $xml_string);
+            $xml=simplexml_load_string($response) or die("Error: Cannot create object");
+            print_r($xml->SOAPBody->ns0MT_ATTENDANCE_RESPONSE->RESPONSE);  
         }
         catch(Exception $e) {
             die($e->getMessage());
         }
     }
+
+    public function debug($data)
+    {
+        $myfile = fopen("../public/wsdl/response.xml", "w") or die("Unable to open file!");
+        fwrite($myfile, $data);
+        fclose($myfile);
+    }
+
 }
