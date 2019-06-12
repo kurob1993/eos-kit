@@ -78,5 +78,11 @@ trait ReceiveStage
         // mencari yang sent to sap
         return $query->where('stage_id', Stage::failedStage()->id);
     }
+    
+    public function scopeCanceledOnly($query)
+    {
+        // mencari yang sent to sap
+        return $query->where('stage_id', Stage::canceledStage()->id);
+    }
 
 }

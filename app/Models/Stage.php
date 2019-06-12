@@ -66,6 +66,12 @@ class Stage extends Model
         return $query->find(5);
     }
 
+    public function scopeCanceledStage($query)
+    {
+        // NEED TO IMPLEMENT CONFIGURATION
+        return $query->find(6);
+    }
+    
     public function getClassDescriptionAttribute()
     {
         $class = 'default';

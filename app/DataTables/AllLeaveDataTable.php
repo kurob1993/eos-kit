@@ -85,6 +85,7 @@ class AllLeaveDataTable extends DataTable
                         case Stage::successStage()->id: $query->successOnly(); break;
                         case Stage::failedStage()->id: $query->failedOnly(); break;
                         case Stage::deniedStage()->id: $query->deniedOnly(); break;
+                        case Stage::canceledStage()->id: $query->canceledOnly(); break;
                     }
                 }
                 if ($request->has('month_id') && $request->has('year_id')) {
