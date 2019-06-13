@@ -41,9 +41,16 @@ class StructDispController extends Controller
     {
         // menampilkan informasi karyawan
         $employee = $this->findByPersonnel($empnik);
+        $disp = StructDisp::where('empnik',$empnik)
+            ->selfStruct()
+            ->get();
+
+        $disp->transform(function ($item, $key) use ($employee) {
+            return array_add($employee->toArray(),'divisi',$item->minDivisi());
+        });
 
         if (!is_null($employee))
-            return $employee;
+            return $disp;
         else
             return []; 
     
