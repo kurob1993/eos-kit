@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AttendanceSapResponses;
 
 class AttendanceSoapController extends Controller
 {
@@ -22,8 +23,8 @@ class AttendanceSoapController extends Controller
             'PERNR' => 2,
             'SUBTY_TEXT' => 'Training (internal)',
             'SUBTY' => '0110',
-            'ENDDA' => '20190501',
-            'BEGDA' => '20190501'
+            'ENDDA' => '20190505',
+            'BEGDA' => '20190505'
         );
 
         // foreach ($absence->get() as $key => $value) {
@@ -58,11 +59,36 @@ class AttendanceSoapController extends Controller
 
             $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $xml_string);
             $xml=simplexml_load_string($response) or die("Error: Cannot create object");
-            print_r($xml->SOAPBody->ns0MT_ATTENDANCE_RESPONSE->RESPONSE);  
+            $RESPONSE = $xml->SOAPBody->ns0MT_ATTENDANCE_RESPONSE->RESPONSE;
+
+            if($RESPONSE->STATUS == 1){
+                $this->success($RESPONSE);
+            }else{
+                $this->error($RESPONSE);
+            }
         }
         catch(Exception $e) {
             die($e->getMessage());
         }
+    }
+
+    public function success($response)
+    {
+        $asr = new AttendanceSapResponses();
+        $asr->reqno = $response->REQNO;
+        $asr->pernr = $response->PERNR;
+        $asr->status = $response->STATUS;
+        $asr->save();
+    }
+
+    public function error($response)
+    {
+        $asr = new AttendanceSapResponses();
+        $asr->reqno = $response->REQNO;
+        $asr->pernr = $response->PERNR;
+        $asr->status = $response->STATUS;
+        $asr->desc = $response->DESC;
+        $asr->save();
     }
 
     public function debug($data)
