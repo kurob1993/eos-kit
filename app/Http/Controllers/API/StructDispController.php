@@ -50,7 +50,7 @@ class StructDispController extends Controller
         });
 
         if (!is_null($employee))
-            return $disp;
+            return $disp[0];
         else
             return []; 
     
