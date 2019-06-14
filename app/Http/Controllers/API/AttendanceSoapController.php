@@ -5,39 +5,32 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\AttendanceSapResponses;
+use App\Models\Attendance;
 
 class AttendanceSoapController extends Controller
 {
     public function index()
     {
-        // $absence = Absence::where('stage_id','2')
-        // ->where('sendtosap_at', null)
-        // ->limit(1);
+        $attendance = Attendance::where('stage_id','2')
+        ->where('sendtosap_at', null)
+        ->limit(1);
         
-        // if($absence->count() == 0){
-        //     dd('Tidak Ada Data');
-        // }
+        if($attendance->count() == 0){
+            dd('Tidak Ada Data');
+        }
 
-        $data = array(
-            'REQNO' => 1,
-            'PERNR' => 2,
-            'SUBTY_TEXT' => 'Training (internal)',
-            'SUBTY' => '0110',
-            'ENDDA' => '20190505',
-            'BEGDA' => '20190505'
-        );
-
-        // foreach ($absence->get() as $key => $value) {
-        //     $ab = array(
-        //         'REQNO'=> "$value->id",
-        //         'PERNR'=> "$value->personnel_no",
-        //         'SUBTY'=> $value->absenceType->subtype,
-        //         'SUBTY_TEXT'=> $value->absenceType->text,
-        //         'ENDDA'=> $value->end_date->format('Ymd'),
-        //         'BEGDA'=> $value->start_date->format('Ymd')
-        //     );
-        //     array_push($data,$ab);
-        // }
+        $data = [];
+        foreach ($attendance->get() as $key => $value) {
+            $ab = array(
+                'REQNO'=> "$value->id",
+                'PERNR'=> "$value->personnel_no",
+                'SUBTY'=> $value->attendanceType->subtype,
+                'SUBTY_TEXT'=> $value->attendanceType->text,
+                'ENDDA'=> $value->end_date->format('Ymd'),
+                'BEGDA'=> $value->start_date->format('Ymd')
+            );
+            array_push($data,$ab);
+        }
 
         $data = (object) array(
             'HCM_ATTENDANCE' => $data
@@ -79,6 +72,13 @@ class AttendanceSoapController extends Controller
         $asr->pernr = $response->PERNR;
         $asr->status = $response->STATUS;
         $asr->save();
+        
+        if($asr){
+            $att = Attendance::find($response->REQNO*1);
+            $att->stage_id = 3;
+            $att->sendtosap_at = date('Y-m-d');
+            $att->save();
+        }
     }
 
     public function error($response)
@@ -89,6 +89,12 @@ class AttendanceSoapController extends Controller
         $asr->status = $response->STATUS;
         $asr->desc = $response->DESC;
         $asr->save();
+
+        if($asr){
+            $att = Attendance::find($response->REQNO*1);
+            $att->sendtosap_at = date('Y-m-d');
+            $att->save();
+        }
     }
 
     public function debug($data)
