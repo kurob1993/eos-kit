@@ -16,7 +16,7 @@ class AbsenceSoapController extends Controller
         ->limit(1);
         
         if($absence->count() == 0){
-            dd('Tidak Ada Data');
+            return ['response' => 'tidak ada data'];
         }
 
         $data = array();

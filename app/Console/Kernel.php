@@ -30,6 +30,12 @@ class Kernel extends ConsoleKernel
             $client = new Client(['base_uri' => url('') ]);
             $client->request('GET', $url);
         })->everyMinute();
+
+        $schedule->call(function () {
+            $url = config('sapsoap.attendance.api');
+            $client = new Client(['base_uri' => url('') ]);
+            $client->request('GET', $url);
+        })->everyMinute();
     }
 
     /**

@@ -16,7 +16,7 @@ class AttendanceSoapController extends Controller
         ->limit(1);
         
         if($attendance->count() == 0){
-            dd('Tidak Ada Data');
+            return ['response' => 'tidak ada data'];
         }
 
         $data = [];
@@ -40,7 +40,7 @@ class AttendanceSoapController extends Controller
         $options = array(
             'login' => 'SAPWEBAPP',
             'password' => '1234567',
-            'soap_version' => SOAP_1_1, 
+            'soap_version' => SOAP_1_1,
             'trace' => 1,
             'exceptions' => 0
         );
@@ -68,15 +68,15 @@ class AttendanceSoapController extends Controller
     public function success($response)
     {
         $asr = new AttendanceSapResponses();
-        $asr->reqno = $response->REQNO;
-        $asr->pernr = $response->PERNR;
+        $asr->reqno = $response->REQNO*1;
+        $asr->pernr = $response->PERNR*1;
         $asr->status = $response->STATUS;
         $asr->save();
         
         if($asr){
             $att = Attendance::find($response->REQNO*1);
             $att->stage_id = 3;
-            $att->sendtosap_at = date('Y-m-d');
+            $att->sendtosap_at = date('Y-m-d H:i:s');
             $att->save();
         }
     }
@@ -84,15 +84,15 @@ class AttendanceSoapController extends Controller
     public function error($response)
     {
         $asr = new AttendanceSapResponses();
-        $asr->reqno = $response->REQNO;
-        $asr->pernr = $response->PERNR;
+        $asr->reqno = $response->REQNO*1;
+        $asr->pernr = $response->PERNR*1;
         $asr->status = $response->STATUS;
         $asr->desc = $response->DESC;
         $asr->save();
 
         if($asr){
             $att = Attendance::find($response->REQNO*1);
-            $att->sendtosap_at = date('Y-m-d');
+            $att->sendtosap_at = date('Y-m-d H:i:s');
             $att->save();
         }
     }
