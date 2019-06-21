@@ -59,6 +59,7 @@ class SecOvertimeDataTable extends DataTable
                         case Stage::successStage()->id: $query->successOnly(); break;
                         case Stage::failedStage()->id: $query->failedOnly(); break;
                         case Stage::deniedStage()->id: $query->deniedOnly(); break;
+                        case Stage::cancelledStage()->id: $query->cancelledOnly(); break;
                     }
                 } 
             }, true);

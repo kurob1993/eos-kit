@@ -66,6 +66,12 @@ class Stage extends Model
         return $query->find(5);
     }
 
+    public function scopeCancelledStage($query)
+    {
+        // NEED TO IMPLEMENT CONFIGURATION
+        return $query->find(6);
+    }
+    
     public function getClassDescriptionAttribute()
     {
         $class = 'default';
@@ -85,6 +91,9 @@ class Stage extends Model
             break;
             case Stage::deniedStage()->id:
                 $class = 'danger';
+            break;
+            case Stage::cancelledStage()->id:
+                $class = 'warning';
             break;
         }
 

@@ -11,6 +11,11 @@ class OrgUnit extends Model
     public $incrementing = false;
     public $timestamps = false;
 
+    public function orgText()
+    {
+        return $this->hasOne('App\Models\SAP\OrgText','ObjectID','ObjectID');
+    }
+
     public function scopeAtas($query)
     {
         $query->where('S', 'A');

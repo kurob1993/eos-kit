@@ -44,10 +44,10 @@ trait PeriodDates
         // WHERE (start_date <= $s AND end_date >= $s) 
         // OR (start_date <= $e AND end_date >= $e)
         return $query->where(function ($query) use($s){ 
-            $query->where('start_date', '<=', $s)->where('end_date', '>=', $s);
+            $query->where('start_date', '>=', $s)->orWhere('end_date', '>=', $s);
         })
-        ->orWhere(function ($query) use($e){ 
-            $query->where('start_date', '<=', $e)->where('end_date', '>=', $e); 
+        ->where(function ($query) use($e){ 
+            $query->where('start_date', '<=', $e)->orWhere('end_date', '<=', $e); 
         }); 
     }
 

@@ -34,6 +34,13 @@ trait ReceiveStage
             true : false;
     }
 
+    public function getIsCancelledAttribute()
+    {
+        // apakah absence ini tahapnya cancelled
+        return ($this->stage_id == Stage::cancelledStage()->id) ?
+            true : false;
+    }
+    
     public function getIsWaitingApprovalAttribute()
     {
         // apakah tahapnya waiting approval
@@ -77,6 +84,12 @@ trait ReceiveStage
     {
         // mencari yang sent to sap
         return $query->where('stage_id', Stage::failedStage()->id);
+    }
+    
+    public function scopeCancelledOnly($query)
+    {
+        // mencari yang sent to sap
+        return $query->where('stage_id', Stage::cancelledStage()->id);
     }
 
 }

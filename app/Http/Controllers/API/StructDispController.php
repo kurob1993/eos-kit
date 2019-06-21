@@ -20,25 +20,37 @@ class StructDispController extends Controller
     {
         $per_page = isset($request->per_page) ? $request->per_page : 15;
 
-        $paginated = StructDisp::select(
-            'empnik as personnel_no',
-            'empname as name',
-            'emppersk as esgrp',
-            'empkostl as cost_ctr',
-            'emppostx as position_name',
-            'emportx as org_unit_name',
-            'emp_hrp1000_o_short as kode_unit'
-            )->selfStruct()->paginate($per_page);
-        return $paginated;
+        $disp = StructDisp::selfStruct()->paginate($per_page);
+        $disp->transform(function ($item, $key) {
+            $emp = StructDisp::select(
+                'empnik as personnel_no',
+                'empname as name',
+                'emppersk as esgrp',
+                'empkostl as cost_ctr',
+                'emppostx as position_name',
+                'emportx as org_unit_name',
+                'emp_hrp1000_o_short as kode_unit',
+                'emporid'
+                )->where('empnik',$item->empnik)->first();
+            return array_add($emp->toArray(),'divisi',$emp->minDivisi());
+        });
+        return $disp;
     }
 
     public function show($empnik)
     {
         // menampilkan informasi karyawan
         $employee = $this->findByPersonnel($empnik);
+        $disp = StructDisp::where('empnik',$empnik)
+            ->selfStruct()
+            ->get();
+
+        $disp->transform(function ($item, $key) use ($employee) {
+            return array_add($employee->toArray(),'divisi',$item->minDivisi());
+        });
 
         if (!is_null($employee))
-            return $employee;
+            return $disp[0];
         else
             return []; 
     

@@ -10,7 +10,7 @@ class FamilyController extends Controller
     protected function findByPersonnel($personnel_no)
     {
         return Employee::findByPersonnel($personnel_no)
-            ->with('families:PERNR,FAMSA,T591S_STEXT,FCNAM,FGBDT,FGBOT,FASEX_DESC')
+            ->with('families:PERNR,FAMSA,T591S_STEXT,FCNAM,FGBDT,FGBOT,FASEX_DESC,KDZUG as REIMBURSEMENT')
             ->first();
     }
 
