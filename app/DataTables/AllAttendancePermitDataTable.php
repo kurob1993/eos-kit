@@ -43,9 +43,12 @@ class AllAttendancePermitDataTable extends DataTable
                         ]) . '<br />';
                 return $a;
             })
-            ->editColumn('attachment', function (Attendance $attendance){
-                return '<img class="center-block img-responsive" src="' 
-                    . Storage::url($attendance->attachment) . '">';
+            ->editColumn('attachment', function (Attendance $attendance){                
+                return '<img class="center-block img-responsive" src="'.
+                        config('app.url').
+                        "/storage/".
+                        $attendance->attachment.
+                    '">';
             })
             ->addColumn('duration', function(Attendance $attendance){
                 return $attendance->duration . ' hari';

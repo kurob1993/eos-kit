@@ -44,8 +44,11 @@ class AllAbsencePermitDataTable extends DataTable
                 return $a;
             })
             ->editColumn('attachment', function (Absence $absence){
-                return '<img class="center-block img-responsive" src="' 
-                    . Storage::url($absence->attachment) . '">';
+                return '<img class="center-block img-responsive" src="'.
+                            config('app.url').
+                            "/storage/".
+                            $absence->attachment.
+                        '">';
             })
             ->addColumn('duration', function(Absence $absence){
                 return $absence->duration . ' hari';
