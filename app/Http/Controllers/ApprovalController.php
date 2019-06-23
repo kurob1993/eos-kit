@@ -149,11 +149,15 @@ class ApprovalController extends Controller
                 })
                 ->editColumn('permit.attachment', function ($aa) {
                     if (str_is("*pdf", $aa->permit->attachment)) {
-                        $x = '<a href="' . config('app.url'). "/" .$aa->permit->attachment . '"
+                        $x = '<a href="' . config('app.url'). 
+                        "/storage/" .
+                        $aa->permit->attachment . '"
                     class="btn btn-primary" target="_blank">View</a>';
                     } else {
                         $x = '<img class="center-block img-responsive"
-                    src="' . config('app.url'). "/" .$aa->permit->attachment . '" alt="">';
+                        src="' . config('app.url').
+                        "/storage/".
+                        $aa->permit->attachment . '" alt="">';
                     }
                     return $x;
                 })
