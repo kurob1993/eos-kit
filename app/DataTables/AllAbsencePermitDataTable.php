@@ -44,7 +44,8 @@ class AllAbsencePermitDataTable extends DataTable
                 return $a;
             })
             ->editColumn('attachment', function (Absence $absence){
-                return '<img class="center-block img-responsive" src="'.
+                return '<img class="center-block img-responsive" 
+                            style="width : 250px" src="'.
                             config('app.url').
                             "/storage/".
                             $absence->attachment.

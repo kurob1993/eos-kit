@@ -44,7 +44,8 @@ class AllAttendancePermitDataTable extends DataTable
                 return $a;
             })
             ->editColumn('attachment', function (Attendance $attendance){                
-                return '<img class="center-block img-responsive" src="'.
+                return '<img class="center-block img-responsive" 
+                        style="width : 250px src="'.
                         config('app.url').
                         "/storage/".
                         $attendance->attachment.
