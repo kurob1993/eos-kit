@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () {
             $url = config('sapsoap.absence.api');
-            $client = new Client(['base_uri' => url('') ]);
+            $client = new Client(['base_uri' => config('app.url') ]);
             $client->request('GET', $url);
         })->everyMinute();
     }
