@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\AttendanceSapResponses;
 use App\Models\Attendance;
+use Carbon\Carbon;
 
 class AttendanceSoapController extends Controller
 {
@@ -74,9 +75,10 @@ class AttendanceSoapController extends Controller
         $asr->save();
         
         if($asr){
+            $mytime = Carbon::now();
             $att = Attendance::find($response->REQNO*1);
             $att->stage_id = 3;
-            $att->sendtosap_at = date('Y-m-d H:i:s');
+            $att->sendtosap_at = $mytime->toDateTimeString();
             $att->save();
         }
     }
@@ -90,9 +92,10 @@ class AttendanceSoapController extends Controller
         $asr->desc = $response->DESC;
         $asr->save();
 
-        if($asr){
+        if($asr && $asr->pernr !== 0){
+            $mytime = Carbon::now();
             $att = Attendance::find($response->REQNO*1);
-            $att->sendtosap_at = date('Y-m-d H:i:s');
+            $att->sendtosap_at = $mytime->toDateTimeString();
             $att->save();
         }
     }

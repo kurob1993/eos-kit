@@ -30,3 +30,34 @@
 
     // route untuk manage daftar semua lembur
     Route::resource('all_overtimes', 'AllOvertimeController', ['only' => ['index']]);
+
+    //route untuk manage data yang dikirim ke sap
+    Route::prefix('sendtosap')->group(function () {
+        Route::resource('absence', 'SendToSapAbsenceController', [
+            'parameters'=> [
+                'absence' => 'id'
+            ],
+            'names' => [
+                'index' => 'sendtosap.absence.index',
+                'show' => 'sendtosap.absence.show',
+                'create' => 'sendtosap.absence.create',
+                'update' => 'sendtosap.absence.update',
+                'destroy' => 'sendtosap.absence.destroy',
+                'edit' => 'sendtosap.absence.edit'
+            ]
+        ]);
+        Route::resource('attendance', 'SendToSapAttendanceController', [
+            'parameters'=> [
+                'attendance' => 'id'
+            ],
+            'names' => [
+                'index' => 'sendtosap.attendance.index',
+                'show' => 'sendtosap.attendance.show',
+                'create' => 'sendtosap.attendance.create',
+                'update' => 'sendtosap.attendance.update',
+                'destroy' => 'sendtosap.attendance.destroy',
+                'edit' => 'sendtosap.attendance.edit'
+            ]
+        ]);
+    });
+    
