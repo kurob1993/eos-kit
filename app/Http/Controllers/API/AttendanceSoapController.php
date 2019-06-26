@@ -37,13 +37,23 @@ class AttendanceSoapController extends Controller
             'HCM_ATTENDANCE' => $data
         );
 
-        $url = config('sapsoap.attendance.url');
+        $context = stream_context_create([
+            'ssl' => [
+                // set some SSL/TLS specific options
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            ]
+        ]);
+
+        $url = asset('wsdl/SI_ATTENDANCE.WSDL');
         $options = array(
             'login' => 'SAPWEBAPP',
             'password' => '1234567',
             'soap_version' => SOAP_1_1,
             'trace' => 1,
-            'exceptions' => 0
+            'exceptions' => 0,
+            'stream_context' => $context
         );
 
         try {
