@@ -1,0 +1,4 @@
+<SOAP:Envelope xmlns:SOAP="http://schemas.xmlsoap.org/soap/envelope/">
+<SOAP:Body>
+<ns0:MT_ATTENDANCE_RESPONSE xmlns:ns0="http://HCM_ATTENDANCE"><RESPONSE><REQNO>0000000270</REQNO><PERNR>00011790</PERNR><STATUS>1</STATUS></RESPONSE></ns0:MT_ATTENDANCE_RESPONSE></SOAP:Body>
+</SOAP:Envelope>

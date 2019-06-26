@@ -6,10 +6,9 @@ use Session;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
-use App\Models\AbsenceSapResponse;
-use App\Models\Absence;
+use App\Models\Attendance;
 
-class SendToSapController extends Controller
+class SendToSapAttendanceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,51 +18,55 @@ class SendToSapController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $absence = Absence::where('stage_id','2')
+        $attendance = Attendance::where('stage_id','2')
         ->where('sendtosap_at','<>',null);
 
         if(isset($request->search['value'])){
-            $absence->where(function($query) use ($request) {
+            $attendance->where(function($query) use ($request) {
                 $query->orWhere('personnel_no','like', '%' . $request->search['value'] .'%' )
                 ->orWhereHas('user', function ($query) use ($request) {
                     $query->where('name','like', '%' . $request->search['value'] .'%');
                 })
-                ->orWhereHas('absenceSapResponse', function ($query) use ($request) {
+                ->orWhereHas('attendanceSapResponse', function ($query) use ($request) {
                     $query->where('desc','like', '%' . $request->search['value'] .'%');
                 });
-            })->toSql();
+            });
         }
         
         // response untuk datatables absences
         if ($request->ajax()) {
 
-            return Datatables::of($absence)
-                ->editColumn('id', function($absence){
-                    return $absence->plain_id;
+            return Datatables::of($attendance)
+                ->editColumn('id', function($attendance){
+                    return $attendance->plain_id;
                 })
-                ->editColumn('name', function($absence){
-                    $nik = '<span class="label label-warning">'.$absence->personnel_no.'</span>';
-                    return $nik.' '.$absence->user['name'];
+                ->editColumn('name', function($attendance){
+                    $nik = '<span class="label label-warning">'.$attendance->personnel_no.'</span>';
+                    return $nik.' '.$attendance->user['name'];
                 })
-                ->editColumn('absence_type_id', function($absence){
-                    return $absence->absenceType['text'];
+                ->editColumn('absence_type_id', function($attendance){
+                    return $attendance->attendanceType['text'];
                 })
-                ->addColumn('duration', function($absence){
-                    $s = $absence->formatted_start_date;
-                    $e = $absence->formatted_end_date;
-                    $d = '<span class="label label-success">'.$absence->duration.' hari</span>';
+                ->addColumn('duration', function($attendance){
+                    $s = $attendance->formatted_start_date;
+                    $e = $attendance->formatted_end_date;
+                    $d = '<span class="label label-success">'.$attendance->duration.' hari</span>';
                     return $d.' <br> '.$s.' <br> '.$e;
                 }) 
-                ->addColumn('status', function($absence){
+                ->addColumn('status', function($attendance){
                     return '<span class="label label-danger"> Error Send to SAP</span>';
                 }) 
-                ->addColumn('desc', function($absence){
-                    $status = $absence->absenceSapResponse;
+                ->addColumn('desc', function($attendance){
+                    $status = $attendance->attendanceSapResponse;
                     return $status->count() > 0 ? $status->last()->desc : ' - ';
                 }) 
-                ->addColumn('action', function($absence){
-                    return view('sendtosap._action-button',$absence);
-                }) 
+                ->addColumn('action', function($attendance){
+                    $data = [
+                        'route' => 'sendtosap.attendance',
+                        'data' => $attendance
+                    ];
+                    return view('sendtosap._action-button',$data);
+                })
                 ->escapeColumns([0,1,2])
                 ->make(true);
         }
@@ -138,7 +141,8 @@ class SendToSapController extends Controller
             ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('sendtosap.index')->with(compact('html', 'absences'));
+        $data = ['switch' => 'sendtosap.absence.index','button'=>'absence','title'=>'attendance'];
+        return view('sendtosap.index')->with(compact('html', 'absences','data'));
     }
 
     /**
@@ -193,10 +197,10 @@ class SendToSapController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $absence = Absence::find($id);
+        $absence = Attendance::find($id);
         $absence->sendtosap_at = null;
         $absence->save();
-
+        
         Session::flash("flash_notification", [
             "level" => "success",
             "message" => "Data berhasil dimasukan ke dalam antrian untuk di preoses ulang.",
@@ -213,7 +217,7 @@ class SendToSapController extends Controller
      */
     public function destroy($id)
     {
-        $absence = Absence::find($id);
+        $absence = Attendance::find($id);
         $absence->stage_id = 4;
         $absence->save();
 

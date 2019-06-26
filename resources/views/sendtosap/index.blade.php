@@ -7,12 +7,13 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-6">
-                <h4 class="panel-title" style="display: inline-block">Send To SAP (Absence)</h4>
+                <h4 class="panel-title" style="display: inline-block">Send To SAP ({{$data['title']}})</h4>
             </div>
             <div class="col-sm-6" style="display: inline-block">
                 <div class="pull-right">
-                    switch to : 
-                    <button class="btn btn-danger btn-xs form-inline">Attendance</button>
+                    switch to :
+                    <a class="btn btn-danger btn-xs form-inline"
+                    href="{{ route( $data['switch'] ) }}" >{{ $data['button']}}</a>
                 </div>
             </div>
         </div>

@@ -47,6 +47,12 @@ class Attendance extends Model
         return $this->belongsTo('App\Models\Employee', 'personnel_no', 'personnel_no');
     }    
 
+    public function attendanceSapResponse()
+    {
+        // many-to-one relationship dengan AttendanceSapResponse
+        return $this->hasMany('App\Models\AttendanceSapResponse','reqno');
+    }
+
     public function attendanceType()
     {
         // many-to-one relationship dengan AttendanceType

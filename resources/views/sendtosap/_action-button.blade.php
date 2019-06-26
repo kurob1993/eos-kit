@@ -1,4 +1,4 @@
-<form action="{{ route('sendtosap.destroy',$id) }}" method="POST">
+<form action="{{ route($route.'.destroy',$data->id) }}" method="POST">
     {{ csrf_field() }}
     {{ method_field('DELETE') }}
     <button class="btn btn-danger btn-xs m-2">
@@ -7,7 +7,7 @@
     </button>
 </form>
 
-<form action="{{ route('sendtosap.update',$id) }}" method="POST">
+<form action="{{ route($route.'.update',$data->id) }}" method="POST">
     {{ csrf_field() }}
     {{ method_field('PATCH') }}
     <button class="btn btn-primary btn-xs m-2">

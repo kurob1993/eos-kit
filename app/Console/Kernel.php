@@ -26,8 +26,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call('App\Http\Controllers\API\AbsenceSoapController@index')
-        ->everyMinute();
+        $schedule->call('App\Http\Controllers\API\AbsenceSoapController@index')->everyMinute();
+        $schedule->call('App\Http\Controllers\API\AttendanceSoapController@index')->everyMinute();
     }
 
     /**
