@@ -136,7 +136,7 @@
     </wsdl:binding>
     <wsdl:service name="SI_ATTENDANCEService">
         <wsdl:port name="SI_ATTENDANCEPort" binding="p1:SI_ATTENDANCEBinding">
-            <soap:address location="http://10.10.3.99:50200/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=WEB_SAP&amp;Interface=http%3A%2F%2FHCM_ATTENDANCE%5ESI_ATTENDANCE" 
+            <soap:address location="http://10.10.3.99:50000/sap/xi/engine?type=entry&amp;version=3.0&amp;Sender.Service=WEB_SAP&amp;Interface=http%3A%2F%2FHCM_ATTENDANCE%5ESI_ATTENDANCE" 
                 xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
         </wsdl:port>
     </wsdl:service>
