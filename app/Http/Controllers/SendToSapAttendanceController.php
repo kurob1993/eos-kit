@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\Attendance;
+use App\Exports\SendToSapAttendanceExport; 
+use Maatwebsite\Excel\Facades\Excel;
 
 class SendToSapAttendanceController extends Controller
 {
@@ -141,7 +143,19 @@ class SendToSapAttendanceController extends Controller
             ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        $data = ['switch' => 'sendtosap.absence.index','button'=>'absence','title'=>'attendance'];
+        $data = [
+            'switch' => 'sendtosap.absence.index',
+            'download' => 'sendtosap.attendance.download',
+            'button'=>'absence',
+            'title'=>'attendance',
+            'yearList' => Attendance::where('stage_id','2')
+                            ->where('sendtosap_at','<>',null)
+                            ->foundYear()->get(),
+
+            'monthList' => Attendance::where('stage_id','2')
+                            ->where('sendtosap_at','<>',null)
+                            ->foundMonth()->get()
+        ];
         return view('sendtosap.index')->with(compact('html', 'absences','data'));
     }
 
@@ -227,5 +241,19 @@ class SendToSapAttendanceController extends Controller
         ]);
 
         return redirect()->back();
+    }
+
+    public function download(Request $request) 
+    {
+        ob_end_clean();
+        ob_start(); 
+
+        $bulan = (int)$request->month;
+        $tahun = (int)$request->year;
+
+        return (new SendToSapAttendanceExport)
+            ->forMonth($bulan)
+            ->forYear($tahun)
+            ->download('SendToSapAttendance'.$bulan.$tahun.'.xlsx');
     }
 }

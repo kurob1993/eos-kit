@@ -33,6 +33,12 @@
 
     //route untuk manage data yang dikirim ke sap
     Route::prefix('sendtosap')->group(function () {
+        Route::post('absence/download', 'SendToSapAbsenceController@download')
+        ->name('sendtosap.absence.download');
+
+        Route::post('attendance/download', 'SendToSapAttendanceController@download')
+        ->name('sendtosap.attendance.download');
+        
         Route::resource('absence', 'SendToSapAbsenceController', [
             'parameters'=> [
                 'absence' => 'id'
