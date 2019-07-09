@@ -21,7 +21,7 @@
             <td>{{ $value->plain_id }}</td>
             <td>{{ $value->personnel_no }}</td>
             <td>{{ $value->user['name'] }}</td>
-            <td>{{ $value->absenceType['text'] }}</td>
+            <td>{{ $value->$type['text'] }}</td>
             <td>{{ $value->duration }} hari</td>
             <td>{{ $value->formatted_start_date }}</td>
             <td>{{ $value->formatted_end_date }}</td>

@@ -24,13 +24,26 @@ class SendToSapAttendanceController extends Controller
         ->where('sendtosap_at','<>',null);
 
         if(isset($request->search['value'])){
-            $attendance->where(function($query) use ($request) {
-                $query->orWhere('personnel_no','like', '%' . $request->search['value'] .'%' )
-                ->orWhereHas('user', function ($query) use ($request) {
-                    $query->where('name','like', '%' . $request->search['value'] .'%');
+            $cari = explode('|', $request->search['value']);
+            $month = $cari[0];
+            $year = $cari[1];
+            $text = $cari[2];
+
+            if($month){
+                $attendance->whereMonth('start_date',$month);
+            }
+
+            if($year){
+                $attendance->whereYear('start_date',$year);
+            }
+
+            $attendance->where(function($query) use ($text) {
+                $query->orWhere('personnel_no','like', '%' . $text .'%' )
+                ->orWhereHas('user', function ($query) use ($text) {
+                    $query->where('name','like', '%' . $text .'%');
                 })
-                ->orWhereHas('attendanceSapResponse', function ($query) use ($request) {
-                    $query->where('desc','like', '%' . $request->search['value'] .'%');
+                ->orWhereHas('attendanceSapResponse', function ($query) use ($text) {
+                    $query->where('desc','like', '%' . $text .'%');
                 });
             });
         }
@@ -75,8 +88,9 @@ class SendToSapAttendanceController extends Controller
 
         // disable paging, searching, details button but enable responsive
         $htmlBuilder->parameters([
+            'serverSide' => true,
             'paging' => true,
-            'searching' => true,
+            'sDom' => 'tpi',
             'responsive' => [ 'details' => true ],
             "columnDefs" => [ 
                 [ "width" => "12%", "targets" => 0 ],

@@ -35,7 +35,8 @@ class SendToSapAttendanceExport implements FromView
                             ->where('stage_id','2')
                             ->where('sendtosap_at','<>',null)
                             ->get(),
-            'relasi' => 'attendanceSapResponse'
+            'relasi' => 'attendanceSapResponse',
+            'type' => 'attendanceType'
         ]);
     }
 }

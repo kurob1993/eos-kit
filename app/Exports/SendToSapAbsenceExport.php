@@ -35,7 +35,8 @@ class SendToSapAbsenceExport implements FromView
                             ->where('stage_id','2')
                             ->where('sendtosap_at','<>',null)
                             ->get(),
-            'relasi' => 'absenceSapResponse'
+            'relasi' => 'absenceSapResponse',
+            'type' => 'absenceType'
         ]);
     }
 }
