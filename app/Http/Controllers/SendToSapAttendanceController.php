@@ -170,7 +170,7 @@ class SendToSapAttendanceController extends Controller
                             ->where('sendtosap_at','<>',null)
                             ->foundMonth()->get()
         ];
-        return view('sendtosap.index')->with(compact('html', 'absences','data'));
+        return view('sendtosap.index')->with(compact('html', 'attendance','data'));
     }
 
     /**
