@@ -42,3 +42,39 @@
         ->name('transition.employee');
     
     Route::resource('transition', 'TransitionController');
+    
+    //route untuk manage data yang dikirim ke sap
+    Route::prefix('sendtosap')->group(function () {
+        Route::post('absence/download', 'SendToSapAbsenceController@download')
+        ->name('sendtosap.absence.download');
+
+        Route::post('attendance/download', 'SendToSapAttendanceController@download')
+        ->name('sendtosap.attendance.download');
+        
+        Route::resource('absence', 'SendToSapAbsenceController', [
+            'parameters'=> [
+                'absence' => 'id'
+            ],
+            'names' => [
+                'index' => 'sendtosap.absence.index',
+                'show' => 'sendtosap.absence.show',
+                'create' => 'sendtosap.absence.create',
+                'update' => 'sendtosap.absence.update',
+                'destroy' => 'sendtosap.absence.destroy',
+                'edit' => 'sendtosap.absence.edit'
+            ]
+        ]);
+        Route::resource('attendance', 'SendToSapAttendanceController', [
+            'parameters'=> [
+                'attendance' => 'id'
+            ],
+            'names' => [
+                'index' => 'sendtosap.attendance.index',
+                'show' => 'sendtosap.attendance.show',
+                'create' => 'sendtosap.attendance.create',
+                'update' => 'sendtosap.attendance.update',
+                'destroy' => 'sendtosap.attendance.destroy',
+                'edit' => 'sendtosap.attendance.edit'
+            ]
+        ]);
+    });

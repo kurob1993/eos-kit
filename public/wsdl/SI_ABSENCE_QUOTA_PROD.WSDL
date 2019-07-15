@@ -133,7 +133,7 @@
     
     <wsdl:service name="SI_ABSENCE_QUOTAService">
         <wsdl:port name="SI_ABSENCE_QUOTAPort" binding="p1:SI_ABSENCE_QUOTABinding">
-            <soap:address location="http://eos.krakatausteel.com/api/sap/absenceQuota?WSDL" 
+            <soap:address location="https://portal.krakatausteel.com/eos/api/sap/absenceQuota?WSDL" 
                 xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"/>
         </wsdl:port>
     </wsdl:service>

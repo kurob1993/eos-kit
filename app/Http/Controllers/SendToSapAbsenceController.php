@@ -8,8 +8,10 @@ use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\AbsenceSapResponse;
 use App\Models\Absence;
+use App\Exports\SendToSapAbsenceExport;
+use Maatwebsite\Excel\Facades\Excel;
 
-class SendToSapController extends Controller
+class SendToSapAbsenceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,15 +25,28 @@ class SendToSapController extends Controller
         ->where('sendtosap_at','<>',null);
 
         if(isset($request->search['value'])){
-            $absence->where(function($query) use ($request) {
-                $query->orWhere('personnel_no','like', '%' . $request->search['value'] .'%' )
-                ->orWhereHas('user', function ($query) use ($request) {
-                    $query->where('name','like', '%' . $request->search['value'] .'%');
+            $cari = explode('|', $request->search['value']);
+            $month = $cari[0];
+            $year = $cari[1];
+            $text = $cari[2];
+
+            if($month){
+                $absence->whereMonth('start_date',$month);
+            }
+
+            if($year){
+                $absence->whereYear('start_date',$year);
+            }
+
+            $absence->where(function($query) use ($text) {
+                $query->orWhere('personnel_no','like', '%' . $text .'%' )
+                ->orWhereHas('user', function ($query) use ($text) {
+                    $query->where('name','like', '%' . $text .'%');
                 })
-                ->orWhereHas('absenceSapResponse', function ($query) use ($request) {
-                    $query->where('desc','like', '%' . $request->search['value'] .'%');
+                ->orWhereHas('absenceSapResponse', function ($query) use ($text) {
+                    $query->where('desc','like', '%' . $text .'%');
                 });
-            })->toSql();
+            });
         }
         
         // response untuk datatables absences
@@ -62,16 +77,22 @@ class SendToSapController extends Controller
                     return $status->count() > 0 ? $status->last()->desc : ' - ';
                 }) 
                 ->addColumn('action', function($absence){
-                    return view('sendtosap._action-button',$absence);
-                }) 
+                    $data = [
+                        'route' => 'sendtosap.absence',
+                        'data' => $absence
+                    ];
+                    return view('sendtosap._action-button',$data);
+                })
                 ->escapeColumns([0,1,2])
                 ->make(true);
         }
 
         // disable paging, searching, details button but enable responsive
         $htmlBuilder->parameters([
+            'serverSide' => true,
             'paging' => true,
-            'searching' => true,
+            'ordering'=> true,
+            'sDom' => 'tpi',
             'responsive' => [ 'details' => true ],
             "columnDefs" => [ 
                 [ "width" => "12%", "targets" => 0 ],
@@ -138,7 +159,20 @@ class SendToSapController extends Controller
             ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('sendtosap.index')->with(compact('html', 'absences'));
+        $data = [
+            'switch' => 'sendtosap.attendance.index',
+            'download' => 'sendtosap.absence.download',
+            'button'=>'attendance',
+            'title'=>'absence',
+            'yearList' => Absence::where('stage_id','2')
+                            ->where('sendtosap_at','<>',null)
+                            ->foundYear()->get(),
+
+            'monthList' => Absence::where('stage_id','2')
+                            ->where('sendtosap_at','<>',null)
+                            ->foundMonth()->get()
+        ];
+        return view('sendtosap.index')->with(compact('html', 'absence','data'));
     }
 
     /**
@@ -196,7 +230,7 @@ class SendToSapController extends Controller
         $absence = Absence::find($id);
         $absence->sendtosap_at = null;
         $absence->save();
-
+        
         Session::flash("flash_notification", [
             "level" => "success",
             "message" => "Data berhasil dimasukan ke dalam antrian untuk di preoses ulang.",
@@ -223,5 +257,19 @@ class SendToSapController extends Controller
         ]);
 
         return redirect()->back();
+    }
+
+    public function download(Request $request) 
+    {
+        ob_end_clean();
+        ob_start(); 
+
+        $bulan = (int)$request->month;
+        $tahun = (int)$request->year;
+
+        return (new SendToSapAbsenceExport)
+            ->forMonth($bulan)
+            ->forYear($tahun)
+            ->download('SendToSapAbsence'.$bulan.$tahun.'.xlsx');
     }
 }

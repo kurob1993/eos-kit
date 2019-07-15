@@ -43,9 +43,13 @@ class AllAttendancePermitDataTable extends DataTable
                         ]) . '<br />';
                 return $a;
             })
-            ->editColumn('attachment', function (Attendance $attendance){
-                return '<img class="center-block img-responsive" src="' 
-                    . Storage::url($attendance->attachment) . '">';
+            ->editColumn('attachment', function (Attendance $attendance){                
+                return '<img class="center-block img-responsive" 
+                        style="width : 250px src="'.
+                        config('app.url').
+                        "/storage/".
+                        $attendance->attachment.
+                    '">';
             })
             ->addColumn('duration', function(Attendance $attendance){
                 return $attendance->duration . ' hari';
@@ -84,6 +88,7 @@ class AllAttendancePermitDataTable extends DataTable
                         case Stage::successStage()->id: $query->successOnly(); break;
                         case Stage::failedStage()->id: $query->failedOnly(); break;
                         case Stage::deniedStage()->id: $query->deniedOnly(); break;
+                        case Stage::cancelledStage()->id: $query->cancelledOnly(); break;
                     }
                 } 
                 if ($request->has('month_id') && $request->has('year_id')) {

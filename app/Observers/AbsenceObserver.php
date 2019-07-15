@@ -49,12 +49,13 @@ class AbsenceObserver
 
         // apakah tanggal absence sudah pernah dilakukan sebelumnya (intersection)
         // HARUS DITAMBAHKAN APABILA dari masing-masing intersected statusnya DENIED
-        // JIKA DENIED tidak termasuk intersected
+        // JIKA DENIED(5) dan CANCELLED(6) tidak termasuk intersected
         $intersected = Absence::where('personnel_no', $absence->personnel_no)
+            ->whereNotIn('stage_id',[5,6])
             ->intersectWith($absence->start_date, $absence->end_date)
             ->first();
             
-        if ( $intersected && !$intersected->is_denied ) {
+        if ( $intersected ) {
             Session::flash("flash_notification", [
                 "level" => "danger",
                 "message" => "Tidak dapat melakukan pengajuan pada tanggal tersebut "

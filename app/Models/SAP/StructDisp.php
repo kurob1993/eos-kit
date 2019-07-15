@@ -265,4 +265,27 @@ class StructDisp extends Model
         $select2 = ['results'=>$results,'pagination'=>['more'=>$morePages]];
         return response()->json($select2);
     }
+    
+    /************** End of boss function ************* */
+
+    //show minimal divisi
+    public function minDivisi($ObjectId = null)
+    {
+        $ObjectId = $ObjectId == null ?  $this->emporid : $ObjectId;
+
+        $org = OrgUnit::findByObjectID($ObjectId)
+		->currentPeriod()
+		->first();
+
+		if($org){
+			$name = strtolower($org->orgText->Objectname);
+			if ( str_is('divisi*',$name) || str_is('subdit*',$name) ||
+				str_is('direktorat*',$name) || str_is('krakatau steel',$name)
+			)
+				return $org->orgText->Objectname;
+			else
+				return $this->minDivisi($org->parent->ObjectID);
+		}
+		return $org;
+    }
 }

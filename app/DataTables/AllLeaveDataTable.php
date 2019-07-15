@@ -53,13 +53,14 @@ class AllLeaveDataTable extends DataTable
                 } else if ($absence->is_sent_to_sap) {
                     // apakah stage-nya: sent to sap kemudian coba kirim manual
                     // atau dikirim secara otomatis (belum diakomodasi)
-                    return view('components._action-confirm-integrate', [
+                    return view('components._action-delete', [
                         'model' => $absence,
-                        'integrate_url' => route('personnel_service.integrate', [
-                            'id' => $absence->id, 'approval' => 'absence' ] ),
 
-                        'confirm_url' => route('personnel_service.confirm', [
-                            'id' => $absence->id, 'approval' => 'absence' ] ),
+                        // 'integrate_url' => route('personnel_service.integrate', [
+                        //     'id' => $absence->id, 'approval' => 'absence' ] ),
+
+                        // 'confirm_url' => route('personnel_service.confirm', [
+                        //     'id' => $absence->id, 'approval' => 'absence' ] ),
 
                         'delete_url' => route('personnel_service.delete', [
                                 'id' => $absence->id, 'approval' => 'absence' ] )
@@ -84,6 +85,7 @@ class AllLeaveDataTable extends DataTable
                         case Stage::successStage()->id: $query->successOnly(); break;
                         case Stage::failedStage()->id: $query->failedOnly(); break;
                         case Stage::deniedStage()->id: $query->deniedOnly(); break;
+                        case Stage::cancelledStage()->id: $query->cancelledOnly(); break;
                     }
                 }
                 if ($request->has('month_id') && $request->has('year_id')) {

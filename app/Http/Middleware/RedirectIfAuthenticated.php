@@ -17,6 +17,12 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+
+        //hapus session ketika akan login
+        if($request->is('a/*') || $request->is('b/*')){
+            $request->session()->flush();
+        }
+
         if (Auth::guard('secr')->check()) {
             return redirect()->route('secretary.index');
         } else if (Auth::check()) {

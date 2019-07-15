@@ -85,8 +85,14 @@ Route::group(['prefix' => 'personalEmail', 'middleware' => 'api'], function() {
 Route::group(['prefix' => 'sap', 'middleware' => 'api'], function() {
     Route::any('absenceQuota', 'AbsenceQuotaSoapController@index');
     Route::any('absence', 'AbsenceSoapController@index');
+    Route::any('attendance', 'AttendanceSoapController@index');
 });
 
 Route::group(['prefix' => 'personalAddress', 'middleware' => 'api'], function(){
     Route::get('{PERNR}/{ANSSA?}', 'AddressController@show');
+});
+
+Route::group(['prefix' => 'Secretary', 'middleware' => 'api'], function(){
+    Route::get('/', 'SecretaryApiController@index');
+    Route::get('/{id?}', 'SecretaryApiController@show');
 });

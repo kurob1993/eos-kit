@@ -14,7 +14,7 @@
 	<title>{{ config('app.name') }}</title>
 
 	<!-- jQueryUI -->
-	<link href={{ url("/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css") }} rel="stylesheet" />
+	<link href={{ url('/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css') }} rel="stylesheet" />
 	<!-- Bootstrap 3.3.4 -->
 	<link href={{ url("/plugins/bootstrap/css/bootstrap.min.css") }} rel="stylesheet" />
 	<link href={{ url("/plugins/bootstrap/css/BootstrapXL.css") }} rel="stylesheet" />
