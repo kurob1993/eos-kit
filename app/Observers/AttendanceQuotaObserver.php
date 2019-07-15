@@ -40,23 +40,9 @@ class AttendanceQuotaObserver
 
         // karyawan yang membuat attendanceQuota
         $employee = Employee::find($personnel_no);
-
-        $a = ( $employee->sptBossWithDelegation() ) 
-            ? $employee->sptBossWithDelegation()->personnel_no : 0;
-
-        if($a == 0){
-            Session::flash("flash_notification", [
-                "level" => "danger",
-                "message" => "Tidak dapat mengajukan lembur dikarnakan karyawan : (".
-                $employee->personnel_no.") ".$employee->name." tidak memiliki Superintendent,
-                silakan mengajukan peralihan pada HCI&A untuk Superintendent yang terkait dengan
-                karyawan tersebut."
-            ]);
-            return false;
-        }
         
-        $b = ( $employee->managerBossWithDelegation() )
-            ? $employee->managerBossWithDelegation()->personnel_no : 0;
+        $b = ( $employee->minSptBossWithDelegation() )
+            ? $employee->minSptBossWithDelegation()->personnel_no : 0;
 
         if($b == 0){
             Session::flash("flash_notification", [
