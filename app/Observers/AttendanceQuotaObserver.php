@@ -41,8 +41,8 @@ class AttendanceQuotaObserver
         // karyawan yang membuat attendanceQuota
         $employee = Employee::find($personnel_no);
         
-        $b = ( $employee->minSptBossWithDelegation() )
-            ? $employee->minSptBossWithDelegation()->personnel_no : 0;
+        $b = ( $employee->minManagerBossWithDelegation() )
+            ? $employee->minManagerBossWithDelegation()->personnel_no : 0;
 
         if($b == 0){
             Session::flash("flash_notification", [
