@@ -10,6 +10,7 @@ use App\Http\Requests\StoreAbsenceRequest;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\AbsenceQuota;
 use App\Models\SAP\Zhrom0013;
+use App\Models\AbsenceApproval;
 
 class DebugController extends Controller
 {
@@ -24,16 +25,19 @@ class DebugController extends Controller
     }
     public function debug()
     {   
-        $zhrom13 = Zhrom0013::where('nojabatan', 'like','%2252323001%')
-        ->orWhere('namajabatan', 'like','%2252323001%')
-        ->get();
-        dd( $zhrom13 );
+        $approved = AbsenceApproval::find('22437');
+        return $approved->absence->start_date->toDateString();
 
-        $s = new \DateTime('2018-01-06 17:00:00');
-        $e = new \DateTime('2018-01-07 17:00:00');
+        // $zhrom13 = Zhrom0013::where('nojabatan', 'like','%2252323001%')
+        // ->orWhere('namajabatan', 'like','%2252323001%')
+        // ->get();
+        // dd( $zhrom13 );
 
-        $a = new \DateTime('2018-01-06 17:30:00'); // beririsan
-        $b = new \DateTime('2018-01-06 19:00:00'); // beririsan
+        // $s = new \DateTime('2018-01-06 17:00:00');
+        // $e = new \DateTime('2018-01-07 17:00:00');
+
+        // $a = new \DateTime('2018-01-06 17:30:00'); // beririsan
+        // $b = new \DateTime('2018-01-06 19:00:00'); // beririsan
         
         // $x = new \DateTime('2018-01-05 05:00:00'); // tdk
         // $y = new \DateTime('2018-01-06 18:00:00');

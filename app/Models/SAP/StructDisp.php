@@ -265,7 +265,7 @@ class StructDisp extends Model
         $select2 = ['results'=>$results,'pagination'=>['more'=>$morePages]];
         return response()->json($select2);
     }
-    
+
     /************** End of boss function ************* */
 
     //show minimal divisi
@@ -274,8 +274,8 @@ class StructDisp extends Model
         $ObjectId = $ObjectId == null ?  $this->emporid : $ObjectId;
 
         $org = OrgUnit::findByObjectID($ObjectId)
-		->currentPeriod()
-		->first();
+            ->currentPeriod()
+            ->first();
 
 		if($org){
 			$name = strtolower($org->orgText->Objectname);

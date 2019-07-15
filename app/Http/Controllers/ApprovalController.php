@@ -502,9 +502,9 @@ class ApprovalController extends Controller
         $approved = null;
         switch ($module) {
             case 'leave':
-                $approved = AttendanceApproval::find($id);
+                $approved = AbsenceApproval::find($id);
                 if($approved){
-                    $approved =  $approved->attendance;
+                    $approved =  $approved->absence;
                     $start_date = $approved->start_date->toDateString();
                     $end_date = $approved->end_date->toDateString();
                     $strucdisp = $approved->employee->StructDisp->first();
@@ -516,9 +516,9 @@ class ApprovalController extends Controller
                 break;
 
             case 'absence':
-                $approved = AttendanceApproval::find($id);
+                $approved = AbsenceApproval::find($id);
                 if($approved){
-                    $approved =  $approved->attendance;
+                    $approved =  $approved->absence;
                     $start_date = $approved->start_date->toDateString();
                     $end_date = $approved->end_date->toDateString();
                     $strucdisp = $approved->employee->StructDisp->first();
