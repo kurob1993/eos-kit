@@ -44,16 +44,16 @@ class StructDispController extends Controller
         $disp = StructDisp::where('empnik',$empnik)
             ->selfStruct()
             ->get();
-
+        
         $disp->transform(function ($item, $key) use ($employee) {
             return array_add($employee->toArray(),'divisi',$item->minDivisi());
         });
-
-        if (!is_null($employee))
+        
+        if (count($disp) !== 0){
             return $disp[0];
-        else
-            return []; 
-    
+        }
+
+        return []; 
     }
 
     public function showByCostCenter($cost_center)
