@@ -77,3 +77,6 @@
 
     // route untuk wakers
     Route::resource('wakers', 'WakerController', ['only' => 'index']);
+
+    // route activiti report
+    Route::get('activity', 'ActivitiReportController@index')->name('activity.index');
