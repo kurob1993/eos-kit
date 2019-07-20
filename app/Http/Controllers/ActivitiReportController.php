@@ -36,9 +36,10 @@ class ActivitiReportController extends Controller
             'autoWidth' => false,
             'responsive' => true,
             "columnDefs" => [ 
-                [ "width" => "35%", "targets" => 0 ], 
-                [ "width" => "30%", "targets" => 3 ], 
-                [ "width" => "30%", "targets" => 4 ], 
+                [ "width" => "20%", "targets" => 0 ], 
+                [ "width" => "20%", "targets" => 3 ], 
+                [ "width" => "20%", "targets" => 4 ], 
+                [ "width" => "20%", "targets" => 5 ], 
             ]
         ]);
         
@@ -102,21 +103,25 @@ class ActivitiReportController extends Controller
                 'data' => 'ijin',
                 'name' => 'ijin',
                 'title' => 'IJIN',
+                'class'=>'none'
             ])
             ->addColumn([
                 'data' => 'cuti',
                 'name' => 'cuti',
                 'title' => 'CUTI',
+                'class'=>'none'
             ])
             ->addColumn([
                 'data' => 'lain',
                 'name' => 'lain',
                 'title' => 'LAIN',
+                'class'=>'none'
             ])
             ->addColumn([
                 'data' => 'keterangan',
                 'name' => 'keterangan',
                 'title' => 'KETERANGAN',
+                'class'=>'none'
             ]);
 
         return view('activity.index')->with(compact('html', 'activity'));
