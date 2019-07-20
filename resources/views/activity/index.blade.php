@@ -10,14 +10,10 @@
   @include('layouts._flash')
   <div class="panel-body">
     
-      <div class="row m-b-25">
-          <div class="col-sm-3">
+      <div class="row m-b-20">
+          <div class="col-sm-4">
               <label for="month">Data:</label>
-              <select id="month" name="month" class="form-control" required>
-                  <option selected value=""> .:: Select one data ::. </option>
-                  {{-- @foreach ($data['monthList'] as $item)
-                  <option value="{{ $item->month }}"> {{ $item->month }}</option>
-                  @endforeach --}}
+              <select id="data" class="form-control data" required>
               </select>
           </div>
 
@@ -48,7 +44,7 @@
           </div>
       </div>
     
-    <div class="table-responsive">
+    <div class="table-responsive ">
         {!! $html->table(['class'=>'table table-striped', 'width'=>'100%']) !!}
     </div>
   </div>
@@ -74,11 +70,31 @@
 <!-- DataTables -->
 <link href={{ url("/plugins/DataTables/css/jquery.dataTables.min.css") }} rel="stylesheet" />
 <link href={{ url("/plugins/DataTables/Responsive/css/responsive.dataTables.min.css") }} rel="stylesheet" />
+<link rel="stylesheet" href="{{ url('plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ url('plugins/select2/css/select2-bootstrap3.min.css') }}">
 @endpush
 
 @push('plugin-scripts')
 <script src={{ url("/plugins/DataTables/js/jquery.dataTables.min.js") }}></script>
 <script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
+<script src="{{ url('plugins/select2/js/select2.full.min.js') }}"></script>
+
+<script>
+$('#data').select2({
+    theme: "bootstrap",
+    ajax: {
+        url: "http://127.0.0.1:8000/debug",
+        dataType: 'json',
+        data: function(params) {
+            return {
+                term: params.term || '',
+                page: params.page || 1
+            }
+        },
+        cache: true
+    }
+});
+</script>
 <!-- Generated scripts from DataTables -->
 {!! $html->scripts() !!}
 @endpush
