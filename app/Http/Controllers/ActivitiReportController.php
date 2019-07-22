@@ -17,6 +17,21 @@ class ActivitiReportController extends Controller
         $nik = Auth::User()->personnel_no;
         $activity = ActivitiReport::where('Pernr',$nik);
 
+        if(isset($request->search['value'])){
+            $cari = explode('|', $request->search['value']);
+            $month = $cari[0];
+            $year = $cari[1];
+
+            if($month){
+                $activity->whereMonth('tanggal',$month);
+            }
+
+            if($year){
+                $activity->whereYear('tanggal',$year);
+            }
+
+        }
+
         // response untuk datatables absences
         if ($request->ajax()) {
             return Datatables::of($activity)
@@ -60,17 +75,17 @@ class ActivitiReportController extends Controller
                 'title' => 'RULE',
             ])
             ->addColumn([
-                'data' => 'sobeg-soend',
+                'data' => 'sobeg_soend',
                 'name' => 'rencana',
                 'title' => 'RENCANA JAM KERJA',
             ])
             ->addColumn([
-                'data' => 'itime-otime',
+                'data' => 'itime_otime',
                 'name' => 'aktual',
                 'title' => 'AKTUAL JAM KERJA',
             ])
             ->addColumn([
-                'data' => 'beguz-enduz',
+                'data' => 'beguz_enduz',
                 'name' => 'renclembur',
                 'title' => 'RENCANA JAM LEMBUR',
             ])
@@ -123,7 +138,118 @@ class ActivitiReportController extends Controller
                 'title' => 'KETERANGAN',
                 'class'=>'none'
             ]);
+        
+        $data = [
+            'monthList' => ActivitiReport::monthList()->get(),
+            'yearList' => ActivitiReport::yearList()->get(),
+        ];
+        return view('activity.index')->with(compact('html', 'activity', 'data'));
+   }
 
-        return view('activity.index')->with(compact('html', 'activity'));
+   public function list($personnel_no = null)
+   {
+        $nik = $personnel_no;
+        if($nik){
+            $a = scandir('/home/kurob/Documents');
+            $matches  = preg_grep ('/.*_'.$nik.'_.*/i', $a);
+            $res = array();
+            foreach ($matches as $key => $value) {
+                array_push(
+                    $res,
+                    array(
+                        'id' => $key,
+                        'text'=>$value,
+                        'value'=>$value,
+                    )
+                );
+            }
+            return json_encode(
+                array('results' => $res)
+            );
+        }else{
+            return json_encode(
+                array('results' => 
+                    array(
+                        'id' => 0,
+                        'text'=>'tidak ada data',
+                        'value'=>null,
+                    )
+                )
+            );
+        }
+   }
+
+   public function download(Request $request, $file = null)
+   {
+        if($file){
+            $readdir = "/home/kurob/Documents/";
+            $movedir = "/home/kurob/Documents/Archive/";
+            $arfile  = scandir($readdir);
+
+            $data = explode('_',$file);
+            $date = explode('.',$data[2]);
+            $tgl = $date[0];
+            $bulan = date('m',strtotime($tgl));
+            $tahun = date('Y',strtotime($tgl));
+
+            foreach ($arfile as $key => $value) {
+                if($value == $file){ 	
+                    //delete data
+                    $delete = ActivitiReport::whereMonth('tanggal',$bulan)
+                    ->whereYear('tanggal', $tahun)
+                    ->delete();
+
+                    $file_handle = fopen($readdir.$value, "rb");
+                    $i = 1;
+                    while (!feof($file_handle)) {
+                        $line_of_text = fgets($file_handle);
+                        if (strlen($line_of_text)>0) {
+                            $this->tulisfile($line_of_text);
+                        }											
+                        $i++;
+                    }			
+                    fclose($file_handle);
+                }
+            }
+
+            try {
+                copy($readdir.$file, $movedir.$file);
+                unlink($readdir.$file);
+                return array(["response" => "berhasil"]);
+            } catch (\Throwable $th) {
+                return array(["response" => "gagal"]);
+            }
+        }
+   }
+
+   public function tulisfile($teks)
+   {
+        $delimiteriactiviti_report = "|";		
+        $splitcontentsactiviti_report = explode($delimiteriactiviti_report, $teks);	
+
+        try {
+            $simpan = new ActivitiReport();
+            $simpan->Pernr=rtrim($splitcontentsactiviti_report[0]);
+            $simpan->tanggal=rtrim($splitcontentsactiviti_report[1]);
+            $simpan->hari=rtrim($splitcontentsactiviti_report[2]);
+            $simpan->tprog=rtrim($splitcontentsactiviti_report[3]);
+            $simpan->sobeg_soend=rtrim($splitcontentsactiviti_report[4]);
+            $simpan->itime_otime=rtrim($splitcontentsactiviti_report[5]);
+            $simpan->beguz_enduz=rtrim($splitcontentsactiviti_report[6]);
+            $simpan->late=rtrim($splitcontentsactiviti_report[7]);
+            $simpan->wtact=rtrim($splitcontentsactiviti_report[8]);
+            $simpan->otact=rtrim($splitcontentsactiviti_report[9]);
+            $simpan->otaut=rtrim($splitcontentsactiviti_report[10]);
+            $simpan->othit=rtrim($splitcontentsactiviti_report[11]);
+            $simpan->ijin=rtrim($splitcontentsactiviti_report[12]);
+            $simpan->cuti=rtrim($splitcontentsactiviti_report[13]);
+            $simpan->lain=rtrim($splitcontentsactiviti_report[14]);
+            $simpan->keterangan=rtrim($splitcontentsactiviti_report[15]);
+            $simpan->update_at=date('Y-m-d h:i:s');
+            $simpan->save();
+        } catch (\Throwable $th) {
+            return array(["response" => "gagal"]);
+        }
+        
    }
 }

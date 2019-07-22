@@ -25,18 +25,18 @@
               <label for="month">Month:</label>
               <select id="month" name="month" class="form-control" required>
                   <option selected value=""> .:: All Month ::. </option>
-                  {{-- @foreach ($data['monthList'] as $item)
+                  @foreach ($data['monthList'] as $item)
                   <option value="{{ $item->month }}"> {{ $item->month }}</option>
-                  @endforeach --}}
+                  @endforeach
               </select>
           </div>
           <div class="col-sm-2">
               <label for="year">Year:</label>
               <select id="year" name="year" class="form-control" required>
                   <option selected value=""> .:: All Year ::. </option>
-                  {{-- @foreach ($data['yearList'] as $item)
+                  @foreach ($data['yearList'] as $item)
                   <option value="{{ $item->year }}"> {{ $item->year }}</option>
-                  @endforeach --}}
+                  @endforeach
               </select>
           </div>
           <div class="col-sm-2 m-t-25">
@@ -78,12 +78,14 @@
 <script src={{ url("/plugins/DataTables/js/jquery.dataTables.min.js") }}></script>
 <script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
 <script src="{{ url('plugins/select2/js/select2.full.min.js') }}"></script>
-
+<!-- Generated scripts from DataTables -->
+{!! $html->scripts() !!}
 <script>
+var nik = '{{ Auth::user()->personnel_no }}';
 $('#data').select2({
     theme: "bootstrap",
     ajax: {
-        url: "http://127.0.0.1:8000/debug",
+        url: "http://127.0.0.1:8000/activity/list/"+nik,
         dataType: 'json',
         data: function(params) {
             return {
@@ -94,7 +96,22 @@ $('#data').select2({
         cache: true
     }
 });
+
+$("#load").click(function(){
+  var select2 = $('#data').select2('data');
+  if(select2) {
+    $.get("{{ route('activity.download') }}/"+select2[0].text, function(data, status){
+      location.reload();
+    });
+  }
+});
+
+oTable = $('.table').DataTable();
+$('#search').click(function(){
+    var month = $('#month').val();
+    var year = $('#year').val();
+    var cari = month+'|'+year;
+    oTable.search(cari).draw();
+})
 </script>
-<!-- Generated scripts from DataTables -->
-{!! $html->scripts() !!}
 @endpush
