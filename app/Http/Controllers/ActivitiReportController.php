@@ -36,7 +36,7 @@ class ActivitiReportController extends Controller
         if ($request->ajax()) {
             return Datatables::of($activity)
                     ->editColumn('tanggal', function($activity){
-                        $tanggal = date('d . m . Y',strtotime($activity->tanggal));
+                        $tanggal = date('d.m.Y',strtotime($activity->tanggal));
                         return $tanggal;
                     })
                     ->make(true);
@@ -49,6 +49,8 @@ class ActivitiReportController extends Controller
             'ordering'=> true,
             'sDom' => 'tpi',
             'responsive' => true,
+            'autoWidth' => false,
+            'pageLength' => 16,
             "columnDefs" => [ 
                 [ "width" => "20%", "targets" => 0 ], 
                 [ "width" => "20%", "targets" => 3 ], 
@@ -67,7 +69,7 @@ class ActivitiReportController extends Controller
             ->addColumn([
                 'data' => 'hari',
                 'name' => 'hari',
-                'title' => 'HAR,I',
+                'title' => 'HARI',
                 'searchable' => false,
                 ])
             ->addColumn([
