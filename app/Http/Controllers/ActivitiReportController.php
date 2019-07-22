@@ -31,15 +31,15 @@ class ActivitiReportController extends Controller
             }
 
         }
-
+        
         // response untuk datatables absences
         if ($request->ajax()) {
             return Datatables::of($activity)
-            ->editColumn('tanggal', function($activity){
-                $tanggal = date('d . m . Y',strtotime($activity->tanggal));
-                return $tanggal;
-            })
-            ->make(true);
+                    ->editColumn('tanggal', function($activity){
+                        $tanggal = date('d . m . Y',strtotime($activity->tanggal));
+                        return $tanggal;
+                    })
+                    ->make(true);
         }
 
         // disable paging, searching, details button but enable responsive
@@ -48,7 +48,6 @@ class ActivitiReportController extends Controller
             'paging' => true,
             'ordering'=> true,
             'sDom' => 'tpi',
-            'autoWidth' => false,
             'responsive' => true,
             "columnDefs" => [ 
                 [ "width" => "20%", "targets" => 0 ], 
@@ -62,82 +61,97 @@ class ActivitiReportController extends Controller
             ->addColumn([
                 'data' => 'tanggal',
                 'name' => 'tanggal',
-                'title' => 'TANGGAL',
-            ])
+                'title' => 'TAN,GGAL',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'hari',
                 'name' => 'hari',
-                'title' => 'HARI',
-            ])
+                'title' => 'HAR,I',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'tprog',
-                'name' => 'rule',
-                'title' => 'RULE',
-            ])
+                'name' => 'tprog',
+                'title' => 'RUL,E',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'sobeg_soend',
-                'name' => 'rencana',
-                'title' => 'RENCANA JAM KERJA',
-            ])
+                'name' => 'sobeg_soend',
+                'title' => 'REN,CANA JAM KERJA',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'itime_otime',
-                'name' => 'aktual',
-                'title' => 'AKTUAL JAM KERJA',
-            ])
+                'name' => 'itime_otime',
+                'title' => 'AKT,UAL JAM KERJA',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'beguz_enduz',
-                'name' => 'renclembur',
-                'title' => 'RENCANA JAM LEMBUR',
-            ])
+                'name' => 'beguz_enduz',
+                'title' => 'REN,CANA JAM LEMBUR',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'late',
-                'name' => 'lambatcepat',
-                'title' => 'LAMBAT / CEPAT',
-            ])
+                'name' => 'late',
+                'title' => 'LAM,BAT / CEPAT',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'wtact',
-                'name' => 'jamkerjakatual',
-                'title' => 'J_KER AKTUAL',
-            ])
+                'name' => 'wtact',
+                'title' => 'J_K,ER AKTUAL',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'otact',
-                'name' => 'lemburaktual',
-                'title' => 'LEMBUR AKTUAL',
-            ])
+                'name' => 'otact',
+                'title' => 'LEM,BUR AKTUAL',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'otaut',
-                'name' => 'lemburauto',
-                'title' => 'LEMBUR AUTO',
-            ])
+                'name' => 'otaut',
+                'title' => 'LEM,BUR AUTO',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'othit',
-                'name' => 'lemburhitung',
-                'title' => 'LEMBUR HITUNG',
-            ])
+                'name' => 'othit',
+                'title' => 'LEM,BUR HITUNG',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'ijin',
                 'name' => 'ijin',
                 'title' => 'IJIN',
-                'class'=>'none'
-            ])
+                'class'=>'none',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'cuti',
                 'name' => 'cuti',
                 'title' => 'CUTI',
-                'class'=>'none'
-            ])
+                'class'=>'none',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'lain',
                 'name' => 'lain',
                 'title' => 'LAIN',
-                'class'=>'none'
-            ])
+                'class'=>'none',
+                'searchable' => false,
+                ])
             ->addColumn([
                 'data' => 'keterangan',
                 'name' => 'keterangan',
                 'title' => 'KETERANGAN',
-                'class'=>'none'
-            ]);
+                'class'=>'none',
+                'searchable' => false,
+                ]);
         
         $data = [
             'monthList' => ActivitiReport::monthList()->get(),
