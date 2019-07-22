@@ -63,7 +63,7 @@ class ActivitiReportController extends Controller
             ->addColumn([
                 'data' => 'tanggal',
                 'name' => 'tanggal',
-                'title' => 'TAN,GGAL',
+                'title' => 'TANGGAL',
                 'searchable' => false,
                 ])
             ->addColumn([
@@ -75,61 +75,61 @@ class ActivitiReportController extends Controller
             ->addColumn([
                 'data' => 'tprog',
                 'name' => 'tprog',
-                'title' => 'RUL,E',
+                'title' => 'RULE',
                 'searchable' => false,
                 ])
             ->addColumn([
                 'data' => 'sobeg_soend',
                 'name' => 'sobeg_soend',
-                'title' => 'REN,CANA JAM KERJA',
+                'title' => 'RENCANA JAM KERJA',
                 'searchable' => false,
                 ])
             ->addColumn([
                 'data' => 'itime_otime',
                 'name' => 'itime_otime',
-                'title' => 'AKT,UAL JAM KERJA',
+                'title' => 'AKTUAL JAM KERJA',
                 'searchable' => false,
                 ])
             ->addColumn([
                 'data' => 'beguz_enduz',
                 'name' => 'beguz_enduz',
-                'title' => 'REN,CANA JAM LEMBUR',
+                'title' => 'RENCANA JAM LEMBUR',
                 'searchable' => false,
                 ])
             ->addColumn([
                 'data' => 'late',
                 'name' => 'late',
-                'title' => 'LAM,BAT / CEPAT',
+                'title' => 'LAMBAT / CEPAT',
                 'searchable' => false,
                 ])
             ->addColumn([
                 'data' => 'wtact',
                 'name' => 'wtact',
-                'title' => 'J_K,ER AKTUAL',
+                'title' => 'J_KER AKTUAL',
                 'searchable' => false,
                 ])
             ->addColumn([
                 'data' => 'otact',
                 'name' => 'otact',
-                'title' => 'LEM,BUR AKTUAL',
+                'title' => 'LEMBUR AKTUAL',
                 'searchable' => false,
                 ])
             ->addColumn([
                 'data' => 'otaut',
                 'name' => 'otaut',
-                'title' => 'LEM,BUR AUTO',
+                'title' => 'LEMBUR AUTO',
                 'searchable' => false,
                 ])
             ->addColumn([
                 'data' => 'othit',
                 'name' => 'othit',
-                'title' => 'LEM,BUR HITUNG',
+                'title' => 'LEMBUR HITUNG',
                 'searchable' => false,
                 ])
             ->addColumn([
                 'data' => 'ijin',
                 'name' => 'ijin',
-                'title' => 'IJIN',
+                'title' => 'IZIN',
                 'class'=>'none',
                 'searchable' => false,
                 ])
