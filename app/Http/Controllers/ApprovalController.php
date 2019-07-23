@@ -44,6 +44,9 @@ class ApprovalController extends Controller
         if ($request->ajax()) {
 
             return Datatables::of($leaveApprovals)
+                ->editColumn('absence.id', function (AbsenceApproval $aa) {
+                    return $aa->absence->plain_id;
+                })
                 ->editColumn('absence.start_date', function (AbsenceApproval $aa) {
                     return $aa->absence->formatted_start_date;
                 })
@@ -125,6 +128,9 @@ class ApprovalController extends Controller
         if ($request->ajax()) {
 
             return Datatables::of($permitApprovals)
+                ->editColumn('permit.id', function ($aa) {
+                    return $aa->permit->plain_id;
+                })
                 ->editColumn('permit.start_date', function ($aa) {
                     return $aa->permit->formatted_start_date;
                 })
@@ -206,6 +212,9 @@ class ApprovalController extends Controller
         if ($request->ajax()) {
 
             return Datatables::of($timeEventApprovals)
+                ->editColumn('time_event.id', function (TimeEventApproval $aa) {
+                    return $aa->timeEvent->plain_id;
+                })
                 ->editColumn('time_event.check_date', function (TimeEventApproval $aa) {
                     return $aa->timeEvent->formattedCheckDate;
                 })
@@ -266,6 +275,9 @@ class ApprovalController extends Controller
         if ($request->ajax()) {
 
             return Datatables::of($overtimeApprovals)
+                ->editColumn('attendance_quota.id', function (AttendanceQuotaApproval $aa) {
+                    return $aa->attendanceQuota->plain_id;
+                })
                 ->editColumn('attendance_quota.start_date', function (AttendanceQuotaApproval $aa) {
                     return $aa->attendanceQuota->start_date;
                 })

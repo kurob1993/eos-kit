@@ -45,19 +45,26 @@ class EmployeeApprovalComposer
         // disable paging, searching, details button but enable responsive
         $tableParameters = [
             'sDom' => '<"toolbar">tpi',
-            'pageLength' => 15,
+            'pageLength' => 20,
             'paging' => true,
             'searching' => false,
             'responsive' => true,
+            'autoWidth' => false,
             'columnDefs' => [
                 // NIK, DURASI, AKSI
-                [ 'responsivePriority' => 1, 'targets' => 0 ],
+                [ 'responsivePriority' => 1, 'width'=> '15%' , 'targets' => 0 ],
                 [ 'responsivePriority' => 2, 'targets' => -3 ],
                 [ 'responsivePriority' => 3, 'targets' => -1 ]
             ]
         ];
 
         $leaveFields = [
+            [
+                'data' => 'absence.id',
+                'name' => 'absence.id',
+                'title' => 'ID',
+                'orderable' => false,
+            ],
             [
                 'data' => 'absence.personnel_no',
                 'name' => 'absence.personnel_no',
@@ -135,6 +142,12 @@ class EmployeeApprovalComposer
 
         $permitFields = [
             [
+                'data' => 'permit.id',
+                'name' => 'permit.id',
+                'title' => 'ID',
+                'orderable' => false,
+            ],
+            [
                 'data' => 'permit.personnel_no',
                 'name' => 'permit.personnel_no',
                 'title' => 'NIK',
@@ -211,6 +224,12 @@ class EmployeeApprovalComposer
 
         $timeEventFields = [
             [
+                'data' => 'time_event.id',
+                'name' => 'time_event.id',
+                'title' => 'ID',
+                'orderable' => false,
+            ],
+            [
                 'data' => 'time_event.personnel_no',
                 'name' => 'time_event.personnel_no',
                 'title' => 'NIK',
@@ -269,6 +288,12 @@ class EmployeeApprovalComposer
         ];
 
         $overtimeFields = [
+            [ 
+                'data' => 'attendance_quota.id', 
+                'name' => 'attendance_quota.id', 
+                'title' => 'ID',
+                'orderable' => false,
+            ],
             [ 
                 'data' => 'attendance_quota.personnel_no', 
                 'name' => 'attendance_quota.personnel_no', 
