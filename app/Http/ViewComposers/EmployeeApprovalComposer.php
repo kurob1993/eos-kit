@@ -44,8 +44,9 @@ class EmployeeApprovalComposer
 
         // disable paging, searching, details button but enable responsive
         $tableParameters = [
-            'dom' => '<"toolbar">trif',
-            'paging' => false,
+            'sDom' => '<"toolbar">tpi',
+            'pageLength' => 15,
+            'paging' => true,
             'searching' => false,
             'responsive' => true,
             'columnDefs' => [

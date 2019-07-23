@@ -24,19 +24,21 @@ class AttendanceQuotaApprovalObserver
 
         // menyimpan catatan pengiriman pesan
         $message = new Message;
-
         switch ($currentAqa->sequence) {
             case 1:
                 if ($currentAqa->is_approved) {
                     
                     // hitung jumlah persetujuan
                     $count_of_aqa = $aq->attendanceQuotaApproval->count();
-                    
+
                     // jika jumlah persetujuan hanya 1 maka langsung ubah stage
                     if ($count_of_aqa == 1) {
                         // NEED TO IMPLEMENT FLOW STAGE (send to SAP)
                         $aq->stage_id = Stage::sentToSapStage()->id;
 
+                        // simpan perubahan Stage untuk AttendanceQuota
+                        $aq->save();
+                        
                         // message history
                         $messageAttribute = sprintf('Overtime completely approved from %s to %s',
                             $from->personnelNoWithName, $to->personnelNoWithName);                        
@@ -119,7 +121,7 @@ class AttendanceQuotaApprovalObserver
                     "level" => "danger",
                     "message" => "Tidak dapat melakukan persetujuan karena data persetujuan "
                     . "pada proses sebelumnya belum diselesaikan. "
-                    . $firstApproval->employee->personnelNoWithName,
+                    . $firstApproval->employee['personnelNoWithName'],
                 ]);
                 // batalkan persetujuan
                 return false;
