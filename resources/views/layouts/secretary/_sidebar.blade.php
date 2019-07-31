@@ -33,7 +33,7 @@
                             <span>Time Management</span>
                         </a>
                     <ul class="sub-menu">
-                        <li> <a href="{{ route('secretary.travels.index') }}">Perjalanan Dinas</a> </li>
+                        {{-- <li> <a href="{{ route('secretary.travels.index') }}">Perjalanan Dinas</a> </li> --}}
                         <li> <a href="{{ route('secretary.overtimes.index') }}">Lembur</a> </li>
                     </ul>
                 </li>
