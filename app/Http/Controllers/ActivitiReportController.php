@@ -210,6 +210,7 @@ class ActivitiReportController extends Controller
             $arfile  = scandir($readdir);
 
             $data = explode('_', $file);
+            $nik = explode('.', $data[1]);
             $date = explode('.', $data[2]);
             $tgl = $date[0];
             $bulan = date('m', strtotime($tgl));
@@ -218,7 +219,8 @@ class ActivitiReportController extends Controller
             foreach ($arfile as $key => $value) {
                 if ($value == $file) {
                     //delete data
-                    $delete = ActivitiReport::whereMonth('tanggal', $bulan)
+                    $delete = ActivitiReport::where('Pernr',$nik)
+                        ->whereMonth('tanggal', $bulan)
                         ->whereYear('tanggal', $tahun)
                         ->delete();
 
