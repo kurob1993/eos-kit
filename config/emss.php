@@ -47,8 +47,8 @@ return [
 
   // alamat folder untuk activity
   'activity' => [
-    'dir' => env('ACTIVITY_DIR', '/nfs/interface/LapActivity'),
-    'archive' => env('ACTIVITY_ARCHIVE', '/nfs/interface/LapActivity/Archive'),
+    'dir' => env('ACTIVITY_DIR', '/nfs/interface/LapActivity/'),
+    'archive' => env('ACTIVITY_ARCHIVE', '/nfs/interface/LapActivity/Archive/'),
   ],
 
 ];
