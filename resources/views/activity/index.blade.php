@@ -85,7 +85,7 @@ var nik = '{{ Auth::user()->personnel_no }}';
 $('#data').select2({
     theme: "bootstrap",
     ajax: {
-        url: "http://127.0.0.1:8000/activity/list/"+nik,
+        url: "{{ url('activity/list') }}/"+nik,
         dataType: 'json',
         data: function(params) {
             return {
