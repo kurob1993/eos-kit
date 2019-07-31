@@ -24,7 +24,6 @@
           <div class="col-sm-2">
               <label for="month">Month:</label>
               <select id="month" name="month" class="form-control" required>
-                  <option selected value=""> .:: All Month ::. </option>
                   @foreach ($data['monthList'] as $item)
                   <option value="{{ $item->month }}"> {{ $item->month }}</option>
                   @endforeach
@@ -33,7 +32,6 @@
           <div class="col-sm-2">
               <label for="year">Year:</label>
               <select id="year" name="year" class="form-control" required>
-                  <option selected value=""> .:: All Year ::. </option>
                   @foreach ($data['yearList'] as $item)
                   <option value="{{ $item->year }}"> {{ $item->year }}</option>
                   @endforeach

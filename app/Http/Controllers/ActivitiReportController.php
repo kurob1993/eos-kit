@@ -44,12 +44,12 @@ class ActivitiReportController extends Controller
         // disable paging, searching, details button but enable responsive
         $htmlBuilder->parameters([
             'serverSide' => true,
-            'paging' => true,
+            'paging' => false,
             'ordering' => true,
             'sDom' => 'tpi',
             'responsive' => true,
             'autoWidth' => false,
-            'pageLength' => 16,
+            'pageLength' => 50,
             "columnDefs" => [
                 ["width" => "20%", "targets" => 0],
                 ["width" => "20%", "targets" => 3],
