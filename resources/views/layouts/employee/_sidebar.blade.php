@@ -68,7 +68,7 @@
                     <li class="{{ Request::segment(1)=='wakers' ? 'active' : '' }}"> 
                         <a href="{{ url('wakers') }}">Waktu Kerja</a> 
                     </li>
-                    {{-- <li> <a href="#">Laporan Aktivitas</a> </li> --}}
+                    <li> <a href="{{ route('activity.index') }}">Laporan Aktivitas</a> </li>
                 </ul>
             </li>
             {{-- <li class="has-sub">

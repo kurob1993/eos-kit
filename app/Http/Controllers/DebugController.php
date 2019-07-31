@@ -14,7 +14,25 @@ class DebugController extends Controller
 {
     public function debug()
     {   
-        dd( config('sapsoap.absence.url') );
+        $nik = '10696';
+        $a = scandir('/home/kurob/Documents');
+        
+        $matches  = preg_grep ('/.*'.$nik.'.*/i', $a);
+
+        $res = array();
+        foreach ($matches as $key => $value) {
+            array_push(
+                $res,
+                array(
+                    'id' => $key,
+                    'text'=>$value
+                )
+            );
+        }
+        echo json_encode(
+            array('results' => $res)
+        );
+        die();
 
         $s = new \DateTime('2018-01-06 17:00:00');
         $e = new \DateTime('2018-01-07 17:00:00');
