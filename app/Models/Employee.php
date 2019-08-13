@@ -242,7 +242,7 @@ class Employee extends Model
     public function canDelegate()
     {
         // apakah boleh melakukan pelimpahan wewenang?
-        return (($this->esgrp == 'BS') || ($this->esgrp == 'AS'))
+        return (($this->esgrp == 'CS') || ($this->esgrp == 'BS') || ($this->esgrp == 'AS'))
         ? true : false;
     }
 

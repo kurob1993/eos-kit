@@ -116,7 +116,7 @@
     <div class="form-group{{ $errors->has('approver') ? ' has-error' : '' }}">
         {!! Form::label('approver', 'Atasan') !!}
         <select class="form-control boss-selectize">
-            <option value="" selected>Piilh Atasan</option>
+            <option value="" selected>Pilih Atasan</option>
           </select>
       </div>
       <!-- end approver field -->
