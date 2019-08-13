@@ -14,7 +14,7 @@ use App\Models\Attendance;
 use App\Models\AttendanceQuota;
 use App\Models\TimeEvent;
 use App\Models\SAP\Zhrom0013;
-use App\Models\SAP\Zhrom0007;
+use App\Models\SAP\StructJab;
 
 class Employee extends Model
 {
@@ -676,11 +676,11 @@ class Employee extends Model
         }
         
         //no jabatan boss
-        $directboss = Zhrom0013::where('nojabatan', $nojabatan)
+        $directboss = StructJab::where('no', $nojabatan)
         ->orderBy('id', 'desc')
-        ->first();       
-        $NoAtasan = $directboss['nojabatanatasanlangsung'];
-        $GolAtasan = $directboss['goljabatanatasanlangsung'];
+        ->first();
+        $NoAtasan = $directboss['boss_no'];
+        $GolAtasan = $directboss['boss_gol'];
 
         if ($GolAtasan > 'CS') {
             return $this->getSuperintendentJobs($NoAtasan);
@@ -702,11 +702,11 @@ class Employee extends Model
         }
         
         //no jabatan boss
-        $directboss = Zhrom0013::where('nojabatan', $nojabatan)
+        $directboss = StructJab::where('no', $nojabatan)
         ->orderBy('id', 'desc')
-        ->first();       
-        $NoAtasan = $directboss['nojabatanatasanlangsung'];
-        $GolAtasan = $directboss['goljabatanatasanlangsung'];
+        ->first();
+        $NoAtasan = $directboss['boss_no'];
+        $GolAtasan = $directboss['boss_gol'];
 
         if ($GolAtasan > 'BS') {
             return $this->getManagerJobs($NoAtasan);
@@ -728,11 +728,11 @@ class Employee extends Model
         }
         
         //no jabatan boss
-        $directboss = Zhrom0013::where('nojabatan', $nojabatan)
+        $directboss = StructJab::where('no', $nojabatan)
         ->orderBy('id', 'desc')
-        ->first();       
-        $NoAtasan = $directboss['nojabatanatasanlangsung'];
-        $GolAtasan = $directboss['goljabatanatasanlangsung'];
+        ->first();
+        $NoAtasan = $directboss['boss_no'];
+        $GolAtasan = $directboss['boss_gol'];
         
         if ($GolAtasan > 'AS') {
             return $this->getGmJobs($NoAtasan);
