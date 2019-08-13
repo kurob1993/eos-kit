@@ -37,6 +37,9 @@ class AttendanceQuotaApprovalObserver
                         // NEED TO IMPLEMENT FLOW STAGE (send to SAP)
                         $aq->stage_id = Stage::sentToSapStage()->id;
 
+                        // simpan perubahan Stage untuk AttendanceQuota
+                        $aq->save();
+                        
                         // message history
                         $messageAttribute = sprintf('Overtime completely approved from %s to %s',
                             $from->personnelNoWithName, $to->personnelNoWithName);                        
@@ -49,6 +52,9 @@ class AttendanceQuotaApprovalObserver
                     // batalkan persetujuan, ubah stage menjadi denied
                     $aq->stage_id = Stage::deniedStage()->id;
 
+                    // simpan perubahan Stage untuk AttendanceQuota
+                    $aq->save();
+
                     // reject status pada second approval
                     $secondAqa = $aq->second_approval;
                     $secondAqa->status_id = Status::rejectStatus()->id;
@@ -58,8 +64,7 @@ class AttendanceQuotaApprovalObserver
                     $messageAttribute = sprintf('Overtime rejected at first sequence from %s to %s',
                         $from->personnelNoWithName, $to->personnelNoWithName);
                 }
-                // simpan perubahan Stage untuk AttendanceQuota
-                $aq->save();
+
                 break;
             case 2:
                 if ($currentAqa->is_approved) {
