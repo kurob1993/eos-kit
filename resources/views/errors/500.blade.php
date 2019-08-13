@@ -1,6 +1,6 @@
 <!DOCTYPE html> 
 <html> 
-<head> <title>403 Forbidden.</title> 
+<head> <title>500.</title> 
 <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css"> 
 
 <style> 
@@ -30,16 +30,25 @@
     }
  
     .title { 
-       font-size: 72px; 
+       font-size: 50px; 
+       font-weight: bold;
+       margin-bottom: 40px; 
+    } 
+
+    .emoji { 
+       font-size: 100px; 
+       font-weight: bold;
        margin-bottom: 40px; 
     } 
 </style> 
 </head> 
 <body> 
     <div class="container"> 
+        
         <div class="content"> 
-            <div class="title">403 Forbidden.</div> 
-            <h5>Silahkan kembali kehalaman utama <a href="{route('home')}">CV</a></h5>
+        <div class="emoji">😟<br></div>
+        <div class="title">Maaf terjadi kesalahan !!!               
+            <br>Silahkan Hubungi Servicedesk 72888</div> 
         </div> 
     </div> 
 </body> 
