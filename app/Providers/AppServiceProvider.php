@@ -13,11 +13,13 @@ use App\Models\AttendanceQuota;
 use App\Models\AttendanceQuotaApproval;
 use App\Models\TimeEvent;
 use App\Models\TimeEventApproval;
+use App\Models\Transition;
 use App\Observers\
     { AbsenceObserver, AbsenceApprovalObserver,
       TimeEventObserver, TimeEventApprovalObserver,
       AttendanceObserver, AttendanceApprovalObserver,
-      AttendanceQuotaObserver, AttendanceQuotaApprovalObserver };
+      AttendanceQuotaObserver, AttendanceQuotaApprovalObserver,
+      TransitionObserver };
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -59,6 +61,9 @@ class AppServiceProvider extends ServiceProvider
         TimeEvent::observe(TimeEventObserver::class);
         // Observer untuk model TimeEventApproval
         TimeEventApproval::observe(TimeEventApprovalObserver::class);
+
+        // Observer untuk model Transition/Pengalihan
+        Transition::observe(TransitionObserver::class);
 
         // Form macro laravelcollective
         \Form::macro('labelRadio', function ($name, $value, $label,

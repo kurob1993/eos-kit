@@ -144,4 +144,59 @@ class StructDispController extends Controller
         else 
             return [];
     }
+
+    public function minSptBossWithDelegation($empnik)
+    {
+        // mencari atasan minimal golongan CS
+        $employee = $this->findByPersonnel($empnik);
+        
+        if (!is_null($employee))
+            return $employee->minSptBossWithDelegation();
+        else 
+            return [];
+    }
+    
+    public function minManagerBossWithDelegation($empnik)
+    {
+        // mencari atasan minimal golongan BS
+        $employee = $this->findByPersonnel($empnik);
+        
+        if (!is_null($employee))
+            return $employee->minManagerBossWithDelegation();
+        else 
+            return [];
+    }
+
+    public function sptBossWithDelegation($empnik)
+    {
+        // mencari atasan minimal golongan CS
+        $employee = $this->findByPersonnel($empnik);
+        
+        if (!is_null($employee))
+            return $employee->sptBossWithDelegation();
+        else 
+            return [];
+    }
+    
+    public function managerBossWithDelegation($empnik)
+    {
+        // mencari atasan minimal golongan BS
+        $employee = $this->findByPersonnel($empnik);
+        
+        if (!is_null($employee))
+            return $employee->managerBossWithDelegation();
+        else 
+            return [];
+    }
+
+    public function gmBossWithDelegation($empnik)
+    {
+        // mencari atasan minimal golongan BS
+        $employee = $this->findByPersonnel($empnik);
+        
+        if (!is_null($employee))
+            return $employee->gmBossWithDelegation();
+        else 
+            return [];
+    }
 }

@@ -9,6 +9,7 @@
 
 {!! Form::button('<i class="fa fa-times js-button-submit"></i>', [
     'type' => 'submit',
+    'title' => 'Hapus',
     'class' => 'btn btn-xs btn-danger m-b-5',
     'title' => 'Hapus',
     'data-actiontype' => 'delete-' . $model->id

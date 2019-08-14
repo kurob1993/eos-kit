@@ -37,6 +37,23 @@ class AttendanceQuotaObserver
             ]);
             return false;
         }
+
+        // karyawan yang membuat attendanceQuota
+        $employee = Employee::find($personnel_no);
+        
+        $b = ( $employee->minManagerBossWithDelegation() )
+            ? $employee->minManagerBossWithDelegation()->personnel_no : 0;
+
+        if($b == 0){
+            Session::flash("flash_notification", [
+                "level" => "danger",
+                "message" => "Tidak dapat mengajukan lembur dikarnakan karyawan : (".
+                $employee->personnel_no.") ".$employee->name." tidak memiliki Manager,
+                silakan mengajukan peralihan pada HCI&A untuk Manager yang terkait dengan
+                karyawan tersebut."
+            ]);
+            return false;
+        }
     }
 
     public function created(AttendanceQuota $attendanceQuota)
@@ -59,11 +76,11 @@ class AttendanceQuotaObserver
         $attendanceQuota->save();
 
         // mencari atasan & direktur dari karyawan yang mengajukan attendanceQuotas
-        $a = ( $employee->minSuperintendentBoss() ) 
-            ? $employee->minSuperintendentBoss()->personnel_no : 0;
+        $a = ( $employee->sptBossWithDelegation() ) 
+            ? $employee->sptBossWithDelegation()->personnel_no : 0;
         
-        $b = ( $employee->minManagerBoss() )
-            ? $employee->minManagerBoss()->personnel_no : 0;
+        $b = ( $employee->managerBossWithDelegation() )
+            ? $employee->managerBossWithDelegation()->personnel_no : 0;
         
         $c = ($employee->generalManagerBoss() )
             ? $employee->generalManagerBoss()->personnel_no : 0;

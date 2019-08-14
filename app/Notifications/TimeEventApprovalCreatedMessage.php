@@ -12,7 +12,8 @@ class TimeEventApprovalCreatedMessage extends Notification  implements ShouldQue
 {
     use Queueable;
     protected $timeEventApproval, $timeEvent;
-
+    public $tries = 5;
+    
     public function __construct(TimeEventApproval $timeEventApproval)
     {
         $this->timeEventApproval = $timeEventApproval;

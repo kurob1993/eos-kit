@@ -15,7 +15,8 @@ class LeaveApprovalMessage extends Notification implements ShouldQueue
     public $approved;
     public $fromUser;
     public $absenceApproval;
-
+    public $tries = 5;
+    
     public function __construct(User $user, AbsenceApproval $absenceApproval)
     {
         $this->fromUser = $user;

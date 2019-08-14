@@ -27,3 +27,6 @@ Route::get('b/{email}', 'Auth\LoginController@programaticallySecretaryLogin')
 
 // route untuk user yang belum di set Role-nya
 Route::get('noRole', 'HomeController@noRole')->name('noRole');
+
+//route untuk manage data yang dikirim ke sap
+Route::resource('sendtosap', 'SendToSapController')->parameters(['sendtosap' => 'id']);

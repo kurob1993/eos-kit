@@ -13,6 +13,8 @@ use App\Models\Absence;
 use App\Models\Attendance;
 use App\Models\AttendanceQuota;
 use App\Models\TimeEvent;
+use App\Models\SAP\Zhrom0013;
+use App\Models\SAP\StructJab;
 
 class Employee extends Model
 {
@@ -28,8 +30,8 @@ class Employee extends Model
 
     public function attendanceQuotas()
     {
-      // one-to-many relationship dengan AttendanceQuota
-      return $this->hasMany('App\Models\AttendanceQuota', 'personnel_no', 'personnel_no');
+        // one-to-many relationship dengan AttendanceQuota
+        return $this->hasMany('App\Models\AttendanceQuota', 'personnel_no', 'personnel_no');
     }
 
     public function attendances()
@@ -40,8 +42,8 @@ class Employee extends Model
 
     public function absences()
     {
-      // one-to-many relationship dengan Absence
-      return $this->hasMany('App\Models\Absence', 'personnel_no', 'personnel_no');
+        // one-to-many relationship dengan Absence
+        return $this->hasMany('App\Models\Absence', 'personnel_no', 'personnel_no');
     }
 
     public function currentPeriodAbsences()
@@ -65,8 +67,8 @@ class Employee extends Model
 
     public function leaves()
     {
-      // one-to-many relationship dengan Absence leaves only
-      return $this->hasMany('App\Models\Absence', 'personnel_no', 'personnel_no')
+        // one-to-many relationship dengan Absence leaves only
+        return $this->hasMany('App\Models\Absence', 'personnel_no', 'personnel_no')
         ->leavesOnly();
     }
 
@@ -78,8 +80,8 @@ class Employee extends Model
 
     public function timeEvents()
     {
-      // one-to-many relationship dengan Time Event
-      return $this->hasMany('App\Models\TimeEvent', 'personnel_no', 'personnel_no');
+        // one-to-many relationship dengan Time Event
+        return $this->hasMany('App\Models\TimeEvent', 'personnel_no', 'personnel_no');
     }
 
     public function currentPeriodTimeEvents()
@@ -90,8 +92,8 @@ class Employee extends Model
 
     public function absenceQuotas()
     {
-      // one-to-many relationship dengan AbsenceQuota
-      return $this->hasMany('App\Models\AbsenceQuota', 'personnel_no', 'personnel_no');
+        // one-to-many relationship dengan AbsenceQuota
+        return $this->hasMany('App\Models\AbsenceQuota', 'personnel_no', 'personnel_no');
     }
 
     public function getActiveAbsenceQuotaAttribute()
@@ -106,32 +108,32 @@ class Employee extends Model
 
     public function absenceApprovals()
     {
-      // one-to-many relationship dengan AbsenceApproval
-      return $this->hasMany('App\Models\AbsenceApproval', 'regno', 'personnel_no');
+        // one-to-many relationship dengan AbsenceApproval
+        return $this->hasMany('App\Models\AbsenceApproval', 'regno', 'personnel_no');
     }
 
     public function attendanceApprovals()
     {
-      // one-to-many relationship dengan AttendanceApproval
-      return $this->hasMany('App\Models\AttendanceApproval', 'regno', 'personnel_no');
+        // one-to-many relationship dengan AttendanceApproval
+        return $this->hasMany('App\Models\AttendanceApproval', 'regno', 'personnel_no');
     }
 
     public function structDisp()
     {
-      // one-to-many relationship dengan StructDisp
-      return $this->hasMany('App\Models\SAP\StructDisp', 'empnik', 'personnel_no');
+        // one-to-many relationship dengan StructDisp
+        return $this->hasMany('App\Models\SAP\StructDisp', 'empnik', 'personnel_no');
     }
 
     public function families()
     {
-      // one-to-many relationship dengan it0021
-      return $this->hasMany('App\Models\SAP\Family', 'PERNR', 'personnel_no');
+        // one-to-many relationship dengan it0021
+        return $this->hasMany('App\Models\SAP\Family', 'PERNR', 'personnel_no');
     }
 
     public function positions()
     {
-      // one-to-many relationship dengan it0001
-      return $this->hasMany('App\Models\SAP\Position', 'PERNR', 'personnel_no');
+        // one-to-many relationship dengan it0001
+        return $this->hasMany('App\Models\SAP\Position', 'PERNR', 'personnel_no');
     }
 
     public function scopeFindByPersonnel($query, $p)
@@ -142,7 +144,7 @@ class Employee extends Model
             ->first();
 
         // jika ditemukan datanya di StructDisp
-        if( !is_null($struct) ) {
+        if (!is_null($struct)) {
 
             // mencari di Employee
             $employee = $query
@@ -150,7 +152,7 @@ class Employee extends Model
                 ->first();
 
             // jika tidak ditemukan di Employee buat baru
-            if ( is_null($employee) ) {
+            if (is_null($employee)) {
                 $employee = new Employee();
                 $employee->personnel_no = $struct->empnik;
             }
@@ -165,7 +167,7 @@ class Employee extends Model
 
             // jika tidak ada record user maka buatkan
             $user = User::where('personnel_no', $p)->first();
-            if ( is_null($user) ) {
+            if (is_null($user)) {
                 $user = new User();
                 $user->personnel_no = $employee->personnel_no;
                 $user->name = $employee->name;
@@ -194,7 +196,7 @@ class Employee extends Model
                 ->first();
 
             // jika tidak ditemukan di Employee buat baru
-            if ( is_null($employee) ) {
+            if (is_null($employee)) {
                 $employee = new Employee();
                 $employee->personnel_no = $item->empnik;
             }
@@ -240,23 +242,23 @@ class Employee extends Model
     public function canDelegate()
     {
         // apakah boleh melakukan pelimpahan wewenang?
-        return (($this->esgrp == 'BS') || ($this->esgrp == 'AS'))
+        return (($this->esgrp == 'CS') || ($this->esgrp == 'BS') || ($this->esgrp == 'AS'))
         ? true : false;
     }
 
     public function allowedForOvertime()
     {
         // apakah boleh melakukan lembur?
-        return ( ($this->esgrp == 'ES') || ($this->esgrp == 'EF')
-                 || ($this->esgrp == 'F') )
+        return (($this->esgrp == 'ES') || ($this->esgrp == 'EF')
+                 || ($this->esgrp == 'F'))
         ? true : false;
     }
 
     public function allowedToSubmitSubordinateOvertime()
     {
         // apakah boleh mengajukan lembur untuk bawahan?
-        return ( ($this->esgrp != 'ES') && ($this->esgrp != 'EF')
-            && ($this->esgrp != 'F') )
+        return (($this->esgrp != 'ES') && ($this->esgrp != 'EF')
+            && ($this->esgrp != 'F'))
         ? true : false;
     }
 
@@ -303,7 +305,7 @@ class Employee extends Model
 
         // mengembalikan collection of Employee
         return $subordinates;
-    }    
+    }
 
     public function oneTwoDirectSubordinates()
     {
@@ -318,7 +320,7 @@ class Employee extends Model
 
         // mengembalikan collection of Employee
         return $subordinates;
-    }    
+    }
 
     public function subordinates()
     {
@@ -461,7 +463,7 @@ class Employee extends Model
         $s = $this->structDisp()->superintendentOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return ( is_null($s) || $this->isSuperintendent() ) ?
+        return (is_null($s) || $this->isSuperintendent()) ?
             [] :
             (Employee::findByPersonnel($s->dirnik)->first());
     }
@@ -477,9 +479,9 @@ class Employee extends Model
         $m = (is_null($s)) ? $sf : $s;
 
         // mengembalikan Employee model
-        if (is_null($m))
+        if (is_null($m)) {
             return [];
-        else {
+        } else {
             return Employee::findByPersonnel($m->dirnik)->first();
         }
     }
@@ -493,7 +495,7 @@ class Employee extends Model
         $s = $this->structDisp()->generalManagerOf($this->personnel_no)->first();
 
         // mengembalikan Employee model
-        return ( is_null($s) || $this->isGeneralManager() ) ?
+        return (is_null($s) || $this->isGeneralManager()) ?
             [] :
             (Employee::findByPersonnel($s->dirnik)->first());
     }
@@ -505,37 +507,39 @@ class Employee extends Model
         // apabila tidak ditemukan di level BS
         // maka cari di level AS
 
-        if ($this->isSuperintendent() || $this->isManager() ) {
+        if ($this->isSuperintendent() || $this->isManager()) {
             return $this->closestBoss();
         } else {
             $superintendent = $this->superintendentBoss();
 
-            if (!$superintendent)
+            if (!$superintendent) {
                 return $this->minManagerBoss();
-            else
+            } else {
                 return $superintendent;
+            }
         }
     }
 
     public function minManagerBoss()
     {
-        if ($this->isSuperintendent() || $this->isManager() ) {
+        if ($this->isSuperintendent() || $this->isManager()) {
             return $this->closestBoss();
         } else {
             // meneruskan recursive call dari atas
             $manager = $this->managerBoss();
 
-            if (!$manager)
+            if (!$manager) {
                 return $this->generalManagerBoss();
-            else
+            } else {
                 return $manager;
+            }
         }
     }
 
     public function getPersonnelNoWithNameAttribute()
     {
-      // menggabungkan personnel_no dan nama
-      return $this->personnel_no . ' - ' . $this->name;
+        // menggabungkan personnel_no dan nama
+        return $this->personnel_no . ' - ' . $this->name;
     }
 
     public function getIsATransferKnowledgeAttribute()
@@ -554,7 +558,7 @@ class Employee extends Model
             ->successOnly()
             ->get();
 
-        return $leaves->sum(function ($leave){
+        return $leaves->sum(function ($leave) {
             return $leave->hourDuration;
         });
     }
@@ -567,7 +571,7 @@ class Employee extends Model
             ->successOnly()
             ->get();
 
-        $sum = $absences->sum(function ($absence){
+        $sum = $absences->sum(function ($absence) {
             return $absence->hourDuration;
         });
 
@@ -576,7 +580,7 @@ class Employee extends Model
             ->successOnly()
             ->get();
 
-        $sum += $attendances->sum(function ($attendance){
+        $sum += $attendances->sum(function ($attendance) {
             return $attendance->hourDuration;
         });
 
@@ -591,12 +595,12 @@ class Employee extends Model
             ->successOnly()
             ->get();
 
-        $sum += $timeEvents->sum(function ($timeEvent){
+        $sum += $timeEvents->sum(function ($timeEvent) {
             return 1;
         });
 
         return $sum;
-    }    
+    }
 
     public function overtimeTotalDurationHour($month, $year)
     {
@@ -605,7 +609,7 @@ class Employee extends Model
             ->successOnly()
             ->get();
 
-        $sum += $overtimes->sum(function ($overtime){
+        $sum += $overtimes->sum(function ($overtime) {
             return $overtime->hourDuration;
         });
 
@@ -621,7 +625,9 @@ class Employee extends Model
             ->groupBy(DB::raw('MONTH(start_date)'))
             ->get();
         
-        return $o->map(function ($item, $key) { return $item->month; });
+        return $o->map(function ($item, $key) {
+            return $item->month;
+        });
     }
 
     public function successOvertimeFoundYear()
@@ -630,10 +636,12 @@ class Employee extends Model
             ->successOnly()
             ->selectRaw('YEAR(start_date) as year')
             ->orderBy(DB::raw('YEAR(start_date)'), 'desc')
-            ->groupBy(DB::raw('YEAR(start_date)'))   
+            ->groupBy(DB::raw('YEAR(start_date)'))
             ->get();
 
-        return $o->map(function ($item, $key) { return $item->year; });
+        return $o->map(function ($item, $key) {
+            return $item->year;
+        });
     }
 
     public function getPermitsAttribute()
@@ -658,5 +666,201 @@ class Employee extends Model
             ->currentPeriod()
             ->get()
             ->merge($absences);
+    }
+
+    public function getSuperintendentJobs($nojabatan = null)
+    {
+        //no jabatan karyawan
+        if (is_null($nojabatan)) {
+            $nojabatan = $this->structDisp->first()['emp_hrp1000_s_short'];
+        }
+        
+        //no jabatan boss
+        $directboss = StructJab::where('no', $nojabatan)
+        ->orderBy('id', 'desc')
+        ->first();
+        $NoAtasan = $directboss['boss_no'];
+        $GolAtasan = $directboss['boss_gol'];
+
+        if ($GolAtasan > 'CS') {
+            return $this->getSuperintendentJobs($NoAtasan);
+        }
+
+        if ($GolAtasan !== 'CS') {
+            return ['job'=>null, 'bos'=>null];
+        }
+
+        $StructDisp = StructDisp::where('emp_hrp1000_s_short', $NoAtasan)->first();
+        return ['job'=>$NoAtasan, 'bos'=>$StructDisp];
+    }
+
+    public function getManagerJobs($nojabatan = null)
+    {
+        //no jabatan karyawan
+        if (is_null($nojabatan)) {
+            $nojabatan = $this->structDisp->first()['emp_hrp1000_s_short'];
+        }
+        
+        //no jabatan boss
+        $directboss = StructJab::where('no', $nojabatan)
+        ->orderBy('id', 'desc')
+        ->first();
+        $NoAtasan = $directboss['boss_no'];
+        $GolAtasan = $directboss['boss_gol'];
+
+        if ($GolAtasan > 'BS') {
+            return $this->getManagerJobs($NoAtasan);
+        }
+        
+        if ($GolAtasan !== 'BS') {
+            return ['job'=>null, 'bos'=>null];
+        }
+
+        $StructDisp = StructDisp::where('emp_hrp1000_s_short', $NoAtasan)->first();
+        return ['job'=>$NoAtasan, 'bos'=>$StructDisp];
+    }
+
+    public function getGmJobs($nojabatan = null)
+    {
+        //no jabatan karyawan
+        if (is_null($nojabatan)) {
+            $nojabatan = $this->structDisp->first()['emp_hrp1000_s_short'];
+        }
+        
+        //no jabatan boss
+        $directboss = StructJab::where('no', $nojabatan)
+        ->orderBy('id', 'desc')
+        ->first();
+        $NoAtasan = $directboss['boss_no'];
+        $GolAtasan = $directboss['boss_gol'];
+        
+        if ($GolAtasan > 'AS') {
+            return $this->getGmJobs($NoAtasan);
+        }
+        
+        if ($GolAtasan !== 'AS') {
+            return ['job'=>null, 'bos'=>null];
+        }
+
+        $StructDisp = StructDisp::where('emp_hrp1000_s_short', $NoAtasan)->first();
+        return ['job'=>$NoAtasan, 'bos'=>$StructDisp];
+    }
+
+    public function sptBossWithDelegation()
+    {
+        //get boss
+        $jobsBoss = $this->getSuperintendentJobs();
+
+        //tanggal sekarang
+        $now = date('Y-m-d');
+
+        //cek data pengalihan
+        $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
+        ->where(function ($query) use ($now) {
+            $query->where('start_date', '<=', $now)
+            ->where('end_date', '>=', $now);
+        })->where('actived_at', '<>', null);
+
+        if ($transition->count()) {
+            $delegation = $transition->first();
+            return Employee::where('personnel_no', $delegation->personnel_no)->first();
+        } else {
+            if ($jobsBoss['bos']) {
+                return Employee::where('personnel_no', $jobsBoss['bos']['empnik'])->first();
+            } else {
+                return [];
+            }
+        }
+    }
+
+    public function managerBossWithDelegation()
+    {
+        //get boss
+        $jobsBoss = $this->getManagerJobs();
+
+        //tanggal sekarang
+        $now = date('Y-m-d');
+
+        //cek data pengalihan
+        $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
+        ->where(function ($query) use ($now) {
+            $query->where('start_date', '<=', $now)
+            ->where('end_date', '>=', $now);
+        })->where('actived_at', '<>', null);
+        
+        if ($transition->count()) {
+            $delegation = $transition->first();
+            return Employee::where('personnel_no', $delegation->personnel_no)->first();
+        } else {
+            if ($jobsBoss['bos']) {
+                return Employee::where('personnel_no', $jobsBoss['bos']['empnik'])->first();
+            } else {
+                return [];
+            }
+        }
+    }
+
+    public function gmBossWithDelegation()
+    {
+        //get boss
+        $jobsBoss = $this->getGmJobs();
+
+        //tanggal sekarang
+        $now = date('Y-m-d');
+
+        //cek data pengalihan
+        $transition = Transition::where('abbr_jobs', $jobsBoss['job'])
+        ->where(function ($query) use ($now) {
+            $query->where('start_date', '<=', $now)
+            ->where('end_date', '>=', $now);
+        })->where('actived_at', '<>', null);
+        
+        if ($transition->count()) {
+            $delegation = $transition->first();
+            return Employee::where('personnel_no', $delegation->personnel_no)->first();
+        } else {
+            if ($jobsBoss['bos']) {
+                return Employee::where('personnel_no', $jobsBoss['bos']['empnik'])->first();
+            } else {
+                return $this->generalManagerBoss();
+            }
+        }
+    }
+
+    /**
+     * Menampilkan atasan minimal supperintenden
+     * dengan pe;impahan
+     *
+     * 1. Jika data adalah supperintenden atau manager
+     *    tampilkan atasan langsung
+     * 2. jika level atasan langsung tidak sama
+     *    dengan C (Bukan supperintendent)
+     *    lempar ke minManagerBossWithDelegation
+     * 3. jika data superintendent null
+     *          maka cari data superintendent di pelimpahan
+     *    jika tidak
+     *          tampilkan data superintendent
+     * 4. jika data superintendent di pelimpahan null
+     *          maka tampilkan null
+     */
+    public function minSptBossWithDelegation()
+    {
+        $superintendent = $this->sptBossWithDelegation();
+        if (!$superintendent) {
+            return $this->minManagerBossWithDelegation();
+        } else {
+            return $superintendent;
+        }
+    }
+
+    public function minManagerBossWithDelegation()
+    {
+        // meneruskan recursive call dari atas
+        $manager = $this->managerBossWithDelegation();
+        if (!$manager) {
+            return $this->gmBossWithDelegation();
+        } else {
+            return $manager;
+        }
     }
 }

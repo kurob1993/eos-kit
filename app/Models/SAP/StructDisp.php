@@ -239,6 +239,33 @@ class StructDisp extends Model
                 $query->where('esgrp', 'AS');
             });
     }
+
+    public function scopeGetForSelect2($query,$request)
+    {           
+        $page = $request->page;
+        $resultCount = 25;
+        $offset = ($page - 1) * $resultCount;
+
+        $user = $query->where('no', '1')
+                ->where( function ($query) use ($request) {
+                    $query->where('empnik', 'like','%'.$request->term.'%')
+                    ->orWhere('empname', 'like','%'.$request->term.'%');
+                })->get();
+        $results = $user->map(function ($value,$key) {
+            return [
+                'id' => $value->empnik, 
+                'text'=> $value->empname
+            ];
+        });
+
+        $count = $user->count();
+        $endCount = $offset + $resultCount;
+        $morePages = $count > $endCount;
+
+        $select2 = ['results'=>$results,'pagination'=>['more'=>$morePages]];
+        return response()->json($select2);
+    }
+
     /************** End of boss function ************* */
 
     //show minimal divisi
@@ -247,8 +274,8 @@ class StructDisp extends Model
         $ObjectId = $ObjectId == null ?  $this->emporid : $ObjectId;
 
         $org = OrgUnit::findByObjectID($ObjectId)
-		->currentPeriod()
-		->first();
+            ->currentPeriod()
+            ->first();
 
 		if($org){
 			$name = strtolower($org->orgText->Objectname);

@@ -63,6 +63,7 @@ class AttendanceQuotaApprovalObserver
                     $messageAttribute = sprintf('Overtime rejected at first sequence from %s to %s',
                         $from->personnelNoWithName, $to->personnelNoWithName);
                 }
+
                 break;
             case 2:
                 if ($currentAqa->is_approved) {

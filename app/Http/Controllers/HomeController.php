@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use App\Models\AbsenceApproval;
+use App\Models\AttendanceApproval;
+use App\Models\Transition;
+
 
 class HomeController extends Controller
 {
@@ -33,4 +37,5 @@ class HomeController extends Controller
     {
         return view('errors.403');
     }
+    
 }

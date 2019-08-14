@@ -12,7 +12,8 @@ class AbsenceDeletedMessage extends Notification implements ShouldQueue
 {
     use Queueable;
     public $absence;
-
+    public $tries = 5;
+    
     public function __construct(Absence $absence)
     {
         $this->absence = $absence;

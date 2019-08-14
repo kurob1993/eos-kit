@@ -12,7 +12,8 @@ class AttendanceApprovalCreatedMessage extends Notification implements ShouldQue
 {
     use Queueable;
     protected $attendanceApproval, $attendance;
-
+    public $tries = 5;
+    
     public function __construct(AttendanceApproval $attendanceApproval)
     {
         $this->attendanceApproval = $attendanceApproval;

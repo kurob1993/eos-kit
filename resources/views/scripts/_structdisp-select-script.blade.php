@@ -37,7 +37,7 @@
     };
   
     $.ajax({
-    url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/minSuperintendentBoss',
+    url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/minSptBossWithDelegation',
         type: 'GET',
         dataType: 'json',
         error: function() {},
@@ -52,11 +52,11 @@
       }
     });
     
-     @if (Auth::user()->employee()->first()->canDelegate())
+    @if (Auth::user()->employee()->first()->canDelegate())
     
     var subOptions = {
       persist: false,
-      valueField: "name",
+      valueField: "personnel_no",
       labelField: "personnel_no",
       searchField: ["personnel_no", "name"],
       options: [    ],

@@ -15,7 +15,8 @@ class PermitApprovalMessage extends Notification implements ShouldQueue
     public $approved;
     public $fromUser;
     public $attendanceApproval;
-
+    public $tries = 5;
+    
     public function __construct(User $user, AttendanceApproval $attendanceApproval)
     {
         $this->fromUser = $user;

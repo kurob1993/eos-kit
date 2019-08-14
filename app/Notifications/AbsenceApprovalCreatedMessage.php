@@ -12,7 +12,8 @@ class AbsenceApprovalCreatedMessage extends Notification implements ShouldQueue
 {
     use Queueable;
     protected $absenceApproval, $absence;
-
+    public $tries = 5;
+    
     public function __construct(AbsenceApproval $absenceApproval)
     {
         $this->absenceApproval = $absenceApproval;
