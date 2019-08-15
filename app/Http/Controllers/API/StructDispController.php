@@ -199,4 +199,15 @@ class StructDispController extends Controller
         else 
             return [];
     }
+    
+    public function clossestSubordinates($empnik)
+    {
+        // mencari atasan satu tingkat di atas
+        $employee = $this->findByPersonnel($empnik);
+
+        if (!is_null($employee))
+            return $employee->closestSubordinates();
+        else
+            return [];
+    }
 }

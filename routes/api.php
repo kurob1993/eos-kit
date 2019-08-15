@@ -21,6 +21,7 @@ Route::group(['prefix' => 'structdisp', 'middleware' => 'api'], function() {
     Route::get('/', 'StructDispController@index');
     Route::get('{empnik}', 'StructDispController@show');
     Route::get('{empnik}/subordinates', 'StructDispController@subordinates');
+    Route::get('{empnik}/clossestSubordinates', 'StructDispController@clossestSubordinates');
     Route::get('{empnik}/foremanAndOperatorSubordinates', 'StructDispController@foremanAndOperatorSubordinates');
     Route::get('{empnik}/bosses', 'StructDispController@bosses');
     Route::get('{empnik}/closestBoss', 'StructDispController@closestBoss');
