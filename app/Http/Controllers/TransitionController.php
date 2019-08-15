@@ -9,6 +9,7 @@ use App\Http\Requests\StoreTransitionRequest;
 use Illuminate\Http\Request;
 use App\Models\SAP\Zhrom0007;
 use App\Models\SAP\Zhrom0013;
+use App\Models\SAP\StructJab;
 use App\Models\SAP\StructDisp;
 use App\Models\Transition;
 
@@ -30,11 +31,11 @@ class TransitionController extends Controller
         if ($request->ajax()) {
             return Datatables::of($transition)
             ->editColumn('abbr_jobs', function ($transition) {
-                $jabaran = $transition->zhrom0013->first();
+                $jabaran = $transition->structJab->first();
                 $code = '<label class="label label-info">'.
-                    $jabaran['nojabatan']
+                    $jabaran['no']
                 .'</label>';
-                $name = $jabaran['namajabatan'];
+                $name = $jabaran['jabatan'];
                 return $code.' '.$name;
             })
             ->editColumn('personnel_no', function ($transition) {
@@ -189,14 +190,9 @@ class TransitionController extends Controller
     {
         //
     }
-    public function zhrom0007(Request $request)
+    public function StructJab(Request $request)
     {
-        return Zhrom0007::getForSelect2($request);
-    }
-
-    public function zhrom0013(Request $request)
-    {
-        return Zhrom0013::getForSelect2($request);
+        return StructJab::getForSelect2($request);
     }
 
     public function employee(Request $request)

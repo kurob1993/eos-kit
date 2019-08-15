@@ -31,12 +31,9 @@
     // route untuk manage daftar semua lembur
     Route::resource('all_overtimes', 'AllOvertimeController', ['only' => ['index']]);
 
-    //Route untuk delegation
-    Route::get('transition/zhrom0007', 'TransitionController@zhrom0007')
-        ->name('transition.zhrom0007');
-    
-    Route::get('transition/zhrom0013', 'TransitionController@zhrom0013')
-        ->name('transition.zhrom0013');
+    //Route untuk delegation    
+    Route::get('transition/StructJab', 'TransitionController@StructJab')
+        ->name('transition.StructJab');
 
     Route::get('transition/employee', 'TransitionController@employee')
         ->name('transition.employee');

@@ -14,7 +14,7 @@
             templateResult: renderSelect2,
 		    templateSelection: renderSelect2,
             ajax: {
-                url: "{{ route('transition.zhrom0013') }}",
+                url: "{{ route('transition.StructJab') }}",
                 dataType: 'json',
                 data: function(params) {
                     return {
