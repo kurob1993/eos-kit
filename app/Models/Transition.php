@@ -15,6 +15,11 @@ class Transition extends Model
     {
         return $this->hasMany('App\Models\SAP\Zhrom0013','nojabatan','abbr_jobs');
     }
+    
+    public function structJab()
+    {
+        return $this->hasMany('App\Models\SAP\StructJab','no','abbr_jobs');
+    }
 
     public function user()
     {
