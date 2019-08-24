@@ -21,6 +21,25 @@ class Employee extends Model
     protected $primaryKey = 'personnel_no';
     public $incrementing = false;
     public $timestamps = false;
+    protected $appends = ['empposid','emp_hrp1000_s_short'];
+
+    public function getEmpHrp1000SShortAttribute()
+    {
+        $s = StructDisp::select('emp_hrp1000_s_short')
+            ->where('no','1')
+            ->where('empnik',$this->personnel_no)
+            ->first();
+        return $s->emp_hrp1000_s_short;
+    }
+
+    public function getEmpposidAttribute()
+    {
+        $s = StructDisp::select('empposid')
+            ->where('no','1')
+            ->where('empnik',$this->personnel_no)
+            ->first();
+        return $s->empposid;
+    }
 
     public function user()
     {
