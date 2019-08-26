@@ -76,11 +76,11 @@ class AttendanceQuotaObserver
         $attendanceQuota->save();
 
         // mencari atasan & direktur dari karyawan yang mengajukan attendanceQuotas
-        $a = ( $employee->sptBossWithDelegation() ) 
-            ? $employee->sptBossWithDelegation()->personnel_no : 0;
+        $a = ( $employee->minSptBossWithDelegation() ) 
+            ? $employee->minSptBossWithDelegation()->personnel_no : 0;
         
-        $b = ( $employee->managerBossWithDelegation() )
-            ? $employee->managerBossWithDelegation()->personnel_no : 0;
+        $b = ( $employee->minManagerBossWithDelegation() )
+            ? $employee->minManagerBossWithDelegation()->personnel_no : 0;
         
         $c = ($employee->generalManagerBoss() )
             ? $employee->generalManagerBoss()->personnel_no : 0;
