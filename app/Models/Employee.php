@@ -29,7 +29,7 @@ class Employee extends Model
             ->where('no','1')
             ->where('empnik',$this->personnel_no)
             ->first();
-        return $s->emp_hrp1000_s_short;
+        return $s['emp_hrp1000_s_short'];
     }
 
     public function getEmpposidAttribute()
@@ -38,7 +38,7 @@ class Employee extends Model
             ->where('no','1')
             ->where('empnik',$this->personnel_no)
             ->first();
-        return $s->empposid;
+        return $s['empposid'];
     }
 
     public function user()
