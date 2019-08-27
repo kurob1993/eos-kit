@@ -101,6 +101,14 @@ class LoginController extends Controller
                 $employee->position_name = $structDisp->emppostx;
                 $employee->org_unit_name = $structDisp->emportx;
                 $employee->save();
+            }else{
+                $employee->personnel_no = $structDisp->empnik;
+                $employee->name = $structDisp->empname;
+                $employee->esgrp = $structDisp->emppersk;
+                $employee->cost_ctr = $structDisp->empkostl;
+                $employee->position_name = $structDisp->emppostx;
+                $employee->org_unit_name = $structDisp->emportx;
+                $employee->save();
             }
 
             // attach the role if not available

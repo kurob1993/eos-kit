@@ -26,13 +26,15 @@ class DebugController extends Controller
     public function debug()
     {   
 
-        return AttendanceQuota::where('secretary_id', '87')
-            ->with([
-                'overtimeReason', 
-                'stage',
-                'employee:personnel_no,name',
-                'attendanceQuotaApproval'
-                ]
-            )->get();
+        return url('/images/default.png');
+        
+        // AttendanceQuota::where('secretary_id', '87')
+        //     ->with([
+        //         'overtimeReason', 
+        //         'stage',
+        //         'employee:personnel_no,name',
+        //         'attendanceQuotaApproval'
+        //         ]
+        //     )->get();
     }
 }
