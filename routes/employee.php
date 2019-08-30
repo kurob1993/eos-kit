@@ -82,3 +82,6 @@
     Route::get('activity', 'ActivitiReportController@index')->name('activity.index');
     Route::get('activity/list/{personnel_no?}', 'ActivitiReportController@list')->name('activity.list');
     Route::get('activity/download/{file?}', 'ActivitiReportController@download')->name('activity.download');
+
+   // route untuk spd/travel
+   Route::resource('travels', 'TravelController');
