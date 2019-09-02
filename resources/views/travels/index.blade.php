@@ -9,9 +9,9 @@
   </div>
   @include('layouts._flash')
   <div class="panel-body">
-    <p> <a class="btn btn-primary" href="{{ route('overtimes.create') }}">Tambah</a> </p>
+    <p> <a class="btn btn-primary" href="{{ route('travels.create') }}">Tambah</a> </p>
     <div class="table-responsive">
-      {{-- {!! $html->table(['class'=>'table table-striped', 'width' => '100%']) !!} --}}
+      {!! $html->table(['class'=>'table table-striped', 'width' => '100%']) !!}
     </div>
   </div>
 </div>
@@ -45,7 +45,7 @@
 <script src={{ url("/plugins/DataTables/js/jquery.dataTables.min.js") }}></script>
 <script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
 <!-- Generated scripts from DataTables -->
-{{-- {!! $html->scripts() !!} --}}
+{!! $html->scripts() !!}
 @endpush
 
 @push('custom-scripts')

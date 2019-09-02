@@ -51,6 +51,22 @@
           selectize.setValue(res.personnel_no, false);
       }
     });
+
+    $.ajax({
+    url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/minManagerBossWithDelegation',
+        type: 'GET',
+        dataType: 'json',
+        error: function() {},
+        success: function(res) {
+          var newOptions = [];
+          var o = {name: res.name, personnel_no: res.personnel_no};
+          newOptions.push(o);
+          bossOptions.options = newOptions;
+          var bossSelect = $(".minManager-selectize").selectize(bossOptions);
+          var selectize = bossSelect[0].selectize;
+          selectize.setValue(res.personnel_no, false);
+      }
+    });
     
     @if (Auth::user()->employee()->first()->canDelegate())
     
