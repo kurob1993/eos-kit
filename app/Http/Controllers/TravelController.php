@@ -22,7 +22,7 @@ class TravelController extends Controller
         $nowEmp = Auth::user()->employee->personnel_no;
         $Travel = Travel::get();
         if ($request->ajax()) {
-            $DB = Datatables::of($Travel)
+            return Datatables::of($Travel)
                 ->editColumn('id', function ($Travel) {
                     return $Travel->plain_id;
                 })
@@ -51,13 +51,10 @@ class TravelController extends Controller
                         .'</label>';
                     }
                     return $code.' '.$name;
-                });
-                
-                $DB->editColumn('stage_id', function ($Travel) {
+                })->editColumn('stage_id', function ($Travel) {
                     return '<span class="label label-' . $Travel->stage->class_description . '">' 
                     . $Travel->stage->description . '</span>';
-                });
-                return $DB->escapeColumns([0,1,6])
+                })->escapeColumns([0,1,6])
                 ->make(true);
         }
 
