@@ -31,11 +31,16 @@ class Stage extends Model
         return $this->hasMany('App\Models\Attendance');
     }
 
+    public function travel()
+    {
+        return $this->hasMany('App\Models\Travel');
+    }
+
     public function flows()
     {
       return $this->belongsToMany('App\Models\Flow')->withPivot('sequence');
     }
-
+    
     public function scopeWaitingApprovalStage($query)
     {
         // NEED TO IMPLEMENT CONFIGURATION

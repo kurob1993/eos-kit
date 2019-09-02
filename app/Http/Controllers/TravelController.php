@@ -19,31 +19,46 @@ class TravelController extends Controller
      */
     public function index(Request $request, Builder $htmlBuilder)
     {
+        $nowEmp = Auth::user()->employee->personnel_no;
         $Travel = Travel::get();
-
         if ($request->ajax()) {
-            return Datatables::of($Travel)
-            ->editColumn('id', function ($Travel) {
-                return $Travel->plain_id;
-            })
-            ->editColumn('personnel_no', function ($Travel) {
-                return $Travel->employee->name;
-            })
-            ->editColumn('personnel_no', function ($Travel) {
-                $name = $Travel->employee->name;
-                $code = '<label class="label label-info">'.
-                    $Travel->employee->personnel_no
-                .'</label>';
-                return $code.' '.$name;
-            })
-            ->editColumn('start_date', function ($Travel) {
-                return $Travel->formatted_start_date;
-            })
-            ->editColumn('end_date', function ($Travel) {
-                return $Travel->formatted_end_date;
-            })
-            ->escapeColumns([0,1])
-            ->make(true);
+            $DB = Datatables::of($Travel)
+                ->editColumn('id', function ($Travel) {
+                    return $Travel->plain_id;
+                })
+                ->editColumn('personnel_no', function ($Travel) {
+                    return $Travel->employee->name;
+                })
+                ->editColumn('personnel_no', function ($Travel) {
+                    $name = $Travel->employee->name;
+                    $code = '<label class="label label-info">'.
+                        $Travel->employee->personnel_no
+                    .'</label>';
+                    return $code.' '.$name;
+                })
+                ->editColumn('start_date', function ($Travel) {
+                    return $Travel->formatted_start_date;
+                })
+                ->editColumn('end_date', function ($Travel) {
+                    return $Travel->formatted_end_date;
+                })
+                ->editColumn('atasan', function ($Travel) {
+                    $ta = $Travel->TravelApproval->first();
+                    if ($ta) {
+                        $name = $ta->employee->name;
+                        $code = '<label class="label label-info">'.
+                            $ta->employee->personnel_no
+                        .'</label>';
+                    }
+                    return $code.' '.$name;
+                });
+                
+                $DB->editColumn('stage_id', function ($Travel) {
+                    return '<span class="label label-' . $Travel->stage->class_description . '">' 
+                    . $Travel->stage->description . '</span>';
+                });
+                return $DB->escapeColumns([0,1,6])
+                ->make(true);
         }
 
         // disable paging, searching, details button but enable responsive
@@ -99,6 +114,22 @@ class TravelController extends Controller
             'class' => 'desktop',
             'searchable' => false,
             'orderable' => false,
+        ])
+        ->addColumn([
+            'data' => 'atasan',
+            'name' => 'atasan',
+            'title' => 'Atasan',
+            'class' => 'none',
+            'searchable' => false,
+            'orderable' => false,
+        ])
+        ->addColumn([
+            'data' => 'stage_id',
+            'name' => 'stage',
+            'title' => 'Tahapan',
+            'class' => 'none',
+            'searchable' => false,
+            'orderable' => false,
         ]);
 
         return view('travels.index')->with(compact('html', 'Travel'));
@@ -115,7 +146,6 @@ class TravelController extends Controller
             // mendapatkan data employee dari user
             // dan mengecek apakah dapat melakukan pelimpahan
             $canDelegate = Auth::user()->employee()->firstOrFail()->canDelegate();
-
         } catch(ModelNotFoundException $e) {
             // tampilkan pesan bahwa tidak ada data karyawan yang bisa ditemukan
             Session::flash("flash_notification", [
@@ -124,27 +154,10 @@ class TravelController extends Controller
             ]);
             // batalkan view create dan kembali ke parent
             return redirect()->route('travels.index');
-        }
-
-        try {
-             // mendapatkan absence quota berdasarkan user
-            $absenceQuota = AbsenceQuota::activeAbsenceQuota(Auth::user()->personnel_no)
-            ->with('absenceType:id,text')->firstOrFail();
-
-        } catch(ModelNotFoundException $e) {
-            // tampilkan pesan bahwa tidak ada absence quota
-            Session::flash("flash_notification", [
-                "level"=>"danger",
-                "message"=>"Belum ada kuota cuti untuk periode saat ini. " . 
-                    "Silahkan hubungi Divisi HCI&A."
-            ]);
-            // batalkan view create dan kembali ke parent
-            return redirect()->route('travels.index');
-        }  
+        } 
 
         return view('travels.create', [
-            'can_delegate' => $canDelegate,
-            'absence_quota' => $absenceQuota
+            'can_delegate' => $canDelegate
         ]);
     }
 
