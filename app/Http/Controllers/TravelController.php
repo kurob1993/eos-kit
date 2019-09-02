@@ -36,6 +36,12 @@ class TravelController extends Controller
                 .'</label>';
                 return $code.' '.$name;
             })
+            ->editColumn('start_date', function ($Travel) {
+                return $Travel->formatted_start_date;
+            })
+            ->editColumn('end_date', function ($Travel) {
+                return $Travel->formatted_end_date;
+            })
             ->escapeColumns([0,1])
             ->make(true);
         }
@@ -81,7 +87,15 @@ class TravelController extends Controller
         ->addColumn([
             'data' => 'tujuan',
             'name' => 'tujuan',
-            'title' => 'tujuan',
+            'title' => 'Tujuan',
+            'class' => 'desktop',
+            'searchable' => false,
+            'orderable' => false,
+        ])
+        ->addColumn([
+            'data' => 'keperluan',
+            'name' => 'keperluan',
+            'title' => 'Keperluan',
             'class' => 'desktop',
             'searchable' => false,
             'orderable' => false,
