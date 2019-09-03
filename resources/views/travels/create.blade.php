@@ -53,6 +53,17 @@
 <script src={{ url("/plugins/bootstrap-select/bootstrap-select.min.js") }}></script>
 <script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
 <script src={{ url("/plugins/parsley/dist/parsley.js") }}></script>
+<script>
+    $('#kendaraan').change(function(data){
+
+      if( $(this).val() == 1 ){
+        $('#nopol').removeClass('hidden');
+      }else{
+        $('#nopol').addClass('hidden');
+      }
+
+    })
+  </script>
 @endpush 
 
 @push('custom-scripts')

@@ -44,6 +44,8 @@ class TravelController extends Controller
                 })
                 ->editColumn('atasan', function ($Travel) {
                     $ta = $Travel->TravelApproval->first();
+                    $name = '';
+                    $code = '';
                     if ($ta) {
                         $name = $ta->employee->name;
                         $code = '<label class="label label-info">'.

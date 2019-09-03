@@ -62,6 +62,19 @@
     <!-- end deduction field -->
   </div>
 
+  <div class="form-group">
+    <select name="kendaraan" id="kendaraan" class="form-control">
+      <option value="">.:: Pilih Kendaraan ::.</option>
+      <option value="1">Dinas</option>
+      <option value="2">Umum</option>
+    </select>
+  </div>
+
+  <div class="form-group" id="nopol">
+    <label for="nopol">No Polisi</label>
+    <input type="text" class="form-control" name="nopol">
+  </div>
+
   <!-- begin note field -->
   <div class="form-group{{ $errors->has('note') ? ' has-error' : '' }}">
     {!! Form::label('note', 'Tujuan') !!}
