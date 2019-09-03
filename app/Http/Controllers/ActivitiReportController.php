@@ -237,13 +237,8 @@ class ActivitiReportController extends Controller
                 }
             }
 
-            try {
-                copy($readdir . $file, $movedir . $file);
-                unlink($readdir . $file);
-                return array(["response" => "berhasil"]);
-            } catch (\Throwable $th) {
-                return array(["response" => "gagal"]);
-            }
+            copy($readdir . $file, $movedir . $file);
+            unlink($readdir . $file);
         }
     }
 
