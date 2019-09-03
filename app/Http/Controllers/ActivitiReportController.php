@@ -155,8 +155,8 @@ class ActivitiReportController extends Controller
             ]);
 
         $data = [
-            'monthList' => ActivitiReport::monthList()->get(),
-            'yearList' => ActivitiReport::yearList()->get(),
+            'monthList' => ActivitiReport::where('Pernr', $nik)->monthList()->get(),
+            'yearList' => ActivitiReport::where('Pernr', $nik)->yearList()->get(),
         ];
         return view('activity.index')->with(compact('html', 'activity', 'data'));
     }
@@ -205,8 +205,8 @@ class ActivitiReportController extends Controller
     public function download(Request $request, $file = null)
     {
         if ($file) {
-            $readdir = config('emss.activity.dir');
-            $movedir = config('emss.activity.archive');
+            $readdir = '/nfs/interface/LapActivity/';
+            $movedir = '/nfs/interface/LapActivity/Archive/';
             $arfile  = scandir($readdir);
 
             $data = explode('_', $file);
