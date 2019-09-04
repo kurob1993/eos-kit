@@ -7,6 +7,7 @@ use App\Models\AbsenceApproval;
 use App\Models\AttendanceApproval;
 use App\Models\AttendanceQuotaApproval;
 use App\Models\TimeEventApproval;
+use App\Models\TravelApproval;
 use App\Models\Stage;
 
 class EmployeeApprovalComposer
@@ -14,6 +15,12 @@ class EmployeeApprovalComposer
     public function compose(View $view)
     {
         $view->with('stages', Stage::all());
+
+        // Jumlah item notifikasi untuk absence
+        $countTravelApprovals = TravelApproval::ofLoggedUser()
+            ->waitedForApproval()
+            ->get();
+        $view->with('countTravelApprovals', count($countTravelApprovals));
 
         // Jumlah item notifikasi untuk absence
         $countLeaveApprovals = AbsenceApproval::ofLoggedUser()

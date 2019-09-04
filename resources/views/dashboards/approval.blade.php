@@ -45,6 +45,15 @@
                     @endif
                 </a>
             </li>
+            <li class="">
+                <a href="#tab-spd" data-toggle="tab" aria-expanded="true"> SPD
+                    @if ($countTravelApprovals > 0)
+                    <span class="badge pull-right m-l-5">
+                        {{$countTravelApprovals}}
+                    </span>
+                    @endif
+                </a>
+            </li>
         </ul>
         <!-- end of dashboard nav-tabs  -->
 
@@ -86,6 +95,14 @@
 
             <!-- begin of overtimes tab  -->
             <div class="tab-pane fade" id="tab-overtimes">
+                <div class="panel-body p-0">
+                    {!! $overtimeTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+                </div>
+            </div>
+            <!-- end of overtimes tab  -->
+
+            <!-- begin of overtimes tab  -->
+            <div class="tab-pane fade" id="tab-spd">
                 <div class="panel-body p-0">
                     {!! $overtimeTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
                 </div>

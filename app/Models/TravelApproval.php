@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\ReceiveStatus;
+use App\Traits\ParentStage;
+use App\Traits\OfLoggedUserApproval;
 
 class TravelApproval extends Model
 {
-    use ReceiveStatus;
+    use ReceiveStatus, ParentStage, OfLoggedUserApproval;
 
     public function travel()
     {
