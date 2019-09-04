@@ -56,10 +56,12 @@
 <script>
     $('#kendaraan').change(function(data){
 
-      if( $(this).val() == 1 ){
-        $('#nopol').removeClass('hidden');
+      if( $(this).val() == 'Dinas' ){
+        $('#divnopol').removeClass('hidden');
+        $('#nopol').attr('required','true');
       }else{
-        $('#nopol').addClass('hidden');
+        $('#divnopol').addClass('hidden');
+        $('#nopol').removeAttr('required');
       }
 
     })

@@ -63,16 +63,16 @@
   </div>
 
   <div class="form-group">
-    <select name="kendaraan" id="kendaraan" class="form-control">
+    <select name="kendaraan" id="kendaraan" class="form-control" required>
       <option value="">.:: Pilih Kendaraan ::.</option>
-      <option value="1">Dinas</option>
-      <option value="2">Umum</option>
+      <option value="Dinas">Dinas</option>
+      <option value="Umum">Umum</option>
     </select>
   </div>
 
-  <div class="form-group" id="nopol">
+  <div class="form-group hidden" id="divnopol">
     <label for="nopol">No Polisi</label>
-    <input type="text" class="form-control" name="nopol">
+    <input type="text" class="form-control" name="nopol" id="nopol">
   </div>
 
   <!-- begin note field -->

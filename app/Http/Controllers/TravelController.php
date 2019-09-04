@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\AbsenceQuota;
 use App\Models\Travel;
 use App\Models\TravelApproval;
+use App\Models\Transition;
 
 class TravelController extends Controller
 {
@@ -19,8 +20,8 @@ class TravelController extends Controller
      */
     public function index(Request $request, Builder $htmlBuilder)
     {
-        $nowEmp = Auth::user()->employee->personnel_no;
-        $Travel = Travel::get();
+        $personnel_no = Auth::user()->employee->personnel_no;
+        $Travel = Travel::where('personnel_no', $personnel_no)->get();
         if ($request->ajax()) {
             return Datatables::of($Travel)
                 ->editColumn('id', function ($Travel) {
@@ -53,10 +54,20 @@ class TravelController extends Controller
                         .'</label>';
                     }
                     return $code.' '.$name;
-                })->editColumn('stage_id', function ($Travel) {
+                })
+                ->editColumn('stage_id', function ($Travel) {
                     return '<span class="label label-' . $Travel->stage->class_description . '">' 
                     . $Travel->stage->description . '</span>';
-                })->escapeColumns([0,1,6])
+                })
+                ->editColumn('kendaraan', function ($Travel) {
+                    if($Travel->kendaraan == 'Dinas'){
+                        $re = '<span class="label label-primary">'. $Travel->nopol . '</span> '. $Travel->kendaraan;
+                    }else{
+                        $re = '<span class="label label-primary">'. $Travel->kendaraan . '</span>';
+                    }
+                    return $re;
+                })
+                ->escapeColumns([0,1,6])
                 ->make(true);
         }
 
@@ -123,6 +134,14 @@ class TravelController extends Controller
             'orderable' => false,
         ])
         ->addColumn([
+            'data' => 'kendaraan',
+            'name' => 'kendaraan',
+            'title' => 'Kendaraan',
+            'class' => 'none',
+            'searchable' => false,
+            'orderable' => false,
+        ])
+        ->addColumn([
             'data' => 'stage_id',
             'name' => 'stage',
             'title' => 'Tahapan',
@@ -174,18 +193,40 @@ class TravelController extends Controller
         $travel->end_date = $request->end_date;
         $travel->tujuan = $request->tujuan;
         $travel->keperluan = $request->keperluan;
+        $travel->kendaraan = $request->kendaraan;
+        $travel->nopol = $request->nopol;
         $travel->stage_id = 1;
-        $travel->save();
 
-        $ta = new TravelApproval();
-        $ta->travel_id = $travel->id;
-        $ta->regno = $request->minManagerBoss;
-        $ta->status_id = 1;
-        $ta->save();
-
+        if($travel->save()){
+            $this->approval($travel->id,$request->minManagerBoss);
+            if($request->delegation){
+                $abbr = Auth::user()->structDisp()->first()->emp_hrp1000_s_short;
+                $nik = $request->delegation;
+                $this->storeDelegation($nik,$abbr,$travel->start_date,$travel->end_date);
+            }
+        }
+        
         return redirect()->route('travels.index');
     }
 
+    public function approval($id,$boss)
+    {
+        $ta = new TravelApproval();
+        $ta->travel_id = $id;
+        $ta->regno = $boss;
+        $ta->status_id = 1;
+        $ta->save();
+    }
+
+    public function storeDelegation($personnel_no,$abbr,$start,$end)
+    {
+        $ta = new Transition();
+        $ta->abbr_jobs = $abbr;
+        $ta->personnel_no = $personnel_no;
+        $ta->start_date = $start;
+        $ta->end_date = $end;
+        $ta->save();
+    }
     /**
      * Display the specified resource.
      *
