@@ -13,16 +13,12 @@
       <div class="alert alert-success fade in">
         <i class="fa fa-paper-plane pull-left"></i>
         <p>Batas maksimal data dislike berjumlah 6. Dengan aturan 3 untuk jabatan level sejajar dan 3 untuk jabatan 1 tingkat diatasnya.</p>
-        <br/>
         <i class="fa fa-paper-plane pull-left"></i>
         <p>Pertama gunakan filter jabatan dari level organisasi: direktorat, subdit, divisi, dinas, atau seksi.</p>
-        <br/>
         <i class="fa fa-paper-plane pull-left"></i>
         <p>Kedua pilih jabatan yang telah di-filter sesuai level organisasi.</p>
-        <br/>
         <i class="fa fa-paper-plane pull-left"></i>
         <p>Ketiga untuk menyimpan data jabatan klik tombol Kirim Data.</p>
-        <br/>
       </div>
       <div class="panel-body">
         {!! Form::open([ 'url' => route('dislike.store'), 'method' => 'post', 
