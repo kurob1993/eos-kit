@@ -23,7 +23,7 @@ class Preferdis extends Model
 
     public function zhrom0007()
     {
-        return $this->belongsTo('App\Models\SAP\zhrom0007','seark','AbbrPosition');
+        return $this->belongsTo('App\Models\SAP\Zhrom0007','seark','AbbrPosition');
     }
 
     public function scopeOfLoggedUser($query)
