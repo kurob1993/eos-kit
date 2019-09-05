@@ -13,6 +13,7 @@ use Yajra\DataTables\Html\Builder;
 use App\Models\Preferdis;
 use App\Models\PreferdisPeriode;
 use App\Models\Company;
+use App\Models\CompanyPosisition;
 use App\Models\SAP\Zhrom0007;
 use App\Models\SAP\StructDisp;
 use App\Http\Controllers\API\StructDispController;
@@ -180,6 +181,7 @@ class PreferenceController extends Controller
                 }])
                     ->where('sobid', Auth::user()->personnel_no)
                     ->where('preferdis_periode_id', $dataperiode->id)
+                    ->where('relat', '042')
                     ->get();
 
                 $preferSameLevel = $prefer->where('zhrom0007_count', '<>', 0)->count();
@@ -252,6 +254,15 @@ class PreferenceController extends Controller
             {
                 // get name off posisition
                 $stext  = Zhrom0007::where('AbbrPosition',$item)->first();
+                if(isset($stext->NameofPosition))
+                {
+                    $stextname = $stext->NameofPosition;
+                }
+                else
+                {
+                    $stext1 = CompanyPosisition::where('AbbrPosition',$item)->first();
+                    $stextname = $stext1->NameofPosition;
+                }
 
                 // input to tabel preferdis 
                 $referdis = Preferdis::create(
@@ -259,7 +270,7 @@ class PreferenceController extends Controller
                         'preferdis_periode_id'  => $request->input('periode'),
                         'otype'                 => 'S',
                         'seark'                 => $item,
-                        'stext'                 => $stext->NameofPosition,
+                        'stext'                 => $stextname,
                         'begda'                 => $dateNow,
                         'enda'                  => '9999-12-31',
                         'rsign'                 => 'B',

@@ -14,7 +14,7 @@
     @endif
     <div class="row" style="margin-bottom: 20px">
       <div>
-          <div class="col-sm-3">
+          <div class="col-sm-3 col-md-offset-8">
               <label for="year">Periode:</label>
               <select id="year" name="year" class="form-control" required>
                   <option selected value=""> .:: All Periode ::. </option>
@@ -27,7 +27,7 @@
               <label for="search">Search:</label>
               <input type="text" name="" id="text" class="form-control">
           </div> --}}
-          <div class="col-sm-4 m-t-25">
+          <div class="col-sm-1 m-t-25">
               <input type="submit" name="" id="search" value="search" class="btn btn-md btn-primary" required>
           </div>
       </div>

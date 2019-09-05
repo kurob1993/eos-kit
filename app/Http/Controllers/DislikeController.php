@@ -12,6 +12,7 @@ use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\Preferdis;
 use App\Models\PreferdisPeriode;
+use App\Models\Company;
 use App\Models\SAP\Zhrom0007;
 use App\Models\SAP\StructDisp;
 use App\Http\Controllers\API\StructDispController;
@@ -47,21 +48,49 @@ class DislikeController extends Controller
 
             if($cek > 0)
             {
+                // get data periode
                 $dataperiode = PreferdisPeriode::where('finish_date', '>=', $dateNow)
                     ->where('start_date', '<=', $dateNow)
                     ->first();
-                    
+
                 // get data structdisp
                 $strucDisp = new StructDispController();
-
                 $dataDisp = $strucDisp->show(Auth::user()->personnel_no);
 
+                // get level jabatan
                 $level = substr($dataDisp['esgrp'],0,1);
+            
+                // cek periode
+                $prefer = Preferdis::withCount(['zhrom0007' => function ($query) use($level) {
+                    $query->where('LvlOrg', $level);
+                }])
+                    ->where('sobid', Auth::user()->personnel_no)
+                    ->where('preferdis_periode_id', $dataperiode->id)
+                    ->where('relat', '043')
+                    ->get();
 
-                $pref ="Data Preference dan Dislike";
+                $preferSameLevel = $prefer->where('zhrom0007_count', '<>', 0)->count();
 
+                $allPrefer = $prefer->count();
+
+                $preferNotSameLevel  = $allPrefer -  $preferSameLevel;
+
+                // get data perusahaan
+                $companies = Company::all();
+
+                // cek level jabatan
+                if($level == 'A' || $level == 'B')
+                {
+                    // tampilkan view create
+                    return view('dislikes.create-ab')->with(compact('pref', 'level', 'dataperiode','companies','preferNotSameLevel','preferSameLevel'));
+                }
+                else
+                {
+                    // tampilkan view create
+                    return view('dislikes.create')->with(compact('pref', 'level', 'dataperiode','preferNotSameLevel','preferSameLevel'));
+                }
                 // tampilkan view create
-                return view('dislikes.create')->with(compact('pref', 'level', 'dataperiode'));
+                // return view('dislikes.create')->with(compact('pref', 'level', 'dataperiode'));
             }
             else
             {
@@ -108,8 +137,17 @@ class DislikeController extends Controller
             // check item null or not
             if($item != "") 
             {
-                // get name off posisition
-                $stext  = Zhrom0007::where('AbbrPosition',$item)->first();
+                 // get name off posisition
+                 $stext  = Zhrom0007::where('AbbrPosition',$item)->first();
+                 if(isset($stext->NameofPosition))
+                 {
+                     $stextname = $stext->NameofPosition;
+                 }
+                 else
+                 {
+                     $stext1 = CompanyPosisition::where('AbbrPosition',$item)->first();
+                     $stextname = $stext1->NameofPosition;
+                 }
 
                 // save to table preferdis
                 $referdis = Preferdis::create(

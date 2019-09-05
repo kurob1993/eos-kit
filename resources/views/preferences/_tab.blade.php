@@ -2,7 +2,7 @@
     <li @if(Request::segment(1) == 'preference')
             class="active"
         @endif>
-        <a href="{{ route('preference.create') }}"> Preferances</a>
+        <a href="{{ route('preference.create') }}"> Preferences</a>
     </li>
     <li @if(Request::segment(1) == 'dislike') 
             class="active"

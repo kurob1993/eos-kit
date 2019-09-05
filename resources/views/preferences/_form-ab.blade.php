@@ -24,6 +24,10 @@
 
     <div class="row" id="ks">
         <div class="col-xs-11"> 
+        <input name="jumSameLevel" value="{{ $preferSameLevel }}" type="hidden" id="jumSameLevel" />
+        <input name="jumNotSameLevel" value="{{ $preferNotSameLevel }}" type="hidden" id="jumNotSameLevel" />
+
+            
         <input name="golongan" value="{{ $level }}" type="hidden" id="level" />
         <input name="periode" value="{{ $dataperiode->id }}" type="hidden" id="periode" />
 
