@@ -22,7 +22,7 @@
                 </a>
             </li>            
             <li class="has-sub {{ (
-                (Request::segment(1) == 'cvs') || (Request::segment(1) == 'organizations') 
+                (Request::segment(1) == 'preference') || (Request::segment(1) == 'cvs') || (Request::segment(1) == 'organizations') 
                     || (Request::segment(1) == 'administrations')) ? 'active' : '' 
                 }}">
                 <a href="javascript:;">
@@ -34,6 +34,12 @@
                     <li class="{{ Request::segment(1)=='cvs' ? 'active' : '' }}"> 
                         <a href="{{ url('cvs') }}">Curriculum Vitae</a> 
                     </li>
+                    {{-- preference and dislike menu --}}
+                    <li class="{{ Request::segment(1)=='preference' ? 'active' : '' }}">
+                        <a href="{{ url('preference') }}">Preference and Dislike</a>
+                    </li>
+                    {{-- end preference and dislike menu --}}
+
                     {{-- <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 
                         <a href="#">Organisasi</a> 
                     </li>
@@ -71,6 +77,7 @@
                     {{-- <li> <a href="#">Laporan Aktivitas</a> </li> --}}
                 </ul>
             </li>
+            
             {{-- <li class="has-sub">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>

@@ -3,6 +3,7 @@
 namespace App\Models\SAP;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\SAP\StructDispSap;
 
 class StructDisp extends Model
 {
@@ -12,6 +13,13 @@ class StructDisp extends Model
     public $timestamps = false;
 
     protected $casts = ['empnik' => 'integer', 'dirnik' => 'integer'];
+
+    protected $appends = ['old_abbr'];
+ 
+    public function getOldAbbrAttribute()
+    { 
+        return $this->empnik;
+    }
 
     public function user()
     {
@@ -29,6 +37,11 @@ class StructDisp extends Model
     {
         // many-to-one relationship
         return $this->belongsTo('\App\Models\Employee', 'dirnik', 'personnel_no');
+    }
+
+    public function structDispSap()
+    {
+        return $this->belongsTo('\App\Models\SAP\StructDispSap', 'empnik', 'empnik')->where('no',1);
     }
 
     public function scopeGmMgrSpt($query)

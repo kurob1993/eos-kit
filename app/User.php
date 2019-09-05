@@ -89,4 +89,10 @@ class User extends Authenticatable
       // many-to-one relationship dengan AttendanceQuota
       return $this->hasMany('App\Models\AttendanceQuota', 'dirnik', 'personnel_no');
   }
+
+  public function preferdis()
+  {
+    return $this->hasMany('App\Model\Preferdis', 'sobid', 'personnel_no');
+  }
+
 }

@@ -19,4 +19,14 @@ class Zhrom0007 extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public function structDispSap()
+    {
+        return $this->belongsTo('\App\Models\SAP\StructDispSap');
+    }
+
+    public function preferdis()
+    {
+        return $this->hasMany('\App\Models\Preferdis');
+    }
 }

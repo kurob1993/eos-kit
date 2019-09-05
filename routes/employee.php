@@ -77,3 +77,7 @@
 
     // route untuk wakers
     Route::resource('wakers', 'WakerController', ['only' => 'index']);
+
+    // route prefence and dislike
+    Route::resource('preference','PreferenceController');
+    Route::resource('dislike','DislikeController');

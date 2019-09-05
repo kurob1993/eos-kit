@@ -31,6 +31,23 @@
                     </ul>
                 </li>
                 @endrole 
+
+                @role('hcd')
+                <li class="has-sub {{ (
+                    (Request::segment(2) == 'preference')) ? 'active' : '' 
+                    }}">
+                    <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <i class="icon-user"></i>
+                            <span>Personnel Admin</span>
+                        </a>
+                    <ul class="sub-menu">
+                        <li class="{{ Request::segment(2)=='preference' ? 'active' : '' }}">
+                            <a href="{{ url('admin/preference') }}">Pref and Dis Download</a>
+                        </li>
+                    </ul>
+                </li>
+                @endrole
     
                 <li class="">
                     <a href="{{ route('home') }}" >

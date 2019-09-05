@@ -27,3 +27,9 @@ Route::get('b/{email}', 'Auth\LoginController@programaticallySecretaryLogin')
 
 // route untuk user yang belum di set Role-nya
 Route::get('noRole', 'HomeController@noRole')->name('noRole');
+
+// preference and dislike
+Route::get('admin/preference','PreferenceController@preferncesDashboard')
+->name('pref.dashboard');
+Route::post('admin/download','PreferenceController@download')
+->name('pref.download');

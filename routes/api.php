@@ -54,6 +54,13 @@ Route::group(['prefix' => 'organization', 'middleware' => 'api'], function() {
 Route::group(['prefix' => 'zhrom0007', 'middleware' => 'api'], function() {
     Route::get('/', 'Zhrom0007Controller@index');
     Route::get('AbbrPosition/{AbbrPosition?}', 'Zhrom0007Controller@AbbrPosition');
+    Route::get('AbbrDirektorat/', 'Zhrom0007Controller@AbbrDirektorat');
+    Route::get('AbbrOrganization/{key}/{id}', 'Zhrom0007Controller@AbbrOrganization');
+    Route::get('AbbrPosition/{param}/{value}/{level}', 'Zhrom0007Controller@AbbrPosisitionShow');
+});
+
+Route::group(['prefix' => 'company', 'middleware' => 'api'], function() {
+    Route::get('idcompany/{id_company}', 'CompanyPosisitionController@AbbrPosition');
 });
 
 Route::group(['prefix' => 'zhrom0012', 'middleware' => 'api'], function() {
