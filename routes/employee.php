@@ -49,6 +49,8 @@
             ->name('dashboards.overtime_approval');
         Route::get('time_event_approval', 'ApprovalController@timeEventApproval')
             ->name('dashboards.time_event_approval');
+        Route::get('travel_approval', 'ApprovalController@travelApproval')
+            ->name('dashboards.travel_approval');
     });
 
     // route untuk leave

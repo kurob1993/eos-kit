@@ -8,9 +8,11 @@ use App\Models\AbsenceApproval;
 use App\Models\AttendanceApproval;
 use App\Models\TimeEventApproval;
 use App\Models\AttendanceQuotaApproval;
+use App\Models\TravelApproval;
 use App\Models\Status;
 use App\Models\Absence;
 use App\Models\Attendance;
+use App\Models\Travel;
 use App\Models\Transition;
 use Session;
 use Storage;
@@ -156,15 +158,15 @@ class ApprovalController extends Controller
                 })
                 ->editColumn('permit.attachment', function ($aa) {
                     if (str_is("*pdf", $aa->permit->attachment)) {
-                        $x = '<a href="' . config('app.url'). 
-                        "/storage/" .
-                        $aa->permit->attachment . '"
+                        $x = '<a href="' . config('app.url') .
+                            "/storage/" .
+                            $aa->permit->attachment . '"
                     class="btn btn-primary" target="_blank">View</a>';
                     } else {
                         $x = '<img class="center-block img-responsive"
-                        src="' . config('app.url').
-                        "/storage/".
-                        $aa->permit->attachment . '" alt="">';
+                        src="' . config('app.url') .
+                            "/storage/" .
+                            $aa->permit->attachment . '" alt="">';
                     }
                     return $x;
                 })
@@ -332,6 +334,77 @@ class ApprovalController extends Controller
         }
     }
 
+    public function travelApproval(Request $request)
+    {
+        // ambil data persetujuan attendanceQuota, WARNING nested relationship eager loading
+        $TravelApproval = TravelApproval::ofLoggedUser()
+        ->with([
+            'Travel',
+            'Travel.employee',
+            'Travel.stage',
+            'Travel.employee:personnel_no,name',
+        ]);
+
+        if (is_numeric($request->input('stage_id')))
+            $TravelApproval->whereStageId('Travel', $request->input('stage_id'));
+
+        // response untuk datatables absences approval
+        if ($request->ajax()) {
+            return Datatables::of($TravelApproval)
+                ->editColumn('id', function ($TravelApproval) {
+                    return $TravelApproval->travel->plain_id;
+                })
+                ->editColumn('personnel_no', function ($TravelApproval) {
+                    return $TravelApproval->employee->name;
+                })
+                ->editColumn('personnel_no', function ($TravelApproval) {
+                    $name = $TravelApproval->employee->name;
+                    $code = '<label class="label label-info">' .
+                        $TravelApproval->employee->personnel_no
+                        . '</label>';
+                    return $code . ' ' . $name;
+                })
+                ->editColumn('travel.start_date', function ($TravelApproval) {
+                    return $TravelApproval->travel->formatted_start_date;
+                })
+                ->editColumn('travel.end_date', function ($TravelApproval) {
+                    return $TravelApproval->travel->formatted_end_date;
+                })
+                ->editColumn('travel.stage_id', function ($TravelApproval) {
+                    return '<span class="label label-' . $TravelApproval->travel
+                        ->stage->class_description . '">' . $TravelApproval->travel->stage->description . 
+                    '</span>';
+                })
+                ->editColumn('travel.kendaraan', function ($TravelApproval) {
+                    if($TravelApproval->travel->kendaraan == 'Dinas'){
+                        $re = '<span class="label label-primary">'. $TravelApproval->travel->nopol . '</span> '. $TravelApproval->travel->kendaraan;
+                    }else{
+                        $re = '<span class="label label-primary">'. $TravelApproval->travel->kendaraan . '</span>';
+                    }
+                    return $re;
+                })
+                ->addColumn('action', function ($TravelApproval) {
+                    if (
+                        $TravelApproval->travel->is_waiting_approval &&
+                        $TravelApproval->isWaiting
+                    ) {
+                        // apakah stage-nya: waiting approval
+                        return view('components._action-approval', [
+                            'model' => $TravelApproval,
+                            'approve_url' => route('dashboards.approve', [
+                                'id' => $TravelApproval->id, 'approval' => 'travel'
+                            ]),
+                            'reject_url' => route('dashboards.reject', [
+                                'id' => $TravelApproval->id, 'approval' => 'travel'
+                            ]),
+                        ]);
+                    }
+                })
+                ->escapeColumns([0, 1, 6])
+                ->make(true);
+        }
+    }
+
     public function approve(Request $request, $approval, $id)
     {
         // poor database design
@@ -361,6 +434,12 @@ class ApprovalController extends Controller
             case 'overtime':
                 $approved = AttendanceQuotaApproval::find($id);
                 $moduleText = config('emss.modules.overtimes.text');
+                break;
+            case 'travel':
+                $approved = TravelApproval::find($id);
+                $moduleText = config('emss.modules.overtimes.text');
+                // delegasi
+                $this->storeToDelegation($approval, $id);
                 break;
         }
 
@@ -432,19 +511,19 @@ class ApprovalController extends Controller
                     ->leavesOnly()
                     ->get();
                 $moduleText = config('emss.modules.leaves.text');
-                $this->storeToDelegationForAll('leave',$approvals);
+                $this->storeToDelegationForAll('leave', $approvals);
                 break;
             case 'permit':
                 $approvals = AbsenceApproval::ofLoggedUser()
                     ->whereStageIsWaitingApproval('absence')
                     ->get();
-                $this->storeToDelegationForAll('absence',$approvals);
+                $this->storeToDelegationForAll('absence', $approvals);
 
                 $approvals = AttendanceApproval::ofLoggedUser()
                     ->whereStageIsWaitingApproval('attendance')
                     ->get()
                     ->merge($approvals);
-                $this->storeToDelegationForAll('attendance',$approvals);
+                $this->storeToDelegationForAll('attendance', $approvals);
 
                 $moduleText = config('emss.modules.permits.text');
                 break;
@@ -458,6 +537,14 @@ class ApprovalController extends Controller
                 $approvals = AttendanceQuotaApproval::ofLoggedUser()
                     ->whereStageIsWaitingApproval('attendanceQuota')
                     ->get();
+                $moduleText = config('emss.modules.overtimes.text');
+                break;
+            case 'travel':
+                $approvals = TravelApproval::ofLoggedUser()
+                    ->whereStageIsWaitingApproval('travel')
+                    ->get();
+                $this->storeToDelegationForAll('travel', $approvals);
+
                 $moduleText = config('emss.modules.overtimes.text');
                 break;
         }
@@ -509,58 +596,72 @@ class ApprovalController extends Controller
         return $result;
     }
 
-    public function storeToDelegation($module,$id)
+    public function storeToDelegation($module, $id)
     {
         $approved = null;
         switch ($module) {
             case 'leave':
                 $approved = AbsenceApproval::find($id);
-                if($approved){
+                if ($approved) {
                     $approved =  $approved->absence;
                     $start_date = $approved->start_date->toDateString();
                     $end_date = $approved->end_date->toDateString();
                     $strucdisp = $approved->employee->StructDisp->first();
 
-                    $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
-                        ->where('start_date',$start_date)
-                        ->where('end_date',$end_date);
+                    $transition = Transition::where('abbr_jobs', $strucdisp->emp_hrp1000_s_short)
+                        ->where('start_date', $start_date)
+                        ->where('end_date', $end_date);
                 }
                 break;
 
             case 'absence':
                 $approved = AbsenceApproval::find($id);
-                if($approved){
+                if ($approved) {
                     $approved =  $approved->absence;
                     $start_date = $approved->start_date->toDateString();
                     $end_date = $approved->end_date->toDateString();
                     $strucdisp = $approved->employee->StructDisp->first();
 
-                    $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
-                        ->where('start_date',$start_date)
-                        ->where('end_date',$end_date);
+                    $transition = Transition::where('abbr_jobs', $strucdisp->emp_hrp1000_s_short)
+                        ->where('start_date', $start_date)
+                        ->where('end_date', $end_date);
                 }
                 break;
 
             case 'attendance':
                 $approved = AttendanceApproval::find($id);
-                if($approved){
+                if ($approved) {
                     $approved =  $approved->attendance;
                     $start_date = $approved->start_date->toDateString();
                     $end_date = $approved->end_date->toDateString();
                     $strucdisp = $approved->employee->StructDisp->first();
 
-                    $transition = Transition::where('abbr_jobs',$strucdisp->emp_hrp1000_s_short)
-                        ->where('start_date',$start_date)
-                        ->where('end_date',$end_date);
+                    $transition = Transition::where('abbr_jobs', $strucdisp->emp_hrp1000_s_short)
+                        ->where('start_date', $start_date)
+                        ->where('end_date', $end_date);
                 }
                 break;
-            
+
+            case 'travel':
+                $approved = TravelApproval::find($id);
+                if ($approved) {
+                    $approved =  $approved->travel;
+                    $start_date = $approved->start_date->toDateString();
+                    $end_date = $approved->end_date->toDateString();
+                    $strucdisp = $approved->employee->StructDisp->first();
+
+                    $transition = Transition::where('abbr_jobs', $strucdisp->emp_hrp1000_s_short)
+                        ->where('start_date', $start_date)
+                        ->where('end_date', $end_date);
+                }
+                break;
+
             default:
                 # code...
                 break;
         }
 
-        if(!$approved){
+        if (!$approved) {
             // tampilkan pesan bahwa telah berhasil menyetujui
             Session::flash("flash_notification", [
                 "level" => "warning",
@@ -568,12 +669,13 @@ class ApprovalController extends Controller
             ]);
             return redirect()->back();
         }
-        $transition->update(['actived_at'=>date('Y-m-d H:i:s')]);
+        $transition->update(['actived_at' => date('Y-m-d H:i:s')]);
     }
-    
-    public function storeToDelegationForAll($module,$data){
+
+    public function storeToDelegationForAll($module, $data)
+    {
         foreach ($data as $key => $value) {
-           $this->storeToDelegation($module,$value->id);
+            $this->storeToDelegation($module, $value->id);
         }
     }
 }

@@ -54,9 +54,15 @@ class ComposerServiceProvider extends ServiceProvider
             return $this->app->make(Builder::class);
 
         });        
+
         // DataTables builder for time event approval
         $this->app->bind('datatables.html.timeEventTable', function () {
             return $this->app->make(Builder::class);
         });   
+
+        // DataTables builder for time event approval
+        $this->app->bind('datatables.html.travelTable', function () {
+            return $this->app->make(Builder::class);
+        });
     }
 }

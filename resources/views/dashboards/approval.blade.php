@@ -104,7 +104,7 @@
             <!-- begin of overtimes tab  -->
             <div class="tab-pane fade" id="tab-spd">
                 <div class="panel-body p-0">
-                    {!! $overtimeTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+                    {!! $travelTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
                 </div>
             </div>
             <!-- end of overtimes tab  -->
@@ -165,6 +165,7 @@
 {!! $permitTable->scripts() !!}
 {!! $overtimeTable->scripts() !!}
 {!! $timeEventTable->scripts() !!}
+{!! $travelTable->scripts() !!}
 @endpush
 
 @push('custom-scripts')

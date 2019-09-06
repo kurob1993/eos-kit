@@ -360,6 +360,80 @@ class EmployeeApprovalComposer
             ],
         ];
 
+        $travelFields = [
+            [ 
+                'data' => 'id', 
+                'name' => 'id', 
+                'title' => 'ID',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'travel.personnel_no', 
+                'name' => 'travel.personnel_no', 
+                'title' => 'NIK',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'travel.employee.name', 
+                'name' => 'travel.employee.name', 
+                'title' => 'Nama',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'travel.start_date', 
+                'name' => 'travel.start_date', 
+                'title' => 'Tanggal Mulai',
+                'searchable' => false,
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'travel.end_date', 
+                'name' => 'travel.end_date', 
+                'title' => 'Berakhir',
+                'searchable' => false,
+                'orderable' => false,
+            ],        
+            [ 
+                'data' => 'travel.tujuan', 
+                'name' => 'travel.tujuan', 
+                'title' => 'Tujuan', 
+                'searchable' => false,
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'travel.keperluan', 
+                'name' => 'travel.keperluan', 
+                'title' => 'Keperluan', 
+                'searchable' => false, 
+                'class' => 'none',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'travel.kendaraan',
+                'name' => 'travel.kendaraan',
+                'title' => 'Kendaraan',
+                'class' => 'none',
+                'searchable' => false,
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'travel.stage_id',
+                'name' => 'travel.stage',
+                'title' => 'Tahapan',
+                'class' => 'none',
+                'searchable' => false,
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'action', 
+                'name' => 'action', 
+                'title' => 'Aksi', 
+                'class' => 'text-center',
+                'searchable' => false,
+                'orderable' => false,
+            ],
+        ];
+
         // table builder untuk AbsenceApproval
         $leaveTableBuilder = app('datatables.html.leaveTable');
         $leaveTable = $leaveTableBuilder
@@ -408,11 +482,24 @@ class EmployeeApprovalComposer
         $overtimeTable->parameters($tableParameters);
         $view->with('overtimeTable', $overtimeTable);
 
+        // table builder untuk Travel atau SPD
+        $travelTableBuilder = app('datatables.html.travelTable');
+        $travelTable = $travelTableBuilder
+            ->setTableAttribute('id', 'travelTable')
+            ->columns($travelFields)
+            ->minifiedAjax(
+                route('dashboards.travel_approval'),
+                'data.stage_id = $("#filter-travelTable option:selected").val();', [ ]
+            );
+        $travelTable->parameters($tableParameters);
+        $view->with('travelTable', $travelTable);
+
         $tableNames = collect([
             [ 'tableName' => 'leaveTable', 'approval' => 'leave' ],
             [ 'tableName' => 'permitTable', 'approval' => 'permit' ],
             [ 'tableName' => 'overtimeTable', 'approval' => 'overtime' ],
-            [ 'tableName' => 'timeEventTable', 'approval' => 'time_event' ]
+            [ 'tableName' => 'timeEventTable', 'approval' => 'time_event' ],
+            [ 'tableName' => 'travelTable', 'approval' => 'travel' ]
         ]);
         $view->with(compact('tableNames'));
     }
