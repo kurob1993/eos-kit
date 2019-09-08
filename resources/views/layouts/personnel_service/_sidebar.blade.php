@@ -43,6 +43,9 @@
                         </a>
                     <ul class="sub-menu">
                         <li class="{{ Request::segment(2)=='preference' ? 'active' : '' }}">
+                            <a href="{{ url('preferdis/periode') }}">Periode</a>
+                        </li>
+                        <li class="{{ Request::segment(2)=='preference' ? 'active' : '' }}">
                             <a href="{{ url('admin/preference') }}">Pref and Dis Download</a>
                         </li>
                     </ul>

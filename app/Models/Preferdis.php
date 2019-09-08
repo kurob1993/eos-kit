@@ -4,11 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use App\Models\SAP\Zhrom0007;
 
 
 class Preferdis extends Model
 {
     protected $fillable = ['preferdis_periode_id','begda','enda','sobid','otype','seark','rsign','relat','sclas','status','stext'];
+
+    protected $appends = ['golongan'];
+
+    public function getGolonganAttribute()
+    {
+        $golongan = Zhrom0007::where('AbbrPosition', $this->attributes['seark'])->get();
+        return $golongan;
+    }
 
     public function user()
     {

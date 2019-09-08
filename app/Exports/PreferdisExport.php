@@ -23,16 +23,15 @@ class PreferdisExport implements FromView
     */
     public function view(): View
     {
-        $data = Preferdis::where('preferdis_periode_id',$this->periode)
-                    ->get([
-                        'preferdis_periode_id',
-                        'sobid',
-                        'stext',
-                        'begda'
-                        ]
-                    );
+        $data = Preferdis::with(['zhrom0007'])
+            ->where('preferdis_periode_id',$this->periode)
+            ->where('relat','042')
+            ->get();
 
-        $dataGroup = $data->groupBy('sobid');
+        $groupBySobid = $data->groupBy('sobid');
+
+        $dataGroup = $groupBySobid->sortBy('seark');
+        // dd($dataGroup);
 
         return view('preferences._export', [
             'preferences' => $dataGroup
