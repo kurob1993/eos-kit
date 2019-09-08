@@ -437,13 +437,14 @@ class ApprovalController extends Controller
                 break;
             case 'travel':
                 $approved = TravelApproval::find($id);
-                $moduleText = config('emss.modules.overtimes.text');
+                $moduleText = 'SPD';
                 // delegasi
                 $this->storeToDelegation($approval, $id);
                 break;
         }
 
         $approved->status_id = Status::approveStatus()->id;
+        $approved->text = $request->text;
         if (!$approved->save()) {
             // kembali lagi jika gagal
             return redirect()->back();

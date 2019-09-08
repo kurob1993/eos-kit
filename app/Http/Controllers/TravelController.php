@@ -121,7 +121,7 @@ class TravelController extends Controller
             'data' => 'keperluan',
             'name' => 'keperluan',
             'title' => 'Keperluan',
-            'class' => 'desktop',
+            'class' => 'none',
             'searchable' => false,
             'orderable' => false,
         ])
@@ -145,7 +145,7 @@ class TravelController extends Controller
             'data' => 'stage_id',
             'name' => 'stage',
             'title' => 'Tahapan',
-            'class' => 'none',
+            'class' => 'desktop',
             'searchable' => false,
             'orderable' => false,
         ]);

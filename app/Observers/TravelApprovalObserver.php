@@ -3,8 +3,7 @@
 namespace App\Observers;
 
 use Session;
-// use App\Notifications\LeaveApprovalMessage;
-// use App\Notifications\AbsenceApprovalCreatedMessage;
+use App\Notifications\TravelApprovalMessage;
 use App\Models\TravelApproval;
 use App\Models\Stage;
 use App\Models\Employee;
@@ -12,22 +11,8 @@ use App\Message;
 
 class TravelApprovalObserver
 {
-    public function created(TravelApproval $TravelApproval)
-    {
-        // // to adalah karyawan yang mengajukan
-        // $to = Employee::findByPersonnel($absenceApproval->regno)
-        //     ->first()
-        //     ->user;
-
-        // // sistem mengirim email notifikasi
-        // $to->notify(new AbsenceApprovalCreatedMessage($absenceApproval));
-    }
-
     public function updated(TravelApproval $TravelApproval)
-    {
-      // $flow_id  = config('emss.flows.absences');
-      // $flow_stage = FlowStage::nextSequence($flow_id);
-      
+    {      
       // mencari data absence sesuai dengan relatioship
       $travel = $TravelApproval->travel()->first();
 
@@ -49,31 +34,23 @@ class TravelApprovalObserver
         $travel->stage_id = Stage::sentToSapStage()->id;
 
         // message history
-        // $messageAttribute = sprintf('Leave approved from %s to %s',
-        // $from->personnelNoWithName, $to->personnelNoWithName);
-      } else {
-
-        // NEED TO IMPLEMENT FLOW STAGE (denied)
-        // $absence->stage_id = 5;
-
-        // // message history
-        // $messageAttribute = sprintf('Leave rejected from %s to %s',
-        // $from->personnelNoWithName, $to->personnelNoWithName);
+        $messageAttribute = sprintf('SPD approved from %s to %s',
+        $from->personnelNoWithName, $to->personnelNoWithName);
       }
       
-      // // simpan data message history lainnya
-      // $message->setAttribute('from', $from->id);
-      // $message->setAttribute('to', $to->id);
-      // $message->setAttribute('message', $messageAttribute);
+      // simpan data message history lainnya
+      $message->setAttribute('from', $from->id);
+      $message->setAttribute('to', $to->id);
+      $message->setAttribute('message', $messageAttribute);
       
-      // // simpan message history
-      // $message->save();
+      // // simpan message history/
+      $message->save();
       
-      // // update data absence
+      // update data absence
       $travel->save();
 
-      // // sistem mengirim email notifikasi dari atasan ke
-      // // karyawan yang mengajukan         
-      // $to->notify(new LeaveApprovalMessage($from, $TravelApproval));
+      // sistem mengirim email notifikasi dari atasan ke
+      // karyawan yang mengajukan         
+      $to->notify(new TravelApprovalMessage($from, $TravelApproval));
     }
 }
