@@ -28,9 +28,23 @@
                 <th>{{ $value[0]->user->structDisp[0]->structDispSap->zhrom0007->NameofOrgUnitDivisi }}</th>
                 <th>{{ $value[0]->user->structDisp[0]->structDispSap->zhrom0007->NameofOrgUnitSubDirektorat }}</th>
                 <th>{{ $value[0]->user->structDisp[0]->structDispSap->zhrom0007->NameofOrgUnitDirektorat }}</th>
-                <th>{{ substr($value[0]->begda, 0,4) }}</th>
+                <th>{{ $value[0]->preferdisPeriode->start_date }} s/d {{ $value[0]->preferdisPeriode->finish_date }}</th>
+                @php $no1 = 1 @endphp
                 @foreach ($value as $item)
-                <td>{{ $item->stext }}</td>
+                @php $no1 = 1 @endphp
+                    @if( $item->zhrom0007->LvlOrg != substr($value[0]->user->structDisp[0]->emppersk,0,1))
+                    <td>{{ $no1++ }} {{ $item->stext }}</td>
+                    @endif
+                @endforeach
+                @if($no1 < 3)
+                @for ($no2=1;  $no2 <= 3-$no1; $no2++)
+                    <td>Null</td>
+                @endfor
+                @endif
+                @foreach ($value as $item)
+                    @if( $item->zhrom0007->LvlOrg == substr($value[0]->user->structDisp[0]->emppersk,0,1))
+                    <td>{{ $item->stext }}</td>
+                    @endif
                 @endforeach
             </tr>
             @endforeach
