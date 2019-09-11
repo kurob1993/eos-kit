@@ -14,6 +14,7 @@ use App\Models\AbsenceQuota;
 use App\Models\FlowStage;
 use App\Models\Status;
 use App\Models\Transition;
+use App\Jobs\SendNotifToSso;
 
 class AbsenceObserver
 {
@@ -145,6 +146,19 @@ class AbsenceObserver
             // menyimpan data persetujuan
             $absence_approval->save();
         }
+
+        //Kirim Notif Ke SSO
+        $type = $absence->absenceType()->first()->subtype;
+        if($type == '0100' || $type == '0200'){
+            $absenceType = 'Cuti';
+        }else{
+            $absenceType = 'Izin';
+        }
+        $nik = $employee->personnel_no;
+        $title = $absence->plain_id;
+        $body = 'Selamat '.$absenceType.' Anda Berhasil dibuat.';
+        $url = url('notif-sso/absence/'.$absence->id);
+        SendNotifToSso::dispatch($nik,$title,$body,$url);
     }
 
     public function updating(Absence $absence)

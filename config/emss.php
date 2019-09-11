@@ -51,4 +51,8 @@ return [
     'archive' => env('ACTIVITY_ARCHIVE', '/nfs/interface/LapActivity/Archive/'),
   ],
 
+  'notif_sso' => [
+    'link' => env('NOTIF_SSO','http://192.168.43.231:8000/api/notif')
+  ]
+
 ];

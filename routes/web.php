@@ -30,3 +30,6 @@ Route::get('noRole', 'HomeController@noRole')->name('noRole');
 
 //route untuk manage data yang dikirim ke sap
 Route::resource('sendtosap', 'SendToSapController')->parameters(['sendtosap' => 'id']);
+
+// route untuk kirim notif ke sso
+Route::get('notif-sso/absence/{id}', 'SendNotifSsoController@absence')->name('ssonotif.absence');
