@@ -44,7 +44,7 @@ class SendNotifToSso implements ShouldQueue
                 "title" => $this->title,
                 "body" =>  $this->body,
                 "url" => $this->url,
-                "module" => 'SMART'
+                "module" => 'EOS'
             ]
         );
 

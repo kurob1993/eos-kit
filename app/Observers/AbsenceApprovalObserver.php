@@ -11,6 +11,7 @@ use App\Models\Absence;
 use App\Models\Stage;
 use App\Models\Employee;
 use App\Message;
+use App\Jobs\SendNotifToSso;
 
 class AbsenceApprovalObserver
 {
@@ -23,6 +24,17 @@ class AbsenceApprovalObserver
 
         // sistem mengirim email notifikasi
         $to->notify(new AbsenceApprovalCreatedMessage($absenceApproval));
+
+        $nik = $absenceApproval->regno;
+        if($absenceApproval->absence->is_a_leave){
+          $title = 'Leave-'.$absenceApproval->id;
+          $body = 'Pengajuan Cuti dari '.$absenceApproval->absence->employee->name;
+        }else{
+          $title = 'Permit-'.$absenceApproval->id;
+          $body = 'Pengajuan Izin dari '.$absenceApproval->absence->employee->name;
+        }
+        $url = url('notif-sso/absence-aproval/'.$absenceApproval->id);
+        SendNotifToSso::dispatch($nik,$title,$body,$url);
     }
 
     public function updated(AbsenceApproval $absenceApproval)
@@ -53,6 +65,15 @@ class AbsenceApprovalObserver
         // message history
         $messageAttribute = sprintf('Leave approved from %s to %s',
         $from->personnelNoWithName, $to->personnelNoWithName);
+        
+        if($absenceApproval->absence->is_a_leave){
+          $title = 'Leave-'.$absenceApproval->id. ' approved';
+          $body = 'Selamat pengajuan cuti anda disetuji ';
+        }else{
+          $title = 'Permit-'.$absenceApproval->id;
+          $body = 'Selamat pengajuan izin anda disetuji ';
+        }
+
       } else {
 
         // NEED TO IMPLEMENT FLOW STAGE (denied)
@@ -61,6 +82,14 @@ class AbsenceApprovalObserver
         // message history
         $messageAttribute = sprintf('Leave rejected from %s to %s',
         $from->personnelNoWithName, $to->personnelNoWithName);
+
+        if($absenceApproval->absence->is_a_leave){
+          $title = 'Leave-'.$absenceApproval->id. ' Denied';
+          $body = 'Mohon maaf pengajuan cuti anda ditolak ';
+        }else{
+          $title = 'Permit-'.$absenceApproval->id;
+          $body = 'Mohon maaf pengajuan izin anda ditolak ';
+        }
       }
       
       // simpan data message history lainnya
@@ -77,5 +106,10 @@ class AbsenceApprovalObserver
       // sistem mengirim email notifikasi dari atasan ke
       // karyawan yang mengajukan         
       $to->notify(new LeaveApprovalMessage($from, $absenceApproval));
+
+      // kirim notifikasi ke sso
+      $nik = $absenceApproval->absence->personnel_no;
+      $url = url('notif-sso/absence/'.$absenceApproval->absence->id);
+      SendNotifToSso::dispatch($nik,$title,$body,$url);
     }
 }

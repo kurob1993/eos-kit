@@ -9,8 +9,20 @@
     </div>
     <div class="panel-body">
       <div class="text-center">
+          @if($absence->IsSentToSap)
+            <i class="fa fa-check-circle fa-5x text-success" aria-hidden="true"></i>
+            <p>Selamat {{$absenceType}} Anda Berhasil disetujui.</p>
+          @endif
+
+          @if($absence->IsDenied)
+            <i class="fa fa-times-circle fa-5x text-danger" aria-hidden="true"></i>
+            <p>Mohon Maaf {{$absenceType}} Anda ditolak.</p>
+          @endif
+
+          @if($absence->IsWaitingApproval)
           <i class="fa fa-check-circle fa-5x text-default" aria-hidden="true"></i>
-          <p>Selamat {{$absenceType}} Anda Berhasil dibuat.</p>
+            <p>Selamat {{$absenceType}} Anda Berhasil dibuat.</p>
+          @endif
       </div>
       <table class="table table-striped table-bordered">
         <tbody>

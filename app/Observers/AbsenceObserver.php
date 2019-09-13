@@ -149,7 +149,7 @@ class AbsenceObserver
 
         //Kirim Notif Ke SSO
         $type = $absence->absenceType()->first()->subtype;
-        if($type == '0100' || $type == '0200'){
+        if($absence->is_a_leave){
             $absenceType = 'Cuti';
         }else{
             $absenceType = 'Izin';

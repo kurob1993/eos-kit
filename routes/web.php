@@ -33,3 +33,11 @@ Route::resource('sendtosap', 'SendToSapController')->parameters(['sendtosap' => 
 
 // route untuk kirim notif ke sso
 Route::get('notif-sso/absence/{id}', 'SendNotifSsoController@absence')->name('ssonotif.absence');
+Route::get('notif-sso/absence-aproval/{id}', 'SendNotifSsoController@absenceApproval')
+    ->name('ssonotif.absenceApproval');
+
+// approval lewat mobile
+Route::post('mobile/approve', 'MobileApprovalController@approve')
+    ->name('mobile.approve');
+Route::post('mobile/reject', 'MobileApprovalController@reject')
+    ->name('mobile.reject');
