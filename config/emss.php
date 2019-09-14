@@ -52,7 +52,7 @@ return [
   ],
 
   'notif_sso' => [
-    'link' => env('NOTIF_SSO','http://192.168.43.231:8000/api/notif')
+    'link' => env('NOTIF_SSO','https://portal.krakatausteel.com/api-sso/api/notif')
   ]
 
 ];
