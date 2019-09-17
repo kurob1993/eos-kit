@@ -21,9 +21,13 @@
                     <span>Approval</span>
                 </a>
             </li>            
-            <li class="has-sub {{ (
-                (Request::segment(1) == 'cvs') || (Request::segment(1) == 'organizations') 
-                    || (Request::segment(1) == 'administrations')) ? 'active' : '' 
+            <li class="has-sub {{ 
+                (
+                    (Request::segment(1) == 'cvs') || 
+                    (Request::segment(1) == 'organizations') || 
+                    (Request::segment(1) == 'administrations') ||
+                    (Request::segment(1) == 'internal-activity')
+                ) ? 'active' : '' 
                 }}">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>
@@ -33,6 +37,10 @@
                 <ul class="sub-menu">
                     <li class="{{ Request::segment(1)=='cvs' ? 'active' : '' }}"> 
                         <a href="{{ url('cvs') }}">Curriculum Vitae</a> 
+                    </li>
+
+                    <li class="{{ Request::segment(1)=='internal-activity' ? 'active' : '' }}"> 
+                        <a href="{{ route('internal-activity.index') }}">Internal Activity</a> 
                     </li>
                     {{-- <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 
                         <a href="#">Organisasi</a> 
