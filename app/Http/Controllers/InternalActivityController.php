@@ -23,7 +23,7 @@ class InternalActivityController extends Controller
      */
     public function create()
     {
-        //
+        return view('internal_activity.create');
     }
 
     /**
@@ -34,7 +34,7 @@ class InternalActivityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**

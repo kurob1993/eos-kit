@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.employee._page-container', ['page_header' => 'Laporan Aktivitas'])
+@component('layouts.employee._page-container', ['page_header' => 'Internal Activity'])
 <div class="panel panel-prussian">
   <div class="panel-heading">
     <h4 class="panel-title">Internal Activity</h4>
@@ -13,7 +13,7 @@
       <div class="row m-b-20">
       
           <div class="col-sm-2 m-t-25">
-              <a href="{{ route('internal-activity.create') }}" id="tambah" class="btn btn-md btn-primary" required>Tambah</a>
+              <a href="{{ route('internal-activity.create') }}" type="button" class="btn btn-primary">Tambah</a>
           </div>
           
           <div class="col-sm-2">
@@ -42,20 +42,8 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="modal-dialog">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 class="modal-title">Cuti (ID: <span id="title-span"></span>)</h4>
-      </div>
-      <div class="modal-body">
-        
-      </div>
-    </div>
-  </div>
-</div>
 @endcomponent
+
 <!-- end page container -->
 @endsection
 
