@@ -10,61 +10,55 @@
   @include('layouts._flash')
   <div class="panel-body">
     <div class="row m-b-20">
-      <form class="form-horizontal" action="{{ route('internal-activity.store') }}" method="POST">
+      <form class="form-horizontal" id="form" action="{{ route('internal-activity.store') }}" method="POST">
         {{ csrf_field() }}
 
         <div class="form-group">
-          <label class="control-label col-sm-2" for="jenis">Jenis Kegiatan: </label>
+          <label class="control-label col-sm-2" for="jenis_kegiatan">Jenis Kegiatan: </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="jenis" name="jenis" 
-              placeholder="Jenis Kegiatan" required value="{{ old('jenis') }}">
+            <input type="text" class="form-control" id="jenis_kegiatan" name="jenis_kegiatan" placeholder="Jenis Kegiatan"
+              value="{{ old('jenis_kegiatan') }}">
+              {!! $errors->first('jenis_kegiatan', ' <p class="text-danger help-block">:message</p>') !!}
           </div>
         </div>
 
         <div class="form-group">
           <label class="control-label col-sm-2" for="posisi">Posisi: </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="posisi" name="posisi"
-              placeholder="Posisi" required value="{{ old('posisi') }}">
+            <input type="text" class="form-control" id="posisi" name="posisi" placeholder="Posisi"
+              value="{{ old('posisi') }}">
+              {!! $errors->first('posisi', ' <p class="text-danger help-block">:message</p>') !!}
           </div>
         </div>
 
-        <div class="input-daterange input-group col-xs-12" id="datepicker">
-            <div class="form-group">
-                <label class="control-label col-sm-2" for="mulai">Mulai: </label>
-                <div class="col-sm-10">
-                  <input type="text" 
-                    class="form-control text-left" 
-                    id="mulai" 
-                    placeholder="Muali"
-                    name="start_date" 
-                    value="{{ old('start_date') }}" 
-                    autocomplete="off"
-                    data-date-format="dd/mm/yyyy" 
-                    required>
-                </div>
-              </div>
-    
-              <div class="form-group">
-                  <label class="control-label col-sm-2" for="selesai">Selesai: </label>
-                  <div class="col-sm-10">
-                    <input type="text" 
-                      class="form-control text-left" 
-                      id="selesai" 
-                      placeholder="selesai"
-                      name="end_date" 
-                      value="{{ old('end_date') }}" 
-                      autocomplete="off"
-                      data-date-format="dd/mm/yyyy" 
-                      required>
-                  </div>
-                </div>
-        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="posisi"> </label>
+          <div id="datepicker-range">
 
+            <div class=" col-lg-5">
+              <input type="text" class="form-control text-center" id="start_date" 
+              name="start_date" value="{{ old('start_date') }}" placeholder='Pilih Tanggal mulai' readonly>
+              {!! $errors->first('start_date', ' <p class="text-danger help-block">:message</p>') !!}
+          
+              <div id="datepicker-range-start" class="datepicker-range"></div>
+            </div>
+
+            <div class=" col-lg-5">
+              <input type="text" class="form-control text-center is-invalid" id="end_date" 
+              name="end_date" value="{{ old('end_date') }}" placeholder='Pilih Tanggal berakhir' readonly>
+              {!! $errors->first('end_date', ' <p class="text-danger help-block">:message</p>') !!}
+
+              <div id="datepicker-range-end" class="datepicker-range"></div>
+            </div>
+
+          </div>
+        </div>
+        
         <div class="form-group">
           <label class="control-label col-sm-2" for="keterangan">Keterangan: </label>
           <div class="col-sm-10">
-            <textarea name="keterangan" class="form-control" id="keterangan" cols="30" rows="10" required>{{ old('keterangan') }}</textarea>
+            <textarea name="keterangan" class="form-control" id="keterangan" cols="30" rows="10" >{{ old('keterangan') }}</textarea>
+              {!! $errors->first('keterangan', ' <p class="text-danger help-block">:message</p>') !!}
           </div>
         </div>
 
@@ -92,19 +86,17 @@
 @push('plugin-scripts')
 <script src="{{ url('plugins/select2/js/select2.full.min.js') }}"></script>
 <script src={{ url("/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js") }}></script>
-<script>
-// $('#simpan').click(function() {
-//   $(this).attr('disabled','disabled');
-// });
-</script>
-
-
 @endpush
 
 @push('custom-scripts')
-@include('scripts._transition-script')
+@include('scripts._daterange-picker-script',[
+'start_date' => "new Date(new Date().getFullYear() - 4, new Date().getMonth(), 1)",
+'end_date' => "new Date(new Date().getFullYear() + 4, new Date().getMonth(), 31)"
+])
 @endpush
-
 @push('on-ready-scripts')
-TransitionPlugins.init();
+DaterangePickerPlugins.init();
+$(document).on('submit','#form',function(){
+  $('#simpan').attr('disabled','disabled');
+});
 @endpush

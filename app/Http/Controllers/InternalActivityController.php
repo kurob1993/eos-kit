@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Activity;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreInternalActivityRequest;
 
 class InternalActivityController extends Controller
 {
@@ -35,11 +36,11 @@ class InternalActivityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreInternalActivityRequest $request)
     {
         $activity = New Activity();
         $activity->personnel_no = Auth::user()->personnel_no;
-        $activity->jenis_kegiatan = $request->jenis;
+        $activity->jenis_kegiatan = $request->jenis_kegiatan;
         $activity->posisi = $request->posisi;
         $activity->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
         $activity->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
