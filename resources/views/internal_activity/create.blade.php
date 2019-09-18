@@ -64,15 +64,13 @@
         <div class="form-group">
           <label class="control-label col-sm-2" for="keterangan">Keterangan: </label>
           <div class="col-sm-10">
-            <textarea name="keterangan" class="form-control" id="keterangan" cols="30" rows="10" required>
-              {{ old('keterangan') }}
-            </textarea>
+            <textarea name="keterangan" class="form-control" id="keterangan" cols="30" rows="10" required>{{ old('keterangan') }}</textarea>
           </div>
         </div>
 
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary">Simpan</button>
+            <button type="submit" class="btn btn-primary" id="simpan">Simpan</button>
           </div>
         </div>
 
@@ -94,6 +92,12 @@
 @push('plugin-scripts')
 <script src="{{ url('plugins/select2/js/select2.full.min.js') }}"></script>
 <script src={{ url("/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js") }}></script>
+<script>
+// $('#simpan').click(function() {
+//   $(this).attr('disabled','disabled');
+// });
+</script>
+
 
 @endpush
 

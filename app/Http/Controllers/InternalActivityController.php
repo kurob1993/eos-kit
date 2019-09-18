@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Activity;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class InternalActivityController extends Controller
 {
@@ -34,7 +37,18 @@ class InternalActivityController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $activity = New Activity();
+        $activity->personnel_no = Auth::user()->personnel_no;
+        $activity->jenis_kegiatan = $request->jenis;
+        $activity->posisi = $request->posisi;
+        $activity->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
+        $activity->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
+        $activity->keterangan = $request->keterangan;
+        $activity->type = 'internal';
+        if($activity->save()){
+            return redirect()->route('internal-activity.index');
+        }
+
     }
 
     /**
