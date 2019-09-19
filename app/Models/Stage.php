@@ -31,6 +31,11 @@ class Stage extends Model
         return $this->hasMany('App\Models\Attendance');
     }
 
+    public function activities()
+    {
+        return $this->hasMany('App\Models\Activity');
+    }
+
     public function flows()
     {
       return $this->belongsToMany('App\Models\Flow')->withPivot('sequence');

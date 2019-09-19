@@ -7,6 +7,8 @@ use App\Models\Activity;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreInternalActivityRequest;
+use Yajra\DataTables\Datatables;
+use Yajra\DataTables\Html\Builder;
 
 class InternalActivityController extends Controller
 {
@@ -15,9 +17,66 @@ class InternalActivityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, Builder $htmlBuilder)
     {
-        return view('internal_activity.index');
+        // ambil data cuti untuk user tersebut
+        $activity = Activity::ofLoggedUser()->where('type','internal')->get();
+
+        // response untuk datatables absences
+        if ($request->ajax()) {
+
+            return Datatables::of($activity)
+                ->editColumn('summary', function ($activity) {
+                    // kolom summary menggunakan view _summary
+                    return view('internal_activity._summary', [ 
+                        'summary' => $activity,
+                        'when' => $activity->created_at->format('d/m') 
+                    ]);
+                })
+                ->editColumn('approver', function ($activity) {
+                    $a = view('layouts._personnel-no-with-name', [
+                        'personnel_no' => 'Admin',
+                        'employee_name' => 'Personnel Services'
+                        ]) . '<br />';
+                    return $a;
+                })
+                ->setRowAttr([
+                    // href untuk dipasang di setiap tr
+                    'data-href' => function ($activity) {
+                        return route('leaves.show', ['leaf' => $activity->id]);
+                    } 
+                ])
+                ->escapeColumns([0,1])
+                ->make(true);
+        }
+
+        // disable paging, searching, details button but enable responsive
+        $htmlBuilder->parameters([
+            'paging' => true,
+            'searching' => false,
+            'responsive' => [ 'details' => false ],
+            "columnDefs" => [ [ "width" => "60%", "targets" => 0 ] ]
+        ]);
+
+        $html = $htmlBuilder
+            ->addColumn([
+                'data' => 'summary',
+                'name' => 'summary',
+                'title' => 'Summary',
+                'searchable' => false,
+                'orderable' => false, 
+                ])
+            ->addColumn([
+                'data' => 'approver',
+                'name' => 'approver',
+                'title' => 'Approver',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
+                ]);
+
+        // tampilkan view index dengan tambahan script html DataTables
+        return view('internal_activity.index')->with(compact('html', 'activity'));
     }
 
     /**
@@ -46,10 +105,10 @@ class InternalActivityController extends Controller
         $activity->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
         $activity->keterangan = $request->keterangan;
         $activity->type = 'internal';
+        $activity->stage_id = 1;
         if($activity->save()){
             return redirect()->route('internal-activity.index');
         }
-
     }
 
     /**

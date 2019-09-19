@@ -10,35 +10,14 @@
   @include('layouts._flash')
   <div class="panel-body">
     
-      <div class="row m-b-20">
-      
-          <div class="col-sm-2 m-t-25">
+      <div class="row m-b-15">
+          <div class="col-sm-2">
               <a href="{{ route('internal-activity.create') }}" type="button" class="btn btn-primary">Tambah</a>
-          </div>
-          
-          <div class="col-sm-2">
-              <label for="month">Month:</label>
-              {{-- <select id="month" name="month" class="form-control" required>
-                  @foreach ($data['monthList'] as $item)
-                  <option value="{{ $item->month }}"> {{ $item->month }}</option>
-                  @endforeach
-              </select> --}}
-          </div>
-          <div class="col-sm-2">
-              <label for="year">Year:</label>
-              {{-- <select id="year" name="year" class="form-control" required>
-                  @foreach ($data['yearList'] as $item)
-                  <option value="{{ $item->year }}"> {{ $item->year }}</option>
-                  @endforeach
-              </select> --}}
-          </div>
-          <div class="col-sm-2 m-t-25">
-              <input type="submit" name="" id="search" value="search" class="btn btn-md btn-primary" required>
           </div>
       </div>
     
     <div class="table-responsive ">
-        {{-- {!! $html->table(['class'=>'table table-striped', 'width'=>'100%']) !!} --}}
+        {!! $html->table(['class'=>'table table-striped', 'width'=>'100%']) !!}
     </div>
   </div>
 </div>
@@ -60,7 +39,7 @@
 <script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
 <script src="{{ url('plugins/select2/js/select2.full.min.js') }}"></script>
 <!-- Generated scripts from DataTables -->
-{{-- {!! $html->scripts() !!} --}}
+{!! $html->scripts() !!}
 <script>
 var nik = '{{ Auth::user()->personnel_no }}';
 $('#data').select2({
