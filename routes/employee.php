@@ -90,3 +90,9 @@
         ],
         'except' => ['destroy', 'update', 'edit']
     ]);
+    Route::resource('external-activity', 'ExternalActivityController',[
+        'parameters'=> [
+            'external-activity' => 'id'
+        ],
+        'except' => ['destroy', 'update', 'edit']
+    ]);

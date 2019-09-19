@@ -26,7 +26,8 @@
                     (Request::segment(1) == 'cvs') || 
                     (Request::segment(1) == 'organizations') || 
                     (Request::segment(1) == 'administrations') ||
-                    (Request::segment(1) == 'internal-activity')
+                    (Request::segment(1) == 'internal-activity') ||
+                    (Request::segment(1) == 'external-activity') 
                 ) ? 'active' : '' 
                 }}">
                 <a href="javascript:;">
@@ -41,6 +42,9 @@
 
                     <li class="{{ Request::segment(1)=='internal-activity' ? 'active' : '' }}"> 
                         <a href="{{ route('internal-activity.index') }}">Internal Activity</a> 
+                    </li>
+                    <li class="{{ Request::segment(1)=='external-activity' ? 'active' : '' }}"> 
+                        <a href="{{ route('external-activity.index') }}">External Activity</a> 
                     </li>
                     {{-- <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 
                         <a href="#">Organisasi</a> 
