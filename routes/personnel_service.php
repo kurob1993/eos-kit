@@ -75,3 +75,18 @@
             ]
         ]);
     });
+
+    //route untuk update cv
+    Route::resource('internal-activity', 'AllInternalActivityController',[
+        'parameters'=> [
+            'internal-activity' => 'id'
+        ],
+        'names' => [
+            'index' => 'personnel_service.internal-activity.index',
+            'show' => 'personnel_service.internal-activity.show',
+            'create' => 'personnel_service.internal-activity.create',
+            'update' => 'personnel_service.internal-activity.update',
+            'destroy' => 'personnel_service.internal-activity.destroy',
+            'edit' => 'personnel_service.internal-activity.edit'
+        ]
+    ]);

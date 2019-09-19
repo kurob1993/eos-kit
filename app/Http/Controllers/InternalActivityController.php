@@ -54,6 +54,8 @@ class InternalActivityController extends Controller
         $htmlBuilder->parameters([
             'paging' => true,
             'searching' => false,
+            'ordering'=> true,
+            'sDom' => 'tpi',
             'responsive' => [ 'details' => false ],
             "columnDefs" => [ [ "width" => "60%", "targets" => 0 ] ]
         ]);

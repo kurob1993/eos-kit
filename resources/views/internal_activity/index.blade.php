@@ -28,16 +28,14 @@
 
 @push('styles')
 <!-- DataTables -->
-<link href={{ url("/plugins/DataTables/css/jquery.dataTables.min.css") }} rel="stylesheet" />
+<link href={{ url("/plugins/DataTables/css/dataTables.bootstrap.min.css") }} rel="stylesheet" />
 <link href={{ url("/plugins/DataTables/Responsive/css/responsive.dataTables.min.css") }} rel="stylesheet" />
-<link rel="stylesheet" href="{{ url('plugins/select2/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ url('plugins/select2/css/select2-bootstrap3.min.css') }}">
 @endpush
 
 @push('plugin-scripts')
 <script src={{ url("/plugins/DataTables/js/jquery.dataTables.min.js") }}></script>
-<script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
-<script src="{{ url('plugins/select2/js/select2.full.min.js') }}"></script>
+<script src={{ url("/plugins/DataTables/js/dataTables.bootstrap.min.js") }}></script>
+<script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script
 <!-- Generated scripts from DataTables -->
 {!! $html->scripts() !!}
 <script>

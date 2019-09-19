@@ -83,9 +83,10 @@
     Route::get('activity/list/{personnel_no?}', 'ActivitiReportController@list')->name('activity.list');
     Route::get('activity/download/{file?}', 'ActivitiReportController@download')->name('activity.download');
 
-    //route untuk uodate cv
+    //route untuk update cv
     Route::resource('internal-activity', 'InternalActivityController',[
         'parameters'=> [
             'internal-activity' => 'id'
-        ]
+        ],
+        'except' => ['destroy', 'update', 'edit']
     ]);

@@ -21,67 +21,66 @@ class SendToSapAbsenceController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $absence = Absence::where('stage_id','2')
-        ->where('sendtosap_at','<>',null);
+        $absence = Absence::where('stage_id', '2')
+        ->where('sendtosap_at', '<>', null);
 
-        if(isset($request->search['value'])){
+        if (isset($request->search['value'])) {
             $cari = explode('|', $request->search['value']);
             $month = $cari[0];
             $year = $cari[1];
             $text = $cari[2];
 
-            if($month){
-                $absence->whereMonth('start_date',$month);
+            if ($month) {
+                $absence->whereMonth('start_date', $month);
             }
 
-            if($year){
-                $absence->whereYear('start_date',$year);
+            if ($year) {
+                $absence->whereYear('start_date', $year);
             }
 
-            $absence->where(function($query) use ($text) {
-                $query->orWhere('personnel_no','like', '%' . $text .'%' )
+            $absence->where(function ($query) use ($text) {
+                $query->orWhere('personnel_no', 'like', '%' . $text .'%')
                 ->orWhereHas('user', function ($query) use ($text) {
-                    $query->where('name','like', '%' . $text .'%');
+                    $query->where('name', 'like', '%' . $text .'%');
                 })
                 ->orWhereHas('absenceSapResponse', function ($query) use ($text) {
-                    $query->where('desc','like', '%' . $text .'%');
+                    $query->where('desc', 'like', '%' . $text .'%');
                 });
             });
         }
         
         // response untuk datatables absences
         if ($request->ajax()) {
-
             return Datatables::of($absence)
-                ->editColumn('id', function($absence){
+                ->editColumn('id', function ($absence) {
                     return $absence->plain_id;
                 })
-                ->editColumn('name', function($absence){
+                ->editColumn('name', function ($absence) {
                     $nik = '<span class="label label-warning">'.$absence->personnel_no.'</span>';
                     return $nik.' '.$absence->user['name'];
                 })
-                ->editColumn('absence_type_id', function($absence){
+                ->editColumn('absence_type_id', function ($absence) {
                     return $absence->absenceType['text'];
                 })
-                ->addColumn('duration', function($absence){
+                ->addColumn('duration', function ($absence) {
                     $s = $absence->formatted_start_date;
                     $e = $absence->formatted_end_date;
                     $d = '<span class="label label-success">'.$absence->duration.' hari</span>';
                     return $d.' <br> '.$s.' <br> '.$e;
-                }) 
-                ->addColumn('status', function($absence){
+                })
+                ->addColumn('status', function ($absence) {
                     return '<span class="label label-danger"> Error Send to SAP</span>';
-                }) 
-                ->addColumn('desc', function($absence){
+                })
+                ->addColumn('desc', function ($absence) {
                     $status = $absence->absenceSapResponse;
                     return $status->count() > 0 ? $status->last()->desc : ' - ';
-                }) 
-                ->addColumn('action', function($absence){
+                })
+                ->addColumn('action', function ($absence) {
                     $data = [
                         'route' => 'sendtosap.absence',
                         'data' => $absence
                     ];
-                    return view('sendtosap._action-button',$data);
+                    return view('sendtosap._action-button', $data);
                 })
                 ->escapeColumns([0,1,2])
                 ->make(true);
@@ -94,9 +93,9 @@ class SendToSapAbsenceController extends Controller
             'ordering'=> true,
             'sDom' => 'tpi',
             'responsive' => [ 'details' => true ],
-            "columnDefs" => [ 
+            "columnDefs" => [
                 [ "width" => "12%", "targets" => 0 ],
-                [ "width" => "20%", "targets" => 1 ] 
+                [ "width" => "20%", "targets" => 1 ]
             ]
         ]);
 
@@ -164,15 +163,15 @@ class SendToSapAbsenceController extends Controller
             'download' => 'sendtosap.absence.download',
             'button'=>'attendance',
             'title'=>'absence',
-            'yearList' => Absence::where('stage_id','2')
-                            ->where('sendtosap_at','<>',null)
+            'yearList' => Absence::where('stage_id', '2')
+                            ->where('sendtosap_at', '<>', null)
                             ->foundYear()->get(),
 
-            'monthList' => Absence::where('stage_id','2')
-                            ->where('sendtosap_at','<>',null)
+            'monthList' => Absence::where('stage_id', '2')
+                            ->where('sendtosap_at', '<>', null)
                             ->foundMonth()->get()
         ];
-        return view('sendtosap.index')->with(compact('html', 'absence','data'));
+        return view('sendtosap.index')->with(compact('html', 'absence', 'data'));
     }
 
     /**
@@ -259,10 +258,10 @@ class SendToSapAbsenceController extends Controller
         return redirect()->back();
     }
 
-    public function download(Request $request) 
+    public function download(Request $request)
     {
         ob_end_clean();
-        ob_start(); 
+        ob_start();
 
         $bulan = (int)$request->month;
         $tahun = (int)$request->year;

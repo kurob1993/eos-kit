@@ -22,14 +22,23 @@ class InternalActivityObserver
         ]);
     }
 
-    /**
-     * Listen to the User deleting event.
-     *
-     * @param  \App\Activity  $Activity
-     * @return void
-     */
-    public function deleting(Activity $activity)
+    public function updated(Activity $activity)
     {
-        //
+        if($activity->stage_id == 2){
+            $m = [
+                "level" => "success",
+                "message" => ucfirst($activity->type)." Activity Approved"
+            ];
+        }
+
+        if($activity->stage_id == 5){
+            $m = [
+                "level" => "danger",
+                "message" => ucfirst($activity->type)." Activity Denied"
+            ];
+        }
+
+        // tampilkan pesan bahwa telah menyimpan activiti
+        Session::flash("flash_notification", $m);
     }
 }
