@@ -16,7 +16,11 @@
                 <select id="month" name="month" class="form-control" required onchange="month(this.value)">
                     <option value="">.: Pilih Bulan :.</option>
                     @foreach ($data['monthList'] as $item)
-                    <option value="{{ $item->month }}"> {{ $item->month }}</option>
+                        @php
+                            $month_num = $item->month;
+                            $month_name = date("F", mktime(0, 0, 0, $month_num, 10));
+                        @endphp
+                    <option value="{{ $item->month }}"> {{ $month_name }}</option>
                     @endforeach
                 </select>
             </div>

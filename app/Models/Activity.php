@@ -38,7 +38,7 @@ class Activity extends Model
     public function scopeMonthList($query)
     {
         return $query->selectRaw('MONTH(start_date) as month')
-            ->orderBy(DB::raw('MONTH(start_date)'), 'desc')
+            ->orderBy(DB::raw('MONTH(start_date)'), 'asc')
             ->groupBy( DB::raw('MONTH(start_date)') );
         # code...
     }
@@ -46,7 +46,7 @@ class Activity extends Model
     public function scopeYearList($query)
     {
         return $query->selectRaw('YEAR(start_date) as year')
-            ->orderBy(DB::raw('YEAR(start_date)'), 'desc')
+            ->orderBy(DB::raw('YEAR(start_date)'), 'asc')
             ->groupBy( DB::raw('YEAR(start_date)') );
         # code...
     }
