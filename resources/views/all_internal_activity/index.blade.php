@@ -13,7 +13,8 @@
         <div class="row m-b-15">
             <div class="col-sm-3">
                 <label for="month">Month:</label>
-                <select id="month" name="month" class="form-control" required>
+                <select id="month" name="month" class="form-control" required onchange="month(this.value)">
+                    <option value="">.: Pilih Bulan :.</option>
                     @foreach ($data['monthList'] as $item)
                     <option value="{{ $item->month }}"> {{ $item->month }}</option>
                     @endforeach
@@ -21,7 +22,8 @@
             </div>
             <div class="col-sm-3">
                 <label for="year">Year:</label>
-                <select id="year" name="year" class="form-control" required>
+                <select id="year" name="year" class="form-control" required onchange="year(this.value)">
+                    <option value="">.: Pilih Tahun :.</option>
                     @foreach ($data['yearList'] as $item)
                     <option value="{{ $item->year }}"> {{ $item->year }}</option>
                     @endforeach
@@ -29,7 +31,7 @@
             </div>
             <div class="col-sm-3">
                 <label for="year">Stage:</label>
-                <select id="year" name="year" class="form-control" required>
+                <select id="stage" name="stage" class="form-control" required onchange="stage(this.value)">
                     <option value="">All</option>
                     @foreach ($stage as $item)
                     <option value="{{ $item->id }}"> {{ $item->description }}</option>
@@ -37,10 +39,15 @@
                 </select>
             </div>
             <div class="col-sm-3 m-t-25">
-                <button class="btn btn-info">
-                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-                    Excel
-                </button>
+                <form action="{{route('personnel_service.internal-activity.export')}}" method="get">
+                    <input type="hidden" id="export_month" name="month" value="">
+                    <input type="hidden" id="export_year" name="year" value="">
+                    <input type="hidden" id="export_stage" name="stage" value="">
+                    <button type="submit" class="btn btn-info">
+                        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                        Excel
+                    </button>
+                </form>
             </div>
         </div>
         <div class="row">
@@ -68,28 +75,37 @@
 <!-- Generated scripts from DataTables -->
 {!! $html->scripts() !!}
 <script>
-    var nik = '{{ Auth::user()->personnel_no }}';
-$('#data').select2({
-    theme: "bootstrap",
-    ajax: {
-        url: "{{ url('activity/list') }}/"+nik,
-        dataType: 'json',
-        data: function(params) {
-            return {
-                term: params.term || '',
-                page: params.page || 1
-            }
-        },
-        cache: true
-    }
-});
+    function fillter() {
+        var month = localStorage.getItem("ActivitySelectMonth");
+        var year = localStorage.getItem("ActivitySelectYear");
+        var stage = localStorage.getItem("ActivitySelectStage");
+        var cari = month+'|'+year+'|'+stage;
+        
+        oTable = $('.table').DataTable();
+        oTable.search(cari).draw();
 
-oTable = $('.table').DataTable();
-$('#search').click(function(){
-    var month = $('#month').val();
-    var year = $('#year').val();
-    var cari = month+'|'+year;
-    oTable.search(cari).draw();
-})
+        $('#export_month').val(month);
+        $('#export_year').val(year);
+        $('#export_stage').val(stage);
+    }
+
+   function month(params) {
+      localStorage.setItem("ActivitySelectMonth", params);
+      this.fillter();
+   }
+
+   function year(params) {
+      localStorage.setItem("ActivitySelectYear", params);
+      this.fillter();
+   }
+
+   function stage(params) {
+      localStorage.setItem("ActivitySelectStage", params);
+      this.fillter();
+   }
 </script>
+@endpush
+
+@push('on-ready-scripts')
+@include('all_internal_activity.script')
 @endpush

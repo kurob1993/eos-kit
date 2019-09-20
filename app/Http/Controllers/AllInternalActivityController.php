@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreInternalActivityRequest;
+use App\Exports\InternalActivityExport;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Datatables;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Models\Activity;
 use App\Models\Stage;
+use Carbon\Carbon;
 
 class AllInternalActivityController extends Controller
 {
@@ -21,11 +23,33 @@ class AllInternalActivityController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $activity = Activity::ofLoggedUser()->where('type', 'internal')->get();
+        $activity = Activity::ofLoggedUser()->where('type', 'internal');
+        if (isset($request->search['value'])) {
+            $cari = explode('|', $request->search['value']);
+            $month = $cari[0];
+            $year = $cari[1];
+            $stage = $cari[2];
+
+            if ($month) {
+                $activity->whereMonth('start_date', $month);
+            }
+
+            if ($year) {
+                $activity->whereYear('start_date', $year);
+            }
+
+            if ($stage) {
+                $activity->where('stage_id', $stage);
+            }
+            
+        }
 
         // response untuk datatables absences
         if ($request->ajax()) {
             return Datatables::of($activity)
+                ->editColumn('id', function ($activity) {
+                    return $activity->plain_id;
+                })
                 ->editColumn('personnel_no', function ($activity) {
                     $nik = '<span class="label label-primary">' . $activity->personnel_no . '</span>';
                     return $nik . ' ' . $activity->user['name'];
@@ -37,7 +61,7 @@ class AllInternalActivityController extends Controller
                     return $activity->end_date->format('d.m.Y');
                 })
                 ->editColumn('aksi', function ($activity) {
-                    return view('all_internal_activity._action',$activity);
+                    return view('all_internal_activity._action',compact('activity'));
                 })
                 ->escapeColumns([0, 1])
                 ->make(true);
@@ -45,8 +69,8 @@ class AllInternalActivityController extends Controller
 
         // disable paging, searching, details button but enable responsive
         $htmlBuilder->parameters([
+            'serverSide' => true,
             'paging' => true,
-            'searching' => false,
             'ordering' => true,
             'sDom' => 'tpi',
             'responsive' => true,
@@ -186,5 +210,21 @@ class AllInternalActivityController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function export(Request $request) 
+    {
+        ob_end_clean();
+        ob_start();
+
+        $bulan = (int)$request->month;
+        $tahun = (int)$request->year;
+        $stage = (int)$request->stage;
+
+        return (new InternalActivityExport)
+            ->forMonth($bulan)
+            ->forYear($tahun)
+            ->forStage($stage)
+            ->download('InternalActivity.xlsx');
     }
 }

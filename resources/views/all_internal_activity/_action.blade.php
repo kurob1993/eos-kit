@@ -1,5 +1,4 @@
-@if($stage_id == 1)
-
+@if($activity->stage_id == 1)
 <!-- Trigger the modal with a button -->
 <button type="button" class="btn btn-xs btn-success" title="Approve" data-toggle="modal" data-target="#approve"
     data-backdrop="static">
@@ -15,7 +14,7 @@
     <div class="modal-dialog modal-sm">
         <!-- Modal content-->
         <div class="modal-content">
-            <form action="{{ route('personnel_service.internal-activity.update',$id) }}" method="post"
+            <form action="{{ route('personnel_service.internal-activity.update',$activity->id) }}" method="post"
                 style="display: inline">
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}
@@ -41,7 +40,7 @@
     <div class="modal-dialog modal-sm">
         <!-- Modal content-->
         <div class="modal-content">
-            <form action="{{ route('personnel_service.internal-activity.update',$id) }}" method="post"
+            <form action="{{ route('personnel_service.internal-activity.update',$activity->id) }}" method="post"
                 style="display: inline">
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}
@@ -62,4 +61,10 @@
         </div>
     </div>
 </div>
+@endif
+@if($activity->stage_id == 2)
+<span class="label label-success">{{ $activity->stage->description }}</span>
+@endif
+@if($activity->stage_id == 5)
+<span class="label label-danger">{{ $activity->stage->description }}</span>
 @endif

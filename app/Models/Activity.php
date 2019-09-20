@@ -50,4 +50,8 @@ class Activity extends Model
             ->groupBy( DB::raw('YEAR(start_date)') );
         # code...
     }
+    public function getPlainIdAttribute()
+    {
+        return 'activity-' . $this->id;
+    }
 }

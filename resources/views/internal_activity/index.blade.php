@@ -35,32 +35,7 @@
 @push('plugin-scripts')
 <script src={{ url("/plugins/DataTables/js/jquery.dataTables.min.js") }}></script>
 <script src={{ url("/plugins/DataTables/js/dataTables.bootstrap.min.js") }}></script>
-<script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script
+<script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
 <!-- Generated scripts from DataTables -->
 {!! $html->scripts() !!}
-<script>
-var nik = '{{ Auth::user()->personnel_no }}';
-$('#data').select2({
-    theme: "bootstrap",
-    ajax: {
-        url: "{{ url('activity/list') }}/"+nik,
-        dataType: 'json',
-        data: function(params) {
-            return {
-                term: params.term || '',
-                page: params.page || 1
-            }
-        },
-        cache: true
-    }
-});
-
-oTable = $('.table').DataTable();
-$('#search').click(function(){
-    var month = $('#month').val();
-    var year = $('#year').val();
-    var cari = month+'|'+year;
-    oTable.search(cari).draw();
-})
-</script>
 @endpush
