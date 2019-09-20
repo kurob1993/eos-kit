@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\Exportable;
 
-class InternalActivityExport implements FromView
+class OtherActivityExport implements FromView
 {
     use Exportable;
 
@@ -37,7 +37,7 @@ class InternalActivityExport implements FromView
     */
     public function view(): View
     {
-        $activity = Activity::where('type','internal');
+        $activity = Activity::where('type','other');
         if ($this->month !== 0) {
             $activity->whereMonth('start_date',$this->month);
         }
@@ -47,7 +47,7 @@ class InternalActivityExport implements FromView
         if ($this->stage !== 0) {
             $activity->where('stage_id', $this->stage);
         }
-        return view('all_internal_activity.export', [
+        return view('all_other_activity.export', [
             'activity' => $activity->get()
         ]);
     }

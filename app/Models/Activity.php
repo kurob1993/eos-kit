@@ -52,6 +52,6 @@ class Activity extends Model
     }
     public function getPlainIdAttribute()
     {
-        return 'activity-' . $this->id;
+        return $this->type.'-activity-' . $this->id;
     }
 }

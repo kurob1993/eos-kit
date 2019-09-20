@@ -12,7 +12,8 @@
             <li class="has-sub {{ 
                     (
                         (Request::segment(1) == 'internal-activity')||
-                        (Request::segment(1) == 'external-activity')
+                        (Request::segment(1) == 'external-activity') ||
+                        (Request::segment(1) == 'other-activity')
                     ) 
                     ? 'active' : '' 
                     }}">
@@ -27,6 +28,9 @@
                     </li>
                     <li class="{{ Request::segment(1)=='external-activity' ? 'active' : '' }}">
                         <a href="{{ route('personnel_service.external-activity.index') }}">External Activity</a>
+                    </li>
+                    <li class="{{ Request::segment(1)=='other-activity' ? 'active' : '' }}">
+                        <a href="{{ route('personnel_service.other-activity.index') }}">Other Activity</a>
                     </li>
                 </ul>
             </li>

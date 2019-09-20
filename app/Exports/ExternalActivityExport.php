@@ -47,11 +47,8 @@ class ExternalActivityExport implements FromView
         if ($this->stage !== 0) {
             $activity->where('stage_id', $this->stage);
         }
-        return view('all_internal_activity.export', [
-            'activity' => $activity->get(),
-            'month' => $this->month,
-            'year' => $this->year,
-            'stage' => $this->stage,
+        return view('all_external_activity.export', [
+            'activity' => $activity->get()
         ]);
     }
 }
