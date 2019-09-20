@@ -22,7 +22,7 @@ class AllExternalActivityController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $activity = Activity::ofLoggedUser()->where('type', 'external');
+        $activity = Activity::where('type', 'external');
         if (isset($request->search['value'])) {
             $cari = explode('|', $request->search['value']);
             $month = $cari[0];
