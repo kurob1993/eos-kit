@@ -27,7 +27,8 @@
                     (Request::segment(1) == 'organizations') || 
                     (Request::segment(1) == 'administrations') ||
                     (Request::segment(1) == 'internal-activity') ||
-                    (Request::segment(1) == 'external-activity') 
+                    (Request::segment(1) == 'external-activity') ||
+                    (Request::segment(1) == 'other-activity')
                 ) ? 'active' : '' 
                 }}">
                 <a href="javascript:;">
@@ -45,6 +46,9 @@
                     </li>
                     <li class="{{ Request::segment(1)=='external-activity' ? 'active' : '' }}"> 
                         <a href="{{ route('external-activity.index') }}">External Activity</a> 
+                    </li>
+                    <li class="{{ Request::segment(1)=='other-activity' ? 'active' : '' }}"> 
+                        <a href="{{ route('other-activity.index') }}">Other Activity</a> 
                     </li>
                     {{-- <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 
                         <a href="#">Organisasi</a> 

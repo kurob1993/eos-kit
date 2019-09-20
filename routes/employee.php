@@ -96,3 +96,9 @@
         ],
         'except' => ['destroy', 'update', 'edit']
     ]);
+    Route::resource('other-activity', 'OtherActivityController',[
+        'parameters'=> [
+            'other-activity' => 'id'
+        ],
+        'except' => ['destroy', 'update', 'edit']
+    ]);
