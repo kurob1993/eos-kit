@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\InternalActivityExport;
+use App\Exports\ExternalActivityExport;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Html\Builder;
@@ -12,7 +12,7 @@ use App\Models\Activity;
 use App\Models\Stage;
 use Carbon\Carbon;
 
-class AllInternalActivityController extends Controller
+class AllExternalActivityController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,7 +22,7 @@ class AllInternalActivityController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $activity = Activity::ofLoggedUser()->where('type', 'internal');
+        $activity = Activity::ofLoggedUser()->where('type', 'external');
         if (isset($request->search['value'])) {
             $cari = explode('|', $request->search['value']);
             $month = $cari[0];
@@ -60,7 +60,7 @@ class AllInternalActivityController extends Controller
                     return $activity->end_date->format('d.m.Y');
                 })
                 ->editColumn('aksi', function ($activity) {
-                    return view('all_internal_activity._action',compact('activity'));
+                    return view('all_external_activity._action',compact('activity'));
                 })
                 ->escapeColumns([0, 1])
                 ->make(true);
@@ -139,7 +139,7 @@ class AllInternalActivityController extends Controller
         ];
         $stage = Stage::all();
         // tampilkan view index dengan tambahan script html DataTables
-        return view('all_internal_activity.index')->with(compact('html', 'activity', 'data','stage'));
+        return view('all_external_activity.index')->with(compact('html', 'activity', 'data','stage'));
     }
 
     /**
@@ -220,10 +220,10 @@ class AllInternalActivityController extends Controller
         $tahun = (int)$request->year;
         $stage = (int)$request->stage;
 
-        return (new InternalActivityExport)
+        return (new ExternalActivityExport)
             ->forMonth($bulan)
             ->forYear($tahun)
             ->forStage($stage)
-            ->download('InternalActivity.xlsx');
+            ->download('ExternalActivity.xlsx');
     }
 }

@@ -90,3 +90,17 @@
             'update' => 'personnel_service.internal-activity.update',
         ]
     ]);
+
+    Route::get('external-activity/export', 'AllExternalActivityController@export')
+        ->name('personnel_service.external-activity.export');
+        
+    Route::resource('external-activity', 'AllExternalActivityController',[
+        'parameters'=> [
+            'external-activity' => 'id'
+        ],
+        'only' => ['index', 'update'],
+        'names' => [
+            'index' => 'personnel_service.external-activity.index',
+            'update' => 'personnel_service.external-activity.update',
+        ]
+    ]);

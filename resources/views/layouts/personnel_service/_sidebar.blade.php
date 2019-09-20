@@ -11,7 +11,8 @@
             @role('personnel_service')
             <li class="has-sub {{ 
                     (
-                        (Request::segment(1) == 'internal-activity')
+                        (Request::segment(1) == 'internal-activity')||
+                        (Request::segment(1) == 'external-activity')
                     ) 
                     ? 'active' : '' 
                     }}">
@@ -23,6 +24,9 @@
                 <ul class="sub-menu">
                     <li class="{{ Request::segment(1)=='internal-activity' ? 'active' : '' }}">
                         <a href="{{ route('personnel_service.internal-activity.index') }}">Internal Activity</a>
+                    </li>
+                    <li class="{{ Request::segment(1)=='external-activity' ? 'active' : '' }}">
+                        <a href="{{ route('personnel_service.external-activity.index') }}">External Activity</a>
                     </li>
                 </ul>
             </li>
