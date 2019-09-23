@@ -80,9 +80,13 @@
 {!! $html->scripts() !!}
 <script>
     function fillter() {
-        var month = localStorage.getItem("ActivitySelectMonth");
-        var year = localStorage.getItem("ActivitySelectYear");
-        var stage = localStorage.getItem("ActivitySelectStage");
+        var m = localStorage.getItem("ActivitySelectMonth");
+        var y = localStorage.getItem("ActivitySelectYear");
+        var s = localStorage.getItem("ActivitySelectStage");
+
+        var month = m ? m : '';
+        var year = y ? y : '';
+        var stage = s ? s: '';
         var cari = month+'|'+year+'|'+stage;
         
         oTable = $('.table').DataTable();

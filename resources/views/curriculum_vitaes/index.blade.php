@@ -181,6 +181,22 @@
                             </dl>
                         </div>
                     </div>
+                    <small>Terakhir diubah di WEB: {{ isset($activities['last_updated']) ? date('Y-m-d', strtotime($activities['last_updated'])): '' }}</small>
+                    <div class="media media">
+                        <div class="media-body">
+                            <dl class="dl-horizontal">
+                                @foreach ($activities['data'] as $activities)
+                                <dt> {{ $activities->start_date->format('d/m/y') }} - {{ $activities->end_date->format('d/m/y') }}</dt>
+                                <dd><b>{{ $activities->posisi }}</b></dd>
+                                <dt></dt>
+                                <dd class="m-b-10">
+                                    {{ $activities->jenis_kegiatan }}<br>
+                                    {{ $activities->keterangan }}
+                                </dd>
+                                @endforeach
+                            </dl>
+                        </div>
+                    </div>
                     <h3 class="m-t-10 m-b-0">Aktivitas Eksternal</h3>
                     <small>Terakhir diubah di SAP: {{ $externalActivities['last_updated'] }}</small>
                     <div class="media media">

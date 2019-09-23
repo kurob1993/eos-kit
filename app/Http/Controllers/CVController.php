@@ -13,6 +13,7 @@ use App\Models\SAP\InternalActivity;
 use App\Models\SAP\ExternalActivity;
 use App\Models\SAP\Other;
 use App\Models\SAP\Position;
+use App\Models\Activity;
 use Illuminate\Support\Facades\Storage;
 
 class CVController extends Controller
@@ -111,6 +112,15 @@ class CVController extends Controller
             ->get();
         $this->cvs['others']['last_updated'] = Other::sapOfLoggedUser()
             ->max('BEGDA');
+
+        // ambil data activity internal. external, other
+        $this->cvs['activities']['data'] = Activity::ofLoggedUser()
+            ->sentToSapOnly()
+            ->orderBy('start_date', 'DESC')
+            ->get();
+        $this->cvs['activities']['last_updated'] = Activity::ofLoggedUser()
+            ->sentToSapOnly()
+            ->max('updated_at');
     }
 
     public function index(Request $request, Builder $htmlBuilder)
@@ -131,7 +141,8 @@ class CVController extends Controller
                 'trainings',
                 'internalActivities',
                 'externalActivities',
-                'others'
+                'others',
+                'activities'
             )
         );
     }

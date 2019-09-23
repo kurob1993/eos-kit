@@ -1,6 +1,9 @@
-var selectedMonth = localStorage.getItem("ActivitySelectMonth");
-var selectedYear = localStorage.getItem("ActivitySelectYear");
-var selectedStage = localStorage.getItem("ActivitySelectStage");
+var m = localStorage.getItem("ActivitySelectMonth");
+var y = localStorage.getItem("ActivitySelectYear");
+var s = localStorage.getItem("ActivitySelectStage");
+var selectedMonth = m ? m : '';
+var selectedYear = y ? y : '';
+var selectedStage = s ? s: '';
 
 $('#month').val(selectedMonth);
 $('#year').val(selectedYear);

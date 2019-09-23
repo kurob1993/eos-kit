@@ -16,10 +16,10 @@
                 <select id="month" name="month" class="form-control" required onchange="month(this.value)">
                     <option value="">.: Pilih Bulan :.</option>
                     @foreach ($data['monthList'] as $item)
-                        @php
-                            $month_num = $item->month;
-                            $month_name = date("F", mktime(0, 0, 0, $month_num, 10));
-                        @endphp
+                    @php
+                    $month_num = $item->month;
+                    $month_name = date("F", mktime(0, 0, 0, $month_num, 10));
+                    @endphp
                     <option value="{{ $item->month }}"> {{ $month_name }}</option>
                     @endforeach
                 </select>
@@ -80,9 +80,13 @@
 {!! $html->scripts() !!}
 <script>
     function fillter() {
-        var month = localStorage.getItem("ActivitySelectMonth");
-        var year = localStorage.getItem("ActivitySelectYear");
-        var stage = localStorage.getItem("ActivitySelectStage");
+        var m = localStorage.getItem("ActivitySelectMonth");
+        var y = localStorage.getItem("ActivitySelectYear");
+        var s = localStorage.getItem("ActivitySelectStage");
+
+        var month = m ? m : '';
+        var year = y ? y : '';
+        var stage = s ? s: '';
         var cari = month+'|'+year+'|'+stage;
         
         oTable = $('.table').DataTable();
