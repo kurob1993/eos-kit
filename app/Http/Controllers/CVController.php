@@ -114,11 +114,33 @@ class CVController extends Controller
             ->max('BEGDA');
 
         // ambil data activity internal. external, other
-        $this->cvs['activities']['data'] = Activity::ofLoggedUser()
+        $this->cvs['intActivities']['data'] = Activity::ofLoggedUser()
+            ->where('type','internal')
             ->sentToSapOnly()
             ->orderBy('start_date', 'DESC')
             ->get();
-        $this->cvs['activities']['last_updated'] = Activity::ofLoggedUser()
+        $this->cvs['intActivities']['last_updated'] = Activity::ofLoggedUser()
+            ->where('type','internal')
+            ->sentToSapOnly()
+            ->max('updated_at');
+
+        $this->cvs['extActivities']['data'] = Activity::ofLoggedUser()
+            ->where('type','external')
+            ->sentToSapOnly()
+            ->orderBy('start_date', 'DESC')
+            ->get();
+        $this->cvs['extActivities']['last_updated'] = Activity::ofLoggedUser()
+            ->where('type','external')
+            ->sentToSapOnly()
+            ->max('updated_at');
+
+        $this->cvs['otherActivities']['data'] = Activity::ofLoggedUser()
+            ->where('type','other')
+            ->sentToSapOnly()
+            ->orderBy('start_date', 'DESC')
+            ->get();
+        $this->cvs['otherActivities']['last_updated'] = Activity::ofLoggedUser()
+            ->where('type','other')
             ->sentToSapOnly()
             ->max('updated_at');
     }
@@ -142,7 +164,9 @@ class CVController extends Controller
                 'internalActivities',
                 'externalActivities',
                 'others',
-                'activities'
+                'intActivities',
+                'extActivities',
+                'otherActivities'
             )
         );
     }
