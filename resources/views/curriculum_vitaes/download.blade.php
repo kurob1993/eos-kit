@@ -12,8 +12,8 @@
                 <table class="table table-profile">
                     <thead>
                         <tr>
-                            <th>
-                                {{ $picture }}
+                            <th class="text-right">
+                                <img src="{{ $picture }}" alt="" width="100px">
                             </th>
                             <th>
                                 <h4>{{ $personalData->CNAME }} <small>{{ $position->HRP1000_S_STEXT }}</small>
@@ -153,6 +153,20 @@
                             </td>
                         </tr>
                         @endforeach
+                        @foreach ($intActivities['data'] as $intActivities)
+                        <tr>
+                            <td class="field">
+                                {{ $intActivities->start_date->format('d/m/y') }} -
+                                {{ $intActivities->end_date->format('d/m/y') }}
+                            </td>
+                            <td>
+                                <b>{{ $intActivities->posisi }}</b>
+                                <br>
+                                {{ $intActivities->jenis_kegiatan }}<br>
+                                {{ $intActivities->keterangan }}
+                            </td>
+                        </tr>
+                        @endforeach
 
                         <tr class="divider">
                             <td colspan="2"></td>
@@ -174,7 +188,20 @@
                             </td>
                         </tr>
                         @endforeach
-
+                        @foreach ($extActivities['data'] as $extActivities)
+                        <tr>
+                            <td class="field">
+                                {{ $extActivities->start_date->format('d/m/y') }} -
+                                {{ $extActivities->end_date->format('d/m/y') }}
+                            </td>
+                            <td>
+                                <b>{{ $extActivities->posisi }}</b>
+                                <br>
+                                {{ $extActivities->jenis_kegiatan }}<br>
+                                {{ $extActivities->keterangan }}
+                            </td>
+                        </tr>
+                        @endforeach
                         <tr class="divider">
                             <td colspan="2"></td>
                         </tr>
@@ -195,7 +222,19 @@
                             </td>
                         </tr>
                         @endforeach
-
+                        @foreach ($otherActivities['data'] as $otherActivities)
+                        <tr>
+                            <td class="field">
+                                {{ $otherActivities->start_date->format('d/m/y') }} -
+                                {{ $otherActivities->end_date->format('d/m/y') }}
+                            </td>
+                            <td>
+                                <b>{{ $otherActivities->jenis_kegiatan }}</b>
+                                <br>
+                                {{ $otherActivities->keterangan }}
+                            </td>
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

@@ -181,7 +181,7 @@ class CVController extends Controller
         if (Storage::disk('public')->exists('pic/' . $position->PERNR . '.jpg'))
             $picture = asset('storage/pic/' . $position->PERNR . '.jpg');
         else
-            $picture = Storage::url('default.png');
+            $picture = url('/images/default.png');
 
         // tampilkan view index dengan tambahan script html DataTables
         return view(
@@ -196,7 +196,10 @@ class CVController extends Controller
                 'internalActivities',
                 'externalActivities',
                 'others',
-                'picture'
+                'picture',
+                'intActivities',
+                'extActivities',
+                'otherActivities'
             )
         );
     }
