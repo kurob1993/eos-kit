@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Activity;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreotherActivityRequest;
+use App\Http\Requests\StoreOtherActivityRequest;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 
