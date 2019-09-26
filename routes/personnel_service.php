@@ -67,6 +67,21 @@
         ]);
     });
 
+    Route::group(['prefix' => 'periode'], function () {
+        Route::get('', 'PreferdisPeriodeController@index')
+            ->name('preferdis.periode.index');
+        Route::delete('/{id}/destroy', 'PreferdisPeriodeController@destroy')
+            ->name('preferdis.periode.delete');
+        Route::get('/create', 'PreferdisPeriodeController@create')
+            ->name('preferdis.periode.create');
+        Route::post('', 'PreferdisPeriodeController@store')
+            ->name('preferdis.periode.store');
+        Route::get('/{id}/edit', 'PreferdisPeriodeController@edit')
+            ->name('preferdis.periode.edit');
+        Route::put('/{id}/update', 'PreferdisPeriodeController@update')
+            ->name('preferdis.periode.update');
+    });
+
     
 
     
