@@ -31,7 +31,7 @@
                 <div class="col-sm-4 m-t-25">
                     <input type="submit" name="" id="search" value="search" class="btn btn-md btn-primary" required>
                     <button class="btn btn-primary btn-md form-inline" data-toggle="modal" data-target="#myModal">
-                        <span class="blink"> Download </span>
+                        <span class="blink"> Download <i class="fa fa-file-excel-o"></i> </span>
                     </button>
                 </div>
             </div>
