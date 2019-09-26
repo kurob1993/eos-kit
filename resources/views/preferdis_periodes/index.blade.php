@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.employee._page-container', ['page_header' => 'Preferences and Dislike Periode'])
+@component('layouts.personnel_service._page-container', ['page_header' => 'Preferences and Dislike Periode'])
 <div class="panel panel-prussian">
   <div class="panel-heading">
     <h4 class="panel-title">Data Periode</h4>

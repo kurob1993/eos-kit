@@ -34,7 +34,9 @@
 
                 @role('hcd')
                 <li class="has-sub {{ (
-                    (Request::segment(2) == 'preference')) ? 'active' : '' 
+                    (Request::segment(2) == 'periode') || 
+                    (Request::segment(2) == 'preference')
+                        ) ? 'active' : '' 
                     }}">
                     <a href="javascript:;">
                             <b class="caret pull-right"></b>
@@ -42,8 +44,8 @@
                             <span>Personnel Admin</span>
                         </a>
                     <ul class="sub-menu">
-                        <li class="{{ Request::segment(2)=='preference' ? 'active' : '' }}">
-                            <a href="{{ url('preferdis/periode') }}">Periode</a>
+                        <li class="{{ Request::segment(2)=='periode' ? 'active' : '' }}">
+                            <a href="{{ url('personnel_service/periode') }}">Periode</a>
                         </li>
                         <li class="{{ Request::segment(2)=='preference' ? 'active' : '' }}">
                             <a href="{{ url('admin/preference') }}">Pref and Dis Download</a>

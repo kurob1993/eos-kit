@@ -1,7 +1,7 @@
 @extends('layouts.app') 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.employee._page-container', ['page_header' => 'Prefereces and Dislike Periode'])
+@component('layouts.personnel_service._page-container', ['page_header' => 'Prefereces and Dislike Periode'])
 <div class="row">
   <div class="col-lg-12 col-xl-9">
     <div class="panel panel-prussian">
