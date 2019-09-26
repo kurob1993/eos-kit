@@ -28,8 +28,7 @@ class StoreInternalActivityRequest extends FormRequest
             'jenis_kegiatan' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
-            'posisi' => 'required',
-            'keterangan' => 'required'
+            'posisi' => 'required'
           ];
     }
 

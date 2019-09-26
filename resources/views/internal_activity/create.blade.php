@@ -14,11 +14,38 @@
         {{ csrf_field() }}
 
         <div class="form-group">
+          <label class="control-label col-sm-2" for="posisi"> </label>
+          <div id="datepicker-range">
+
+            <div class=" col-lg-5">
+              <label class="control-label col-sm-2" for="start_date">Mulai </label>
+              <input type="text" class="form-control text-center" id="start_date" name="start_date"
+                value="{{ old('start_date') }}" placeholder='Pilih Tanggal mulai'
+                style="background : white; color:black" readonly>
+              {!! $errors->first('start_date', ' <p class="text-danger help-block">:message</p>') !!}
+
+              <div id="datepicker-range-start" class="datepicker-range"></div>
+            </div>
+
+            <div class=" col-lg-5">
+              <label class="control-label col-sm-2" for="start_date">Berakhir </label>
+              <input type="text" class="form-control text-center is-invalid" id="end_date" name="end_date"
+                value="{{ old('end_date') }}" placeholder='Pilih Tanggal berakhir'
+                style="background : white; color:black" readonly>
+              {!! $errors->first('end_date', ' <p class="text-danger help-block">:message</p>') !!}
+
+              <div id="datepicker-range-end" class="datepicker-range"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-group">
           <label class="control-label col-sm-2" for="jenis_kegiatan">Jenis Kegiatan: </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="jenis_kegiatan" name="jenis_kegiatan" placeholder="Jenis Kegiatan"
-              value="{{ old('jenis_kegiatan') }}">
-              {!! $errors->first('jenis_kegiatan', ' <p class="text-danger help-block">:message</p>') !!}
+            <input type="text" class="form-control" id="jenis_kegiatan" name="jenis_kegiatan"
+              placeholder="Contoh: Team Implementasi SAP" value="{{ old('jenis_kegiatan') }}">
+            {!! $errors->first('jenis_kegiatan', ' <p class="text-danger help-block">:message</p>') !!}
           </div>
         </div>
 
@@ -27,42 +54,16 @@
           <div class="col-sm-10">
             <input type="text" class="form-control" id="posisi" name="posisi" placeholder="Posisi"
               value="{{ old('posisi') }}">
-              {!! $errors->first('posisi', ' <p class="text-danger help-block">:message</p>') !!}
+            {!! $errors->first('posisi', ' <p class="text-danger help-block">:message</p>') !!}
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="posisi"> </label>
-          <div id="datepicker-range">
-
-            <div class=" col-lg-5">
-              <label class="control-label col-sm-2" for="start_date">Mulai </label>
-              <input type="text" class="form-control text-center" id="start_date" 
-              name="start_date" value="{{ old('start_date') }}" placeholder='Pilih Tanggal mulai' 
-              style="background : white; color:black" readonly>
-              {!! $errors->first('start_date', ' <p class="text-danger help-block">:message</p>') !!}
-          
-              <div id="datepicker-range-start" class="datepicker-range"></div>
-            </div>
-
-            <div class=" col-lg-5">
-              <label class="control-label col-sm-2" for="start_date">Berakhir </label>
-              <input type="text" class="form-control text-center is-invalid" id="end_date" 
-              name="end_date" value="{{ old('end_date') }}" placeholder='Pilih Tanggal berakhir' 
-              style="background : white; color:black" readonly>
-              {!! $errors->first('end_date', ' <p class="text-danger help-block">:message</p>') !!}
-
-              <div id="datepicker-range-end" class="datepicker-range"></div>
-            </div>
-
-          </div>
-        </div>
-        
         <div class="form-group">
           <label class="control-label col-sm-2" for="keterangan">Keterangan: </label>
           <div class="col-sm-10">
-            <textarea name="keterangan" class="form-control" id="keterangan" cols="30" rows="10" >{{ old('keterangan') }}</textarea>
-              {!! $errors->first('keterangan', ' <p class="text-danger help-block">:message</p>') !!}
+            <textarea name="keterangan" class="form-control" id="keterangan" cols="30"
+              rows="10">{{ old('keterangan') }}</textarea>
+            {!! $errors->first('keterangan', ' <p class="text-danger help-block">:message</p>') !!}
           </div>
         </div>
 
@@ -101,6 +102,6 @@
 @push('on-ready-scripts')
 DaterangePickerPlugins.init();
 $(document).on('submit','#form',function(){
-  $('#simpan').attr('disabled','disabled');
+$('#simpan').attr('disabled','disabled');
 });
 @endpush
