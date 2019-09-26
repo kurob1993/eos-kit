@@ -104,16 +104,43 @@ class PreferdisPeriodeController extends Controller
     public function destroy($id)
     {
         try {
-            // tampilkan pesan bahwa telah berhasil diinput
-            Session::flash("flash_notification", [
-                "level" => "success",
-                "message" => "Berhasil menghapus data periode.",
-            ]);
+            $cek_data = Preferdis::where('preferdis_periode_id',$id)
+                ->first();
+            
+            // count data
+            if($cek_data != null)
+            {
+                $jumlah_data = $cek_data->count();
+            }
+            else
+            {
+                $jumlah_data = 0;
+            }
+            
 
-            // hapus data
-            $preferdis = PreferdisPeriode::find($id);
-            $preferdis->delete();
-            return redirect()->route('preferdis.periode.index');
+            if($jumlah_data > 0)
+            {  
+                Session::flash("flash_notification", [
+                    "level"=>"danger",
+                    "message"=>"Gagal manghapus periode, silahkan hubungi Divisi HCI&A."
+                ]);
+
+                return redirect()->route('preferdis.periode.index');
+            }
+            else 
+            {
+                // tampilkan pesan bahwa telah berhasil diinput
+                Session::flash("flash_notification", [
+                    "level" => "success",
+                    "message" => "Berhasil menghapus data periode.",
+                ]);
+
+                // hapus data
+                $preferdis = PreferdisPeriode::find($id);
+                $preferdis->delete();
+                return redirect()->route('preferdis.periode.index');
+            }
+
 
         } catch(ModelNotFoundException $e) {
             // tampilkan pesan bahwa ada kegagalan system
