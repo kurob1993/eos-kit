@@ -36,20 +36,24 @@
           <div id="datepicker-range">
 
             <div class=" col-lg-5">
-              <input type="text" class="form-control text-center" id="start_date" 
-              name="start_date" value="{{ old('start_date') }}" placeholder='Pilih Tanggal mulai' readonly>
-              {!! $errors->first('start_date', ' <p class="text-danger help-block">:message</p>') !!}
-          
-              <div id="datepicker-range-start" class="datepicker-range"></div>
-            </div>
-
-            <div class=" col-lg-5">
-              <input type="text" class="form-control text-center is-invalid" id="end_date" 
-              name="end_date" value="{{ old('end_date') }}" placeholder='Pilih Tanggal berakhir' readonly>
-              {!! $errors->first('end_date', ' <p class="text-danger help-block">:message</p>') !!}
-
-              <div id="datepicker-range-end" class="datepicker-range"></div>
-            </div>
+                <label class="control-label col-sm-2" for="start_date">Mulai </label>
+                <input type="text" class="form-control text-center" id="start_date" 
+                name="start_date" value="{{ old('start_date') }}" placeholder='Pilih Tanggal mulai' 
+                style="background : white; color:black" readonly>
+                {!! $errors->first('start_date', ' <p class="text-danger help-block">:message</p>') !!}
+            
+                <div id="datepicker-range-start" class="datepicker-range"></div>
+              </div>
+  
+              <div class=" col-lg-5">
+                <label class="control-label col-sm-2" for="start_date">Berakhir </label>
+                <input type="text" class="form-control text-center is-invalid" id="end_date" 
+                name="end_date" value="{{ old('end_date') }}" placeholder='Pilih Tanggal berakhir' 
+                style="background : white; color:black" readonly>
+                {!! $errors->first('end_date', ' <p class="text-danger help-block">:message</p>') !!}
+  
+                <div id="datepicker-range-end" class="datepicker-range"></div>
+              </div>
 
           </div>
         </div>
