@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Datatables;
 use Illuminate\Http\Request;
-use App\Models\Activity;
+use App\Models\InternalActivity;
 use App\Models\Stage;
 use Carbon\Carbon;
 
@@ -22,7 +22,7 @@ class AllInternalActivityController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $activity = Activity::where('type', 'internal');
+        $activity = InternalActivity::where('id','<>',null);
         if (isset($request->search['value'])) {
             $cari = explode('|', $request->search['value']);
             $month = $cari[0];
@@ -58,6 +58,9 @@ class AllInternalActivityController extends Controller
                 })
                 ->editColumn('end_date', function ($activity) {
                     return $activity->end_date->format('d.m.Y');
+                })
+                ->editColumn('internal_activity_position_id', function ($activity) {
+                    return $activity->position->text;
                 })
                 ->editColumn('aksi', function ($activity) {
                     return view('all_internal_activity._action',compact('activity'));
@@ -98,9 +101,10 @@ class AllInternalActivityController extends Controller
                 'orderable' => false,
             ])
             ->addColumn([
-                'data' => 'posisi',
-                'name' => 'posisi',
+                'data' => 'internal_activity_position_id',
+                'name' => 'internal_activity_position_id',
                 'title' => 'Posisi',
+                'class' => 'none',
                 'searchable' => false,
                 'orderable' => false,
             ])
@@ -122,6 +126,7 @@ class AllInternalActivityController extends Controller
                 'data' => 'keterangan',
                 'name' => 'keterangan',
                 'title' => 'Keterangan',
+                'class' => 'none',
                 'searchable' => false,
                 'orderable' => false,
             ])
@@ -134,8 +139,8 @@ class AllInternalActivityController extends Controller
             ]);
 
         $data = [
-            'monthList' => Activity::monthList()->get(),
-            'yearList' => Activity::yearList()->get(),
+            'monthList' => InternalActivity::monthList()->get(),
+            'yearList' => InternalActivity::yearList()->get(),
         ];
         $stage = Stage::all();
         // tampilkan view index dengan tambahan script html DataTables
@@ -194,8 +199,8 @@ class AllInternalActivityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $activity = Activity::find($id);
-        $activity->stage_id = $request->stage_id;
+        $activity = InternalActivity::find($id);
+        $activity->stage_id = 3;
         $activity->save();
         return redirect()->back(); 
     }
@@ -224,6 +229,6 @@ class AllInternalActivityController extends Controller
             ->forMonth($bulan)
             ->forYear($tahun)
             ->forStage($stage)
-            ->download('InternalActivity.xlsx');
+            ->download('InternalActivity_'.$bulan.$tahun.'.xlsx');
     }
 }

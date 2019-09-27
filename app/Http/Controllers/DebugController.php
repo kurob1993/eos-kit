@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\AttendanceQuota;
 use App\Models\SAP\Zhrom0013;
 use App\Models\AbsenceApproval;
+use App\Models\InternalActivity;
 
 class DebugController extends Controller
 {
@@ -26,15 +27,9 @@ class DebugController extends Controller
     public function debug()
     {   
 
-        return url('/images/default.png');
+        // return url('/images/default.png');
         
-        // AttendanceQuota::where('secretary_id', '87')
-        //     ->with([
-        //         'overtimeReason', 
-        //         'stage',
-        //         'employee:personnel_no,name',
-        //         'attendanceQuotaApproval'
-        //         ]
-        //     )->get();
+        // $activity = InternalActivity::all();
+        return InternalActivity::where('id',3);
     }
 }

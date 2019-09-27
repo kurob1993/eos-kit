@@ -56,7 +56,7 @@ class InternalActivity extends Model
     }
     public function getPlainIdAttribute()
     {
-        return $this->type.'-activity-' . $this->id;
+        return 'internal-activity-' . $this->id;
     }
 
 }

@@ -18,7 +18,6 @@
                 style="display: inline">
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}
-                <input type="hidden" value="2" name="stage_id">
 
                 <div class="modal-body">
                     <p>Yakin Menyetujui Data ini?</p>
@@ -44,7 +43,6 @@
                 style="display: inline">
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}
-                <input type="hidden" value="5" name="stage_id">
 
                 <div class="modal-body">
                     <p>Yakin Menolak Data ini?</p>
@@ -62,9 +60,6 @@
     </div>
 </div>
 @endif
-@if($activity->stage_id == 2)
-<span class="label label-success">{{ $activity->stage->description }}</span>
-@endif
-@if($activity->stage_id == 5)
-<span class="label label-danger">{{ $activity->stage->description }}</span>
+@if($activity->stage_id !== 1)
+<span class="label label-{{$activity->stage->classDescription}}">{{ $activity->stage->description }}</span>
 @endif

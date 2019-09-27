@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Activity;
+use App\Models\InternalActivity;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -37,7 +37,7 @@ class InternalActivityExport implements FromView
     */
     public function view(): View
     {
-        $activity = Activity::where('type','internal');
+        $activity = InternalActivity::where('id','<>',null);
         if ($this->month !== 0) {
             $activity->whereMonth('start_date',$this->month);
         }
