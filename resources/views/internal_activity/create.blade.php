@@ -52,8 +52,19 @@
         <div class="form-group">
           <label class="control-label col-sm-2" for="posisi">Posisi: </label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="posisi" name="posisi" placeholder="Posisi"
-              value="{{ old('posisi') }}">
+
+            <select class="form-control" id="posisi" name="posisi">
+            <option value="">.:: Pilih Posisi ::. {{ old('posisi') }}</option>
+              @foreach ($posisi as $item)
+              @if (old('posisi') == $item->id)
+                <option value="{{$item->id}}" selected>{{$item->text}}</option>
+              @else
+                <option value="{{$item->id}}">{{$item->text}}</option>
+              @endif
+              @endforeach
+            </select>
+            {{-- <input type="text" class="form-control" id="posisi" name="posisi" placeholder="Posisi"
+              value="{{ old('posisi') }}"> --}}
             {!! $errors->first('posisi', ' <p class="text-danger help-block">:message</p>') !!}
           </div>
         </div>

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Activity;
+use App\Models\InternalActivity;
+use App\Models\InternalActivityPosition;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreInternalActivityRequest;
@@ -20,7 +21,7 @@ class InternalActivityController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $activity = Activity::ofLoggedUser()->where('type','internal')->get();
+        $activity = InternalActivity::ofLoggedUser()->get();
 
         // response untuk datatables absences
         if ($request->ajax()) {
@@ -88,7 +89,8 @@ class InternalActivityController extends Controller
      */
     public function create()
     {
-        return view('internal_activity.create');
+        $posisi = InternalActivityPosition::all();
+        return view('internal_activity.create', compact('posisi'));
     }
 
     /**
@@ -99,14 +101,13 @@ class InternalActivityController extends Controller
      */
     public function store(StoreInternalActivityRequest $request)
     {
-        $activity = New Activity();
+        $activity = New InternalActivity();
         $activity->personnel_no = Auth::user()->personnel_no;
         $activity->jenis_kegiatan = $request->jenis_kegiatan;
-        $activity->posisi = $request->posisi;
+        $activity->internal_activity_position_id = $request->posisi;
         $activity->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
         $activity->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
         $activity->keterangan = $request->keterangan;
-        $activity->type = 'internal';
         $activity->stage_id = 1;
         if($activity->save()){
             return redirect()->route('internal-activity.index');

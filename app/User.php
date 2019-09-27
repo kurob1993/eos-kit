@@ -100,6 +100,12 @@ class User extends Authenticatable
     return $this->hasMany('App\Models\Activity', 'personnel_no', 'personnel_no');
   }
 
+  public function internalActivies()
+  {
+    // one-to-many relationship dengan Absence
+    return $this->hasMany('App\Models\InternalActivity', 'personnel_no', 'personnel_no');
+  }
+
   public function getHasValidEmailAttribute()
   {
     $email1 = str_is('*@krakatausteel.com', $this->email);
