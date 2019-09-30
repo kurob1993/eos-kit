@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\PeriodDates;
 use App\Traits\ReceiveStage;
+use App\Traits\OfLoggedUser;
 
 class Travel extends Model
 {
-    use PeriodDates, ReceiveStage;
-
+    use PeriodDates, ReceiveStage, OfLoggedUser;
+    
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',

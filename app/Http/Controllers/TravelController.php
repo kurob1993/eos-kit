@@ -24,127 +24,54 @@ class TravelController extends Controller
         $Travel = Travel::where('personnel_no', $personnel_no)->get();
         if ($request->ajax()) {
             return Datatables::of($Travel)
-                ->editColumn('id', function ($Travel) {
-                    return $Travel->plain_id;
-                })
-                ->editColumn('personnel_no', function ($Travel) {
-                    return $Travel->employee->name;
-                })
-                ->editColumn('personnel_no', function ($Travel) {
-                    $name = $Travel->employee->name;
-                    $code = '<label class="label label-info">'.
-                        $Travel->employee->personnel_no
-                    .'</label>';
-                    return $code.' '.$name;
-                })
-                ->editColumn('start_date', function ($Travel) {
-                    return $Travel->formatted_start_date;
-                })
-                ->editColumn('end_date', function ($Travel) {
-                    return $Travel->formatted_end_date;
-                })
-                ->editColumn('atasan', function ($Travel) {
-                    $ta = $Travel->TravelApproval->first();
-                    $name = '';
-                    $code = '';
-                    if ($ta) {
-                        $name = $ta->employee->name;
-                        $code = '<label class="label label-info">'.
-                            $ta->employee->personnel_no
-                        .'</label>';
+            ->editColumn('summary', function ($Travel) {
+                // kolom summary menggunakan view _summary
+                return view('travels._summary', [ 
+                    'summary' => $Travel,
+                    'when' => $Travel->created_at->format('d/m') 
+                ]);
+            })
+            ->editColumn('approver', function ($Travel) {
+                // personnel_no dan name atasan
+                    $views = '';
+                    foreach ($Travel->travelApproval as $item) {
+                        $views =  $views . view('layouts._personnel-no-with-name', [
+                            'personnel_no' => $item->employee['personnel_no'],
+                            'employee_name' => $item->employee['name'],
+                        ]) . '<br />';
                     }
-                    return $code.' '.$name;
-                })
-                ->editColumn('stage_id', function ($Travel) {
-                    return '<span class="label label-' . $Travel->stage->class_description . '">' 
-                    . $Travel->stage->description . '</span>';
-                })
-                ->editColumn('kendaraan', function ($Travel) {
-                    if($Travel->kendaraan == 'Dinas'){
-                        $re = '<span class="label label-primary">'. $Travel->nopol . '</span> '. $Travel->kendaraan;
-                    }else{
-                        $re = '<span class="label label-primary">'. $Travel->kendaraan . '</span>';
-                    }
-                    return $re;
-                })
-                ->escapeColumns([0,1,6])
-                ->make(true);
+                return $views;
+            })
+            ->setRowAttr([
+                // href untuk dipasang di setiap tr
+                'data-href' => function ($Travel) {
+                    return route('travels.show', ['travel' => $Travel->id]);
+                } 
+            ])
+            ->escapeColumns([0,1])
+            ->make(true);
         }
 
         // disable paging, searching, details button but enable responsive
         $htmlBuilder->parameters([
-            'paging' => true,
-            'searching' => true,
-            'responsive' => [ 'details' => true ]
+            'paging' => false,
+            'searching' => false,
+            'responsive' => [ 'details' => false ],
+            "columnDefs" => [ [ "width" => "60%", "targets" => 0 ] ]
         ]);
 
         $html = $htmlBuilder
         ->addColumn([
-            'data' => 'id',
-            'name' => 'id',
-            'title' => 'ID',
-            'searchable' => true,
+            'data' => 'summary',
+            'name' => 'summary',
+            'title' => 'Summary',
+            'searchable' => false,
             'orderable' => false, 
-            ])
-        ->addColumn([
-            'data' => 'personnel_no',
-            'name' => 'personnel_no',
-            'title' => 'Karyawan',
-            'searchable' => true,
-            'orderable' => false,
         ])
         ->addColumn([
-            'data' => 'start_date',
-            'name' => 'start_date',
-            'title' => 'Tgl Mulai',
-            'class' => 'desktop',
-            'searchable' => false,
-            'orderable' => false,
-        ])
-        ->addColumn([
-            'data' => 'end_date',
-            'name' => 'end_date',
-            'title' => 'Tgl Selesai',
-            'class' => 'desktop',
-            'searchable' => false,
-            'orderable' => false,
-        ])
-        ->addColumn([
-            'data' => 'tujuan',
-            'name' => 'tujuan',
-            'title' => 'Tujuan',
-            'class' => 'desktop',
-            'searchable' => false,
-            'orderable' => false,
-        ])
-        ->addColumn([
-            'data' => 'keperluan',
-            'name' => 'keperluan',
-            'title' => 'Keperluan',
-            'class' => 'none',
-            'searchable' => false,
-            'orderable' => false,
-        ])
-        ->addColumn([
-            'data' => 'atasan',
-            'name' => 'atasan',
-            'title' => 'Atasan',
-            'class' => 'none',
-            'searchable' => false,
-            'orderable' => false,
-        ])
-        ->addColumn([
-            'data' => 'kendaraan',
-            'name' => 'kendaraan',
-            'title' => 'Kendaraan',
-            'class' => 'none',
-            'searchable' => false,
-            'orderable' => false,
-        ])
-        ->addColumn([
-            'data' => 'stage_id',
-            'name' => 'stage',
-            'title' => 'Tahapan',
+            'data' => 'approver',
+            'name' => 'approver',
+            'title' => 'Approver',
             'class' => 'desktop',
             'searchable' => false,
             'orderable' => false,
@@ -235,7 +162,17 @@ class TravelController extends Controller
      */
     public function show($id)
     {
-        //
+        $travel = Travel::find($id)
+            ->load(
+                [
+                    'stage',
+                    'travelApproval'
+                ]
+            );
+
+        $travelId = $travel->id;
+        
+        return view('travels.show', compact('travel', 'travelId'));
     }
 
     /**
