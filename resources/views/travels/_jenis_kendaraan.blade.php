@@ -1,0 +1,1 @@
+<div class="form-group"> <label for="jenis_kendaraan">Jenis Kendaraan</label> <select name="jenis_kendaraan" id="jenis_kendaraan" class="form-control" required> <option value="">.:: Pilih Jenis Kendaraan ::.</option> <option value="Bus">Bus</option> <option value="Kereta Api">Kereta Api</option> <option value="Pesawat">Pesawat</option> </select> </div>

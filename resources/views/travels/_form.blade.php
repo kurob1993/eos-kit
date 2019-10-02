@@ -1,8 +1,3 @@
-{{-- 
-    Form Elements: personnel_no, start_date, end_date, deduction,
-    absence_type, note, address, delegation (if have subordinates)
-  --}}
-
 <!-- begin datepicker range -->
 <div id="datepicker-range">
   <div class=" col-lg-4">
@@ -47,7 +42,7 @@
 
   <div class="row">
     <!-- begin deduction field -->
-    <div class="col-xs-12">
+    <div class="col-xs-4" style="padding-right: 25px">
       <div class="form-group{{ $errors->has('deduction') ? ' has-error' : '' }}">
         {!! Form::label('deduction', 'Durasi') !!}
         <div class="input-group">
@@ -60,31 +55,78 @@
       </div>
     </div>
     <!-- end deduction field -->
+
+    <div class="col-xs-4" style="padding-right: 25px">
+      <div class="form-group">
+        <label for="gol">Gol</label>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-users"></i></span>
+          <input type="text" id="gol" name="gol" class="form-control" readonly value="{{$gol}}" placeholder="Gol">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label for="cc">Cost Center</label>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-usd"></i></span>
+          <input type="text" id="cc" name="cc" class="form-control" readonly value="{{$cc}}" placeholder="Cost Center">
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="form-group">
-    <select name="kendaraan" id="kendaraan" class="form-control" required>
-      <option value="">.:: Pilih Kendaraan ::.</option>
-      <option value="Dinas">Dinas</option>
-      <option value="Umum">Umum</option>
+    <label for="nohp">Jenis SPD</label>
+    <select name="travel-type" id="travel-type" class="form-control" required>
+      <option value="">.:: Pilih Jenis SPD ::.</option>
+      @foreach ($travelType as $item)
+        <option value="{{$item->subtype}}">{{$item->text}}</option>
+      @endforeach
     </select>
   </div>
 
-  <div class="form-group hidden" id="divnopol">
-    <label for="nopol">No Polisi</label>
-    <input type="text" class="form-control" name="nopol" id="nopol">
+  <span id="div_lampiran"></span>
+
+  <div class="row">
+    <div class="col-xs-6" style="padding-right: 25px">
+      <div class="form-group">
+        <label for="tujuan">Tujuan</label>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-plane"></i></span>
+          <select name="tujuan" id="tujuan" class="form-control" required>
+            <option value="">.:: Pilih Tujuan ::.</option>
+            <option value="dalam">Dalam Negri</option>
+            <option value="luar">Luar Negri</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-6" id="div_kota"> </div>
+
+  </div>
+
+  <div class="row">
+
+    <div class="col-xs-6" style="padding-right: 30px">
+      <div class="form-group">
+        <label for="kendaraan">Kendaraan</label>
+        <select name="kendaraan" id="kendaraan" class="form-control" required>
+          <option value="">.:: Pilih Kendaraan ::.</option>
+          <option value="dinas">Dinas</option>
+          <option value="umum">Umum</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col-xs-6" id="div_jenis_kendaraan"> </div>
+
   </div>
 
   <!-- begin note field -->
-  <div class="form-group{{ $errors->has('note') ? ' has-error' : '' }}">
-    {!! Form::label('note', 'Tujuan') !!}
-    {!! Form::text('tujuan', null, ['class'=>'form-control', 'placeholder'=>'Tulis
-    Tujuan', 'id'=>'note', 'data-parsley-required' => 'true',
-    'data-parsley-maxlength' => 100]) !!}
-    {!! $errors->first('note', '
-    <p class="help-block">:message</p>') !!}
-  </div>
-
   <div class="form-group{{ $errors->has('note') ? ' has-error' : '' }}">
     {!! Form::label('note', 'Keperluan') !!}
     {!! Form::text('keperluan', null, ['class'=>'form-control', 'placeholder'=>'Tulis
@@ -99,8 +141,8 @@
   <!-- This field is not sent via form -->
   <div class="form-group{{ $errors->has('approver') ? ' has-error' : '' }}">
     {!! Form::label('approver', 'Atasan') !!}
-    <select class="form-control minManager-selectize" name="minManagerBoss" required
-      <option value="" selected>Pilih Atasan</option>
+    <select class="form-control boss-selectize" name="minManagerBoss" required <option value="" selected>Pilih
+      Atasan</option>
     </select>
   </div>
   <!-- end approver field -->

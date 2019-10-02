@@ -1,0 +1,1 @@
+<div class="form-group"> <label for="lampiran">Lampiran</label> <input type="file" class="form-control" name="lampiran" id="lampiran" required> </div>

@@ -1,0 +1,1 @@
+<div class="form-group" id="div_kota"> <label for="tujuan">Kota</label> <div class="input-group"> <span class="input-group-addon"><i class="fa fa-globe"></i></span> <input type="text" class="form-control" name="kota" id="kota" required> </div> </div>

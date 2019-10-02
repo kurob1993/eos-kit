@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\AbsenceQuota;
 use App\Models\Travel;
 use App\Models\TravelApproval;
+use App\Models\TravelType;
 use App\Models\Transition;
+use App\Models\City;
 
 class TravelController extends Controller
 {
@@ -101,9 +103,20 @@ class TravelController extends Controller
             return redirect()->route('travels.index');
         } 
 
-        return view('travels.create', [
-            'can_delegate' => $canDelegate
-        ]);
+        $gol = Auth::user()->employee->esgrp;
+        $cc = Auth::user()->employee->cost_ctr;
+        $travelType = TravelType::all();
+        $city = City::all();
+
+        return view('travels.create', 
+            [
+                'can_delegate' => $canDelegate,
+                'gol' => $gol,
+                'cc' => $cc,
+                'travelType' => $travelType,
+                'city' => $city
+            ]
+        );
     }
 
     /**
