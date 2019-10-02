@@ -78,23 +78,28 @@
                   });
                 }
               });
+
+              var dataPreferdis = {!! json_encode($dataPreferdis) !!};
+              console.log(dataPreferdis);
                  
-              $('#AbbrPosition').on('change',function(e){
+              $('#AbbrPosition').on('change',function(e) {
                 // get id
-                f.options = [];
-                var golongan = [];
-                golongan = [];
+                f.options     = [];
+                var golongan  = [];
+                golongan      = [];
                 var stringgol = '';
                 var jumlahgol = 0;
-                var result = [];
+                var result    = [];
                 var dataitems = [];
-                var mylevel = '';
-                var maxData = '';
-                var idlevel = $('#level').val();
-                var options = $('#test-selectize > option');
+                var mylevel   = '';
+                var maxData   = '';
+                var idlevel   = $('#level').val();
+                var options   = $('#test-selectize > option');
                 var opt;
-                var ar = {};
+                var ar        = {};
+                var dataDuplicate = '';                
                 var jumlahFromDatabase = 0;
+
                 for (var i=0, iLen=options.length; i<iLen; i++) {
                   opt = options[i];
                   if (opt.selected) {
@@ -104,8 +109,7 @@
                     stringgol = opt.text;
                     golongan.push(stringgol.substr(-2,1));
                   }
-                }
-                
+                }                
                 
                 var valuedata = $(this).val();
                 var textdata = $(this).text();
@@ -139,16 +143,22 @@
                 console.log(jumlahgol);
                 console.log(stringgol.substr(-2,1));
         
-                if(jumlahgol < maksData) {
-                  $('#test-selectize').selectize(f);
-                  var selectize= $('#test-selectize')[0].selectize;
-                  selectize.clear();
-                  selectize.clearOptions();
-                  selectize.renderCache['option'] = {};
-                  selectize.renderCache['item'] = {};
-                  selectize.addOption(f.options);
-                  selectize.setValue(f.items);
-                  selectize.refreshOptions();
+                if(jumlahgol < maksData) {                  
+                    $('#duplicateId').val(valuedata);
+                    if((dataPreferdis.indexOf($('#duplicateId').val()))  == -1) {
+                      $('#test-selectize').selectize(f);
+                      var selectize= $('#test-selectize')[0].selectize;
+                      selectize.clear();
+                      selectize.clearOptions();
+                      selectize.renderCache['option']   = {};
+                      selectize.renderCache['item']     = {};
+                      selectize.addOption(f.options);
+                      selectize.setValue(f.items);
+                      selectize.refreshOptions();
+                    }
+                    else {
+                      alert('Maaf, Jabatan tersebut sudah pernah dipilih');
+                    }
                 } else {
                   alert('Maaf, Jumlah Pilihan Sudah Maksimal');
                 }
@@ -156,3 +166,4 @@
                  
         });
         </script>
+     

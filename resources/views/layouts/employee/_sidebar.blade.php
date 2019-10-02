@@ -20,7 +20,7 @@
                     <i class="fa fa-check-circle"></i>
                     <span>Approval</span>
                 </a>
-            </li>            
+            </li>          
             <li class="has-sub {{ (
                 (Request::segment(1) == 'preference') || (Request::segment(1) == 'cvs') || (Request::segment(1) == 'organizations') 
                     || (Request::segment(1) == 'administrations')) ? 'active' : '' 
@@ -35,9 +35,11 @@
                         <a href="{{ url('cvs') }}">Curriculum Vitae</a> 
                     </li>
                     {{-- preference and dislike menu --}}
-                    <li class="{{ Request::segment(1)=='preference' ? 'active' : '' }}">
-                        <a href="{{ url('preference') }}">Preference and Dislike</a>
-                    </li>
+                    @if(Auth::user()->employee->isManager() || Auth::user()->employee->isGeneralManager() || Auth::user()->employee->isSuperintendent())  
+                        <li class="{{ Request::segment(1)=='preference' ? 'active' : '' }}">
+                            <a href="{{ url('preference') }}">Preference and Dislike</a>
+                        </li>
+                    @endif
                     {{-- end preference and dislike menu --}}
 
                     {{-- <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 

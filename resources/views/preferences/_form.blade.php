@@ -5,11 +5,12 @@
   <div class="col-lg-4">
     <div class="row" id="ks">
         <div class="col-xs-11"> 
+        <input name="duplicateId" value="" type="hidden" id="duplicateId" />
         <input name="jumSameLevel" value="{{ $preferSameLevel }}" type="hidden" id="jumSameLevel" />
         <input name="jumNotSameLevel" value="{{ $preferNotSameLevel }}" type="hidden" id="jumNotSameLevel" />
-
         <input name="golongan" value="{{ $level }}" type="hidden" id="level" />
         <input name="periode" value="{{ $dataperiode->id }}" type="hidden" id="periode" />
+
         <div class="form-group {{ $errors->has('direktorat') ? ' has-error' : '' }}">
           {!! Form::label('personnel_no', 'Direktorat') !!}
           {!! Form::select(

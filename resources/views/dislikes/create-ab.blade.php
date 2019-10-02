@@ -11,14 +11,28 @@
 
       @include('layouts._flash')
       <div class="alert alert-success fade in">
-        <i class="fa fa-paper-plane pull-left"></i>
+        {{-- <i class="fa fa-paper-plane pull-left"></i>
         <p>Batas maksimal data dislike berjumlah 6. Dengan aturan 3 untuk jabatan level sejajar dan 3 untuk jabatan 1 tingkat diatasnya.</p>
         <i class="fa fa-paper-plane pull-left"></i>
         <p>Pertama gunakan filter jabatan dari level organisasi: direktorat, subdit, divisi, dinas, atau seksi.</p>
         <i class="fa fa-paper-plane pull-left"></i>
         <p>Kedua pilih jabatan yang telah di-filter sesuai level organisasi.</p>
         <i class="fa fa-paper-plane pull-left"></i>
-        <p>Ketiga untuk menyimpan data jabatan klik tombol Kirim Data.</p>
+        <p>Ketiga untuk menyimpan data jabatan klik tombol Kirim Data.</p> --}}
+        <i class="fa fa-paper-plane pull-left"></i>
+        <p>Aturan pengisian.</p>
+        <ul>
+          <li>Pilih 3 jabatan yang sama dengan level anda saat ini.</li>
+          <li>Pilih 3 jabatan diatas  level anda saat ini.</li>
+          <li>Anda dapat memilih jabatan diluar organisasi saat ini.</li>
+        </ul>
+        <i class="fa fa-paper-plane pull-left"></i>
+        <p>Langkah pengisian.</p>
+        <ol>
+          <li>Pilih organisasi sesuai urutan dari atas kebawah (Direktorat, Subdit, Divisi, Dinas, Seksi)</li>
+          <li>Pilih jabatan yang diinginkan sesuai aturan diatas.</li>
+          <li>Klik tombol Kirim Data untuk menyimpan data jabatan.</li>
+        </ol>
       </div>
       <div class="panel-body">
         {!! Form::open([ 'url' => route('dislike.store'), 'method' => 'post', 

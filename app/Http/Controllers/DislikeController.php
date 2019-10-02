@@ -12,6 +12,7 @@ use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\Preferdis;
 use App\Models\PreferdisPeriode;
+use App\Models\CompanyPosisition;
 use App\Models\Company;
 use App\Models\SAP\Zhrom0007;
 use App\Models\SAP\StructDisp;
@@ -53,6 +54,15 @@ class DislikeController extends Controller
                     ->where('start_date', '<=', $dateNow)
                     ->first();
 
+                // data preference and dislike
+                $getPreferdis = Preferdis::where('preferdis_periode_id', $dataperiode->id)
+                    ->where('sobid', Auth::user()->personnel_no)
+                    ->get()
+                    ->toArray();
+
+                $dataPreferdis = array_column($getPreferdis, 'seark');
+                // dd($getPreferdis);
+
                 // get data structdisp
                 $strucDisp = new StructDispController();
                 $dataDisp = $strucDisp->show(Auth::user()->personnel_no);
@@ -78,16 +88,21 @@ class DislikeController extends Controller
                 // get data perusahaan
                 $companies = Company::all();
 
+                // title  
+                $pref ="Data Preference dan Dislike";
+            
+
                 // cek level jabatan
                 if($level == 'A' || $level == 'B')
                 {
                     // tampilkan view create
-                    return view('dislikes.create-ab')->with(compact('pref', 'level', 'dataperiode','companies','preferNotSameLevel','preferSameLevel'));
+                    return view('dislikes.create-ab')
+                    ->with(compact('pref', 'level', 'dataperiode','companies','preferNotSameLevel','preferSameLevel','dataPreferdis'));
                 }
                 else
                 {
                     // tampilkan view create
-                    return view('dislikes.create')->with(compact('pref', 'level', 'dataperiode','preferNotSameLevel','preferSameLevel'));
+                    return view('dislikes.create')->with(compact('pref', 'level', 'dataperiode','preferNotSameLevel','preferSameLevel','dataPreferdis'));
                 }
                 // tampilkan view create
                 // return view('dislikes.create')->with(compact('pref', 'level', 'dataperiode'));

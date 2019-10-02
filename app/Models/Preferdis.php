@@ -35,6 +35,11 @@ class Preferdis extends Model
         return $this->belongsTo('App\Models\SAP\Zhrom0007','seark','AbbrPosition');
     }
 
+    public function CompanyPosisition()
+    {
+        return $this->belongsTo('App\Models\CompanyPosisition','seark','AbbrPosition');
+    }
+
     public function scopeOfLoggedUser($query)
     {
         $query->where('sobid', Auth::user()->personnel_no);

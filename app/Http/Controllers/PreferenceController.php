@@ -34,13 +34,15 @@ class PreferenceController extends Controller
         $dateNow = Carbon::now()->toDateString();
 
         // cek data periode
-        $datacek = PreferdisPeriode::where('finish_date', '>=', $dateNow)
+        $dataperiodecek = PreferdisPeriode::where('finish_date', '>=', $dateNow)
             ->where('start_date', '<=', $dateNow)
-            ->get()
-            ->count();
+            ->get();
 
-         // getdata periode
-         $dataperiode = PreferdisPeriode::all();
+        $datacek = $dataperiodecek->count();
+        // dd($dataperiodecek[0]->id);
+
+        // getdata periode
+        $dataperiode = PreferdisPeriode::all();
 
         // tampilkan view index dengan tambahan script html DataTables
         $pref = "Data Preference dan Dislike";
@@ -56,7 +58,14 @@ class PreferenceController extends Controller
                     return $nik." ".$preferece->user->name;
                 })
                 ->editColumn('posisition', function ($preferece) {
-                    return  $preferece->stext;
+                    $golongan = '';
+                    if(isset($preferece->zhrom0007)) {
+                        $golongan = $preferece->zhrom0007->LvlOrg;
+                    }
+                    else {
+                        $golongan = $preferece->CompanyPosisition->LvlOrg;
+                    }
+                    return  $preferece->stext. " (". $golongan .")";
                 })
                 ->editColumn('profile', function ($preferece) {
                     // id preferdis
@@ -68,13 +77,20 @@ class PreferenceController extends Controller
                 ->editColumn('date', function ($preferece) {
                     return  $preferece->begda;
                 })
-                ->editColumn('action', function ($preferece) {
-                    // id preferdis
+                ->editColumn('action', function ($preferece)use($dataperiodecek) {
                     $views = '';
+                    if($dataperiodecek[0]->id == $preferece->preferdis_periode_id )
+                    {
+                        // id preferdis
                         $views =  $views . view('preferences._action', [
                             'id' => $preferece->id
                         ]) . '<br />';
+
+                        // $dataperiodecek[0]->id .'=='. $preferece->preferdis_periode_id
+                    }
+                    else {
                         
+                    }                        
                     return $views;
                 })
                 
@@ -168,6 +184,16 @@ class PreferenceController extends Controller
                     ->where('start_date', '<=', $dateNow)
                     ->first();
 
+                // data preference and dislike
+                $getPreferdis = Preferdis::where('preferdis_periode_id', $dataperiode->id)
+                    ->where('sobid', Auth::user()->personnel_no)
+                    ->get()
+                    ->toArray();
+                // dd($getPreferdis);
+
+                $dataPreferdis = array_column($getPreferdis, 'seark');
+                // dd($dataPreferdis);
+
                 // get data structdisp
                 $strucDisp = new StructDispController();
                 $dataDisp = $strucDisp->show(Auth::user()->personnel_no);
@@ -184,10 +210,12 @@ class PreferenceController extends Controller
                     ->where('relat', '042')
                     ->get();
 
+                // data preferdis jumlah golongan yang setinggkat
                 $preferSameLevel = $prefer->where('zhrom0007_count', '<>', 0)->count();
 
                 $allPrefer = $prefer->count();
 
+                // data dengan golongan yang satu tingkat
                 $preferNotSameLevel  = $allPrefer -  $preferSameLevel;
 
                 // get data perusahaan
@@ -200,12 +228,14 @@ class PreferenceController extends Controller
                 if($level == 'A' || $level == 'B')
                 {
                     // tampilkan view create
-                    return view('preferences.create-ab')->with(compact('pref', 'level', 'dataperiode','companies','preferNotSameLevel','preferSameLevel'));
+                    return view('preferences.create-ab')
+                        ->with(compact('pref', 'level', 'dataperiode','companies','preferNotSameLevel','preferSameLevel','dataPreferdis'));
                 }
                 else
                 {
                     // tampilkan view create
-                    return view('preferences.create')->with(compact('pref', 'level', 'dataperiode','preferNotSameLevel','preferSameLevel'));
+                    return view('preferences.create')
+                    ->with(compact('pref', 'level', 'dataperiode','preferNotSameLevel','preferSameLevel','dataPreferdis'));
                 }
             }
             else {
@@ -384,7 +414,14 @@ class PreferenceController extends Controller
                     return $nik." ".$preferece->user->name;
                 })
                 ->editColumn('posisition', function ($preferece) {
-                    return  $preferece->stext;
+                    $golongan = '';
+                    if(isset($preferece->zhrom0007)) {
+                        $golongan = $preferece->zhrom0007->LvlOrg;
+                    }
+                    else {
+                        $golongan = $preferece->CompanyPosisition->LvlOrg;
+                    }
+                    return  $preferece->stext. " (". $golongan .")";
                 })
                 ->editColumn('periode', function ($preferece) {
                     return  '<span class="label label-primary">'.$preferece->preferdisPeriode->start_date.'</span> <span class="label label-primary">'.$preferece->preferdisPeriode->finish_date."</span>";
