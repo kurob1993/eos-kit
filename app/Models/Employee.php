@@ -882,4 +882,9 @@ class Employee extends Model
             return $manager;
         }
     }
+
+    public function scopeManagerGa($query)
+    {
+        return $query->where('cost_ctr', '111554')->where('esgrp','BS');
+    }
 }

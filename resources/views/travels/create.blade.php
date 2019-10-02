@@ -53,23 +53,6 @@
 <script src={{ url("/plugins/bootstrap-select/bootstrap-select.min.js") }}></script>
 <script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
 <script src={{ url("/plugins/parsley/dist/parsley.js") }}></script>
-<script>
-  $('#tujuan').change(function (data) {
-    if ($(this).val() == 'dalam') {
-      $('#div_kota').html(' @include('travels._list_kota') ');
-    } else {
-      $('#div_kota').html(' @include('travels._kota') ');
-    }
-  });
-
-  $('#kendaraan').change(function (data) {
-    if ($(this).val() == 'dinas') {
-      $('#div_jenis_kendaraan').html(' @include('travels._nopol') ');
-    } else {
-      $('#div_jenis_kendaraan').html(' @include('travels._jenis_kendaraan') ');
-    }
-  });
-</script>
 @endpush
 
 @push('custom-scripts')
