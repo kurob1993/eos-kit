@@ -95,7 +95,7 @@ class PreferenceController extends Controller
                         // id preferdis
                         $views =  view('preferences._action', [
                             'id' => $preferece->id
-                        ]) . '<br />'.$idperiode;
+                        ]) . '<br />';
                         
                     }
                     else 
