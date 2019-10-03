@@ -82,11 +82,10 @@ class PreferenceController extends Controller
                     return  $preferece->begda;
                 })
                 ->editColumn('action', function ($preferece)use($dataperiodecek) {
-                    $views = '';
                     if($dataperiodecek->id == $preferece->preferdis_periode_id )
                     {
                         // id preferdis
-                        $views =  $views . view('preferences._action', [
+                        $views =  view('preferences._action', [
                             'id' => $preferece->id
                         ]) . '<br />';
 
