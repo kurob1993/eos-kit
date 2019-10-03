@@ -78,19 +78,22 @@ class PreferenceController extends Controller
                     return  $preferece->begda;
                 })
                 ->editColumn('action', function ($preferece)use($dataperiodecek) {
-                    $views = '';
-                    if($dataperiodecek[0]->id == $preferece->preferdis_periode_id )
-                    {
-                        // id preferdis
-                        $views =  $views . view('preferences._action', [
-                            'id' => $preferece->id
-                        ]) . '<br />';
+                    // $views = '';
+                    // if($dataperiodecek[0]->id == $preferece->preferdis_periode_id )
+                    // {
+                    //     // id preferdis
+                    //     $views =  $views . view('preferences._action', [
+                    //         'id' => $preferece->id
+                    //     ]) . '<br />';
 
-                        // $dataperiodecek[0]->id .'=='. $preferece->preferdis_periode_id
-                    }
-                    else {
-                        $views = '';
-                    }                        
+                    //     // $dataperiodecek[0]->id .'=='. $preferece->preferdis_periode_id
+                    // }
+                    // else {
+                    //     $views = '';
+                    // }    
+                    $views =  $views . view('preferences._action', [
+                                'id' => $preferece->id
+                            ]) . '<br />';                    
                     return $views;
                 })
                 
