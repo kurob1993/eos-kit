@@ -36,7 +36,8 @@ class PreferenceController extends Controller
         // cek data periode
         $dataperiodecek = PreferdisPeriode::where('finish_date', '>=', $dateNow)
             ->where('start_date', '<=', $dateNow)
-            ->get();
+            ->first();
+        // dd($dataperiodecek);
 
         $datacek = $dataperiodecek->count();
         // dd($dataperiodecek[0]->id);
@@ -79,21 +80,21 @@ class PreferenceController extends Controller
                 })
                 ->editColumn('action', function ($preferece)use($dataperiodecek) {
                     $views = '';
-                    // if($dataperiodecek[0]->id == $preferece->preferdis_periode_id )
-                    // {
-                    //     // id preferdis
-                    //     $views =  $views . view('preferences._action', [
-                    //         'id' => $preferece->id
-                    //     ]) . '<br />';
+                    if($dataperiodecek->id == $preferece->preferdis_periode_id )
+                    {
+                        // id preferdis
+                        $views =  $views . view('preferences._action', [
+                            'id' => $preferece->id
+                        ]) . '<br />';
 
-                    //     // $dataperiodecek[0]->id .'=='. $preferece->preferdis_periode_id
-                    // }
-                    // else {
-                    //     $views = '';
-                    // }    
-                    $views =  $views . view('preferences._action', [
-                                'id' => $preferece->id
-                            ]) . '<br />';                    
+                        // $dataperiodecek[0]->id .'=='. $preferece->preferdis_periode_id
+                    }
+                    else {
+                        $views = '';
+                    }    
+                    // $views =  $views . view('preferences._action', [
+                    //             'id' => $preferece->id
+                    //         ]) . '<br />';                    
                     return $views;
                 })
                 
