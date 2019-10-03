@@ -58,14 +58,15 @@ class PreferenceController extends Controller
                     return $nik." ".$preferece->user->name;
                 })
                 ->editColumn('posisition', function ($preferece) {
-                    $golongan = '';
-                    if(isset($preferece->zhrom0007)) {
-                        $golongan = $preferece->zhrom0007->LvlOrg;
-                    }
-                    else {
-                        $golongan = $preferece->CompanyPosisition->LvlOrg;
-                    }
-                    return  $preferece->stext. " (". $golongan .")";
+                    // $golongan = '';
+                    // if(isset($preferece->zhrom0007)) {
+                    //     $golongan = $preferece->zhrom0007->LvlOrg;
+                    // }
+                    // else {
+                    //     $golongan = $preferece->CompanyPosisition->LvlOrg;
+                    // }
+                    // return  $preferece->stext. " (". $golongan .")";
+                    return  $preferece->stext;
                 })
                 ->editColumn('profile', function ($preferece) {
                     // id preferdis

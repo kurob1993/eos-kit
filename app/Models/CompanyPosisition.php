@@ -13,6 +13,6 @@ class CompanyPosisition extends Model
 
     public function preferdis()
     {
-        return $this->hasMany('\App\Models\Preferdis');
+        return $this->hasMany('App\Models\Preferdis');
     }
 }
