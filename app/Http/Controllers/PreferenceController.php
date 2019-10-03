@@ -58,15 +58,14 @@ class PreferenceController extends Controller
                     return $nik." ".$preferece->user->name;
                 })
                 ->editColumn('posisition', function ($preferece) {
-                    // $golongan = '';
-                    // if(isset($preferece->zhrom0007)) {
-                    //     $golongan = $preferece->zhrom0007->LvlOrg;
-                    // }
-                    // else {
-                    //     $golongan = $preferece->CompanyPosisition->LvlOrg;
-                    // }
-                    // return  $preferece->stext. " (". $golongan .")";
-                    return  $preferece->stext;
+                    $golongan = '';
+                    if(isset($preferece->zhrom0007)) {
+                        $golongan = $preferece->zhrom0007->LvlOrg;
+                    }
+                    else {
+                        $golongan = $preferece->CompanyPosisition->LvlOrg;
+                    }
+                    return  $preferece->stext. " (". $golongan .")";
                 })
                 ->editColumn('profile', function ($preferece) {
                     // id preferdis
@@ -90,7 +89,7 @@ class PreferenceController extends Controller
                         // $dataperiodecek[0]->id .'=='. $preferece->preferdis_periode_id
                     }
                     else {
-                        
+                        $views = '';
                     }                        
                     return $views;
                 })
