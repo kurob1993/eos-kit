@@ -37,6 +37,7 @@ class PreferenceController extends Controller
         $dataperiodecek = PreferdisPeriode::where('finish_date', '>=', $dateNow)
             ->where('start_date', '<=', $dateNow)
             ->first();
+        $idperiode = $dataperiodecek->id;
         // dd($dataperiodecek);
 
         $dataperiodecek1 = PreferdisPeriode::where('finish_date', '>=', $dateNow)
@@ -81,16 +82,16 @@ class PreferenceController extends Controller
                 ->editColumn('date', function ($preferece) {
                     return  $preferece->begda;
                 })
-                ->editColumn('action', function ($preferece)use($dataperiodecek) {
+                ->editColumn('action', function ($preferece) use($idperiode) {
                     // if($dataperiodecek->id == $preferece->preferdis_periode_id )
                     // {
                         // id preferdis
                         $views =  view('preferences._action', [
                             'id' => $preferece->id
-                        ]) . '<br />';
+                        ]) . '<br />'.$dataperiodecek->id;
 
                         // $dataperiodecek->id .'=='. $preferece->preferdis_periode_id;
-                        $dataperiodecek->id;
+                        
                     // }
                     // }
                     // else {
