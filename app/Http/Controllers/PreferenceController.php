@@ -89,7 +89,9 @@ class PreferenceController extends Controller
                             'id' => $preferece->id
                         ]) . '<br />';
 
-                        $dataperiodecek->id .'=='. $preferece->preferdis_periode_id;
+                        // $dataperiodecek->id .'=='. $preferece->preferdis_periode_id;
+                        $dataperiodecek->id;
+                    // }
                     // }
                     // else {
                     //     $views = '';
