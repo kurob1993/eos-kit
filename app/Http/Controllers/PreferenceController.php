@@ -39,7 +39,10 @@ class PreferenceController extends Controller
             ->first();
         // dd($dataperiodecek);
 
-        $datacek = $dataperiodecek->count();
+        $dataperiodecek1 = PreferdisPeriode::where('finish_date', '>=', $dateNow)
+            ->where('start_date', '<=', $dateNow)
+            ->get();
+        $datacek = $dataperiodecek1->count();
         // dd($dataperiodecek[0]->id);
 
         // getdata periode
