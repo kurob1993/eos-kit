@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    public function companyPosisition() 
+    public function companyPosisitions() 
     {
         return $this->hasMany('App\Models\CompanyPosisition');
     }

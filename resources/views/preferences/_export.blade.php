@@ -40,7 +40,7 @@
                        
                     @elseif(isset($item->CompanyPosisition))
                         @if( $item->CompanyPosisition->LvlOrg != substr($value[0]->user->structDisp[0]->emppersk,0,1))
-                            <td> {{ $item->stext }} ({{$item->CompanyPosisition->LvlOrg}})</td>
+                            <td> {{ $item->stext }} ({{$item->CompanyPosisition->LvlOrg}}) {{$item->CompanyPosisition->company->name}}</td>
                             @php $no1++ @endphp
                         @endif
                         

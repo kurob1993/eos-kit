@@ -65,19 +65,19 @@ class PreferenceController extends Controller
         if ($request->ajax()) {
 
             return Datatables::of($preferdis)
-                ->editColumn('name', function ($preferece) {
-                    $nik = '<span class="label label-warning">'.$preferece->sobid.'</span>';
-                    return $nik." ".$preferece->user->name;
-                })
+                // ->editColumn('name', function ($preferece) {
+                //     $nik = '<span class="label label-warning">'.$preferece->sobid.'</span>';
+                //     return $nik." ".$preferece->user->name;
+                // })
                 ->editColumn('posisition', function ($preferece) {
                     $golongan = '';
                     if(isset($preferece->zhrom0007)) {
                         $golongan = $preferece->zhrom0007->LvlOrg;
                     }
                     else {
-                        $golongan = $preferece->CompanyPosisition->LvlOrg;
+                        $golongan = "(".$preferece->CompanyPosisition->LvlOrg.") " .$preferece->CompanyPosisition->company->name;
                     }
-                    return  $preferece->stext. " (". $golongan .")";
+                    return  $preferece->stext.' '.$golongan;
                 })
                 ->editColumn('profile', function ($preferece) {
                     // id preferdis
@@ -115,6 +115,7 @@ class PreferenceController extends Controller
                 //     } 
                 // ])
                 ->escapeColumns([0,1])
+                ->addIndexColumn()
                 ->make(true);
         }
 
@@ -128,13 +129,18 @@ class PreferenceController extends Controller
         ]);
 
         $html = $htmlBuilder
+        // ->addColumn([
+        //     'data' => 'name',
+        //     'name' => 'name',
+        //     'title' => 'Name',
+        //     'searchable' => false,
+        //     'orderable' => false, 
+        // ])
         ->addColumn([
-            'data' => 'name',
-            'name' => 'name',
-            'title' => 'Name',
-            'searchable' => false,
-            'orderable' => false, 
-        ])
+            'data' => 'DT_Row_Index', 
+            'name' => 'DT_Row_Index',
+            'title' => 'No',
+            ])
         ->addColumn([
             'data' => 'posisition',
             'name' => 'posisition',
@@ -433,9 +439,9 @@ class PreferenceController extends Controller
                         $golongan = $preferece->zhrom0007->LvlOrg;
                     }
                     else {
-                        $golongan = $preferece->CompanyPosisition->LvlOrg;
+                        $golongan = "(".$preferece->CompanyPosisition->LvlOrg.") " .$preferece->CompanyPosisition->company->name;
                     }
-                    return  $preferece->stext. " (". $golongan .")";
+                    return  $preferece->stext." ". $golongan;
                 })
                 ->editColumn('periode', function ($preferece) {
                     return  '<span class="label label-primary">'.$preferece->preferdisPeriode->start_date.'</span> <span class="label label-primary">'.$preferece->preferdisPeriode->finish_date."</span>";
@@ -452,6 +458,7 @@ class PreferenceController extends Controller
                //     } 
                // ])
                ->escapeColumns([0,1])
+               ->addIndexColumn()
                ->make(true);
        }
 
@@ -463,12 +470,17 @@ class PreferenceController extends Controller
         'sDom' => 'tpi',
         'responsive' => [ 'details' => true ],
         "columnDefs" => [ 
-            [ "width" => "30%", "targets" => 0 ],
-            [ "width" => "40%", "targets" => 1 ] 
+            [ "width" => "5%", "targets" => 0 ],
+            [ "width" => "30%", "targets" => 1 ] 
         ]
        ]);
 
        $html = $htmlBuilder
+            ->addColumn([
+                'data' => 'DT_Row_Index', 
+                'name' => 'DT_Row_Index',
+                'title' => 'No',
+                ])
             ->addColumn([
                 'data' => 'name',
                 'name' => 'name',

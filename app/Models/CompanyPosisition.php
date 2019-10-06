@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class CompanyPosisition extends Model
 {
-    public function companys() 
+    public function company() 
     {
-        return $this->hasMany('App\Models\Company');
+        return $this->belongsTo('App\Models\Company');
     }
 
     public function preferdis()
