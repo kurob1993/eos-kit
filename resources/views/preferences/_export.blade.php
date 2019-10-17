@@ -34,7 +34,7 @@
                 {{-- @php $no1 = 1 @endphp --}}
                     @if(isset($item->zhrom0007))
                         @if( $item->zhrom0007->LvlOrg != substr($value[0]->user->structDisp[0]->emppersk,0,1))
-                            <td>{{ $item->stext }} ({{$item->zhrom0007->LvlOrg}})</td>
+                            <td>{{ $item->stext }} ({{$item->zhrom0007->LvlOrg}}) </td>
                             @php $no1++ @endphp
                         @endif
                        
@@ -60,7 +60,7 @@
                         @endif
                     @else
                         @if( $item->CompanyPosisition->LvlOrg == substr($value[0]->user->structDisp[0]->emppersk,0,1))
-                            <td>{{ $item->stext }} ({{$item->CompanyPosisition->LvlOrg}})</td>
+                            <td>{{ $item->stext }} ({{$item->CompanyPosisition->LvlOrg}}) {{$item->CompanyPosisition->company->name}}</td>
                             @php $no3++ @endphp
                         @endif
                     @endif
