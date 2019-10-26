@@ -19,6 +19,11 @@ class Secretary extends Authenticatable
         return $this->hasMany('App\Models\AttendanceQuota');
     }
 
+    public function ski()
+    {
+        return $this->hasMany('App\Models\Ski');
+    }
+
     public function hasSecretaryRole()
     {
         $secretaryRole = $this->roles->filter(function ($item, $key) {

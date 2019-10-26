@@ -101,13 +101,6 @@ class SkiController extends Controller
         // user yang dapat melakukan pengajuan lembur
         $user = Auth::user()->personnel_no;
 
-        // alasan lembur
-        $overtime_reason = OvertimeReason::all('id', 'text')
-            ->mapWithKeys(function ($item) {
-                return [$item['id'] => $item['text']];
-            })
-            ->all();
-
         // mengecek apakah boleh mengajukan overtime untuk bawahan
         $allowed = Auth::user()
             ->employee
@@ -121,7 +114,7 @@ class SkiController extends Controller
             // menampilkan view create overtime secretary
             return view(
                 'ski.createas',
-                compact('overtime_reason', 'user', 'formRoute', 'pageContainer')
+                compact('user', 'formRoute', 'pageContainer')
             );
         } else {
 

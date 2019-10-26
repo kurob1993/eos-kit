@@ -23,8 +23,10 @@
     
                 @role('secretary')
                 <li class="has-sub"{{ 
-                    ( (Request::segment(1) == 'travels')
-                    || (Request::segment(1) == 'overtimes')
+                    ( 
+                        (Request::segment(1) == 'travels') || 
+                        (Request::segment(1) == 'overtimes') ||
+                        (Request::segment(1) == 'ski')
                     )  ? 'active' : '' 
                     }}>
                     <a href="javascript:;">
@@ -35,7 +37,11 @@
                     <ul class="sub-menu">
                         {{-- <li> <a href="{{ route('secretary.travels.index') }}">Perjalanan Dinas</a> </li> --}}
                         <li> <a href="{{ route('secretary.overtimes.index') }}">Lembur</a> </li>
+                        <li class="{{ Request::segment(1)=='ski' ? 'active' : '' }}">
+                            <a href="{{ route('secretary.ski.index') }}">Ski</a>
+                        </li>
                     </ul>
+                    
                 </li>
                 @endrole 
     

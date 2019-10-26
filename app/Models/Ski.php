@@ -42,6 +42,11 @@ class Ski extends Model
         return $this->hasMany('App\Models\SkiDetail');
     }
 
+    public function secretary()
+    {
+        return $this->belongsTo('App\Models\Secretary');
+    }
+    
     public function getPlainIdAttribute()
     {
         return 'ski-' . $this->id;

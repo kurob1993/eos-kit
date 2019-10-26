@@ -7,11 +7,13 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\DataTables\SecOvertimeDataTable;
+use App\DataTables\SecSkiDataTable;
 use App\Http\Requests\StoreAttendanceQuotaRequest;
 use App\Models\AttendanceQuota;
 use App\Models\AttendanceQuotaType;
 use App\Models\OvertimeReason;
-
+use App\Models\Ski;
+use App\Models\SkiDetail;
 
 
 class SecretaryController extends Controller
@@ -29,6 +31,11 @@ class SecretaryController extends Controller
     public function travel(SecOvertimeDataTable $dataTable)
     {
         return $dataTable->render('secretary.travels.index');
+    }
+
+    public function ski(SecSkiDataTable $dataTable)
+    {
+        return $dataTable->render('secretary.ski.index');
     }
 
     public function createOvertime()
@@ -50,6 +57,16 @@ class SecretaryController extends Controller
     public function createTravel()
     {
         return view('secretary.travels.create');
+    }
+
+    public function createSki()
+    {
+        $formRoute = route('secretary.ski.store');
+        $user = Auth::guard('secr')->user()->boss;
+        $pageContainer = 'layouts.secretary._page-container';
+        return view('ski.createas',
+            compact('user', 'formRoute', 'pageContainer')
+        );
     }
 
     public function storeOvertime(StoreAttendanceQuotaRequest $request)
@@ -91,5 +108,36 @@ class SecretaryController extends Controller
 
         // kembali ke halaman index overtime
         return redirect()->route('secretary.overtimes.index');
+    }
+
+    public function storeSki(Request $request)
+    {
+        $ski = new Ski();
+        $ski->personnel_no = $request->personnel_no;
+        $ski->month = $request->bulan;
+        $ski->year = $request->tahun;
+        $ski->perilaku = $request->perilkau;
+        $ski->stage_id = 1;
+        $ski->secretary_id = Auth::guard('secr')->user()->id;
+
+        if ($ski->save()) {
+            foreach ($request->klp as $key => $value) {
+                if ($value !== null) {
+                    $skid = new SkiDetail();
+                    $skid->ski_id = $ski->id;
+                    $skid->klp = $value;
+                    $skid->sasaran = $request->sasaran[$key];
+                    $skid->kode = $request->kode[$key];
+                    $skid->ukuran = $request->ukuran[$key];
+                    $skid->bobot = $request->bobot[$key];
+                    $skid->skor = $request->skor[$key];
+                    $skid->nilai = $request->nilai[$key];
+                    $skid->save();
+                }
+            }
+        }
+
+        // // kembali ke halaman index overtime
+        return redirect()->route('secretary.ski.index');
     }
 }
