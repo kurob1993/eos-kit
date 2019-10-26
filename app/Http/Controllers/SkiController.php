@@ -19,18 +19,20 @@ class SkiController extends Controller
         $allowed = Auth::user()->employee->allowedToSubmitSubordinateOvertime();
 
         if ($allowed) {
-            $lembur = "Daftar Sasaran Kerja Bawahan Saya";
+            $lembur = "Daftar Sasaran Kerja";
             $subordinates = Auth::user()->employee->subordinates();
 
             $personal_no = [];
             foreach ($subordinates as $subordinate) {
                 array_push($personal_no,$subordinate->personnel_no);
             }
+            array_push($personal_no, Auth::user()->personnel_no);
             $overtimes = Ski::whereIn('personnel_no',$personal_no)->get();
         } else {
             // ambil data cuti untuk user tersebut
             $lembur = "Daftar Sasaran Kerja Saya";
-            $overtimes = ski::ofLoggedUser()->get();
+            $personal_no = Auth::user()->personnel_no;
+            $overtimes = Ski::where('personnel_no',$personal_no)->get();
         }
 
         // response untuk datatables attendanceQuota
@@ -125,9 +127,9 @@ class SkiController extends Controller
 
             Session::flash("flash_notification", [
                 "level" => "danger",
-                "message" => "Mohon maaf, Anda tidak dapat mengajukan lembur. " .
+                "message" => "Mohon maaf, Anda tidak dapat input Sasaran Kerja. " .
                     "Silahkan hubungi Supervisor/Superintendent/Sekretaris Divisi " .
-                    "untuk mengajukan lembur Anda."
+                    "untuk mengajukan Sasaran Kerja Anda."
             ]);
             // batalkan view create dan kembali ke parent
             return redirect()->route('ski.index');

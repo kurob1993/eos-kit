@@ -289,17 +289,13 @@ class Employee extends Model
     public function allowedForOvertime()
     {
         // apakah boleh melakukan lembur?
-        return (($this->esgrp == 'ES') || ($this->esgrp == 'EF')
-                 || ($this->esgrp == 'F'))
-        ? true : false;
+        return (($this->esgrp == 'ES') || ($this->esgrp == 'EF') || ($this->esgrp == 'F')) ? true : false;
     }
 
     public function allowedToSubmitSubordinateOvertime()
     {
         // apakah boleh mengajukan lembur untuk bawahan?
-        return (($this->esgrp != 'ES') && ($this->esgrp != 'EF')
-            && ($this->esgrp != 'F'))
-        ? true : false;
+        return (($this->esgrp != 'ES') && ($this->esgrp != 'EF') && ($this->esgrp != 'F')) ? true : false;
     }
 
     public function director()
