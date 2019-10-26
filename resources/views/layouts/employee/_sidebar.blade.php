@@ -43,9 +43,13 @@
                 </ul>
             </li>
             <li class="has-sub {{ (
-            (Request::segment(1) == 'leaves') || (Request::segment(1) == 'permits') 
-                || (Request::segment(1) == 'time_events') || (Request::segment(1) == 'overtimes') 
-                || (Request::segment(1) == 'wakers') ) ? 'active' : '' 
+                    (Request::segment(1) == 'leaves') || 
+                    (Request::segment(1) == 'permits') || 
+                    (Request::segment(1) == 'time_events') || 
+                    (Request::segment(1) == 'overtimes') || 
+                    (Request::segment(1) == 'wakers') ||
+                    (Request::segment(1) == 'ski')
+                ) ? 'active' : '' 
             }}">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>
@@ -64,6 +68,9 @@
                     </li>
                     <li class="{{ Request::segment(1)=='overtimes' ? 'active' : '' }}">
                         <a href="{{ url('overtimes') }}">Lembur</a>
+                    </li>
+                    <li class="{{ Request::segment(1)=='ski' ? 'active' : '' }}">
+                        <a href="{{ url('ski') }}">Ski</a>
                     </li>
                     <li class="{{ Request::segment(1)=='wakers' ? 'active' : '' }}"> 
                         <a href="{{ url('wakers') }}">Waktu Kerja</a> 

@@ -71,6 +71,9 @@
     Route::resource('overtimes', 'OvertimeController', ['except' => [
         'destroy', 'update', 'edit']]);
 
+    Route::resource('ski', 'SkiController', ['except' => [
+        'destroy', 'update', 'edit']]);
+
     // route untuk curriculum vitae
     Route::resource('cvs', 'CVController', ['only' => 'index']);
     Route::get('cvs/download', 'CVController@download')->name('cvs.download');

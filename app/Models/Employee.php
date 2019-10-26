@@ -50,6 +50,12 @@ class Employee extends Model
         return $s['empposid'];
     }
 
+    public function skis()
+    {
+        // one-to-many relationship dengan ski
+        return $this->hasMany('App\Models\Ski', 'personnel_no', 'personnel_no');
+    }
+
     public function user()
     {
         // one-to-one relationship dengann User
@@ -144,6 +150,12 @@ class Employee extends Model
     {
         // one-to-many relationship dengan AttendanceApproval
         return $this->hasMany('App\Models\AttendanceApproval', 'regno', 'personnel_no');
+    }
+
+    public function skiApprovals()
+    {
+        // one-to-many relationship dengan AttendanceApproval
+        return $this->hasMany('App\Models\SkiApproval', 'regno', 'personnel_no');
     }
 
     public function structDisp()
