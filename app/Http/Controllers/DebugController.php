@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\StoreAbsenceRequest;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\AttendanceQuota;
+use App\Models\Ski;
 use App\Models\SAP\Zhrom0013;
 use App\Models\AbsenceApproval;
 
@@ -26,7 +27,7 @@ class DebugController extends Controller
     public function debug()
     {   
 
-        return url('/images/default.png');
+        return Ski::with('stage')->get();
         
         // AttendanceQuota::where('secretary_id', '87')
         //     ->with([

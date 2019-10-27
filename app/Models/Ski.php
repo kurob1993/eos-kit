@@ -72,4 +72,19 @@ class Ski extends Model
         // mencari approval dengan sequence 2
         return $this->skiApproval()->where('sequence', 2)->first();
     }
+
+    public function scopefoundMonth($query)
+    {
+        $month = $query->select('month')->orderBy('month', 'ASC')->groupBy( 'month' )->get();
+        $arr = [];
+        foreach ($month as $key => $value) {
+            $arr[$value->month] = date("F", mktime(0, 0, 0, $value->month, 10));
+        }
+        return collect($arr);
+    }
+
+    public function scopefoundYear($query)
+    {
+        $query->select('year')->orderBy('year', 'desc')->groupBy( 'year' );          
+    }
 }
