@@ -69,8 +69,9 @@ class SkiController extends Controller
 
         // disable paging, searching, details button but enable responsive
         $htmlBuilder->parameters([
-            'paging' => false,
+            'paging' => true,
             'searching' => false,
+            'sDom' => 'tpi',
             'responsive' => ['details' => false],
             "columnDefs" => [["width" => "60%", "targets" => 0]]
         ]);

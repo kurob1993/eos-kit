@@ -3,7 +3,7 @@ Form Elements: personnel_no, start_date, day_assignment, from,
 to, overtime_reason, delegation (if have subordinates)
 --}}
 
-<div class="col-lg-4">
+{{-- <div class="col-lg-4">
   @include('layouts._flash')
   <div class="alert alert-success fade in">
     <i class="fa fa-paper-plane pull-left"></i>
@@ -22,9 +22,9 @@ to, overtime_reason, delegation (if have subordinates)
     <p>Silahkan isi jenis lembur Anda.</p>
     <br />
   </div>
-</div>
+</div> --}}
 
-<div class="col-lg-8">
+<div class="col-lg-12">
   <!-- begin personnel_no field -->
   <div class="form-group p-l-5 p-r-5 {{ $errors->has('personnel_no') ? ' has-error' : '' }}">
     {!! Form::label('personnel_no', 'Karyawan') !!}
