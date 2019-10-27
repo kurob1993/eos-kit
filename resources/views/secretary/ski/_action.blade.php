@@ -8,7 +8,7 @@
                 <h4 class="modal-title">Sasaran Kerja Karyawan (ID: <span id="title-span">{{$ski->plain_id}}</span>)</h4>
             </div>
             <div class="modal-body">
-                <table id="table-detail" class="table table-bordered table-condensed m-b-0"
+                <table id="table-detail" class="table table-bordered table-condensed m-b-0 text-left"
                     data-id="{{ $ski->plain_id }}">
                     <tbody>
                         <tr>

@@ -400,6 +400,14 @@ class EmployeeApprovalComposer
                 'searchable' => false,
                 'orderable' => false,
             ],
+            [ 
+                'data' => 'detail', 
+                'name' => 'detail', 
+                'title' => 'Detail', 
+                'class' => 'text-center',
+                'searchable' => false,
+                'orderable' => false,
+            ],
         ];
 
         // table builder untuk AbsenceApproval

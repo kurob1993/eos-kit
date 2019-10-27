@@ -392,13 +392,16 @@ class ApprovalController extends Controller
                         return view('components._action-approval', [
                             'model' => $aa,
                             'approve_url' => route('dashboards.approve', [
-                                'id' => $aa->id, 'approval' => 'overtime'
+                                'id' => $aa->id, 'approval' => 'ski'
                             ]),
                             'reject_url' => route('dashboards.reject', [
-                                'id' => $aa->id, 'approval' => 'overtime'
-                            ]),
+                                'id' => $aa->id, 'approval' => 'ski'
+                            ])
                         ]);
                     }
+                })
+                ->addColumn('detail', function (SkiApproval $aa) {
+                    return view('secretary.ski._action',['ski'=>$aa->ski] );
                 })
                 ->escapeColumns([])
                 ->make(true);
