@@ -19,6 +19,10 @@
     <table style="border: 1px solid black;">
         <tbody>
             <tr>
+                <td>Tahapan</td>
+                <td>{{ $value->stage->description }}</td>
+            </tr>
+            <tr>
                 <td>Period</td>
                 <td>{{ $value->month }}/{{ $value->year }}</td>
             </tr>

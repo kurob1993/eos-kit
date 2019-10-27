@@ -9,19 +9,33 @@
                 <li class="nav-header">Personnel Service</li>
     
                 @role('personnel_service')
+                <li class="has-sub {{ (
+                    (Request::segment(1) == 'ski')
+                ) ? 'active' : ''
+                }}">
+                    <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <i class="icon-user"></i>
+                            <span>Personnel Admin</span>
+                        </a>
+                    <ul class="sub-menu">
+                        <li class="{{ Request::segment(1)=='ski' ? 'active' : '' }}">
+                            <a href="{{ route('personnel_service.attendance.index') }}">Ski</a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="has-sub"{{ (
                         (Request::segment(1) == 'all_leaves') || 
                         (Request::segment(1) == 'all_absence_quotas') || 
                         (Request::segment(1) == 'all_permits/absence') || 
                         (Request::segment(1) == 'all_permits/attendance') || 
                         (Request::segment(1) == 'all_time_events') || 
-                        (Request::segment(1) == 'all_overtimes') ||
-                        (Request::segment(1) == 'ski') 
+                        (Request::segment(1) == 'all_overtimes') 
                     ) ? 'active' : '' 
                     }}>
                     <a href="javascript:;">
                         <b class="caret pull-right"></b>
-                        <i class="icon-user"></i>
+                        <i class="fa fa-inbox"></i>
                         <span>Time Management</span>
                     </a>
                     <ul class="sub-menu">
@@ -30,9 +44,6 @@
                         <li> <a href="{{ route('all_permits.attendance') }}">Izin (Attendance)</a> </li>
                         <li> <a href="{{ route('all_time_events.index') }}">Tidak Slash</a> </li>
                         <li> <a href="{{ route('all_overtimes.index') }}">Lembur</a> </li>
-                        <li class="{{ Request::segment(1)=='ski' ? 'active' : '' }}">
-                            <a href="{{ route('personnel_service.attendance.index') }}">Ski</a>
-                        </li>
                         <li> <a href="{{ route('all_absence_quotas.index') }}">Kuota Cuti</a> </li>
                         <li> <a href="{{ route('sendtosap.absence.index') }}">Send To SAP</a> </li>
                         <li> <a href="{{ route('transition.index') }}">Pengalihan</a> </li>

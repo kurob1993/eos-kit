@@ -22,8 +22,11 @@
                 </a>
             </li>            
             <li class="has-sub {{ (
-                (Request::segment(1) == 'cvs') || (Request::segment(1) == 'organizations') 
-                    || (Request::segment(1) == 'administrations')) ? 'active' : '' 
+                    (Request::segment(1) == 'cvs') || 
+                    (Request::segment(1) == 'organizations') || 
+                    (Request::segment(1) == 'administrations') ||
+                    (Request::segment(1) == 'ski')
+                ) ? 'active' : '' 
                 }}">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>
@@ -33,6 +36,9 @@
                 <ul class="sub-menu">
                     <li class="{{ Request::segment(1)=='cvs' ? 'active' : '' }}"> 
                         <a href="{{ url('cvs') }}">Curriculum Vitae</a> 
+                    </li>
+                    <li class="{{ Request::segment(1)=='ski' ? 'active' : '' }}">
+                        <a href="{{ url('ski') }}">Ski</a>
                     </li>
                     {{-- <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 
                         <a href="#">Organisasi</a> 
@@ -47,8 +53,7 @@
                     (Request::segment(1) == 'permits') || 
                     (Request::segment(1) == 'time_events') || 
                     (Request::segment(1) == 'overtimes') || 
-                    (Request::segment(1) == 'wakers') ||
-                    (Request::segment(1) == 'ski')
+                    (Request::segment(1) == 'wakers')
                 ) ? 'active' : '' 
             }}">
                 <a href="javascript:;">
@@ -68,9 +73,6 @@
                     </li>
                     <li class="{{ Request::segment(1)=='overtimes' ? 'active' : '' }}">
                         <a href="{{ url('overtimes') }}">Lembur</a>
-                    </li>
-                    <li class="{{ Request::segment(1)=='ski' ? 'active' : '' }}">
-                        <a href="{{ url('ski') }}">Ski</a>
                     </li>
                     <li class="{{ Request::segment(1)=='wakers' ? 'active' : '' }}"> 
                         <a href="{{ url('wakers') }}">Waktu Kerja</a> 
