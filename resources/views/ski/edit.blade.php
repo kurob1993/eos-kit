@@ -103,6 +103,7 @@
                 </td>
               </tr>
               @endforeach
+              @php( $key = isset($key) ? $key : -1 )
               @for ($i = 0; $i < 15-($key+1); $i++)
               <tr>
                   <td class="text-center">{{$key+$i+2}}</td>
@@ -207,18 +208,18 @@
     var kolom = '<tr>'+
       '<td class="text-center">'+ (id+1) +'</td>'+
       '<td>'+
-        '<select name="klp[]" style="width: 100%; height: 26px">'+
+        '<select name="add_klp[]" style="width: 100%; height: 26px">'+
           '<option value=""></option>'+
           '<option value="Perilaku">Perilaku</option>'+
           '<option value="Kinerja">Kinerja</option>'+
         '</select> '+
       '</td>'+
-      '<td><input type="text" name="sasaran[]" style="width: 100%"></td>'+
-      '<td><input type="text" name="kode[]" style="width: 100%"></td>'+
-      '<td><input type="text" name="ukuran[]" style="width: 100%"></td>'+
+      '<td><input type="text" name="add_sasaran[]" style="width: 100%"></td>'+
+      '<td><input type="text" name="add_kode[]" style="width: 100%"></td>'+
+      '<td><input type="text" name="add_ukuran[]" style="width: 100%"></td>'+
       '<td> '+
         '<input type="text" '+
-          'name="bobot[]" '+
+          'name="add_bobot[]" '+
           'id="bobot'+id+'" '+
           'style="width: 100%; text-align: right"'+
           'onkeyup="setNilai('+id+')"'+
@@ -226,7 +227,7 @@
       '</td>'+
       '<td> '+
         '<input type="text" '+
-          'name="skor[]" '+
+          'name="add_skor[]" '+
           'id="skor'+id+'" '+
           'style="width: 100%; text-align: right"'+
           'onkeyup="setNilai('+id+')"'+
@@ -234,7 +235,7 @@
       '</td>'+
       '<td>'+
         '<input type="text" '+
-          'name="nilai[]" '+
+          'name="add_nilai[]" '+
           'id="nilai'+id+'" '+
           'style="width: 100%; text-align: right"'+
           'readonly'+

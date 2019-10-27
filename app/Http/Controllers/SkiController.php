@@ -191,40 +191,49 @@ class SkiController extends Controller
         }
         
         // dd($request->all());
-        foreach ($request->klp as $key => $value) {
-            $SkiDetail = SkiDetail::find($key);
-            $SkiDetail->klp = $value;
-            $SkiDetail->save();
-        }
-        foreach ($request->sasaran as $key => $value) {
-            $SkiDetail = SkiDetail::find($key);
-            $SkiDetail->sasaran = $value;
-            $SkiDetail->save();
-        }
-        foreach ($request->kode as $key => $value) {
-            $SkiDetail = SkiDetail::find($key);
-            $SkiDetail->kode = $value;
-            $SkiDetail->save();
-        }
-        foreach ($request->ukuran as $key => $value) {
-            $SkiDetail = SkiDetail::find($key);
-            $SkiDetail->ukuran = $value;
-            $SkiDetail->save();
-        }
-        foreach ($request->bobot as $key => $value) {
-            $SkiDetail = SkiDetail::find($key);
-            $SkiDetail->bobot = $value;
-            $SkiDetail->save();
-        }
-        foreach ($request->skor as $key => $value) {
-            $SkiDetail = SkiDetail::find($key);
-            $SkiDetail->skor = $value;
-            $SkiDetail->save();
-        }
-        foreach ($request->nilai as $key => $value) {
-            $SkiDetail = SkiDetail::find($key);
-            $SkiDetail->nilai = $value;
-            $SkiDetail->save();
+        if(isset($request->klp)){
+            foreach ($request->klp as $key => $value) {
+                $SkiDetail = SkiDetail::find($key);
+                $SkiDetail->klp = $value;
+                $SkiDetail->save();
+            }
+            foreach ($request->sasaran as $key => $value) {
+                $SkiDetail = SkiDetail::find($key);
+                $SkiDetail->sasaran = $value;
+                $SkiDetail->save();
+            }
+            foreach ($request->kode as $key => $value) {
+                $SkiDetail = SkiDetail::find($key);
+                $SkiDetail->kode = $value;
+                $SkiDetail->save();
+            }
+            foreach ($request->ukuran as $key => $value) {
+                $SkiDetail = SkiDetail::find($key);
+                $SkiDetail->ukuran = $value;
+                $SkiDetail->save();
+            }
+            foreach ($request->bobot as $key => $value) {
+                $SkiDetail = SkiDetail::find($key);
+                $SkiDetail->bobot = $value;
+                $SkiDetail->save();
+            }
+            foreach ($request->skor as $key => $value) {
+                $SkiDetail = SkiDetail::find($key);
+                $SkiDetail->skor = $value;
+                $SkiDetail->save();
+            }
+            foreach ($request->nilai as $key => $value) {
+                $SkiDetail = SkiDetail::find($key);
+                $SkiDetail->nilai = $value;
+                $SkiDetail->save();
+            }
+
+            //hapus
+            foreach ($request->klp as $key => $value) {
+                if($value == null){
+                    $SkiDetail = SkiDetail::destroy($key);
+                }
+            }
         }
 
         //add
@@ -244,12 +253,7 @@ class SkiController extends Controller
                 }
             }
         }
-        //hapus
-        foreach ($request->klp as $key => $value) {
-            if($value == null){
-                $SkiDetail = SkiDetail::destroy($key);
-            }
-        }
+        
         return redirect()->route('dashboards.approval');
     }
 
