@@ -368,13 +368,15 @@ class ApprovalController extends Controller
                     $approvals = $aa->ski->skiApproval;
                     $a = '';
                     foreach ($approvals as $approval) {
-                        if ($approval->is_waiting)
+                        if ($approval->is_waiting){
                             $a = $a . '<i class="fa fa-clock-o"></i>&nbsp;';
+                        }
                         else if ($approval->is_approved) {
                             $a = $a . '<i class="fa fa-check text-success"></i>&nbsp;';
                             $a = $a . $approval->updated_at . '&nbsp;';
-                        } else if ($approval->is_rejected)
+                        } else if ($approval->is_rejected){
                             $a = $a . '<i class="fa fa-times text-danger"></i>&nbsp;';
+                        }
 
                         $a = $a . view('layouts._personnel-no-with-name', [
                             'personnel_no' => $approval->regno,
@@ -438,6 +440,10 @@ class ApprovalController extends Controller
                 $approved = AttendanceQuotaApproval::find($id);
                 $moduleText = config('emss.modules.overtimes.text');
                 break;
+            case 'ski':
+                $approved = SkiApproval::find($id);
+                $moduleText = 'Sasaran Kerja Karyawan';
+                break;
         }
 
         $approved->status_id = Status::approveStatus()->id;
@@ -480,10 +486,12 @@ class ApprovalController extends Controller
                 $approved = AttendanceQuotaApproval::find($id);
                 $moduleText = config('emss.modules.overtimes.text');
                 break;
+            case 'ski':
+                $approved = SkiApproval::find($id);
+                $moduleText = 'Sasaran Kerja Karyawan';
+                break;
         }
-
-        if (!$approved->update($request->all()
-            + ['status_id' => Status::rejectStatus()->id])) {
+        if (!$approved->update($request->all() + ['status_id' => Status::rejectStatus()->id])) {
             // kembali lagi jika gagal
             return redirect()->back();
         }
@@ -535,6 +543,12 @@ class ApprovalController extends Controller
                     ->whereStageIsWaitingApproval('attendanceQuota')
                     ->get();
                 $moduleText = config('emss.modules.overtimes.text');
+                break;
+            case 'ski':
+                $approvals = SkiApproval::ofLoggedUser()
+                    ->whereStageIsWaitingApproval('ski')
+                    ->get();
+                $moduleText = 'Sasaran Kerja Karyawan';
                 break;
         }
 

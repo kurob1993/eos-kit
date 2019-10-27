@@ -74,11 +74,17 @@
                     </tbody>
                 </table>
                 @if (isset($edit))
-                    <a class="btn btn-warning" href="{{route('ski.edit',$ski->id)}}">
-                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        Ubah
-                    </a>
+                    @if (!$ski->skiApproval->where('regno',Auth::user()->personnel_no)->first()->IsApproved)
+                        <a class="btn btn-warning" href="{{route('ski.edit',$ski->id)}}">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            Ubah
+                        </a>
+                    @endif
                 @endif
+                <button class="btn btn-default" type="button" data-dismiss="modal">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Batal
+                </button>
             </div>
         </div>
     </div>

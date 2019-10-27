@@ -12,6 +12,17 @@ class SkiApproval extends Model
 {
     use ReceiveStatus, ParentStage, OfLoggedUserApproval, FormatDates;
 
+    public $fillable = [ 'ski_id', 'regno', 'sequence', 'status_id', 'text' ];
+
+    protected $casts = [
+        'id' => 'integer',
+        'ski_id' => 'integer',
+        'regno' => 'integer',
+        'sequence' => 'integer',
+        'status_id' => 'integer',
+        'text' => 'string'
+    ];
+
     public function user()
     {
         // many-to-one relationship dengan User

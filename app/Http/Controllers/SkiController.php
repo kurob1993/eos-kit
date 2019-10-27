@@ -10,6 +10,7 @@ use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\Ski;
 use App\Models\SkiDetail;
+use App\Models\SkiApproval;
 use App\Models\OvertimeReason;
 
 class SkiController extends Controller
@@ -180,6 +181,15 @@ class SkiController extends Controller
 
     public function update(Request $request, $id)
     {
+        $SkiApproval = ski::find($id)->skiApproval->pluck('regno')->toArray();
+        if( !in_array(Auth::user()->personnel_no,$SkiApproval) ){
+            Session::flash("flash_notification", [
+                "level" => "danger",
+                "message" => "Mohon Maaf anda tidak memiliki aksess untuk merubah data (ID: SKI-".$id.")"
+            ]);
+            return redirect()->route('dashboards.approval');
+        }
+        
         // dd($request->all());
         foreach ($request->klp as $key => $value) {
             $SkiDetail = SkiDetail::find($key);
@@ -234,7 +244,7 @@ class SkiController extends Controller
                 }
             }
         }
-        
+        //hapus
         foreach ($request->klp as $key => $value) {
             if($value == null){
                 $SkiDetail = SkiDetail::destroy($key);

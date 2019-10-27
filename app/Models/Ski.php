@@ -61,4 +61,15 @@ class Ski extends Model
         
         return $dirnik->name;
     }
+    public function getFirstApprovalAttribute()
+    {
+        // mencari approval dengan sequence 1
+        return $this->skiApproval()->where('sequence', 1)->first();
+    }
+
+    public function getSecondApprovalAttribute()
+    {
+        // mencari approval dengan sequence 2
+        return $this->skiApproval()->where('sequence', 2)->first();
+    }
 }

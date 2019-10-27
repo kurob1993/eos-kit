@@ -15,12 +15,13 @@ use App\Models\TimeEvent;
 use App\Models\TimeEventApproval;
 use App\Models\Transition;
 use App\Models\Ski;
+use App\Models\SkiApproval;
 use App\Observers\
     { AbsenceObserver, AbsenceApprovalObserver,
       TimeEventObserver, TimeEventApprovalObserver,
       AttendanceObserver, AttendanceApprovalObserver,
       AttendanceQuotaObserver, AttendanceQuotaApprovalObserver,
-      TransitionObserver, SkiObserver };
+      TransitionObserver, SkiObserver, SkiApprovalObserver};
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -68,6 +69,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Observer untuk model Sasaran Kerja Karyawan
         Ski::observe(SkiObserver::class);
+        SkiApproval::observe(SkiApprovalObserver::class);
 
         // Form macro laravelcollective
         \Form::macro('labelRadio', function ($name, $value, $label,
