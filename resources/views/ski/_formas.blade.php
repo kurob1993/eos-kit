@@ -125,7 +125,7 @@ to, overtime_reason, delegation (if have subordinates)
                 <th class="text-center" style="width: 8%">Nilai</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="tbody">
               @for ($i = 0; $i < 15; $i++) 
                 @php($required = '')
                 @if ($i==0)
@@ -139,6 +139,7 @@ to, overtime_reason, delegation (if have subordinates)
                       <option value="Perilaku">Perilaku</option>
                       <option value="Kinerja">Kinerja</option>
                     </select>
+                  </td>
                   <td><input type="text" {{ $required }} name="sasaran[]" style="width: 100%"></td>
                   <td><input type="text" name="kode[]" style="width: 100%"></td>
                   <td><input type="text" name="ukuran[]" style="width: 100%"></td>
@@ -163,15 +164,24 @@ to, overtime_reason, delegation (if have subordinates)
                       name="nilai[]" 
                       id="nilai{{$i}}"
                       style="width: 100%; text-align: right"
+                      readonly
                     >
                   </td>
                 </tr>
               @endfor
             </tbody>
           </table>
+          <input type="hidden" id="id" value="{{$i}}">
         </div>
         <div class="modal-footer">
           {!! Form::submit('Kirim Sasaran Kerja Karyawan', ['class'=>'btn btn-primary']) !!}
+          <button type="button" 
+            class="btn btn-warning" 
+            id="tambah_kolom"
+            onclick="add_column({{$i}})"
+          >
+            Tambah Kolom
+          </button>
           <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
         </div>
       </div>

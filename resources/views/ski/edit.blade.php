@@ -60,7 +60,7 @@
                 <th class="text-center" style="width: 8%">Nilai</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="tbody">
               @foreach ($ski->skiDetail as $key => $item)
               <tr>
                 <td class="text-center">{{$key+1}}</td>
@@ -145,9 +145,17 @@
               @endfor
             </tbody>
           </table>
+          <input type="hidden" id="id" value="{{$key+$i+1}}">
           <button class="btn btn-primary m-t-10" type="submit">
             <i class="fa fa-floppy-o" aria-hidden="true"></i>
             Simpan
+          </button>
+          <button type="button" 
+            class="btn btn-warning m-t-10" 
+            id="tambah_kolom"
+            onclick="add_column()"
+          >
+            Tambah Kolom
           </button>
         </form>
       </div>
@@ -193,6 +201,48 @@
     var bobot = $('#bobot'+id).val();
     var skor = $('#skor'+id).val();
     $('#nilai'+id).val(bobot*skor);
+  }
+  function add_column(id) {
+    var id = Number( $('#id').val() );
+    var kolom = '<tr>'+
+      '<td class="text-center">'+ (id+1) +'</td>'+
+      '<td>'+
+        '<select name="klp[]" style="width: 100%; height: 26px">'+
+          '<option value=""></option>'+
+          '<option value="Perilaku">Perilaku</option>'+
+          '<option value="Kinerja">Kinerja</option>'+
+        '</select> '+
+      '</td>'+
+      '<td><input type="text" name="sasaran[]" style="width: 100%"></td>'+
+      '<td><input type="text" name="kode[]" style="width: 100%"></td>'+
+      '<td><input type="text" name="ukuran[]" style="width: 100%"></td>'+
+      '<td> '+
+        '<input type="text" '+
+          'name="bobot[]" '+
+          'id="bobot'+id+'" '+
+          'style="width: 100%; text-align: right"'+
+          'onkeyup="setNilai('+id+')"'+
+        '> '+
+      '</td>'+
+      '<td> '+
+        '<input type="text" '+
+          'name="skor[]" '+
+          'id="skor'+id+'" '+
+          'style="width: 100%; text-align: right"'+
+          'onkeyup="setNilai('+id+')"'+
+        '>'+
+      '</td>'+
+      '<td>'+
+        '<input type="text" '+
+          'name="nilai[]" '+
+          'id="nilai'+id+'" '+
+          'style="width: 100%; text-align: right"'+
+          'readonly'+
+        '>'+
+      '</td>'+
+      '</tr>';
+    $('#tbody').append(kolom);
+    $('#id').val(id+1);
   }
 </script>
 @endpush

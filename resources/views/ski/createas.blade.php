@@ -68,6 +68,48 @@
     var skor = $('#skor'+id).val();
     $('#nilai'+id).val(bobot*skor);
   }
+  function add_column() {
+    var id = Number( $('#id').val() );
+    var kolom = '<tr>'+
+      '<td class="text-center">'+ (id+1) +'</td>'+
+      '<td>'+
+        '<select name="klp[]" style="width: 100%; height: 26px">'+
+          '<option value=""></option>'+
+          '<option value="Perilaku">Perilaku</option>'+
+          '<option value="Kinerja">Kinerja</option>'+
+        '</select> '+
+      '</td>'+
+      '<td><input type="text" name="sasaran[]" style="width: 100%"></td>'+
+      '<td><input type="text" name="kode[]" style="width: 100%"></td>'+
+      '<td><input type="text" name="ukuran[]" style="width: 100%"></td>'+
+      '<td> '+
+        '<input type="text" '+
+          'name="bobot[]" '+
+          'id="bobot'+id+'" '+
+          'style="width: 100%; text-align: right"'+
+          'onkeyup="setNilai('+id+')"'+
+        '> '+
+      '</td>'+
+      '<td> '+
+        '<input type="text" '+
+          'name="skor[]" '+
+          'id="skor'+id+'" '+
+          'style="width: 100%; text-align: right"'+
+          'onkeyup="setNilai('+id+')"'+
+        '>'+
+      '</td>'+
+      '<td>'+
+        '<input type="text" '+
+          'name="nilai[]" '+
+          'id="nilai'+id+'" '+
+          'style="width: 100%; text-align: right"'+
+          'readonly'+
+        '>'+
+      '</td>'+
+      '</tr>';
+    $('#tbody').append(kolom);
+    $('#id').val(id+1);
+  }
 </script>
 @endpush
 
