@@ -1,4 +1,7 @@
-<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-dialog{{$ski->id}}">Detail</button>
+<button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-dialog{{$ski->id}}">
+    <i class="fa fa-list-ul" aria-hidden="true"></i>
+    Detail
+</button>
 
 <div class="modal fade" id="modal-dialog{{$ski->id}}">
     <div class="modal-dialog modal-lg">
@@ -7,8 +10,8 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title">Sasaran Kerja Karyawan (ID: <span id="title-span">{{$ski->plain_id}}</span>)</h4>
             </div>
-            <div class="modal-body">
-                <table id="table-detail" class="table table-bordered table-condensed m-b-0 text-left"
+            <div class="modal-body text-left">
+                <table id="table-detail" class="table table-bordered table-condensed m-b-0"
                     data-id="{{ $ski->plain_id }}">
                     <tbody>
                         <tr>
@@ -65,11 +68,17 @@
                             <td>{{$item->ukuran}}</td>
                             <td>{{$item->bobot}}</td>
                             <td>{{$item->skor}}</td>
-                            <td>{{$item->nili}}</td>
+                            <td>{{$item->nilai}}</td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
+                @if (isset($edit))
+                    <a class="btn btn-warning" href="{{route('ski.edit',$ski->id)}}">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        Ubah
+                    </a>
+                @endif
             </div>
         </div>
     </div>

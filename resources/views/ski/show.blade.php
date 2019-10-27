@@ -54,7 +54,7 @@
             <td>{{$item->ukuran}}</td>
             <td>{{$item->bobot}}</td>
             <td>{{$item->skor}}</td>
-            <td>{{$item->nili}}</td>
+            <td>{{$item->nilai}}</td>
         </tr>
         @endforeach
     </tbody>

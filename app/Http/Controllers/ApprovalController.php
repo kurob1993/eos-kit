@@ -401,7 +401,7 @@ class ApprovalController extends Controller
                     }
                 })
                 ->addColumn('detail', function (SkiApproval $aa) {
-                    return view('secretary.ski._action',['ski'=>$aa->ski] );
+                    return view('secretary.ski._action',['ski'=>$aa->ski,'edit'=>true] );
                 })
                 ->escapeColumns([])
                 ->make(true);

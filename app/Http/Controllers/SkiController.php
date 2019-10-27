@@ -173,12 +173,74 @@ class SkiController extends Controller
 
     public function edit($id)
     {
-        //
+        $ski = Ski::find($id);
+        $pageContainer = 'layouts.employee._page-container';
+        return view('ski.edit', compact('pageContainer','ski'));
     }
 
     public function update(Request $request, $id)
     {
-        //
+        // dd($request->all());
+        foreach ($request->klp as $key => $value) {
+            $SkiDetail = SkiDetail::find($key);
+            $SkiDetail->klp = $value;
+            $SkiDetail->save();
+        }
+        foreach ($request->sasaran as $key => $value) {
+            $SkiDetail = SkiDetail::find($key);
+            $SkiDetail->sasaran = $value;
+            $SkiDetail->save();
+        }
+        foreach ($request->kode as $key => $value) {
+            $SkiDetail = SkiDetail::find($key);
+            $SkiDetail->kode = $value;
+            $SkiDetail->save();
+        }
+        foreach ($request->ukuran as $key => $value) {
+            $SkiDetail = SkiDetail::find($key);
+            $SkiDetail->ukuran = $value;
+            $SkiDetail->save();
+        }
+        foreach ($request->bobot as $key => $value) {
+            $SkiDetail = SkiDetail::find($key);
+            $SkiDetail->bobot = $value;
+            $SkiDetail->save();
+        }
+        foreach ($request->skor as $key => $value) {
+            $SkiDetail = SkiDetail::find($key);
+            $SkiDetail->skor = $value;
+            $SkiDetail->save();
+        }
+        foreach ($request->nilai as $key => $value) {
+            $SkiDetail = SkiDetail::find($key);
+            $SkiDetail->nilai = $value;
+            $SkiDetail->save();
+        }
+
+        //add
+        if(isset($request->add_klp)){
+            foreach ($request->add_klp as $key => $value) {
+                if ($value !== null) {
+                    $SkiDetail = new SkiDetail();
+                    $SkiDetail->ski_id = $id;
+                    $SkiDetail->klp = $value;
+                    $SkiDetail->sasaran = $request->add_sasaran[$key];
+                    $SkiDetail->kode = $request->add_kode[$key];
+                    $SkiDetail->ukuran = $request->add_ukuran[$key];
+                    $SkiDetail->bobot = $request->add_bobot[$key];
+                    $SkiDetail->skor = $request->add_skor[$key];
+                    $SkiDetail->nilai = $request->add_nilai[$key];
+                    $SkiDetail->save();
+                }
+            }
+        }
+        
+        foreach ($request->klp as $key => $value) {
+            if($value == null){
+                $SkiDetail = SkiDetail::destroy($key);
+            }
+        }
+        return redirect()->route('dashboards.approval');
     }
 
     public function destroy($id)
