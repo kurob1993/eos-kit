@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Ski as Overtime;
+use App\Models\Ski as Ski;
 use Yajra\DataTables\Services\DataTable;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,25 +14,30 @@ class SecSkiDataTable extends DataTable
         $request = $this->request();
 
         return datatables($query)
-            ->editColumn('id', function (Overtime $overtime){
-                return $overtime->plain_id;
+            ->editColumn('id', function (Ski $Ski){
+                return $Ski->plain_id;
             })
-            ->editColumn('stage.description', function (Overtime $overtime) {
-                return '<span class="label label-' .$overtime->stage->class_description . '">' 
-                . $overtime->stage->description . '</span>';
+            ->editColumn('stage.description', function (Ski $Ski) {
+                return '<span class="label label-' .$Ski->stage->class_description . '">' 
+                . $Ski->stage->description . '</span>';
             })
-            ->editColumn('secretary.name', function (Overtime $overtime) {
-                if($overtime->secretary){
-                    return $overtime->secretary->name.
-                        ' ('.$overtime->secretary->email.')';
+            ->editColumn('secretary.name', function (Ski $Ski) {
+                if($Ski->secretary){
+                    return $Ski->secretary->name.
+                        ' ('.$Ski->secretary->email.')';
                 }
                 return '<span class="label label-default">'.
-                            $overtime->userDirnik->personnel_no
+                            $Ski->userDirnik->personnel_no
                         .'</span> '.
-                        $overtime->userDirnik->name;
+                        $Ski->userDirnik->name;
             })
-            ->editColumn('ski_approval', function (Overtime $overtime){
-                $approvals = $overtime->skiApproval;
+            ->editColumn('month', function (Ski $Ski) {
+                return '<span class="label label-warning">'.
+                            $Ski->month."/".$Ski->year
+                        .'</span> ';
+            })
+            ->editColumn('ski_approval', function (Ski $Ski){
+                $approvals = $Ski->skiApproval;
                 $a = '';
                 foreach ($approvals as $approval)
                     $a = $a . view('layouts._personnel-no-with-name', [
@@ -41,8 +46,8 @@ class SecSkiDataTable extends DataTable
                         ]) . '<br />';
                 return $a;
             })         
-            ->editColumn('action', function (Overtime $overtime){
-                return view('secretary.ski._action',['ski'=>$overtime] );
+            ->editColumn('action', function (Ski $Ski){
+                return view('secretary.ski._action',['ski'=>$Ski] );
             })         
             ->escapeColumns([])
             ->filter(function ($query) use ($request) {
@@ -59,7 +64,7 @@ class SecSkiDataTable extends DataTable
             }, true);
     }
 
-    public function query(Overtime $model)
+    public function query(Ski $model)
     {
         // ambil semua data cuti user
         return $model->newQuery()
@@ -116,6 +121,12 @@ class SecSkiDataTable extends DataTable
                 'orderable' => false,
             ],
             [ 
+                'data' => 'month', 
+                'name' => 'month', 
+                'title' => 'Periode',
+                'orderable' => false,
+            ],
+            [ 
                 'data' => 'ski_approval', 
                 'name' => 'ski_approval', 
                 'title' => 'Approval', 
@@ -142,6 +153,6 @@ class SecSkiDataTable extends DataTable
 
     protected function filename()
     {
-        return 'SecOvertime_' . date('YmdHis');
+        return 'SecSki_' . date('YmdHis');
     }
 }

@@ -53,7 +53,14 @@ class ComposerServiceProvider extends ServiceProvider
         $this->app->bind('datatables.html.overtimeTable', function () {
             return $this->app->make(Builder::class);
 
-        });        
+        });     
+
+        // DataTables builder for attendance quota approval
+        $this->app->bind('datatables.html.skiTable', function () {
+            return $this->app->make(Builder::class);
+
+        });    
+
         // DataTables builder for time event approval
         $this->app->bind('datatables.html.timeEventTable', function () {
             return $this->app->make(Builder::class);

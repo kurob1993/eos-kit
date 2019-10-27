@@ -47,6 +47,8 @@
             ->name('dashboards.permit_approval');
         Route::get('overtime_approval', 'ApprovalController@overtimeApproval')
             ->name('dashboards.overtime_approval');
+        Route::get('ski_approval', 'ApprovalController@skiApproval')
+            ->name('dashboards.ski_approval');
         Route::get('time_event_approval', 'ApprovalController@timeEventApproval')
             ->name('dashboards.time_event_approval');
     });
