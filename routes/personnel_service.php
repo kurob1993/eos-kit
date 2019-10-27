@@ -79,12 +79,8 @@
     Route::post('ski/download', 'AllSkiController@download')->name('personnel_service.ski.download');
     Route::resource('ski', 'AllSkiController', [
         'parameters'=> [ 'ski' => 'id' ],
-        'except' => ['destroy'],
+        'except' => ['destroy','show','create','update','edit','store'],
         'names' => [
-            'index' => 'personnel_service.attendance.index',
-            'show' => 'personnel_service.attendance.show',
-            'create' => 'personnel_service.attendance.create',
-            'update' => 'personnel_service.attendance.update',
-            'edit' => 'personnel_service.attendance.edit'
+            'index' => 'personnel_service.ski.index',
         ]
     ]);

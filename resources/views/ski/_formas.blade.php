@@ -25,130 +25,155 @@ to, overtime_reason, delegation (if have subordinates)
 </div> --}}
 
 <div class="col-lg-12">
-  <!-- begin personnel_no field -->
-  <div class="form-group p-l-5 p-r-5 {{ $errors->has('personnel_no') ? ' has-error' : '' }}">
-    {!! Form::label('personnel_no', 'Karyawan') !!}
-    {!! Form::select(
-    'personnel_no',
-    [],
-    null,
-    [
-    'class'=>'form-control sub-selectize',
-    'id'=>'personnel_no',
-    'data-parsley-required' => 'true',
-    'placeholder' => 'Silahkan pilih karyawan'
-    ])
-    !!}
-    {!! $errors->first('personnel_no', '<p class="help-block">:message</p>') !!}
-  </div>
-  <!-- end personnel_no field -->
-
-  <div class="form-group {{ $errors->has('periode') ? ' has-error' : '' }}">
-    <div class="col-xs-6 p-l-5 p-r-5">
-      <label for="">Pilih Bulan</label>
-      <select name="bulan" id="bulan" class="form-control">
-        <option value="06" selected>Juni</option>
-        <option value="12">Desember</option>
-      </select>
+    <!-- begin personnel_no field -->
+    <div class="form-group p-l-5 p-r-5 {{ $errors->has('personnel_no') ? ' has-error' : '' }}">
+      {!! Form::label('personnel_no', 'Karyawan') !!}
+      {!! Form::select(
+      'personnel_no',
+      [],
+      null,
+      [
+      'class'=>'form-control sub-selectize',
+      'id'=>'personnel_no',
+      'data-parsley-required' => 'true',
+      'placeholder' => 'Silahkan pilih karyawan'
+      ])
+      !!}
+      {!! $errors->first('personnel_no', '<p class="help-block">:message</p>') !!}
     </div>
-    <div class="col-xs-6 p-l-5 p-r-5">
-      <label for="">Pilih Tahun</label>
-      <select name="tahun" id="tahun" class="form-control">
-        @for ($i = 0; $i < 10; $i++) @if ($i==0) <option value="{{date('Y') - $i}}" selected>{{date('Y') - $i}}</option>
-          @else
-          <option value="{{date('Y') - $i}}">{{date('Y') - $i}}</option>
-          @endif
-          @endfor
-      </select>
-    </div>
-  </div>
-
-  <div class="form-group {{ $errors->has('perilkau') ? ' has-error' : '' }}">
-    <div class="col-xs-12 p-l-5 p-r-5">
-      <label for="">Perilaku</label>
-      <input type="text" class="form-control" name="perilkau" readonly value="Hasil Kerja">
-    </div>
-  </div>
-
-  <!-- begin superintendent_approver field -->
-  <!-- This field is not sent via form -->
-  <div class="p-l-5 p-r-5 form-group{{ $errors->has('superintendent_approver') ? ' has-error' : '' }}">
-    {!! Form::label('superintendent_approver', 'Superintendent') !!}
-    <select class="form-control superintendent-selectize" name="superintendent">
-      <option value="" selected>Pilih Superintendent</option>
-    </select>
-  </div>
-  <!-- end superintendent_approver field -->
-
-  <!-- begin manager_approver field -->
-  <!-- This field is not sent via form -->
-  <div class="p-l-5 p-r-5 form-group{{ $errors->has('manager_approver') ? ' has-error' : '' }}">
-    {!! Form::label('manager_approver', 'Manager') !!}
-    <select class="form-control manager-selectize" name="manager">
-      <option value="" selected>Pilih Manager</option>
-    </select>
-  </div>
-
-  <div class="p-l-5 p-r-5 form-group">
-    <button id="btn-sasaran"
-      type="button" 
-      class="btn btn-warning" 
-      data-backdrop="static" 
-      data-toggle="modal" 
-      data-target="#myModal"
-      style="display: none">
-      Sasaran Kerja
-    </button>
-  </div>
-</div>
-
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg" style="width: 85%">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Sasaran Kerja</h4>
+    <!-- end personnel_no field -->
+  
+    <div class="form-group {{ $errors->has('periode') ? ' has-error' : '' }}">
+      <div class="col-xs-6 p-l-5 p-r-5">
+        <label for="">Pilih Bulan</label>
+        <select name="bulan" id="bulan" class="form-control">
+          <option value="06" selected>Juni</option>
+          <option value="12">Desember</option>
+        </select>
       </div>
-      <div class="modal-body">
-        <table class="table-responsive" style="width: 100%">
-          <thead>
-            <tr>
-              <th class="text-center" style="width: 5%">NO</th>
-              <th class="text-center" style="width: 10%">KLP</th>
-              <th class="text-center" style="width: 30%">Sasaran Kerja</th>
-              <th class="text-center" style="width: 10%">Kode</th>
-              <th class="text-center" style="width: 25%">Ukuran Prestasi Kerja</th>
-              <th class="text-center" style="width: 6%">Bobot</th>
-              <th class="text-center" style="width: 6%">Skor</th>
-              <th class="text-center" style="width: 8%">Nilai</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for ($i = 0; $i < 15; $i++) 
-              @php($required = '')
-              @if ($i==0)
-              @php($required = 'required')
-              @endif
-              <tr>
-                <td class="text-center">{{$i+1}}</td>
-                <td><input type="text" {{ $required }} name="klp[]" style="width: 100%"></td>
-                <td><input type="text" {{ $required }} name="sasaran[]" style="width: 100%"></td>
-                <td><input type="text" name="kode[]" style="width: 100%"></td>
-                <td><input type="text" name="ukuran[]" style="width: 100%"></td>
-                <td><input type="text" {{ $required }} name="bobot[]" style="width: 100%"></td>
-                <td><input type="text" name="skor[]" style="width: 100%"></td>
-                <td><input type="text" name="nilai[]" style="width: 100%"></td>
-              </tr>
+      <div class="col-xs-6 p-l-5 p-r-5">
+        <label for="">Pilih Tahun</label>
+        <select name="tahun" id="tahun" class="form-control">
+          @for ($i = 0; $i < 10; $i++) @if ($i==0) <option value="{{date('Y') - $i}}" selected>{{date('Y') - $i}}</option>
+            @else
+            <option value="{{date('Y') - $i}}">{{date('Y') - $i}}</option>
+            @endif
             @endfor
-          </tbody>
-        </table>
+        </select>
       </div>
-      <div class="modal-footer">
-        {!! Form::submit('Kirim Sasaran Kerja Karyawan', ['class'=>'btn btn-primary']) !!}
-        <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+    </div>
+  
+    <div class="form-group {{ $errors->has('perilkau') ? ' has-error' : '' }}">
+      <div class="col-xs-12 p-l-5 p-r-5">
+        <label for="">Perilaku</label>
+        <input type="text" class="form-control" name="perilkau" readonly value="Hasil Kerja">
+      </div>
+    </div>
+  
+    <!-- begin superintendent_approver field -->
+    <!-- This field is not sent via form -->
+    <div class="p-l-5 p-r-5 form-group{{ $errors->has('superintendent_approver') ? ' has-error' : '' }}">
+      {!! Form::label('superintendent_approver', 'Superintendent') !!}
+      <select class="form-control superintendent-selectize" name="superintendent">
+        <option value="" selected>Pilih Superintendent</option>
+      </select>
+    </div>
+    <!-- end superintendent_approver field -->
+  
+    <!-- begin manager_approver field -->
+    <!-- This field is not sent via form -->
+    <div class="p-l-5 p-r-5 form-group{{ $errors->has('manager_approver') ? ' has-error' : '' }}">
+      {!! Form::label('manager_approver', 'Manager') !!}
+      <select class="form-control manager-selectize" name="manager">
+        <option value="" selected>Pilih Manager</option>
+      </select>
+    </div>
+  
+    <div class="p-l-5 p-r-5 form-group">
+      <button id="btn-sasaran"
+        type="button" 
+        class="btn btn-warning" 
+        data-backdrop="static" 
+        data-toggle="modal" 
+        data-target="#myModal"
+        style="display: none">
+        Sasaran Kerja
+      </button>
+    </div>
+  </div>
+  
+  <!-- Modal -->
+  <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg" style="width: 85%">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Sasaran Kerja</h4>
+        </div>
+        <div class="modal-body">
+          <table class="table-responsive" style="width: 100%">
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 5%">NO</th>
+                <th class="text-center" style="width: 10%">KLP</th>
+                <th class="text-center" style="width: 30%">Sasaran Kerja</th>
+                <th class="text-center" style="width: 10%">Kode</th>
+                <th class="text-center" style="width: 25%">Ukuran Prestasi Kerja</th>
+                <th class="text-center" style="width: 6%">Bobot</th>
+                <th class="text-center" style="width: 6%">Skor</th>
+                <th class="text-center" style="width: 8%">Nilai</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for ($i = 0; $i < 15; $i++) 
+                @php($required = '')
+                @if ($i==0)
+                @php($required = 'required')
+                @endif
+                <tr>
+                  <td class="text-center">{{$i+1}}</td>
+                  <td>
+                    <select {{ $required }} name="klp[]" style="width: 100%; height: 26px">
+                      <option value=""></option>
+                      <option value="Perilaku">Perilaku</option>
+                      <option value="Kinerja">Kinerja</option>
+                    </select>
+                  <td><input type="text" {{ $required }} name="sasaran[]" style="width: 100%"></td>
+                  <td><input type="text" name="kode[]" style="width: 100%"></td>
+                  <td><input type="text" name="ukuran[]" style="width: 100%"></td>
+                  <td>
+                    <input type="text" {{ $required }} 
+                      name="bobot[]" 
+                      id="bobot{{$i}}"
+                      style="width: 100%; text-align: right"
+                      onkeyup="setNilai({{$i}})"
+                    >
+                  </td>
+                  <td>
+                    <input type="text" 
+                      name="skor[]" 
+                      id="skor{{$i}}" 
+                      style="width: 100%; text-align: right"
+                      onkeyup="setNilai({{$i}})"
+                    >
+                  </td>
+                  <td>
+                    <input type="text" 
+                      name="nilai[]" 
+                      id="nilai{{$i}}"
+                      style="width: 100%; text-align: right"
+                    >
+                  </td>
+                </tr>
+              @endfor
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          {!! Form::submit('Kirim Sasaran Kerja Karyawan', ['class'=>'btn btn-primary']) !!}
+          <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+        </div>
       </div>
     </div>
   </div>
-</div>

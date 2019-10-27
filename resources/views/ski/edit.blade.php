@@ -64,25 +64,83 @@
               @foreach ($ski->skiDetail as $key => $item)
               <tr>
                 <td class="text-center">{{$key+1}}</td>
-                <td><input type="text" name="klp[{{$item->id}}]" value="{{$item->klp}}" style="width: 100%"></td>
+                <td>
+                  <select name="klp[{{$item->id}}]" style="width: 100%; height: 26px">
+                    <option value=""></option>
+                    <option value="Perilaku" {{$item->klp == 'Perilaku' ? 'selected':''}}>Perilaku</option>
+                    <option value="Kinerja" {{$item->klp == 'Kinerja' ? 'selected':''}}>Kinerja</option>
+                  </select>
+                </td>
                 <td><input type="text" name="sasaran[{{$item->id}}]" value="{{$item->sasaran}}" style="width: 100%"></td>
                 <td><input type="text" name="kode[{{$item->id}}]" value="{{$item->kode}}" style="width: 100%"></td>
                 <td><input type="text" name="ukuran[{{$item->id}}]" value="{{$item->ukuran}}" style="width: 100%"></td>
-                <td><input type="text" name="bobot[{{$item->id}}]" value="{{$item->bobot}}" style="width: 100%"></td>
-                <td><input type="text" name="skor[{{$item->id}}]" value="{{$item->skor}}" style="width: 100%"></td>
-                <td><input type="text" name="nilai[{{$item->id}}]" value="{{$item->nilai}}" style="width: 100%"></td>
+                <td>
+                  <input type="text" 
+                    name="bobot[{{$item->id}}]" 
+                    value="{{$item->bobot}}" 
+                    id="bobot{{$key}}"
+                    style="width: 100%; text-align: right"
+                    onkeyup="setNilai({{$key}})"
+                  >
+                </td>
+                <td>
+                  <input type="text" 
+                    name="skor[{{$item->id}}]" 
+                    value="{{$item->skor}}" 
+                    id="skor{{$key}}" 
+                    style="width: 100%; text-align: right"
+                    onkeyup="setNilai({{$key}})"
+                  >
+                </td>
+                <td>
+                  <input type="text" 
+                    name="nilai[{{$item->id}}]" 
+                    value="{{$item->nilai}}" 
+                    id="nilai{{$key}}"
+                    style="width: 100%; text-align: right"
+                    readonly
+                  >
+                </td>
               </tr>
               @endforeach
               @for ($i = 0; $i < 15-($key+1); $i++)
               <tr>
                   <td class="text-center">{{$key+$i+2}}</td>
-                  <td><input type="text" name="add_klp[]" style="width: 100%"></td>
+                  <td>
+                    <select name="add_klp[]" style="width: 100%; height: 26px">
+                      <option value=""></option>
+                      <option value="Perilaku">Perilaku</option>
+                      <option value="Kinerja">Kinerja</option>
+                    </select>
+                  </td>
                   <td><input type="text" name="add_sasaran[]" style="width: 100%"></td>
                   <td><input type="text" name="add_kode[]" style="width: 100%"></td>
                   <td><input type="text" name="add_ukuran[]" style="width: 100%"></td>
-                  <td><input type="text" name="add_bobot[]" style="width: 100%"></td>
-                  <td><input type="text" name="add_skor[]" tyle="width: 100%"></td>
-                  <td><input type="text" name="add_nilai[]" style="width: 100%"></td>
+                  <td>
+                    <input type="text" 
+                      name="add_bobot[]" 
+                      id="bobot{{$key+$i+1}}"
+                      style="width: 100%; text-align: right"
+                      onkeyup="setNilai({{$key+$i+1}})"
+                    >
+                  </td>
+                  <td>
+                    <input type="text" 
+                      name="add_skor[]" 
+                      id="skor{{$key+$i+1}}"
+                      style="width: 100%; text-align: right"
+                      onkeyup="setNilai({{$key+$i+1}})"
+                    >
+                  </td>
+                  <td>
+                    <input type="text" 
+                      name="add_nilai[]" 
+                      id="nilai{{$key+$i+1}}"
+                      style="width: 100%; text-align: right"
+                      onkeyup="setNilai({{$key+$i+1}})"
+                      readonly
+                    >
+                  </td>
                 </tr>
               @endfor
             </tbody>
@@ -130,7 +188,13 @@
 @endpush
 
 @push('custom-scripts')
-
+<script>
+  function setNilai(id) {
+    var bobot = $('#bobot'+id).val();
+    var skor = $('#skor'+id).val();
+    $('#nilai'+id).val(bobot*skor);
+  }
+</script>
 @endpush
 
 @push('on-ready-scripts')

@@ -62,6 +62,13 @@
   'start_date' =>  config('emss.modules.time_events.start_date'),
   'end_date' =>  config('emss.modules.time_events.end_date')
 ])
+<script>
+  function setNilai(id) {
+    var bobot = $('#bobot'+id).val();
+    var skor = $('#skor'+id).val();
+    $('#nilai'+id).val(bobot*skor);
+  }
+</script>
 @endpush
 
 @push('on-ready-scripts') 
