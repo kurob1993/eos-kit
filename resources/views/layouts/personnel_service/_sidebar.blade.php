@@ -20,7 +20,7 @@
                         </a>
                     <ul class="sub-menu">
                         <li class="{{ Request::segment(1)=='ski' ? 'active' : '' }}">
-                            <a href="{{ route('personnel_service.attendance.index') }}">Ski</a>
+                            <a href="{{ route('personnel_service.ski.index') }}">Ski</a>
                         </li>
                     </ul>
                 </li>
