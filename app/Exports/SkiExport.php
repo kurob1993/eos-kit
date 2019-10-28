@@ -38,12 +38,22 @@ class SkiExport implements FromView
 
         return $this;
     }
+    
+    public function forType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+    
+    
     /**
      * @return \Illuminate\Support\Collection
      */
     public function view(): View
     {
         $text = $this->text;
+        $nik = explode(',', $text);
         $data = Ski::with('skiDetail', 'skiApproval', 'stage');
         
         if(isset($this->month)){
@@ -56,16 +66,17 @@ class SkiExport implements FromView
             $data->where('stage_id', $this->stage);
         }
         if(isset($this->text)){
-            $data->where(function ($query) use ($text) {
-                $query->orWhere('personnel_no', 'like', '%' . $text . '%')
-                    ->orWhereHas('user', function ($query) use ($text) {
-                        $query->where('name', 'like', '%' . $text . '%');
-                    });
-            });
+            $data->whereIn('personnel_no',$nik);
         }
 
-        return view('all_ski.export', [
-            'ski' => $data->get()
-        ]);
+        if($this->type == 'all'){
+           $view = 'all_ski.export';
+        }
+
+        if($this->type == 'rekap'){
+            $view = 'all_ski.export_rekap';
+        }
+        return view($view, [ 'ski' => $data->get() ]);
+        
     }
 }

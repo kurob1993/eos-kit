@@ -29,7 +29,7 @@ class AllSkiController extends Controller
             $year = $cari[1];
             $text = $cari[2];
             $stage = $cari[3];
-
+            $nik = explode(',', $text);
             if($month){
                 $ski->where('month',$month);
             }
@@ -41,13 +41,10 @@ class AllSkiController extends Controller
             if($stage){
                 $ski->where('stage_id',$stage);
             }
-
-            $ski->where(function($query) use ($text) {
-                $query->orWhere('personnel_no','like', '%' . $text .'%' )
-                ->orWhereHas('user', function ($query) use ($text) {
-                    $query->where('name','like', '%' . $text .'%');
-                });
-            });
+            if($text){
+                $ski->whereIn('personnel_no',$nik);
+            }
+           
         }
         
         // response untuk datatables skis
@@ -102,7 +99,7 @@ class AllSkiController extends Controller
             ->addColumn([
                 'data' => 'personnel_no',
                 'name' => 'personnel_no',
-                'title' => 'NAME',
+                'title' => 'Nama',
                 'class' => 'desktop',
                 'searchable' => false,
                 'orderable' => false,
@@ -218,12 +215,14 @@ class AllSkiController extends Controller
         $tahun = $request->year;
         $stage = $request->stage;
         $text = $request->text;
+        $type = $request->type;
 
         return (new SkiExport)
             ->forMonth($bulan)
             ->forYear($tahun)
             ->forStage($stage)
             ->forText($text)
+            ->forType($type)
             ->download('Ski.xlsx');
     }
 }

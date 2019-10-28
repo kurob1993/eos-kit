@@ -39,10 +39,6 @@
                 <td>{{ $value->employee->org_unit_name }}</td>
             </tr>
             <tr>
-                <td>Perilaku</td>
-                <td>{{ $value->perilaku }}</td>
-            </tr>
-            <tr>
                 <td>Perlu Dipertahankan</td>
                 <td></td>
             </tr>
