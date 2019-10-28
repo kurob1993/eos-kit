@@ -137,7 +137,6 @@ class SkiController extends Controller
         $ski->personnel_no = $request->personnel_no;
         $ski->month = $request->bulan;
         $ski->year = $request->tahun;
-        $ski->perilaku = $request->perilkau;
         $ski->stage_id = 1;
         $ski->dirnik = Auth::user()->personnel_no;
 

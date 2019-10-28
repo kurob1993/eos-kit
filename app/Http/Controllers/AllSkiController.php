@@ -115,13 +115,6 @@ class AllSkiController extends Controller
                 'searchable' => false,
                 'orderable' => false,
             ])->addColumn([
-                'data' => 'perilaku',
-                'name' => 'perilaku',
-                'title' => 'Perilaku',
-                'class' => 'desktop',
-                'searchable' => false,
-                'orderable' => false,
-            ])->addColumn([
                 'data' => 'stage',
                 'name' => 'stage',
                 'title' => 'Tahapan',

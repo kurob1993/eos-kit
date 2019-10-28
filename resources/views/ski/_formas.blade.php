@@ -62,14 +62,7 @@ to, overtime_reason, delegation (if have subordinates)
         </select>
       </div>
     </div>
-  
-    <div class="form-group {{ $errors->has('perilkau') ? ' has-error' : '' }}">
-      <div class="col-xs-12 p-l-5 p-r-5">
-        <label for="">Perilaku</label>
-        <input type="text" class="form-control" name="perilkau" readonly value="Hasil Kerja">
-      </div>
-    </div>
-  
+    
     <!-- begin superintendent_approver field -->
     <!-- This field is not sent via form -->
     <div class="p-l-5 p-r-5 form-group{{ $errors->has('superintendent_approver') ? ' has-error' : '' }}">
@@ -97,7 +90,7 @@ to, overtime_reason, delegation (if have subordinates)
         data-toggle="modal" 
         data-target="#myModal"
         style="display: none">
-        Sasaran Kerja
+        Input
       </button>
     </div>
   </div>
@@ -134,7 +127,7 @@ to, overtime_reason, delegation (if have subordinates)
                 <tr>
                   <td class="text-center">{{$i+1}}</td>
                   <td>
-                    <select {{ $required }} name="klp[]" style="width: 100%; height: 26px">
+                    <select {{ $required }} name="klp[]" id="klp{{$i}}" style="width: 100%; height: 26px">
                       <option value=""></option>
                       <option value="Perilaku">Perilaku</option>
                       <option value="Kinerja">Kinerja</option>
@@ -172,9 +165,23 @@ to, overtime_reason, delegation (if have subordinates)
             </tbody>
           </table>
           <input type="hidden" id="id" value="{{$i}}">
+          <input type="hidden" id="sum_perilaku">
+          <input type="hidden" id="sum_kinerja">
         </div>
         <div class="modal-footer">
-          {!! Form::submit('Kirim Sasaran Kerja Karyawan', ['class'=>'btn btn-primary']) !!}
+          <div class="pull-left">
+              <span id="bobot_perilaku"></span>
+              -
+              <span id="bobot_kinerja"></span>
+          </div>
+          
+          <button type="submit" 
+            class="btn btn-primary hidden" 
+            id="kirim"
+          >
+            Kirim
+          </button>
+
           <button type="button" 
             class="btn btn-warning" 
             id="tambah_kolom"

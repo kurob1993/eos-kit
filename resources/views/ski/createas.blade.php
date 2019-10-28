@@ -64,9 +64,53 @@
 ])
 <script>
   function setNilai(id) {
+    var count = Number( $('#id').val() );
     var bobot = $('#bobot'+id).val();
     var skor = $('#skor'+id).val();
+    var sum_perilaku = 0;
+    var sum_kinerja = 0;
+
     $('#nilai'+id).val(bobot*skor);
+
+    for (let index = 0; index < count; index++) {
+      var klp = $('#klp'+index).val();
+      var bobot =  Number( $('#bobot'+index).val() );
+      var skor =  Number( $('#skor'+index).val() );
+      
+
+      if(klp == 'Perilaku'){
+        sum_perilaku += bobot;
+        $('#sum_perilaku').val(sum_perilaku);
+      }
+
+      if(klp == 'Kinerja'){
+        sum_kinerja += bobot;
+        $('#sum_kinerja').val(sum_kinerja);
+      }
+      
+    }
+    var msg_perilaku = '';
+    var msg_kinerja = '';
+    if(sum_perilaku < 100 && sum_perilaku !== 0){
+      msg_perilaku = 'Bobot Perilaku Kurang dari 100';
+    }
+    if(sum_perilaku > 100 && sum_perilaku !== 0){
+      msg_perilaku = 'Bobot Perilaku Lebih dari 100';
+    }
+    if(sum_kinerja < 100 && sum_kinerja !== 0){
+      msg_kinerja = 'Bobot Kinerja Kurang dari 100';
+    }
+    if(sum_kinerja > 100 && sum_kinerja !== 0){
+      msg_kinerja = 'Bobot Kinerja Lebih dari 100';
+    }
+    $('#bobot_perilaku').html(msg_perilaku);
+    $('#bobot_kinerja').html(msg_kinerja);
+
+    if(sum_kinerja == 100 && sum_perilaku == 100){
+      $('#kirim').removeClass('hidden');
+    }else{
+      $('#kirim').addClass('hidden');
+    }
   }
   function add_column() {
     var id = Number( $('#id').val() );

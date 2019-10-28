@@ -23,10 +23,6 @@
                             <td>{{$ski->month}}-{{$ski->year}}</td>
                         </tr>
                         <tr>
-                            <td>Perilaku</td>
-                            <td>{{$ski->perilaku}}</td>
-                        </tr>
-                        <tr>
                             <td>Atasan</td>
                             <td>
                                 @foreach ($ski->skiApproval as $item)

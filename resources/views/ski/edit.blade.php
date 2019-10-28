@@ -25,10 +25,6 @@
                 <td>{{$ski->month}}-{{$ski->year}}</td>
               </tr>
               <tr>
-                <td>Perilaku</td>
-                <td>{{$ski->perilaku}}</td>
-              </tr>
-              <tr>
                 <td>Atasan</td>
                 <td>
                   @foreach ($ski->skiApproval as $item)
@@ -65,7 +61,7 @@
               <tr>
                 <td class="text-center">{{$key+1}}</td>
                 <td>
-                  <select name="klp[{{$item->id}}]" style="width: 100%; height: 26px">
+                  <select name="klp[{{$item->id}}]" id="klp{{$key}}" style="width: 100%; height: 26px">
                     <option value=""></option>
                     <option value="Perilaku" {{$item->klp == 'Perilaku' ? 'selected':''}}>Perilaku</option>
                     <option value="Kinerja" {{$item->klp == 'Kinerja' ? 'selected':''}}>Kinerja</option>
@@ -108,7 +104,7 @@
               <tr>
                   <td class="text-center">{{$key+$i+2}}</td>
                   <td>
-                    <select name="add_klp[]" style="width: 100%; height: 26px">
+                    <select name="add_klp[]" id="klp{{$key+$i+1}}" style="width: 100%; height: 26px">
                       <option value=""></option>
                       <option value="Perilaku">Perilaku</option>
                       <option value="Kinerja">Kinerja</option>
@@ -147,7 +143,9 @@
             </tbody>
           </table>
           <input type="hidden" id="id" value="{{$key+$i+1}}">
-          <button class="btn btn-primary m-t-10" type="submit">
+          <input type="hidden" id="sum_perilaku">
+          <input type="hidden" id="sum_kinerja">
+          <button class="btn btn-primary m-t-10" type="submit" id="kirim">
             <i class="fa fa-floppy-o" aria-hidden="true"></i>
             Simpan
           </button>
@@ -158,6 +156,11 @@
           >
             Tambah Kolom
           </button>
+          <div class="pull-right">
+              <span id="bobot_perilaku"></span>
+              -
+              <span id="bobot_kinerja"></span>
+          </div>
         </form>
       </div>
     </div>
@@ -198,54 +201,98 @@
 
 @push('custom-scripts')
 <script>
-  function setNilai(id) {
-    var bobot = $('#bobot'+id).val();
-    var skor = $('#skor'+id).val();
-    $('#nilai'+id).val(bobot*skor);
-  }
-  function add_column(id) {
-    var id = Number( $('#id').val() );
-    var kolom = '<tr>'+
-      '<td class="text-center">'+ (id+1) +'</td>'+
-      '<td>'+
-        '<select name="add_klp[]" style="width: 100%; height: 26px">'+
-          '<option value=""></option>'+
-          '<option value="Perilaku">Perilaku</option>'+
-          '<option value="Kinerja">Kinerja</option>'+
-        '</select> '+
-      '</td>'+
-      '<td><input type="text" name="add_sasaran[]" style="width: 100%"></td>'+
-      '<td><input type="text" name="add_kode[]" style="width: 100%"></td>'+
-      '<td><input type="text" name="add_ukuran[]" style="width: 100%"></td>'+
-      '<td> '+
-        '<input type="text" '+
-          'name="add_bobot[]" '+
-          'id="bobot'+id+'" '+
-          'style="width: 100%; text-align: right"'+
-          'onkeyup="setNilai('+id+')"'+
-        '> '+
-      '</td>'+
-      '<td> '+
-        '<input type="text" '+
-          'name="add_skor[]" '+
-          'id="skor'+id+'" '+
-          'style="width: 100%; text-align: right"'+
-          'onkeyup="setNilai('+id+')"'+
-        '>'+
-      '</td>'+
-      '<td>'+
-        '<input type="text" '+
-          'name="add_nilai[]" '+
-          'id="nilai'+id+'" '+
-          'style="width: 100%; text-align: right"'+
-          'readonly'+
-        '>'+
-      '</td>'+
-      '</tr>';
-    $('#tbody').append(kolom);
-    $('#id').val(id+1);
-  }
-</script>
+    function setNilai(id) {
+      var count = Number( $('#id').val() );
+      var bobot = $('#bobot'+id).val();
+      var skor = $('#skor'+id).val();
+      var sum_perilaku = 0;
+      var sum_kinerja = 0;
+      
+      $('#nilai'+id).val(bobot*skor);
+  
+      for (let index = 0; index < count; index++) {
+        var klp = $('#klp'+index).val();
+        var bobot =  Number( $('#bobot'+index).val() );
+        var skor =  Number( $('#skor'+index).val() );
+        // console.log(klp);
+        if(klp == 'Perilaku'){
+          sum_perilaku += bobot;
+          $('#sum_perilaku').val(sum_perilaku);
+          
+        }
+  
+        if(klp == 'Kinerja'){
+          sum_kinerja += bobot;
+          $('#sum_kinerja').val(sum_kinerja);
+        }
+        
+      }
+      var msg_perilaku = '';
+      var msg_kinerja = '';
+      if(sum_perilaku < 100 && sum_perilaku !== 0){
+        msg_perilaku = 'Bobot Perilaku Kurang dari 100';
+      }
+      if(sum_perilaku > 100 && sum_perilaku !== 0){
+        msg_perilaku = 'Bobot Perilaku Lebih dari 100';
+      }
+      if(sum_kinerja < 100 && sum_kinerja !== 0){
+        msg_kinerja = 'Bobot Kinerja Kurang dari 100';
+      }
+      if(sum_kinerja > 100 && sum_kinerja !== 0){
+        msg_kinerja = 'Bobot Kinerja Lebih dari 100';
+      }
+      $('#bobot_perilaku').html(msg_perilaku);
+      $('#bobot_kinerja').html(msg_kinerja);
+  
+      if(sum_kinerja == 100 && sum_perilaku == 100){
+        $('#kirim').removeClass('hidden');
+      }else{
+        $('#kirim').addClass('hidden');
+      }
+    }
+    function add_column() {
+      var id = Number( $('#id').val() );
+      var kolom = '<tr>'+
+        '<td class="text-center">'+ (id+1) +'</td>'+
+        '<td>'+
+          '<select name="klp[]" style="width: 100%; height: 26px">'+
+            '<option value=""></option>'+
+            '<option value="Perilaku">Perilaku</option>'+
+            '<option value="Kinerja">Kinerja</option>'+
+          '</select> '+
+        '</td>'+
+        '<td><input type="text" name="sasaran[]" style="width: 100%"></td>'+
+        '<td><input type="text" name="kode[]" style="width: 100%"></td>'+
+        '<td><input type="text" name="ukuran[]" style="width: 100%"></td>'+
+        '<td> '+
+          '<input type="text" '+
+            'name="bobot[]" '+
+            'id="bobot'+id+'" '+
+            'style="width: 100%; text-align: right"'+
+            'onkeyup="setNilai('+id+')"'+
+          '> '+
+        '</td>'+
+        '<td> '+
+          '<input type="text" '+
+            'name="skor[]" '+
+            'id="skor'+id+'" '+
+            'style="width: 100%; text-align: right"'+
+            'onkeyup="setNilai('+id+')"'+
+          '>'+
+        '</td>'+
+        '<td>'+
+          '<input type="text" '+
+            'name="nilai[]" '+
+            'id="nilai'+id+'" '+
+            'style="width: 100%; text-align: right"'+
+            'readonly'+
+          '>'+
+        '</td>'+
+        '</tr>';
+      $('#tbody').append(kolom);
+      $('#id').val(id+1);
+    }
+  </script>
 @endpush
 
 @push('on-ready-scripts')
