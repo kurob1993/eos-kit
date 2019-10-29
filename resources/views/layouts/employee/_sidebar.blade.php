@@ -38,7 +38,7 @@
                         <a href="{{ url('cvs') }}">Curriculum Vitae</a> 
                     </li>
                     <li class="{{ Request::segment(1)=='ski' ? 'active' : '' }}">
-                        <a href="{{ url('ski') }}">Ski</a>
+                        <a href="{{ url('ski') }}">Sasaran Kerja Individu</a>
                     </li>
                     {{-- <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 
                         <a href="#">Organisasi</a> 

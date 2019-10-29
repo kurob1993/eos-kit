@@ -10,7 +10,7 @@
     
                 @role('personnel_service')
                 <li class="has-sub {{ (
-                    (Request::segment(1) == 'ski')
+                    (Request::segment(2) == 'ski')
                 ) ? 'active' : ''
                 }}">
                     <a href="javascript:;">
@@ -19,20 +19,20 @@
                             <span>Personnel Admin</span>
                         </a>
                     <ul class="sub-menu">
-                        <li class="{{ Request::segment(1)=='ski' ? 'active' : '' }}">
-                            <a href="{{ route('personnel_service.ski.index') }}">Ski</a>
+                        <li class="{{ Request::segment(2)=='ski' ? 'active' : '' }}">
+                            <a href="{{ route('personnel_service.ski.index') }}">Sasaran Kerja Individu</a>
                         </li>
                     </ul>
                 </li>
-                <li class="has-sub"{{ (
-                        (Request::segment(1) == 'all_leaves') || 
-                        (Request::segment(1) == 'all_absence_quotas') || 
-                        (Request::segment(1) == 'all_permits/absence') || 
-                        (Request::segment(1) == 'all_permits/attendance') || 
-                        (Request::segment(1) == 'all_time_events') || 
-                        (Request::segment(1) == 'all_overtimes') 
+                <li class="has-sub {{ (
+                        (Request::segment(2) == 'all_leaves') || 
+                        (Request::segment(2) == 'all_absence_quotas') || 
+                        (Request::segment(2) == 'all_permits/absence') || 
+                        (Request::segment(2) == 'all_permits/attendance') || 
+                        (Request::segment(2) == 'all_time_events') || 
+                        (Request::segment(2) == 'all_overtimes') 
                     ) ? 'active' : '' 
-                    }}>
+                    }}">
                     <a href="javascript:;">
                         <b class="caret pull-right"></b>
                         <i class="fa fa-inbox"></i>

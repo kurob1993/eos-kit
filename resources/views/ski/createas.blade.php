@@ -15,6 +15,7 @@
             'url' => $formRoute, 
             'method' => 'post', 
             'class'=>'form-horizontal', 
+            'id'=>'forms', 
             'data-parsley-validate' => 'true'
             ])
         !!}
@@ -63,6 +64,13 @@
   'end_date' =>  config('emss.modules.time_events.end_date')
 ])
 <script>
+  $(document).on("keypress", 'form', function (e) {
+      var code = e.keyCode || e.which;
+      if (code == 13) {
+          e.preventDefault();
+          return false;
+      }
+  });
   function setNilai(id) {
     var count = Number( $('#id').val() );
     var bobot = $('#bobot'+id).val();
@@ -158,5 +166,5 @@
 @endpush
 
 @push('on-ready-scripts') 
-SecretaryOvertimePlugins.init(); 
+SecretaryOvertimePlugins.init();
 @endpush
