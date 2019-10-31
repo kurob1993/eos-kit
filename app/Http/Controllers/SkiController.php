@@ -160,8 +160,6 @@ class SkiController extends Controller
             $skiid = $dataski[0]->id;
         }
 
-        
-
         if($request->input('aksi') ==  1)
         {
             // dd($request->klpp);
@@ -180,6 +178,9 @@ class SkiController extends Controller
                     $skid->save();
                 }
             }
+
+             // // kembali ke halaman index overtime
+             return redirect()->route('ski.create');
         }
         else 
         {
@@ -197,10 +198,11 @@ class SkiController extends Controller
                     $skid->save();
                 }
             }
+            
+            // // kembali ke halaman index overtime
+            return redirect()->route('ski.index');
         }
 
-        // // kembali ke halaman index overtime
-        return redirect()->route('ski.index');
     }
 
     public function show($id)
