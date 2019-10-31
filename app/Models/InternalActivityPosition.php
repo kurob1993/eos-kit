@@ -8,7 +8,7 @@ class InternalActivityPosition extends Model
 {
     protected $casts = [
         'id' => 'string',
-        'text' => 'string'
+        'name' => 'string'
     ];
 
     public function internalActivity()

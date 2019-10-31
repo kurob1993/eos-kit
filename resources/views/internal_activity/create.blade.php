@@ -57,9 +57,9 @@
             <option value="">.:: Pilih Posisi ::. {{ old('posisi') }}</option>
               @foreach ($posisi as $item)
               @if (old('posisi') == $item->id)
-                <option value="{{$item->id}}" selected>{{$item->text}}</option>
+                <option value="{{$item->id}}" selected>{{$item->name}}</option>
               @else
-                <option value="{{$item->id}}">{{$item->text}}</option>
+                <option value="{{$item->id}}">{{$item->name}}</option>
               @endif
               @endforeach
             </select>
