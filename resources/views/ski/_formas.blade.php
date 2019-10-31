@@ -83,15 +83,125 @@ to, overtime_reason, delegation (if have subordinates)
     </div>
   
     <div class="p-l-5 p-r-5 form-group">
+      <button id="btn-perilaku"
+        type="button" 
+        class="btn btn-warning" 
+        data-backdrop="static" 
+        data-toggle="modal" 
+        data-target="#modalPrilaku"
+        style="display: none"
+        onclick="return ceking(1)">
+        Input Perilaku
+      </button>
+
       <button id="btn-sasaran"
         type="button" 
         class="btn btn-warning" 
         data-backdrop="static" 
         data-toggle="modal" 
         data-target="#myModal"
-        style="display: none">
-        Input
+        style="display: none"
+        onclick="return ceking(2)">
+        Input Kinerja
       </button>
+    </div>
+  </div>
+  
+<!-- Modal perilaku -->
+<div id="modalPrilaku" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg" style="width: 85%">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Perilaku</h4>
+        </div>
+        <div class="modal-body">
+          <table class="table-responsive" style="width: 100%">
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 5%">NO</th>
+                {{-- <th class="text-center" style="width: 10%">KLP</th> --}}
+                <th class="text-center" style="width: 30%">Sasaran Kerja</th>
+                <th class="text-center" style="width: 10%">Kode</th>
+                <th class="text-center" style="width: 25%">Ukuran Prestasi Kerja</th>
+                <th class="text-center" style="width: 6%">Bobot</th>
+                <th class="text-center" style="width: 6%">Skor</th>
+                <th class="text-center" style="width: 8%">Nilai</th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+              @php($u = 1)
+              @foreach($perilakus as $perilaku) 
+                @php($required = '')
+                @php($required = 'required')
+               
+                <tr>
+                  <td class="text-center">{{ $u++ }}</td>
+                  {{-- <td>
+                    <select {{ $required }} name="klp[]" id="klp{{$i}}" style="width: 100%; height: 26px">
+                      <option value=""></option>
+                      <option value="Perilaku">Perilaku</option>
+                      <option value="Kinerja">Kinerja</option>
+                    </select>
+                  </td> --}}
+                  <td>
+                      <select {{ $required }} name="klpp[]" id="klpp{{ $perilaku->id }}" style="width: 100%; height: 26px; display:none">
+                        <option value="Perilaku">Perilaku</option>
+                      </select>
+                      <input type="text" {{ $required }} name="sasaranp[]" style="width: 100%" value="{{ $perilaku->name }}">
+                  </td>
+                  <td><input type="text" name="kodep[]" style="width: 100%" value=""></td>
+                  <td><input type="text" name="ukuranp[]" style="width: 100%"></td>
+                  <td>
+                    <input type="text" {{ $required }} 
+                      name="bobotp[]" 
+                      id="bobot{{$perilaku->id}}"
+                      value="10"
+                      style="width: 100%; text-align: right"
+                      onkeyup="setNilai({{$perilaku->id}})"
+                    >
+                  </td>
+                  <td>
+                    <input type="text" 
+                      name="skorp[]" 
+                      id="skor{{$perilaku->id}}" 
+                      style="width: 100%; text-align: right"
+                      onkeyup="setNilai({{$perilaku->id}})"
+                    >
+                  </td>
+                  <td>
+                    <input type="text" 
+                      name="nilaip[]" 
+                      id="nilai{{$perilaku->id}}"
+                      style="width: 100%; text-align: right"
+                      readonly
+                    >
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+          <input type="hidden" id="id" value="{{$perilaku->id}}">
+          {{-- <input type="hidden" id="sum_perilaku"> --}}
+          {{-- <input type="hidden" id="sum_kinerja"> --}}
+        </div>
+        <div class="modal-footer">
+          <div class="pull-left">
+              <span id="bobot_perilaku"></span>
+              -
+              <span id="bobot_kinerja"></span>
+          </div>
+          
+          <button type="submit" 
+            class="btn btn-primary" 
+            id="kirimPerilaku"
+          >
+            Kirim
+          </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+        </div>
+      </div>
     </div>
   </div>
   
@@ -109,7 +219,7 @@ to, overtime_reason, delegation (if have subordinates)
             <thead>
               <tr>
                 <th class="text-center" style="width: 5%">NO</th>
-                <th class="text-center" style="width: 10%">KLP</th>
+                {{-- <th class="text-center" style="width: 10%">KLP</th> --}}
                 <th class="text-center" style="width: 30%">Sasaran Kerja</th>
                 <th class="text-center" style="width: 10%">Kode</th>
                 <th class="text-center" style="width: 25%">Ukuran Prestasi Kerja</th>
@@ -122,17 +232,15 @@ to, overtime_reason, delegation (if have subordinates)
               @for ($i = 0; $i < 15; $i++) 
                 @php($required = '')
                 @if ($i==0)
-                @php($required = 'required')
+                @php($required = '')
                 @endif
                 <tr>
                   <td class="text-center">{{$i+1}}</td>
-                  <td>
-                    <select {{ $required }} name="klp[]" id="klp{{$i}}" style="width: 100%; height: 26px">
-                      <option value=""></option>
-                      <option value="Perilaku">Perilaku</option>
+                  {{-- <td> --}}
+                    <select {{ $required }} name="klp[]" id="klp{{$i}}" style="width: 100%; height: 26px; display:none">
                       <option value="Kinerja">Kinerja</option>
                     </select>
-                  </td>
+                  {{-- </td> --}}
                   <td><input type="text" {{ $required }} name="sasaran[]" style="width: 100%"></td>
                   <td><input type="text" name="kode[]" style="width: 100%"></td>
                   <td><input type="text" name="ukuran[]" style="width: 100%"></td>

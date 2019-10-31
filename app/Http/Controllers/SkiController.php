@@ -12,6 +12,7 @@ use App\Models\Ski;
 use App\Models\SkiDetail;
 use App\Models\SkiApproval;
 use App\Models\OvertimeReason;
+use App\Models\SkiPerilaku;
 
 class SkiController extends Controller
 {
@@ -103,6 +104,8 @@ class SkiController extends Controller
         // user yang dapat melakukan pengajuan lembur
         $user = Auth::user()->personnel_no;
 
+        $perilakus = SkiPerilaku::all();
+
         // mengecek apakah boleh mengajukan overtime untuk bawahan
         $allowed = Auth::user()
             ->employee
@@ -116,7 +119,7 @@ class SkiController extends Controller
             // menampilkan view create overtime secretary
             return view(
                 'ski.createas',
-                compact('user', 'formRoute', 'pageContainer')
+                compact('user', 'formRoute', 'pageContainer', 'perilakus')
             );
         } else {
 
@@ -132,19 +135,58 @@ class SkiController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $ski = new Ski();
-        $ski->personnel_no = $request->personnel_no;
-        $ski->month = $request->bulan;
-        $ski->year = $request->tahun;
-        $ski->stage_id = 1;
-        $ski->dirnik = Auth::user()->personnel_no;
+    {    
+        $dataski = Ski::where('personnel_no', $request->personnel_no)
+            ->where('year', $request->tahun)
+            ->where('month', $request->bulan)
+            ->get();
 
-        if ($ski->save()) {
-            foreach ($request->klp as $key => $value) {
+        $cekski = $dataski->count();
+
+        //dd($dataski);
+        
+        if($cekski < 1) {
+            $ski = new Ski();
+            $ski->personnel_no = $request->personnel_no;
+            $ski->month = $request->bulan;
+            $ski->year = $request->tahun;
+            $ski->stage_id = 1;
+            $ski->dirnik = Auth::user()->personnel_no;
+            $ski->save();
+
+            $skiid = $ski->id;
+        }
+        else {
+            $skiid = $dataski[0]->id;
+        }
+
+        
+
+        if($request->input('aksi') ==  1)
+        {
+            // dd($request->klpp);
+            foreach ($request->klpp as $key => $value) {
+                //dd($request->all());
                 if ($value !== null) {
                     $skid = new SkiDetail();
-                    $skid->ski_id = $ski->id;
+                    $skid->ski_id = $skiid;
+                    $skid->klp = $value;
+                    $skid->sasaran = $request->sasaranp[$key];
+                    $skid->kode = $request->kodep[$key];
+                    $skid->ukuran = $request->ukuranp[$key];
+                    $skid->bobot = $request->bobotp[$key];
+                    $skid->skor = $request->skorp[$key];
+                    $skid->nilai = $request->nilaip[$key];
+                    $skid->save();
+                }
+            }
+        }
+        else 
+        {
+            foreach ($request->klp as $key => $value) {
+                if ($request->sasaran[$key] !== null) {
+                    $skid = new SkiDetail();
+                    $skid->ski_id = $skiid;
                     $skid->klp = $value;
                     $skid->sasaran = $request->sasaran[$key];
                     $skid->kode = $request->kode[$key];

@@ -4,6 +4,7 @@
       var subOptions = {
         onChange: function(value) {
           $('#btn-sasaran').removeAttr('style');
+          $('#btn-perilaku').removeAttr('style');
           var minManagerOptions = {
             persist: false,
             valueField: "personnel_no",

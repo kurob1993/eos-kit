@@ -19,6 +19,7 @@
             'data-parsley-validate' => 'true'
             ])
         !!}
+        <input type="hidden" name="aksi" value="" id="aksi" />
         @include('ski._formas')
         {!! Form::close() !!}
       </div>
@@ -64,6 +65,11 @@
   'end_date' =>  config('emss.modules.time_events.end_date')
 ])
 <script>
+  function ceking(isi){
+      $('#aksi').val(isi);
+      return true;
+  }
+  
   $(document).on("keypress", 'form', function (e) {
       var code = e.keyCode || e.which;
       if (code == 13) {
@@ -71,6 +77,7 @@
           return false;
       }
   });
+
   function setNilai(id) {
     var count = Number( $('#id').val() );
     var bobot = $('#bobot'+id).val();
@@ -99,12 +106,28 @@
     }
     var msg_perilaku = '';
     var msg_kinerja = '';
-    if(sum_perilaku < 100 && sum_perilaku !== 0){
-      msg_perilaku = 'Bobot Perilaku Kurang dari 100';
-    }
-    if(sum_perilaku > 100 && sum_perilaku !== 0){
-      msg_perilaku = 'Bobot Perilaku Lebih dari 100';
-    }
+    // if(sum_perilaku < 100 && sum_perilaku !== 0){
+    //   msg_perilaku = 'Bobot Perilaku Kurang dari 100';
+    // }
+    // if(sum_perilaku > 100 && sum_perilaku !== 0){
+    //   msg_perilaku = 'Bobot Perilaku Lebih dari 100';
+    // }
+    // if(sum_kinerja < 100 && sum_kinerja !== 0){
+    //   msg_kinerja = 'Bobot Kinerja Kurang dari 100';
+    // }
+    // if(sum_kinerja > 100 && sum_kinerja !== 0){
+    //   msg_kinerja = 'Bobot Kinerja Lebih dari 100';
+    // }
+    // $('#bobot_perilaku').html(msg_perilaku);
+    // $('#bobot_kinerja').html(msg_kinerja);
+
+    // if(sum_kinerja == 100 && sum_perilaku == 100){
+    //   $('#kirim').removeClass('hidden');
+    // }else{
+    //   $('#kirim').addClass('hidden');
+    // }
+
+    
     if(sum_kinerja < 100 && sum_kinerja !== 0){
       msg_kinerja = 'Bobot Kinerja Kurang dari 100';
     }
@@ -114,7 +137,7 @@
     $('#bobot_perilaku').html(msg_perilaku);
     $('#bobot_kinerja').html(msg_kinerja);
 
-    if(sum_kinerja == 100 && sum_perilaku == 100){
+    if(sum_kinerja == 100){
       $('#kirim').removeClass('hidden');
     }else{
       $('#kirim').addClass('hidden');
