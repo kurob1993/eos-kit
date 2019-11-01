@@ -27,7 +27,7 @@ class SkiObserver
             Session::flash("flash_notification", [
                 "level" => "danger",
                 "message" => "Tidak input Sasaran Kerja Karyawan karena tanggal pengajuan "
-                . "sudah pernah diajukan sebelumnya (ID " . $intersected->id . ": "
+                . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
                 . $ski->month."-".$ski->year. ").",
             ]);
             return false;

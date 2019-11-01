@@ -135,16 +135,15 @@ class SkiController extends Controller
     }
 
     public function store(Request $request)
-    {    
+    {  
+
         $dataski = Ski::where('personnel_no', $request->personnel_no)
             ->where('year', $request->tahun)
             ->where('month', $request->bulan)
             ->get();
 
-        $cekski = $dataski->count();
+        $cekski = $dataski->count();           
 
-        //dd($dataski);
-        
         if($cekski < 1) {
             $ski = new Ski();
             $ski->personnel_no = $request->personnel_no;
@@ -160,47 +159,107 @@ class SkiController extends Controller
             $skiid = $dataski[0]->id;
         }
 
+        $ski = Ski::where('personnel_no', $request->personnel_no)
+            ->where('year', $request->tahun)
+            ->where('month', $request->bulan)
+            ->first();
+
+        // perilaku
         if($request->input('aksi') ==  1)
         {
-            // dd($request->klpp);
-            foreach ($request->klpp as $key => $value) {
-                //dd($request->all());
-                if ($value !== null) {
-                    $skid = new SkiDetail();
-                    $skid->ski_id = $skiid;
-                    $skid->klp = $value;
-                    $skid->sasaran = $request->sasaranp[$key];
-                    $skid->kode = $request->kodep[$key];
-                    $skid->ukuran = $request->ukuranp[$key];
-                    $skid->bobot = $request->bobotp[$key];
-                    $skid->skor = $request->skorp[$key];
-                    $skid->nilai = $request->nilaip[$key];
-                    $skid->save();
+            if($ski != null)
+            {
+                $cekdataPerilaku =  SkiDetail::where('ski_id', $ski->id)
+                    ->where('klp', "Perilaku")
+                    ->get()
+                    ->count();    
+    
+                if($cekdataPerilaku > 0)
+                {
+                    Session::flash("flash_notification", [
+                        "level" => "danger",
+                        "message" => "Tidak input perilaku Kerja Karyawan karena tanggal pengajuan "
+                        . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
+                        . $ski->month."-".$ski->year. ").",
+                    ]);
+                    return redirect()->route('ski.create');
+                }
+                else 
+                {
+                    // dd($request->klpp);
+                    foreach ($request->klpp as $key => $value) {
+                        //dd($request->all());
+                        if ($value !== null) {
+                            $skid = new SkiDetail();
+                            $skid->ski_id = $skiid;
+                            $skid->klp = $value;
+                            $skid->sasaran = $request->sasaranp[$key];
+                            $skid->kode = $request->kodep[$key];
+                            $skid->ukuran = $request->ukuranp[$key];
+                            $skid->bobot = $request->bobotp[$key];
+                            $skid->skor = $request->skorp[$key];
+                            $skid->nilai = $request->nilaip[$key];
+                            $skid->save();
+                        }
+                    }
+
+                    Session::flash("flash_notification", [
+                        "level" => "success",
+                        "message" => "Berhasil Input perilaku Kerja Karyawan.",
+                    ]);
+
+                    // // kembali ke halaman index ski
+                    return redirect()->route('ski.create');
                 }
             }
-
-             // // kembali ke halaman index overtime
-             return redirect()->route('ski.create');
         }
         else 
         {
-            foreach ($request->klp as $key => $value) {
-                if ($request->sasaran[$key] !== null) {
-                    $skid = new SkiDetail();
-                    $skid->ski_id = $skiid;
-                    $skid->klp = $value;
-                    $skid->sasaran = $request->sasaran[$key];
-                    $skid->kode = $request->kode[$key];
-                    $skid->ukuran = $request->ukuran[$key];
-                    $skid->bobot = $request->bobot[$key];
-                    $skid->skor = $request->skor[$key];
-                    $skid->nilai = $request->nilai[$key];
-                    $skid->save();
+            if($ski != null)
+            {
+                $cekdataKinerja =  SkiDetail::where('ski_id', $ski->id)
+                    ->where('klp', "Kinerja")
+                    ->get()
+                    ->count();    
+    
+                if($cekdataKinerja > 0)
+                {
+                    Session::flash("flash_notification", [
+                        "level" => "danger",
+                        "message" => "Tidak input sasaran Kerja Karyawan karena tanggal pengajuan "
+                        . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
+                        . $ski->month."-".$ski->year. ").",
+                    ]);
+                    return redirect()->route('ski.create');
                 }
+                else 
+                {
+                    // kinerja
+                    foreach ($request->klp as $key => $value) {
+                        if ($request->sasaran[$key] !== null) {
+                            $skid = new SkiDetail();
+                            $skid->ski_id = $skiid;
+                            $skid->klp = $value;
+                            $skid->sasaran = $request->sasaran[$key];
+                            $skid->kode = $request->kode[$key];
+                            $skid->ukuran = $request->ukuran[$key];
+                            $skid->bobot = $request->bobot[$key];
+                            $skid->skor = $request->skor[$key];
+                            $skid->nilai = $request->nilai[$key];
+                            $skid->save();
+                        }
+                    }
+                    
+                    Session::flash("flash_notification", [
+                        "level" => "success",
+                        "message" => "Berhasil Input Sasaran Kerja Karyawan.",
+                    ]);
+
+                    // // kembali ke halaman index ski
+                    return redirect()->route('ski.index');
+                }
+                
             }
-            
-            // // kembali ke halaman index overtime
-            return redirect()->route('ski.index');
         }
 
     }

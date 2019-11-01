@@ -6,6 +6,7 @@
 @component($pageContainer, ['page_header' => 'Sasaran Kerja Karyawan'])
 <div class="row">
   <div class="col-lg-12 col-xl-9">
+    @include('layouts._flash')
     <div class="panel panel-prussian">
       <div class="panel-heading">
         <h4 class="panel-title">Input Sasaran Kerja Karyawan</h4>
