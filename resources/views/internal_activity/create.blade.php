@@ -14,6 +14,43 @@
         {{ csrf_field() }}
 
         <div class="form-group">
+          <label class="control-label col-sm-2" for="posisi">Posisi: </label>
+          <div class="col-sm-10">
+            <select class="form-control" id="posisi" name="posisi">
+              <option value="">.:: Pilih Posisi ::. {{ old('posisi') }}</option>
+                @foreach ($posisi as $item)
+                  @if (old('posisi') == $item->id)
+                    <option value="{{$item->id}}" selected>{{$item->name}}</option>
+                  @else
+                    <option value="{{$item->id}}">{{$item->name}}</option>
+                  @endif
+                @endforeach
+            </select>
+            {{-- <input type="text" class="form-control" id="posisi" name="posisi" placeholder="Posisi"
+              value="{{ old('posisi') }}"> --}}
+            {!! $errors->first('posisi', ' <p class="text-danger help-block">:message</p>') !!}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="jenis_kegiatan">Jenis Kegiatan: </label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="jenis_kegiatan" name="jenis_kegiatan"
+              placeholder="Contoh: Team Implementasi SAP" value="{{ old('jenis_kegiatan') }}">
+            {!! $errors->first('jenis_kegiatan', ' <p class="text-danger help-block">:message</p>') !!}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="keterangan">Keterangan: </label>
+          <div class="col-sm-10">
+            <textarea name="keterangan" class="form-control" id="keterangan" cols="30"
+              rows="5">{{ old('keterangan') }}</textarea>
+            {!! $errors->first('keterangan', ' <p class="text-danger help-block">:message</p>') !!}
+          </div>
+        </div>
+
+        <div class="form-group">
           <label class="control-label col-sm-2" for="posisi"> </label>
           <div id="datepicker-range">
 
@@ -37,44 +74,6 @@
               <div id="datepicker-range-end" class="datepicker-range"></div>
             </div>
 
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="jenis_kegiatan">Jenis Kegiatan: </label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="jenis_kegiatan" name="jenis_kegiatan"
-              placeholder="Contoh: Team Implementasi SAP" value="{{ old('jenis_kegiatan') }}">
-            {!! $errors->first('jenis_kegiatan', ' <p class="text-danger help-block">:message</p>') !!}
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="posisi">Posisi: </label>
-          <div class="col-sm-10">
-
-            <select class="form-control" id="posisi" name="posisi">
-            <option value="">.:: Pilih Posisi ::. {{ old('posisi') }}</option>
-              @foreach ($posisi as $item)
-              @if (old('posisi') == $item->id)
-                <option value="{{$item->id}}" selected>{{$item->name}}</option>
-              @else
-                <option value="{{$item->id}}">{{$item->name}}</option>
-              @endif
-              @endforeach
-            </select>
-            {{-- <input type="text" class="form-control" id="posisi" name="posisi" placeholder="Posisi"
-              value="{{ old('posisi') }}"> --}}
-            {!! $errors->first('posisi', ' <p class="text-danger help-block">:message</p>') !!}
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="keterangan">Keterangan: </label>
-          <div class="col-sm-10">
-            <textarea name="keterangan" class="form-control" id="keterangan" cols="30"
-              rows="10">{{ old('keterangan') }}</textarea>
-            {!! $errors->first('keterangan', ' <p class="text-danger help-block">:message</p>') !!}
           </div>
         </div>
 

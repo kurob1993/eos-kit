@@ -103,6 +103,8 @@ class InternalActivityController extends Controller
     {
         $activity = New InternalActivity();
         $activity->personnel_no = Auth::user()->personnel_no;
+        $activity->posisi = $request->posisi;
+        $activity->type = 'internal';
         $activity->jenis_kegiatan = $request->jenis_kegiatan;
         $activity->internal_activity_position_id = $request->posisi;
         $activity->start_date = Carbon::parse($request->start_date)->format('Y-m-d');

@@ -25,7 +25,7 @@ class StoreExternalActivityRequest extends FormRequest
     public function rules()
     {
         return [
-            'jenis_kegiatan' => 'required',
+            'nama_organisasi' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
             'posisi' => 'required',

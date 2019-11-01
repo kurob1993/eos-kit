@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Activity;
+use App\Models\ExternalActivity;
+use App\Models\ExternalActivityOrganization;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreExternalActivityRequest;
@@ -20,15 +22,16 @@ class ExternalActivityController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $activity = Activity::ofLoggedUser()->where('type','external')->get();
+        $activity = ExternalActivity::ofLoggedUser()->get();
 
+        // dd($activity);
         // response untuk datatables absences
         if ($request->ajax()) {
 
             return Datatables::of($activity)
                 ->editColumn('summary', function ($activity) {
                     // kolom summary menggunakan view _summary
-                    return view('internal_activity._summary', [ 
+                    return view('external_activity._summary', [ 
                         'summary' => $activity,
                         'when' => $activity->created_at->format('d/m') 
                     ]);
@@ -88,7 +91,8 @@ class ExternalActivityController extends Controller
      */
     public function create()
     {
-        return view('external_activity.create');
+        $organisasi = ExternalActivityOrganization::all();
+        return view('external_activity.create', compact('organisasi'));
     }
 
     /**
@@ -99,13 +103,14 @@ class ExternalActivityController extends Controller
      */
     public function store(StoreExternalActivityRequest $request)
     {
-        $activity = New Activity();
+        $activity = New ExternalActivity();
         $activity->personnel_no = Auth::user()->personnel_no;
-        $activity->jenis_kegiatan = $request->jenis_kegiatan;
+        $activity->external_activity_organization_id = $request->organisasi;
         $activity->posisi = $request->posisi;
         $activity->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
         $activity->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
         $activity->keterangan = $request->keterangan;
+        $activity->nama_organisasi = $request->nama_organisasi;
         $activity->type = 'external';
         $activity->stage_id = 1;
         if($activity->save()){
