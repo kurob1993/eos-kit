@@ -25,7 +25,7 @@
             <td>{{ $value->user['name'] }}</td>
             <td>{{ $value->jenis_kegiatan }}</td>
             <td>{{ $value->position->id }}</td>
-            <td>{{ $value->position->text }}</td>
+            <td>{{ $value->position->name }}</td>
             <td>{{ $value->start_date->format('d-m-Y') }}</td>
             <td>{{ $value->end_date->format('d-m-Y') }}</td>
             <td>{{ $value->keterangan }}</td>

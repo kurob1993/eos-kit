@@ -14,7 +14,7 @@
     <div class="modal-dialog modal-sm">
         <!-- Modal content-->
         <div class="modal-content">
-            <form action="{{ route('personnel_service.internal-activity.update',$activity->id) }}" method="post"
+            <form action="{{ route('personnel_service.external-activity.update',$activity->id) }}" method="post"
                 style="display: inline">
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}
@@ -40,7 +40,7 @@
     <div class="modal-dialog modal-sm">
         <!-- Modal content-->
         <div class="modal-content">
-            <form action="{{ route('personnel_service.internal-activity.update',$activity->id) }}" method="post"
+            <form action="{{ route('personnel_service.external-activity.update',$activity->id) }}" method="post"
                 style="display: inline">
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}

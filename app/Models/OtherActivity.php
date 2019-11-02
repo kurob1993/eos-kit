@@ -8,7 +8,7 @@ use App\Traits\ReceiveStage;
 use App\Traits\OfLoggedUser;
 use Illuminate\Support\Facades\DB;
 
-class ExternalActivity extends Model
+class OtherActivity extends Model
 {
     use PeriodDates, ReceiveStage, OfLoggedUser;
     protected $casts = [
@@ -17,8 +17,7 @@ class ExternalActivity extends Model
         'start_date' => 'date',
         'end_date' => 'date',
         'stage_id' => 'integer',
-        'posisi' => 'string',
-        'external_activity_organization_id' => 'string',
+        'other_activity_profile_id' => 'string',
         'keterangan' => 'string',
     ];
 
@@ -34,9 +33,9 @@ class ExternalActivity extends Model
         return $this->belongsTo('App\Models\Stage')->withDefault();
     }
 
-    public function organization()
+    public function profile()
     {
-        return $this->belongsTo('App\Models\ExternalActivityOrganization','external_activity_organization_id');
+        return $this->belongsTo('App\Models\OtherActivityProfile','other_activity_profile_id');
     }
 
     public function scopeMonthList($query)
@@ -54,9 +53,9 @@ class ExternalActivity extends Model
             ->groupBy( DB::raw('YEAR(start_date)') );
         # code...
     }
-
     public function getPlainIdAttribute()
     {
-        return 'external-activity-' . $this->id;
+        return 'other-activity-' . $this->id;
     }
+
 }

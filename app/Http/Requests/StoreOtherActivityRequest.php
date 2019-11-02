@@ -25,7 +25,7 @@ class StoreOtherActivityRequest extends FormRequest
     public function rules()
     {
         return [
-            'jenis_kegiatan' => 'required',
+            'profile' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
             'keterangan' => 'required'
@@ -40,7 +40,7 @@ class StoreOtherActivityRequest extends FormRequest
     public function messages()
     {
         return [
-            'jenis_kegiatan.required' => 'Kolom Jenis Kegiatan Tidak Boleh Kosong',
+            'profile.required' => 'Kolom Tipe Profil Tidak Boleh Kosong',
             'start_date.required'  => 'Kolom Tangaal Mulai Tidak Boleh Kosong',
             'end_date.required'  => 'Kolom Tangaal Berakhir Tidak Boleh Kosong',
             'keterangan.required'  => 'Kolom Keterangan Tidak Boleh Kosong',

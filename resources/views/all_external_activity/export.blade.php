@@ -7,7 +7,7 @@
             <th>NAME</th>
             <th>TYPE</th>
 
-            <th>Jenis Kegiatan</th>
+            <th>Nama Organisasi</th>
             <th>Posisi</th>
             <th>Mulai</th>
             <th>Berkhir</th>
@@ -26,7 +26,7 @@
             <td>{{ $value->user['name'] }}</td>
             <td>{{ $value->type }}</td>
 
-            <td>{{ $value->jenis_kegiatan }}</td>
+            <td>{{ $value->nama_organisasi }}</td>
             <td>{{ $value->posisi }}</td>
             <td>{{ $value->start_date->format('d-m-Y') }}</td>
             <td>{{ $value->end_date->format('d-m-Y') }}</td>

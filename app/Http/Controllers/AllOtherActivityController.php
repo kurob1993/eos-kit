@@ -10,6 +10,7 @@ use Yajra\DataTables\Datatables;
 use Illuminate\Http\Request;
 use App\Models\Activity;
 use App\Models\Stage;
+use App\Models\OtherActivity;
 use Carbon\Carbon;
 
 class AllOtherActivityController extends Controller
@@ -22,7 +23,7 @@ class AllOtherActivityController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $activity = Activity::where('type', 'other');
+        $activity = OtherActivity::where('type', 'other');
         if (isset($request->search['value'])) {
             $cari = explode('|', $request->search['value']);
             $month = $cari[0];
@@ -52,6 +53,12 @@ class AllOtherActivityController extends Controller
                 ->editColumn('personnel_no', function ($activity) {
                     $nik = '<span class="label label-primary">' . $activity->personnel_no . '</span>';
                     return $nik . ' ' . $activity->user['name'];
+                })
+                ->editColumn('tipe_profile', function ($activity) {
+                    return '<span class="label label-primary">' . $activity->profile->name . '</span>';
+                })
+                ->editColumn('deskripsi', function ($activity) {
+                    return '<span>' . $activity->keterangan . '</span>';
                 })
                 ->editColumn('start_date', function ($activity) {
                     return $activity->start_date->format('d.m.Y');
@@ -91,16 +98,16 @@ class AllOtherActivityController extends Controller
                 'orderable' => false,
             ])
             ->addColumn([
-                'data' => 'jenis_kegiatan',
-                'name' => 'jenis_kegiatan',
-                'title' => 'Jenis Kegiatan',
+                'data' => 'tipe_profile',
+                'name' => 'tipe_profile',
+                'title' => 'Tipe Profile',
                 'searchable' => false,
                 'orderable' => false,
             ])
             ->addColumn([
-                'data' => 'posisi',
-                'name' => 'posisi',
-                'title' => 'Posisi',
+                'data' => 'deskripsi',
+                'name' => 'deskripsi',
+                'title' => 'Deskripsi',
                 'searchable' => false,
                 'orderable' => false,
             ])
@@ -119,13 +126,6 @@ class AllOtherActivityController extends Controller
                 'orderable' => false,
             ])
             ->addColumn([
-                'data' => 'keterangan',
-                'name' => 'keterangan',
-                'title' => 'Keterangan',
-                'searchable' => false,
-                'orderable' => false,
-            ])
-            ->addColumn([
                 'data' => 'aksi',
                 'name' => 'aksi',
                 'title' => 'Aksi',
@@ -134,8 +134,8 @@ class AllOtherActivityController extends Controller
             ]);
 
         $data = [
-            'monthList' => Activity::monthList()->get(),
-            'yearList' => Activity::yearList()->get(),
+            'monthList' => OtherActivity::monthList()->get(),
+            'yearList' => OtherActivity::yearList()->get(),
         ];
         $stage = Stage::all();
         // tampilkan view index dengan tambahan script html DataTables
@@ -194,7 +194,7 @@ class AllOtherActivityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $activity = Activity::find($id);
+        $activity = OtherActivity::find($id);
         $activity->stage_id = $request->stage_id;
         $activity->save();
         return redirect()->back(); 

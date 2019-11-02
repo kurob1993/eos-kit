@@ -9,6 +9,7 @@ use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Datatables;
 use Illuminate\Http\Request;
 use App\Models\Activity;
+use App\Models\ExternalActivity;
 use App\Models\Stage;
 use Carbon\Carbon;
 
@@ -22,7 +23,7 @@ class AllExternalActivityController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $activity = Activity::where('type', 'external');
+        $activity = ExternalActivity::where('type', 'external');
         if (isset($request->search['value'])) {
             $cari = explode('|', $request->search['value']);
             $month = $cari[0];
@@ -52,6 +53,9 @@ class AllExternalActivityController extends Controller
                 ->editColumn('personnel_no', function ($activity) {
                     $nik = '<span class="label label-primary">' . $activity->personnel_no . '</span>';
                     return $nik . ' ' . $activity->user['name'];
+                })
+                ->editColumn('nama_organisasi', function ($activity) {
+                    return $activity->nama_organisasi;
                 })
                 ->editColumn('start_date', function ($activity) {
                     return $activity->start_date->format('d.m.Y');
@@ -91,9 +95,9 @@ class AllExternalActivityController extends Controller
                 'orderable' => false,
             ])
             ->addColumn([
-                'data' => 'jenis_kegiatan',
-                'name' => 'jenis_kegiatan',
-                'title' => 'Jenis Kegiatan',
+                'data' => 'nama_organisasi',
+                'name' => 'nama_organisasi',
+                'title' => 'Nama Organisasi',
                 'searchable' => false,
                 'orderable' => false,
             ])
@@ -134,8 +138,8 @@ class AllExternalActivityController extends Controller
             ]);
 
         $data = [
-            'monthList' => Activity::monthList()->get(),
-            'yearList' => Activity::yearList()->get(),
+            'monthList' => ExternalActivity::monthList()->get(),
+            'yearList' => ExternalActivity::yearList()->get(),
         ];
         $stage = Stage::all();
         // tampilkan view index dengan tambahan script html DataTables
@@ -194,7 +198,7 @@ class AllExternalActivityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $activity = Activity::find($id);
+        $activity = ExternalActivity::find($id);
         $activity->stage_id = $request->stage_id;
         $activity->save();
         return redirect()->back(); 

@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Activity;
+use App\Models\OtherActivity;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -37,7 +38,7 @@ class OtherActivityExport implements FromView
     */
     public function view(): View
     {
-        $activity = Activity::where('type','other');
+        $activity = OtherActivity::where('type','other');
         if ($this->month !== 0) {
             $activity->whereMonth('start_date',$this->month);
         }

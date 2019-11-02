@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Activity;
+use App\Models\OtherActivity;
+use App\Models\OtherActivityProfile;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreOtherActivityRequest;
@@ -20,7 +22,7 @@ class OtherActivityController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         // ambil data cuti untuk user tersebut
-        $activity = Activity::ofLoggedUser()->where('type','other')->get();
+        $activity = OtherActivity::ofLoggedUser()->where('type','other')->get();
 
         // response untuk datatables absences
         if ($request->ajax()) {
@@ -88,7 +90,8 @@ class OtherActivityController extends Controller
      */
     public function create()
     {
-        return view('other_activity.create');
+        $profile = OtherActivityProfile::all();
+        return view('other_activity.create', compact('profile'));
     }
 
     /**
@@ -99,10 +102,11 @@ class OtherActivityController extends Controller
      */
     public function store(StoreOtherActivityRequest $request)
     {
-        $activity = New Activity();
+        $activity = New OtherActivity();
         $activity->personnel_no = Auth::user()->personnel_no;
-        $activity->jenis_kegiatan = $request->jenis_kegiatan;
-        $activity->posisi = $request->posisi;
+        // $activity->jenis_kegiatan = $request->jenis_kegiatan;
+        // $activity->posisi = $request->posisi;
+        $activity->other_activity_profile_id = $request->profile;
         $activity->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
         $activity->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
         $activity->keterangan = $request->keterangan;
