@@ -122,13 +122,13 @@ class AllExternalActivityController extends Controller
                 'searchable' => false,
                 'orderable' => false,
             ])
-            ->addColumn([
-                'data' => 'keterangan',
-                'name' => 'keterangan',
-                'title' => 'Keterangan',
-                'searchable' => false,
-                'orderable' => false,
-            ])
+            // ->addColumn([
+            //     'data' => 'keterangan',
+            //     'name' => 'keterangan',
+            //     'title' => 'Keterangan',
+            //     'searchable' => false,
+            //     'orderable' => false,
+            // ])
             ->addColumn([
                 'data' => 'aksi',
                 'name' => 'aksi',

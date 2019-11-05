@@ -29,7 +29,6 @@ class StoreExternalActivityRequest extends FormRequest
             'start_date' => 'required',
             'end_date' => 'required',
             'posisi' => 'required',
-            'keterangan' => 'required'
           ];
     }
 

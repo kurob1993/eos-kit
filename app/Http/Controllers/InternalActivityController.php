@@ -109,7 +109,7 @@ class InternalActivityController extends Controller
         $activity->internal_activity_position_id = $request->posisi;
         $activity->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
         $activity->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
-        $activity->keterangan = $request->keterangan;
+        // $activity->keterangan = $request->keterangan;
         $activity->stage_id = 1;
         if($activity->save()){
             return redirect()->route('internal-activity.index');

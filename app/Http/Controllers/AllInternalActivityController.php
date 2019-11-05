@@ -122,14 +122,14 @@ class AllInternalActivityController extends Controller
                 'searchable' => false,
                 'orderable' => false,
             ])
-            ->addColumn([
-                'data' => 'keterangan',
-                'name' => 'keterangan',
-                'title' => 'Keterangan',
-                'class' => 'none',
-                'searchable' => false,
-                'orderable' => false,
-            ])
+            // ->addColumn([
+            //     'data' => 'keterangan',
+            //     'name' => 'keterangan',
+            //     'title' => 'Keterangan',
+            //     'class' => 'none',
+            //     'searchable' => false,
+            //     'orderable' => false,
+            // ])
             ->addColumn([
                 'data' => 'aksi',
                 'name' => 'aksi',

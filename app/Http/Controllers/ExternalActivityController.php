@@ -109,7 +109,7 @@ class ExternalActivityController extends Controller
         $activity->posisi = $request->posisi;
         $activity->start_date = Carbon::parse($request->start_date)->format('Y-m-d');
         $activity->end_date = Carbon::parse($request->end_date)->format('Y-m-d');
-        $activity->keterangan = $request->keterangan;
+        // $activity->keterangan = $request->keterangan;
         $activity->nama_organisasi = $request->nama_organisasi;
         $activity->type = 'external';
         $activity->stage_id = 1;
