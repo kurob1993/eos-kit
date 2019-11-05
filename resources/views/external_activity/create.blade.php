@@ -8,11 +8,42 @@
     <h4 class="panel-title">External Activity</h4>
   </div>
   @include('layouts._flash')
+  <div class="alert alert-success fade in">
+    <i class="fa fa-paper-plane pull-left"></i>
+    <p>Eksternal Activity adalah pencatatan kegiatan organisasi karyawan diluar PT. Krakatau Steel.</p>   
+  </div>
   <div class="panel-body">
     <div class="row m-b-20">
       <form class="form-horizontal" id="form" action="{{ route('external-activity.store') }}" method="POST">
-        {{ csrf_field() }}
-        
+        {{ csrf_field() }}        
+
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="posisi"> </label>
+          <div id="datepicker-range">
+
+            <div class=" col-lg-5">
+              <label class="control-label col-sm-2" for="start_date">Mulai </label>
+              <input type="text" class="form-control text-center" id="start_date" name="start_date"
+                value="{{ old('start_date') }}" placeholder='Pilih Tanggal mulai'
+                style="background : white; color:black" readonly>
+              {!! $errors->first('start_date', ' <p class="text-danger help-block">:message</p>') !!}
+
+              <div id="datepicker-range-start" class="datepicker-range"></div>
+            </div>
+
+            <div class=" col-lg-5">
+              <label class="control-label col-sm-2" for="start_date">Berakhir </label>
+              <input type="text" class="form-control text-center is-invalid" id="end_date" name="end_date"
+                value="{{ old('end_date') }}" placeholder='Pilih Tanggal berakhir'
+                style="background : white; color:black" readonly>
+              {!! $errors->first('end_date', ' <p class="text-danger help-block">:message</p>') !!}
+
+              <div id="datepicker-range-end" class="datepicker-range"></div>
+            </div>
+
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="control-label col-sm-2" for="organisasi">Tipe Organisasi: </label>
           <div class="col-sm-10">
@@ -51,41 +82,14 @@
           </div>
         </div>
 
-        <div class="form-group">
+        {{-- <div class="form-group">
           <label class="control-label col-sm-2" for="keterangan">Keterangan: </label>
           <div class="col-sm-10">
             <textarea name="keterangan" class="form-control" id="keterangan" cols="30"
               rows="5">{{ old('keterangan') }}</textarea>
             {!! $errors->first('keterangan', ' <p class="text-danger help-block">:message</p>') !!}
           </div>
-        </div>
-
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="posisi"> </label>
-          <div id="datepicker-range">
-
-            <div class=" col-lg-5">
-              <label class="control-label col-sm-2" for="start_date">Mulai </label>
-              <input type="text" class="form-control text-center" id="start_date" name="start_date"
-                value="{{ old('start_date') }}" placeholder='Pilih Tanggal mulai'
-                style="background : white; color:black" readonly>
-              {!! $errors->first('start_date', ' <p class="text-danger help-block">:message</p>') !!}
-
-              <div id="datepicker-range-start" class="datepicker-range"></div>
-            </div>
-
-            <div class=" col-lg-5">
-              <label class="control-label col-sm-2" for="start_date">Berakhir </label>
-              <input type="text" class="form-control text-center is-invalid" id="end_date" name="end_date"
-                value="{{ old('end_date') }}" placeholder='Pilih Tanggal berakhir'
-                style="background : white; color:black" readonly>
-              {!! $errors->first('end_date', ' <p class="text-danger help-block">:message</p>') !!}
-
-              <div id="datepicker-range-end" class="datepicker-range"></div>
-            </div>
-
-          </div>
-        </div>
+        </div> --}}
 
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
