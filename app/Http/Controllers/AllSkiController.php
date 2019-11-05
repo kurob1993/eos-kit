@@ -132,7 +132,7 @@ class AllSkiController extends Controller
             'switch' => 'sendtosap.attendance.index',
             'download' => 'sendtosap.ski.download',
             'button'=>'attendance',
-            'title'=>'Sasaran Kerja Karyawan',
+            'title'=>'Sasaran Kinerja Individu',
             'yearList' => ski::foundYear()->get(),
             'monthList' => ski::foundMonth(),
             'stage' => Stage::all()

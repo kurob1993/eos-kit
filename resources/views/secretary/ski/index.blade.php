@@ -2,10 +2,10 @@
 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.secretary._page-container', ['page_header' => 'Daftar Sasaran Kerja Karyawan'])
+@component('layouts.secretary._page-container', ['page_header' => 'Daftar Sasaran Kinerja Individu'])
 <div class="panel panel-prussian">
     <div class="panel-heading">
-        <h4 class="panel-title">Sasaran Kerja Karyawan</h4>
+        <h4 class="panel-title">Sasaran Kinerja Individu</h4>
     </div>
   @include('layouts._flash')
   <div class="panel-body">

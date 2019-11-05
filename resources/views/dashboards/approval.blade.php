@@ -46,7 +46,7 @@
                 </a>
             </li>
             <li class="">
-                <a href="#tab-ski" data-toggle="tab" aria-expanded="true"> Sasaran Kerja Karyawan
+                <a href="#tab-ski" data-toggle="tab" aria-expanded="true"> Sasaran Kinerja Individu
                     @if ($countSki > 0)
                     <span class="badge pull-right m-l-5">
                         {{$countSki}}

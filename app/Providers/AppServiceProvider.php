@@ -67,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
         // Observer untuk model Transition/Pengalihan
         Transition::observe(TransitionObserver::class);
 
-        // Observer untuk model Sasaran Kerja Karyawan
+        // Observer untuk model Sasaran Kinerja Individu
         Ski::observe(SkiObserver::class);
         SkiApproval::observe(SkiApprovalObserver::class);
 

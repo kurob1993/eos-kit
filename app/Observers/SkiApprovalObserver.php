@@ -40,11 +40,11 @@ class SkiApprovalObserver
                         $aq->save();
                         
                         // message history
-                        $messageAttribute = sprintf('Sasaran Kerja Karyawan completely approved from %s to %s',
+                        $messageAttribute = sprintf('Sasaran Kinerja Individu completely approved from %s to %s',
                             $from->personnelNoWithName, $to->personnelNoWithName);                        
                     } else {
                         // message history
-                        $messageAttribute = sprintf('Sasaran Kerja Karyawan partially approved from %s to %s',
+                        $messageAttribute = sprintf('Sasaran Kinerja Individu partially approved from %s to %s',
                             $from->personnelNoWithName, $to->personnelNoWithName);
                     }
                 } else if ($currentAqa->is_rejected) {
@@ -60,7 +60,7 @@ class SkiApprovalObserver
                     $secondAqa->save();
 
                     // message history
-                    $messageAttribute = sprintf('Sasaran Kerja Karyawan rejected at first sequence from %s to %s',
+                    $messageAttribute = sprintf('Sasaran Kinerja Individu rejected at first sequence from %s to %s',
                         $from->personnelNoWithName, $to->personnelNoWithName);
                 }
 
@@ -77,7 +77,7 @@ class SkiApprovalObserver
                         $aq->stage_id = Stage::sentToSapStage()->id;
 
                         // message history
-                        $messageAttribute = sprintf('Sasaran Kerja Karyawan completely approved from %s to %s',
+                        $messageAttribute = sprintf('Sasaran Kinerja Individu completely approved from %s to %s',
                             $from->personnelNoWithName, $to->personnelNoWithName);
                     }
                 } elseif ($currentAqa->is_rejected) {
@@ -85,7 +85,7 @@ class SkiApprovalObserver
                     $aq->stage_id = Stage::deniedStage()->id;
 
                     // message history
-                    $messageAttribute = sprintf('Sasaran Kerja Karyawan rejected at second sequence from %s to %s',
+                    $messageAttribute = sprintf('Sasaran Kinerja Individu rejected at second sequence from %s to %s',
                         $from->personnelNoWithName, $to->personnelNoWithName);
                 }
                 // simpan perubahan Stage untuk ski

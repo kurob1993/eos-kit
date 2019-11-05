@@ -3,12 +3,12 @@
 @section('content')
 
 <!-- begin #page-container -->
-@component($pageContainer, ['page_header' => 'Sasaran Kerja Karyawan'])
+@component($pageContainer, ['page_header' => 'Sasaran Kinerja Individu'])
 <div class="row">
   <div class="col-lg-12 col-xl-9">
     <div class="panel panel-prussian">
       <div class="panel-heading">
-        <h4 class="panel-title">Edit Sasaran Kerja Karyawan ID: {{ $ski->plain_id}}</h4>
+        <h4 class="panel-title">Edit Sasaran Kinerja Individu ID: {{ $ski->plain_id}}</h4>
       </div>
       <div class="panel-body">
         <form action="{{route('ski.update',$ski->id)}}" method="post">

@@ -38,7 +38,7 @@ class EmployeeApprovalComposer
             ->waitedForApproval()->get();
         $view->with('countOvertimeApprovals', count($countOvertimeApprovals));
 
-        // Jumlah item notifikasi untuk sasaran kerja karyawan
+        // Jumlah item notifikasi untuk Sasaran Kinerja Individu
         $countSki = SkiApproval::ofLoggedUser()
             ->waitedForApproval()->get();
         $view->with('countSki', count($countSki));

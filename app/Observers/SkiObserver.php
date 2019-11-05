@@ -26,7 +26,7 @@ class SkiObserver
         if ( $intersected && !$intersected->is_denied) {
             Session::flash("flash_notification", [
                 "level" => "danger",
-                "message" => "Tidak input Sasaran Kerja Karyawan karena tanggal pengajuan "
+                "message" => "Tidak input Sasaran Kinerja Individu karena tanggal pengajuan "
                 . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
                 . $ski->month."-".$ski->year. ").",
             ]);
@@ -56,7 +56,7 @@ class SkiObserver
         // tampilkan pesan bahwa telah berhasil mengajukan cuti
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Berhasil Input Sasaran Kerja Karyawan.",
+            "message" => "Berhasil Input Sasaran Kinerja Individu.",
         ]);
 
         $personnel_no = $ski->personnel_no;

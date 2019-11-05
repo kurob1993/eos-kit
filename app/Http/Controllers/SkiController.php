@@ -226,7 +226,7 @@ class SkiController extends Controller
                 {
                     Session::flash("flash_notification", [
                         "level" => "danger",
-                        "message" => "Tidak input sasaran Kerja Karyawan karena tanggal pengajuan "
+                        "message" => "Tidak input Sasaran Kinerja Individu karena tanggal pengajuan "
                         . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
                         . $ski->month."-".$ski->year. ").",
                     ]);
@@ -252,7 +252,7 @@ class SkiController extends Controller
                     
                     Session::flash("flash_notification", [
                         "level" => "success",
-                        "message" => "Berhasil Input Sasaran Kerja Karyawan.",
+                        "message" => "Berhasil Input Sasaran Kinerja Individu.",
                     ]);
 
                     // // kembali ke halaman index ski

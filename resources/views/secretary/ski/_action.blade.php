@@ -8,7 +8,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">Sasaran Kerja Karyawan (ID: <span id="title-span">{{$ski->plain_id}}</span>)</h4>
+                <h4 class="modal-title">Sasaran Kinerja Individu (ID: <span id="title-span">{{$ski->plain_id}}</span>)</h4>
             </div>
             <div class="modal-body text-left">
                 <table id="table-detail" class="table table-bordered table-condensed m-b-0"

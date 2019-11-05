@@ -3,13 +3,13 @@
 @section('content')
 
 <!-- begin #page-container -->
-@component($pageContainer, ['page_header' => 'Sasaran Kerja Karyawan'])
+@component($pageContainer, ['page_header' => 'Sasaran Kinerja Individu'])
 <div class="row">
   <div class="col-lg-12 col-xl-9">
     @include('layouts._flash')
     <div class="panel panel-prussian">
       <div class="panel-heading">
-        <h4 class="panel-title">Input Sasaran Kerja Karyawan</h4>
+        <h4 class="panel-title">Input Sasaran Kinerja Individu</h4>
       </div>
       <div class="panel-body">
         {!! Form::open([

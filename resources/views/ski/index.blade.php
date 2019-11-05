@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.employee._page-container', ['page_header' => 'Sasaran Kerja Karyawan'])
+@component('layouts.employee._page-container', ['page_header' => 'Sasaran Kinerja Individu'])
 <div class="panel panel-prussian">
   <div class="panel-heading">
     <h4 class="panel-title">{{ $lembur }}</h4>
@@ -20,7 +20,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 class="modal-title">Sasaran Kerja Karyawan (ID: <span id="title-span"></span>)</h4>
+        <h4 class="modal-title">Sasaran Kinerja Individu (ID: <span id="title-span"></span>)</h4>
       </div>
       <div class="modal-body">
         

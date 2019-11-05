@@ -33,7 +33,7 @@
                         </a>
                     <ul class="sub-menu">
                         <li class="{{ Request::segment(2)=='ski' ? 'active' : '' }}">
-                            <a href="{{ route('secretary.ski.index') }}">Sasaran Kerja Individu</a>
+                            <a href="{{ route('secretary.ski.index') }}">Sasaran Kinerja Individu</a>
                         </li>
                     </ul>
                 </li>

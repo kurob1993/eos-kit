@@ -442,7 +442,7 @@ class ApprovalController extends Controller
                 break;
             case 'ski':
                 $approved = SkiApproval::find($id);
-                $moduleText = 'Sasaran Kerja Karyawan';
+                $moduleText = 'Sasaran Kinerja Individu';
                 break;
         }
 
@@ -488,7 +488,7 @@ class ApprovalController extends Controller
                 break;
             case 'ski':
                 $approved = SkiApproval::find($id);
-                $moduleText = 'Sasaran Kerja Karyawan';
+                $moduleText = 'Sasaran Kinerja Individu';
                 break;
         }
         if (!$approved->update($request->all() + ['status_id' => Status::rejectStatus()->id])) {
@@ -548,7 +548,7 @@ class ApprovalController extends Controller
                 $approvals = SkiApproval::ofLoggedUser()
                     ->whereStageIsWaitingApproval('ski')
                     ->get();
-                $moduleText = 'Sasaran Kerja Karyawan';
+                $moduleText = 'Sasaran Kinerja Individu';
                 break;
         }
 
