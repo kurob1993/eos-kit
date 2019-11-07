@@ -10,8 +10,7 @@
   @include('layouts._flash')
   <div class="alert alert-success fade in">
     <i class="fa fa-paper-plane pull-left"></i>
-    <p>Internal Activity adalah pencatatan kegiatan karyawan PT. Krakatau Steel. 
-      Misal: SK TIM, Panitia Kegiatan internal unit kerja, dll</p>   
+    <p>Internal Activity adalah pencatatan kegiatan internal karyawan PT. Krakatau Steel (Persero) Tbk. Misal: SK TIM, Panitia Kegiatan internal unit kerja, dll.</p>   
   </div>
   <div class="panel-body">
     <div class="row m-b-20">

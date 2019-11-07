@@ -10,7 +10,7 @@
   @include('layouts._flash')
   <div class="alert alert-success fade in">
     <i class="fa fa-paper-plane pull-left"></i>
-    <p>Eksternal Activity adalah pencatatan kegiatan organisasi karyawan diluar PT. Krakatau Steel.</p>   
+    <p>Eksternal Activity adalah pencatatan kegiatan organisasi karyawan diluar PT. Krakatau Steel (Persero) Tbk.</p>   
   </div>
   <div class="panel-body">
     <div class="row m-b-20">
