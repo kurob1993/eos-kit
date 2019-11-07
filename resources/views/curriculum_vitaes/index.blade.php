@@ -181,7 +181,7 @@
                             </dl>
                         </div>
                     </div>
-                    <small>Terakhir diubah di WEB: {{ isset($intActivities['last_updated']) ? date('Y-m-d', strtotime($intActivities['last_updated'])): '' }}</small>
+                    {{-- <small>Terakhir diubah di WEB: {{ isset($intActivities['last_updated']) ? date('Y-m-d', strtotime($intActivities['last_updated'])): '' }}</small>
                     <div class="media media">
                         <div class="media-body">
                             <dl class="dl-horizontal">
@@ -196,7 +196,7 @@
                                 @endforeach
                             </dl>
                         </div>
-                    </div>
+                    </div> --}}
                     <h3 class="m-t-10 m-b-0">Aktivitas Eksternal</h3>
                     <small>Terakhir diubah di SAP: {{ $externalActivities['last_updated'] }}</small>
                     <div class="media media">
@@ -214,7 +214,7 @@
                             </dl>
                         </div>
                     </div>
-                    <small>Terakhir diubah di WEB: {{ isset($extActivities['last_updated']) ? date('Y-m-d', strtotime($extActivities['last_updated'])): '' }}</small>
+                    {{-- <small>Terakhir diubah di WEB: {{ isset($extActivities['last_updated']) ? date('Y-m-d', strtotime($extActivities['last_updated'])): '' }}</small>
                     <div class="media media">
                         <div class="media-body">
                             <dl class="dl-horizontal">
@@ -229,7 +229,7 @@
                                 @endforeach
                             </dl>
                         </div>
-                    </div>
+                    </div> --}}
                     <h3 class="m-t-10 m-b-0">Aktivitas Lainnya</h3>
                     <small>Terakhir diubah di SAP: {{ $others['last_updated'] }}</small>
                     <div class="media media">
@@ -247,7 +247,7 @@
                             </dl>
                         </div>
                     </div>
-                    <small>Terakhir diubah di WEB: {{ isset($otherActivities['last_updated']) ? date('Y-m-d', strtotime($otherActivities['last_updated'])): '' }}</small>
+                    {{-- <small>Terakhir diubah di WEB: {{ isset($otherActivities['last_updated']) ? date('Y-m-d', strtotime($otherActivities['last_updated'])): '' }}</small>
                     <div class="media media">
                         <div class="media-body">
                             <dl class="dl-horizontal">
@@ -261,7 +261,7 @@
                                 @endforeach
                             </dl>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <!-- end of activities tab  -->
