@@ -29,6 +29,7 @@ class StoreExternalActivityRequest extends FormRequest
             'start_date' => 'required',
             'end_date' => 'required',
             'posisi' => 'required',
+            'organisasi' => 'required',
           ];
     }
 
@@ -40,11 +41,11 @@ class StoreExternalActivityRequest extends FormRequest
     public function messages()
     {
         return [
-            'jenis_kegiatan.required' => 'Kolom Jenis Kegiatan Tidak Boleh Kosong',
             'start_date.required'  => 'Kolom Tangaal Mulai Tidak Boleh Kosong',
             'end_date.required'  => 'Kolom Tangaal Berakhir Tidak Boleh Kosong',
             'posisi.required'  => 'Kolom Posisi Tidak Boleh Kosong',
             'keterangan.required'  => 'Kolom Keterangan Tidak Boleh Kosong',
+            'organisasi.required' => 'Kolom organisasi Tidak Boleh Kosong'
         ];
     }
 

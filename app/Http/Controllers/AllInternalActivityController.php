@@ -200,7 +200,7 @@ class AllInternalActivityController extends Controller
     public function update(Request $request, $id)
     {
         $activity = InternalActivity::find($id);
-        $activity->stage_id = 3;
+        $activity->stage_id = $request->stage_id;
         $activity->save();
         return redirect()->back(); 
     }
