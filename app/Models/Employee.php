@@ -15,22 +15,13 @@ use App\Models\AttendanceQuota;
 use App\Models\TimeEvent;
 use App\Models\SAP\Zhrom0013;
 use App\Models\SAP\StructJab;
-use App\Models\SAP\StructDispSap;
 
 class Employee extends Model
 {
     protected $primaryKey = 'personnel_no';
     public $incrementing = false;
     public $timestamps = false;
-    protected $appends = ['empposid','emp_hrp1000_s_short','old_abbr'];
-
-    public function getOldAbbrAttribute()
-    {
-        $s = StructDispSap::where('no','1')
-            ->where('empnik',$this->personnel_no)
-            ->first();
-        return $s['emp_hrp1000_s_short'];
-    }
+    protected $appends = ['empposid','emp_hrp1000_s_short'];
 
     public function getEmpHrp1000SShortAttribute()
     {
