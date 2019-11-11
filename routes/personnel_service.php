@@ -75,3 +75,46 @@
             ]
         ]);
     });
+
+    //route untuk update cv
+    Route::get('internal-activity/export', 'AllInternalActivityController@export')
+        ->name('personnel_service.internal-activity.export');
+        
+    Route::resource('internal-activity', 'AllInternalActivityController',[
+        'parameters'=> [
+            'internal-activity' => 'id'
+        ],
+        'only' => ['index', 'update'],
+        'names' => [
+            'index' => 'personnel_service.internal-activity.index',
+            'update' => 'personnel_service.internal-activity.update',
+        ]
+    ]);
+
+    Route::get('external-activity/export', 'AllExternalActivityController@export')
+        ->name('personnel_service.external-activity.export');
+        
+    Route::resource('external-activity', 'AllExternalActivityController',[
+        'parameters'=> [
+            'external-activity' => 'id'
+        ],
+        'only' => ['index', 'update'],
+        'names' => [
+            'index' => 'personnel_service.external-activity.index',
+            'update' => 'personnel_service.external-activity.update',
+        ]
+    ]);
+
+    Route::get('other-activity/export', 'AllOtherActivityController@export')
+        ->name('personnel_service.other-activity.export');
+        
+    Route::resource('other-activity', 'AllOtherActivityController',[
+        'parameters'=> [
+            'other-activity' => 'id'
+        ],
+        'only' => ['index', 'update'],
+        'names' => [
+            'index' => 'personnel_service.other-activity.index',
+            'update' => 'personnel_service.other-activity.update',
+        ]
+    ]);

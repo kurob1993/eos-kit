@@ -68,7 +68,7 @@ class User extends Authenticatable
     // one-to-many relationship dengan it0021
     return $this->hasMany('App\Models\SAP\Family', 'PERNR', 'personnel_no');
   }
-
+  
   public function hasEmployeeRole()
   {
     $employeeRole = $this->roles->filter(function ($item, $key) {
@@ -92,6 +92,18 @@ class User extends Authenticatable
   public function transition()
   {
       return $this->belongsTo('App\Model\Transition','personnel_no','personnel_no');
+  }
+
+  public function activies()
+  {
+    // one-to-many relationship dengan Absence
+    return $this->hasMany('App\Models\Activity', 'personnel_no', 'personnel_no');
+  }
+
+  public function internalActivies()
+  {
+    // one-to-many relationship dengan Absence
+    return $this->hasMany('App\Models\InternalActivity', 'personnel_no', 'personnel_no');
   }
 
   public function getHasValidEmailAttribute()

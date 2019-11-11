@@ -13,6 +13,7 @@ use App\Models\SAP\InternalActivity;
 use App\Models\SAP\ExternalActivity;
 use App\Models\SAP\Other;
 use App\Models\SAP\Position;
+use App\Models\Activity;
 use Illuminate\Support\Facades\Storage;
 
 class CVController extends Controller
@@ -111,6 +112,37 @@ class CVController extends Controller
             ->get();
         $this->cvs['others']['last_updated'] = Other::sapOfLoggedUser()
             ->max('BEGDA');
+
+        // ambil data activity internal. external, other
+        $this->cvs['intActivities']['data'] = Activity::ofLoggedUser()
+            ->where('type','internal')
+            ->sentToSapOnly()
+            ->orderBy('start_date', 'DESC')
+            ->get();
+        $this->cvs['intActivities']['last_updated'] = Activity::ofLoggedUser()
+            ->where('type','internal')
+            ->sentToSapOnly()
+            ->max('updated_at');
+
+        $this->cvs['extActivities']['data'] = Activity::ofLoggedUser()
+            ->where('type','external')
+            ->sentToSapOnly()
+            ->orderBy('start_date', 'DESC')
+            ->get();
+        $this->cvs['extActivities']['last_updated'] = Activity::ofLoggedUser()
+            ->where('type','external')
+            ->sentToSapOnly()
+            ->max('updated_at');
+
+        $this->cvs['otherActivities']['data'] = Activity::ofLoggedUser()
+            ->where('type','other')
+            ->sentToSapOnly()
+            ->orderBy('start_date', 'DESC')
+            ->get();
+        $this->cvs['otherActivities']['last_updated'] = Activity::ofLoggedUser()
+            ->where('type','other')
+            ->sentToSapOnly()
+            ->max('updated_at');
     }
 
     public function index(Request $request, Builder $htmlBuilder)
@@ -131,7 +163,10 @@ class CVController extends Controller
                 'trainings',
                 'internalActivities',
                 'externalActivities',
-                'others'
+                'others',
+                'intActivities',
+                'extActivities',
+                'otherActivities'
             )
         );
     }
@@ -146,7 +181,7 @@ class CVController extends Controller
         if (Storage::disk('public')->exists('pic/' . $position->PERNR . '.jpg'))
             $picture = asset('storage/pic/' . $position->PERNR . '.jpg');
         else
-            $picture = Storage::url('default.png');
+            $picture = url('/images/default.png');
 
         // tampilkan view index dengan tambahan script html DataTables
         return view(
@@ -161,7 +196,10 @@ class CVController extends Controller
                 'internalActivities',
                 'externalActivities',
                 'others',
-                'picture'
+                'picture',
+                'intActivities',
+                'extActivities',
+                'otherActivities'
             )
         );
     }

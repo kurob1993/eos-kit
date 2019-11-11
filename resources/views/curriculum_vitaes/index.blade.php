@@ -181,6 +181,22 @@
                             </dl>
                         </div>
                     </div>
+                    {{-- <small>Terakhir diubah di WEB: {{ isset($intActivities['last_updated']) ? date('Y-m-d', strtotime($intActivities['last_updated'])): '' }}</small>
+                    <div class="media media">
+                        <div class="media-body">
+                            <dl class="dl-horizontal">
+                                @foreach ($intActivities['data'] as $intActivities)
+                                <dt> {{ $intActivities->start_date->format('d/m/y') }} - {{ $intActivities->end_date->format('d/m/y') }}</dt>
+                                <dd><b>{{ $intActivities->posisi }}</b></dd>
+                                <dt></dt>
+                                <dd class="m-b-10">
+                                    {{ $intActivities->jenis_kegiatan }}<br>
+                                    {{ $intActivities->keterangan }}
+                                </dd>
+                                @endforeach
+                            </dl>
+                        </div>
+                    </div> --}}
                     <h3 class="m-t-10 m-b-0">Aktivitas Eksternal</h3>
                     <small>Terakhir diubah di SAP: {{ $externalActivities['last_updated'] }}</small>
                     <div class="media media">
@@ -198,6 +214,22 @@
                             </dl>
                         </div>
                     </div>
+                    {{-- <small>Terakhir diubah di WEB: {{ isset($extActivities['last_updated']) ? date('Y-m-d', strtotime($extActivities['last_updated'])): '' }}</small>
+                    <div class="media media">
+                        <div class="media-body">
+                            <dl class="dl-horizontal">
+                                @foreach ($extActivities['data'] as $extActivities)
+                                <dt> {{ $extActivities->start_date->format('d/m/y') }} - {{ $extActivities->end_date->format('d/m/y') }}</dt>
+                                <dd><b>{{ $extActivities->posisi }}</b></dd>
+                                <dt></dt>
+                                <dd class="m-b-10">
+                                    {{ $extActivities->jenis_kegiatan }}<br>
+                                    {{ $extActivities->keterangan }}
+                                </dd>
+                                @endforeach
+                            </dl>
+                        </div>
+                    </div> --}}
                     <h3 class="m-t-10 m-b-0">Aktivitas Lainnya</h3>
                     <small>Terakhir diubah di SAP: {{ $others['last_updated'] }}</small>
                     <div class="media media">
@@ -215,6 +247,21 @@
                             </dl>
                         </div>
                     </div>
+                    {{-- <small>Terakhir diubah di WEB: {{ isset($otherActivities['last_updated']) ? date('Y-m-d', strtotime($otherActivities['last_updated'])): '' }}</small>
+                    <div class="media media">
+                        <div class="media-body">
+                            <dl class="dl-horizontal">
+                                @foreach ($otherActivities['data'] as $otherActivities)
+                                <dt> {{ $otherActivities->start_date->format('d/m/y') }} - {{ $otherActivities->end_date->format('d/m/y') }}</dt>
+                                <dd><b>{{ $otherActivities->jenis_kegiatan }}</b></dd>
+                                <dt></dt>
+                                <dd class="m-b-10">
+                                    {{ $otherActivities->keterangan }}<br>
+                                </dd>
+                                @endforeach
+                            </dl>
+                        </div>
+                    </div> --}}
                 </div>
             </div>
             <!-- end of activities tab  -->
