@@ -117,6 +117,28 @@ to, overtime_reason, delegation (if have subordinates)
           <h4 class="modal-title">Perilaku</h4>
         </div>
         <div class="modal-body">
+          <div class="alert alert-success fade in">
+            <div class="row">
+              <div class="col-md-3">
+                <p>Di bawah TARGET</p>
+                <p>SKOR (0 - 4.5)</p>
+                <p>Pencapaian 0% - < 70%</p>
+              </div>
+              <div class="col-md-3">
+                <p>Mendekati TARGET</p>
+                <p>SKOR 4.6 - 6.5</p>
+                <P>Pencapaian 70% - < 90% </p>
+              </div>
+              <div class="col-md-3">
+                <p>Memenuhi TARGET</p>
+                <p>SKOR 6.6 - 8.0</p>
+              </div>
+              <div class="col-md-3">
+                <p>Melebihi TARGET</p>
+                <p>SKOR 8.1-10</P>
+              </div>
+            </div>
+          </div>
           <table class="table-responsive" style="width: 100%">
             <thead>
               <tr>
@@ -130,7 +152,7 @@ to, overtime_reason, delegation (if have subordinates)
                 <th class="text-center" style="width: 8%">Nilai</th>
               </tr>
             </thead>
-            <tbody id="tbody">
+            <tbody id="tbodyPerilaku">
               @php($u = 1)
               @foreach($perilakus as $perilaku) 
                 @php($required = '')
@@ -160,6 +182,7 @@ to, overtime_reason, delegation (if have subordinates)
                       value="10"
                       style="width: 100%; text-align: right"
                       onkeyup="setNilai({{$perilaku->id}})"
+                      readonly
                     >
                   </td>
                   <td>
@@ -167,7 +190,7 @@ to, overtime_reason, delegation (if have subordinates)
                       name="skorp[]" 
                       id="skor{{$perilaku->id}}" 
                       style="width: 100%; text-align: right"
-                      onkeyup="setNilai({{$perilaku->id}})"
+                      onkeyup="setNilai({{$perilaku->id}});checkSkor(this.value, '{{$perilaku->id}}')"
                     >
                   </td>
                   <td>
@@ -215,6 +238,28 @@ to, overtime_reason, delegation (if have subordinates)
           <h4 class="modal-title">Sasaran Kerja</h4>
         </div>
         <div class="modal-body">
+          <div class="alert alert-success fade in">
+            <div class="row">
+              <div class="col-md-3">
+                <p>Di bawah TARGET</p>
+                <p>SKOR (0 - 4.5)</p>
+                <p>Pencapaian 0% - < 70%</p>
+              </div>
+              <div class="col-md-3">
+                <p>Mendekati TARGET</p>
+                <p>SKOR 4.6 - 6.5</p>
+                <P>Pencapaian 70% - < 90% </p>
+              </div>
+              <div class="col-md-3">
+                <p>Memenuhi TARGET</p>
+                <p>SKOR 6.6 - 8.0</p>
+              </div>
+              <div class="col-md-3">
+                <p>Melebihi TARGET</p>
+                <p>SKOR 8.1-10</P>
+              </div>
+            </div>
+          </div>
           <table class="table-responsive" style="width: 100%">
             <thead>
               <tr>
@@ -257,7 +302,7 @@ to, overtime_reason, delegation (if have subordinates)
                       name="skor[]" 
                       id="skor{{$i}}" 
                       style="width: 100%; text-align: right"
-                      onkeyup="setNilai({{$i}})"
+                      onkeyup="setNilai({{$i}});checkSkor(this.value, '{{$i}}')"
                     >
                   </td>
                   <td>

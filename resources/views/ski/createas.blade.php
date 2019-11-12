@@ -66,9 +66,19 @@
   'end_date' =>  config('emss.modules.time_events.end_date')
 ])
 <script>
-  function ceking(isi){
+  function ceking(isi) {
       $('#aksi').val(isi);
       return true;
+  }
+
+  function checkSkor(value, iddata) {
+    if(value > 10) {
+      alert('Nilai tidak boleh lebih dari 10 ');
+      $('#skor'+iddata).val(0);
+      $('#nilai'+iddata).val(0);
+      e.preventDefault();
+      return false;
+    }
   }
   
   $(document).on("keypress", 'form', function (e) {
@@ -149,13 +159,11 @@
     var kolom = '<tr>'+
       '<td class="text-center">'+ (id+1) +'</td>'+
       '<td>'+
-        '<select name="klp[]" style="width: 100%; height: 26px">'+
-          '<option value=""></option>'+
-          '<option value="Perilaku">Perilaku</option>'+
+      '<input type="text" name="sasaran[]" style="width: 100%">'+
+      '<select name="klp[]" style="width: 100%; height: 26px; display:none">'+
           '<option value="Kinerja">Kinerja</option>'+
         '</select> '+
       '</td>'+
-      '<td><input type="text" name="sasaran[]" style="width: 100%"></td>'+
       '<td><input type="text" name="kode[]" style="width: 100%"></td>'+
       '<td><input type="text" name="ukuran[]" style="width: 100%"></td>'+
       '<td> '+
