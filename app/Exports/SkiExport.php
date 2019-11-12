@@ -38,6 +38,13 @@ class SkiExport implements FromView
 
         return $this;
     }
+
+    public function forDivisi($divisi)
+    {
+        $this->divisi = $divisi;
+
+        return $this;
+    }
     
     public function forType($type)
     {
@@ -68,6 +75,10 @@ class SkiExport implements FromView
         if(isset($this->text)){
             $data->whereIn('personnel_no',$nik);
         }
+        if(isset($this->divisi)){
+            $data->where('divisi',$this->divisi);
+        }
+    
 
         if($this->type == 'all'){
            $view = 'all_ski.export';
