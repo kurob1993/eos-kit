@@ -8,6 +8,8 @@ use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\Ski;
 use App\Models\Stage;
+use App\Http\Controllers\API\StructDispController;
+use App\Models\SAP\OrgText;
 use App\Exports\SkiExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -20,6 +22,14 @@ class AllSkiController extends Controller
      */
     public function index(Request $request, Builder $htmlBuilder)
     {
+        // data divisi
+        $divisi = OrgText::where('EndDate','9999-12-31')
+            ->where('Objectname','like','Divisi%')
+            ->distinct()
+            ->get(['Objectname','ObjectID','EndDate']);
+
+        // dd($divisi);
+
         // ambil data cuti untuk user tersebut
         $ski = Ski::with('stage');
 
@@ -67,6 +77,34 @@ class AllSkiController extends Controller
                     return '<span class="label label-'.$Ski->stage->classDescription.'">'.
                                 $Ski->stage->description
                             .'</span> ';
+                })
+                ->editColumn('perilaku', function (Ski $Ski) {        
+                    $nilai = 0;            
+                    foreach($Ski->skiDetail as $klp)
+                    {
+                        if($klp->klp == "Perilaku")
+                        {
+                            $nilai +=$klp->nilai;
+                        }
+                    };
+                    return $nilai;
+                })
+                ->editColumn('kinerja', function (Ski $Ski) {       
+                    $nilai = 0;            
+                    foreach($Ski->skiDetail as $klp)
+                    {
+                        if($klp->klp == "Kinerja")
+                        {
+                            $nilai +=$klp->nilai;
+                        }
+                    };
+                    return $nilai;
+                    
+                })
+                ->editColumn('divisi', function (Ski $Ski) {   
+                    $strucdisp = new StructDispController();
+                    $data = $strucdisp->show($Ski->personnel_no);      
+                    return $data['divisi'];                    
                 })
                 ->editColumn('detail', function (Ski $Ski) {
                     return view('secretary.ski._action',['ski'=>$Ski] );
@@ -119,6 +157,27 @@ class AllSkiController extends Controller
                 'searchable' => false,
                 'orderable' => false,
             ])->addColumn([
+                'data' => 'perilaku',
+                'name' => 'perilaku',
+                'title' => 'Perilaku',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
+            ])->addColumn([
+                'data' => 'kinerja',
+                'name' => 'kinerja',
+                'title' => 'Kinerja',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
+            ])->addColumn([
+                'data' => 'divisi',
+                'name' => 'divisi',
+                'title' => 'Divisi',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
+            ])->addColumn([
                 'data' => 'detail',
                 'name' => 'detail',
                 'title' => 'Detail',
@@ -135,7 +194,8 @@ class AllSkiController extends Controller
             'title'=>'Sasaran Kinerja Individu',
             'yearList' => ski::foundYear()->get(),
             'monthList' => ski::foundMonth(),
-            'stage' => Stage::all()
+            'stage' => Stage::all(),
+            'divisi' => $divisi,
         ];
         return view('all_ski.index')->with(compact('html', 'ski','data'));
     }
@@ -216,6 +276,9 @@ class AllSkiController extends Controller
         $stage = $request->stage;
         $text = $request->text;
         $type = $request->type;
+        $divisi = $request->divisi;
+        
+        // dd($divisi.''.$stage);
 
         return (new SkiExport)
             ->forMonth($bulan)
@@ -223,6 +286,7 @@ class AllSkiController extends Controller
             ->forStage($stage)
             ->forText($text)
             ->forType($type)
+            ->forDivisi($divisi)
             ->download('Ski.xlsx');
     }
 }
