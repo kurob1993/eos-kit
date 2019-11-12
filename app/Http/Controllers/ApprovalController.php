@@ -364,6 +364,28 @@ class ApprovalController extends Controller
                             $aa->ski->month."/".$aa->ski->year
                         .'</span> ';
                 })
+                ->editColumn('ski.perilaku', function (SkiApproval $aa) {
+                    $nilai = 0;            
+                    foreach($aa->ski->skiDetail as $klp)
+                    {
+                        if($klp->klp == "Perilaku")
+                        {
+                            $nilai +=$klp->nilai;
+                        }
+                    };
+                    return $nilai;
+                })
+                ->editColumn('ski.kinerja', function (SkiApproval $aa) {
+                    $nilai = 0;            
+                    foreach($aa->ski->skiDetail as $klp)
+                    {
+                        if($klp->klp == "Kinerja")
+                        {
+                            $nilai +=$klp->nilai;
+                        }
+                    };
+                    return $nilai;
+                })
                 ->editColumn('ski.ski_approval', function (SkiApproval $aa) {
                     $approvals = $aa->ski->skiApproval;
                     $a = '';

@@ -385,6 +385,18 @@ class EmployeeApprovalComposer
                 'orderable' => false,
             ],
             [ 
+                'data' => 'ski.perilaku', 
+                'name' => 'ski.perilaku', 
+                'title' => 'Perilaku',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'ski.kinerja', 
+                'name' => 'ski.kinerja', 
+                'title' => 'Kinerja',
+                'orderable' => false,
+            ],
+            [ 
                 'data' => 'ski.ski_approval', 
                 'name' => 'ski.ski_approval', 
                 'title' => 'Approval', 

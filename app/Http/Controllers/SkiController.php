@@ -13,6 +13,8 @@ use App\Models\SkiDetail;
 use App\Models\SkiApproval;
 use App\Models\OvertimeReason;
 use App\Models\SkiPerilaku;
+use App\Models\SAP\StructDisp;
+use App\Models\SAP\OrgText;
 
 class SkiController extends Controller
 {
@@ -41,13 +43,45 @@ class SkiController extends Controller
         if ($request->ajax()) {
 
             return Datatables::of($overtimes)
-                ->editColumn('summary', function ($overtime) {
-                    // kolom summary menggunakan view _summary
-                    return view('ski._summary', [
-                        'summary' => $overtime,
-                        'when' => $overtime->created_at->format('d/m')
-                    ]);
-                })
+            ->editColumn('id', function($ski){
+                return $ski->plain_id;
+            })
+            ->editColumn('personnel_no', function($ski){
+                $nik = '<span class="label label-info">'.$ski->personnel_no.'</span>';
+                return $nik.' '.$ski->user['name'];
+            })
+            ->editColumn('month', function (Ski $Ski) {
+                return '<span class="label label-warning">'.
+                            $Ski->month."/".$Ski->year
+                        .'</span> ';
+            })
+            ->editColumn('stage', function (Ski $Ski) {
+                return '<span class="label label-'.$Ski->stage->classDescription.'">'.
+                            $Ski->stage->description
+                        .'</span> ';
+            })
+            ->editColumn('perilaku', function (Ski $Ski) {        
+                $nilai = 0;            
+                foreach($Ski->skiDetail as $klp)
+                {
+                    if($klp->klp == "Perilaku")
+                    {
+                        $nilai +=$klp->nilai;
+                    }
+                };
+                return $nilai;
+            })
+            ->editColumn('kinerja', function (Ski $Ski) {        
+                $nilai = 0;            
+                foreach($Ski->skiDetail as $klp)
+                {
+                    if($klp->klp == "Kinerja")
+                    {
+                        $nilai +=$klp->nilai;
+                    }
+                };
+                return $nilai;
+            })
                 ->editColumn('approver', function ($overtime) {
                     // personnel_no dan name atasan
                     $views = '';
@@ -75,18 +109,55 @@ class SkiController extends Controller
             'searching' => false,
             'sDom' => 'tpi',
             'responsive' => ['details' => false],
-            "columnDefs" => [["width" => "60%", "targets" => 0]]
+            "columnDefs" => [["width" => "10%", "targets" => 0]]
         ]);
 
         $html = $htmlBuilder
             ->addColumn([
-                'data' => 'summary',
-                'name' => 'summary',
-                'title' => 'Summary',
+                'data' => 'id',
+                'name' => 'id',
+                'title' => 'ID',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
+                ])
+            ->addColumn([
+                'data' => 'personnel_no',
+                'name' => 'personnel_no',
+                'title' => 'Nama',
+                'class' => 'desktop',
                 'searchable' => false,
                 'orderable' => false,
             ])
             ->addColumn([
+                'data' => 'month',
+                'name' => 'month',
+                'title' => 'Periode',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
+            ])->addColumn([
+                'data' => 'stage',
+                'name' => 'stage',
+                'title' => 'Tahapan',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
+            ])->addColumn([
+                'data' => 'perilaku',
+                'name' => 'perilaku',
+                'title' => 'Perilaku',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
+            ])->addColumn([
+                'data' => 'kinerja',
+                'name' => 'kinerja',
+                'title' => 'Kinerja',
+                'class' => 'desktop',
+                'searchable' => false,
+                'orderable' => false,
+            ])->addColumn([
                 'data' => 'approver',
                 'name' => 'approver',
                 'title' => 'Approver',
@@ -104,8 +175,9 @@ class SkiController extends Controller
         // user yang dapat melakukan pengajuan lembur
         $user = Auth::user()->personnel_no;
 
+        // data master prilaku
         $perilakus = SkiPerilaku::all();
-
+        
         // mengecek apakah boleh mengajukan overtime untuk bawahan
         $allowed = Auth::user()
             ->employee
@@ -136,6 +208,31 @@ class SkiController extends Controller
 
     public function store(Request $request)
     {  
+        $disp = StructDisp::where('empnik',$request->personnel_no)
+            ->selfStruct()
+            ->get();
+
+        $dispdata = $disp->transform(function ($item, $key) {
+            return $item->minDivisiData();
+        });
+
+        if(isset($dispdata[0]['ObjectID'])){
+            $objecid = $dispdata[0]['ObjectID'];
+        }else {
+            $objectid = 0;
+        }
+
+        if(isset($dispdata[0]['EndDate'])){
+            $enddate = $dispdata[0]['EndDate'];
+        }else {
+            $enddate = 0;
+        }
+
+        if(isset($dispdata[0]['Objectname'])){
+            $divisi = $dispdata[0]['Objectname'];
+        }else {
+            $divisi = $dispdata[0];
+        }
 
         $dataski = Ski::where('personnel_no', $request->personnel_no)
             ->where('year', $request->tahun)
@@ -149,6 +246,9 @@ class SkiController extends Controller
             $ski->personnel_no = $request->personnel_no;
             $ski->month = $request->bulan;
             $ski->year = $request->tahun;
+            $ski->object_id = $objectid;
+            $ski->end_date = $enddate;
+            $ski->divisi = $divisi;
             $ski->stage_id = 1;
             $ski->dirnik = Auth::user()->personnel_no;
             $ski->save();
