@@ -22,6 +22,7 @@
 	<link href={{ url("/plugins/font-awesome/css/font-awesome.min.css") }} rel="stylesheet" />
 	<!-- Simple line icons -->
 	<link href={{ url("/plugins/simple-line-icons/simple-line-icons.css") }} rel="stylesheet">
+	<link rel=”stylesheet” href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 	
 	@stack('styles')
 	
@@ -31,6 +32,7 @@
 	<link href={{ url("/css/style-responsive.css") }} rel="stylesheet" />
 	<link href={{ url("/css/theme/default.css") }} rel="stylesheet" id="theme" />
 	<link href={{ url("/css/style-custom.css") }} rel="stylesheet" /> 
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.css">
 	
 	<script>
 		window.Laravel = <?php echo json_encode([

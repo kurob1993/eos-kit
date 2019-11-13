@@ -8,6 +8,7 @@
         <ul class="nav">
             <li class="nav-header">Navigation</li>
 
+
             @role('employee')
             <li class="{{ Route::current()->getName() == 'dashboard.index' ? 'active' : '' }}">
                 <a href="{{ route('dashboard.index') }}">
@@ -15,21 +16,17 @@
                     <span>Dashboard</span>
                 </a>
             </li>
+
+   
             <li class="{{ Route::current()->getName() == 'dashboards.approval' ? 'active' : '' }}">
                 <a href="{{ route('dashboards.approval') }}">
                     <i class="fa fa-check-circle"></i>
                     <span>Approval</span>
                 </a>
             </li>            
-            <li class="has-sub {{ 
-                (
-                    (Request::segment(1) == 'cvs') || 
-                    (Request::segment(1) == 'organizations') || 
-                    (Request::segment(1) == 'administrations') ||
-                    (Request::segment(1) == 'internal-activity') ||
-                    (Request::segment(1) == 'external-activity') ||
-                    (Request::segment(1) == 'other-activity')
-                ) ? 'active' : '' 
+            <li class="has-sub {{ (
+                (Request::segment(1) == 'cvs') || (Request::segment(1) == 'organizations') 
+                    || (Request::segment(1) == 'administrations')) ? 'active' : '' 
                 }}">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>
@@ -39,16 +36,6 @@
                 <ul class="sub-menu">
                     <li class="{{ Request::segment(1)=='cvs' ? 'active' : '' }}"> 
                         <a href="{{ url('cvs') }}">Curriculum Vitae</a> 
-                    </li>
-
-                    <li class="{{ Request::segment(1)=='internal-activity' ? 'active' : '' }}"> 
-                        <a href="{{ route('internal-activity.index') }}">Internal Activity</a> 
-                    </li>
-                    <li class="{{ Request::segment(1)=='external-activity' ? 'active' : '' }}"> 
-                        <a href="{{ route('external-activity.index') }}">External Activity</a> 
-                    </li>
-                    <li class="{{ Request::segment(1)=='other-activity' ? 'active' : '' }}"> 
-                        <a href="{{ route('other-activity.index') }}">Other Activity</a> 
                     </li>
                     {{-- <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 
                         <a href="#">Organisasi</a> 
@@ -61,7 +48,7 @@
             <li class="has-sub {{ (
             (Request::segment(1) == 'leaves') || (Request::segment(1) == 'permits') 
                 || (Request::segment(1) == 'time_events') || (Request::segment(1) == 'overtimes') 
-                || (Request::segment(1) == 'wakers') ) ? 'active' : '' 
+                || (Request::segment(1) == 'wakers') || (Request::segment(1) == 'trip') ) ? 'active' : '' 
             }}">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>
@@ -104,7 +91,7 @@
                         <span>Health &amp; Safety</span>
                     </a>
                 <ul class="sub-menu">
-                    <li> <a href="#">Medical Check-up</a> </li>
+                    <li> <a href="{{route('health_record.index')}}">Medical Check-up</a> </li>
                 </ul>
             </li> --}}
 
@@ -129,6 +116,27 @@
             @endrole 
 
             @endrole
+
+     
+            @role('employee')
+                <li class="has-sub {{ (
+                (Request::segment(1) == 'payslip') || (Request::segment(1) == 'permits') 
+                    || (Request::segment(1) == 'time_events') || (Request::segment(1) == 'overtimes') 
+                    || (Request::segment(1) == 'wakers') ) ? 'active' : '' 
+                }}">
+                    <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-money"></i>
+                            <span>Benefit</span>
+                        </a>
+                    <ul class="sub-menu">
+                        <li class="{{ Request::segment(1)=='payslip' ? 'active' : '' }}">
+                            <a href="{{ route('payslip.index') }}">Slip Gaji</a>
+                        </li>
+                    </ul>
+                </li>
+            @endrole
+
 
             <li class="">
                 <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

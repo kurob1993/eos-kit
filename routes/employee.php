@@ -54,6 +54,8 @@
     // route untuk leave
     Route::resource('leaves', 'LeaveController', ['except' => [
         'destroy', 'update', 'edit']]);
+    
+    
 
     // route untuk permit
     Route::resource('permits', 'PermitController', ['except' => [
@@ -83,22 +85,9 @@
     Route::get('activity/list/{personnel_no?}', 'ActivitiReportController@list')->name('activity.list');
     Route::get('activity/download/{file?}', 'ActivitiReportController@download')->name('activity.download');
 
-    //route untuk update cv
-    Route::resource('internal-activity', 'InternalActivityController',[
-        'parameters'=> [
-            'internal-activity' => 'id'
-        ],
-        'except' => ['destroy', 'update', 'edit']
-    ]);
-    Route::resource('external-activity', 'ExternalActivityController',[
-        'parameters'=> [
-            'external-activity' => 'id'
-        ],
-        'except' => ['destroy', 'update', 'edit']
-    ]);
-    Route::resource('other-activity', 'OtherActivityController',[
-        'parameters'=> [
-            'other-activity' => 'id'
-        ],
-        'except' => ['destroy', 'update', 'edit']
-    ]);
+    // Payslip routing
+    Route::resource('payslip','PayController');
+    Route::get('payslip/{file?}','SlipController@download')->name('payslip.download');
+
+    // Route HealtReport
+    Route::resource('health','HealtReportController');

@@ -118,3 +118,10 @@
             'update' => 'personnel_service.other-activity.update',
         ]
     ]);
+
+    // Route Direksi
+    Route::resource('direksi','DirectorController');
+    Route::get('komisaris','DirectorController@getcommisary')->name('directors.commisary');
+
+    
+    
