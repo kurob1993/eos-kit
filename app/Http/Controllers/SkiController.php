@@ -217,7 +217,7 @@ class SkiController extends Controller
         });
 
         if(isset($dispdata[0]['ObjectID'])){
-            $objecid = $dispdata[0]['ObjectID'];
+            $objectid = $dispdata[0]['ObjectID'];
         }else {
             $objectid = 0;
         }
