@@ -41,12 +41,12 @@
                     </tbody>
                 </table>
 
-                <table class="table table-bordered table-condensed m-t-15" style="width: 100%">
+                <table class="table table-bordered table-condensed m-t-15" style="width:100%;table-layout: fixed;word-wrap: break-word;">
                     <thead>
                         <tr>
                             <th class="text-center" style="width: 5%">NO</th>
                             <th class="text-center" style="width: 10%">KLP</th>
-                            <th class="text-center" style="width: 30%">Sasaran Kerja</th>
+                            <th class="text-center" style="width: 20%">Sasaran Kerja</th>
                             <th class="text-center" style="width: 10%">Kode</th>
                             <th class="text-center" style="width: 25%">Ukuran Prestasi Kerja</th>
                             <th class="text-center" style="width: 6%">Bobot</th>
