@@ -95,23 +95,33 @@
     var skor = $('#skor'+id).val();
     var sum_perilaku = 0;
     var sum_kinerja = 0;
+    var sum_nilai_kinerja1 = 0;
+    var sum_nilai_perilaku1 = 0;
+    
+    
 
     $('#nilai'+id).val(bobot*skor);
 
     for (let index = 0; index < count; index++) {
       var klp = $('#klp'+index).val();
+      var klpp = $('#klpp'+index).val();
       var bobot =  Number( $('#bobot'+index).val() );
       var skor =  Number( $('#skor'+index).val() );
       
 
-      if(klp == 'Perilaku'){
+      if(klpp == 'Perilaku'){
         sum_perilaku += bobot;
         $('#sum_perilaku').val(sum_perilaku);
+        sum_nilai_perilaku1 += bobot*skor;
+        $('#sum_nilai_perilaku1').val(sum_nilai_perilaku1);
       }
 
       if(klp == 'Kinerja'){
         sum_kinerja += bobot;
         $('#sum_kinerja').val(sum_kinerja);
+        $('#sum_kinerja1').val(sum_kinerja);
+        sum_nilai_kinerja1 += bobot*skor;
+        $('#sum_nilai_kinerja1').val(sum_nilai_kinerja1);
       }
       
     }

@@ -204,6 +204,14 @@ to, overtime_reason, delegation (if have subordinates)
                 </tr>
               @endforeach
             </tbody>
+            <tfoot>
+                <tr>
+                  <td colspan="4" class="text-right">Total: </td>
+                  <td class="text-right"><input class="text-right" type="text" value="100" id="sum_perilaku1" readonly></td>
+                  <td class="text-right"></td>
+                  <td class="text-right"><input class="text-right" type="text" id="sum_nilai_perilaku1" readonly></td>
+                </tr>
+            </tfoot>
           </table>
           <input type="hidden" id="id" value="{{$perilaku->id}}">
           {{-- <input type="hidden" id="sum_perilaku"> --}}
@@ -316,6 +324,14 @@ to, overtime_reason, delegation (if have subordinates)
                 </tr>
               @endfor
             </tbody>
+            <tfoot>
+                <tr>
+                  <td colspan="4" class="text-right">Total: </td>
+                  <td class="text-right"><input type="text" id="sum_kinerja1" readonly></td>
+                  <td class="text-right"></td>
+                  <td class="text-right"><input type="text" id="sum_nilai_kinerja1" readonly></td>
+                </tr>
+            </tfoot>
           </table>
           <input type="hidden" id="id" value="{{$i}}">
           <input type="hidden" id="sum_perilaku">
