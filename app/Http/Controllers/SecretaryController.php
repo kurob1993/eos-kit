@@ -196,9 +196,9 @@ class SecretaryController extends Controller
         // perilaku
         if($request->input('aksi') ==  1)
         {
-            if($ski != null)
+            if($skiid !== null)
             {
-                $cekdataPerilaku =  SkiDetail::where('ski_id', $ski->id)
+                $cekdataPerilaku =  SkiDetail::where('ski_id', $skiid)
                     ->where('klp', "Perilaku")
                     ->get()
                     ->count();    
@@ -207,11 +207,11 @@ class SecretaryController extends Controller
                 {
                     Session::flash("flash_notification", [
                         "level" => "danger",
-                        "message" => "Tidak input perilaku Kerja Karyawan karena tanggal pengajuan "
-                        . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
-                        . $ski->month."-".$ski->year. ").",
+                        "message" => "Tidak dapat input perilaku Kerja Karyawan karena tanggal pengajuan "
+                        . "sudah pernah diajukan sebelumnya (ID " . $dataski[0]->id . ": "
+                        . $dataski[0]->month."-".$dataski[0]->year. ").",
                     ]);
-                    return redirect()->route('ski.create');
+                    return redirect()->route('secretary.ski.create');
                 }
                 else 
                 {
@@ -238,7 +238,7 @@ class SecretaryController extends Controller
                     ]);
 
                     // // kembali ke halaman index ski
-                    return redirect()->route('ski.create');
+                    return redirect()->route('secretary.ski.index');
                 }
             }
         }
@@ -259,7 +259,7 @@ class SecretaryController extends Controller
                         . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
                         . $ski->month."-".$ski->year. ").",
                     ]);
-                    return redirect()->route('ski.create');
+                    return redirect()->route('secretary.ski.create');
                 }
                 else 
                 {
@@ -285,7 +285,7 @@ class SecretaryController extends Controller
                     ]);
 
                     // // kembali ke halaman index ski
-                    return redirect()->route('ski.index');
+                    return redirect()->route('secretary.ski.index');
                     // // kembali ke halaman index overtime
                     // return redirect()->route('secretary.ski.index');
                 }
