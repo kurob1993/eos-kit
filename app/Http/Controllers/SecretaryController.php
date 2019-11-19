@@ -244,9 +244,9 @@ class SecretaryController extends Controller
         }
         else 
         {
-            if($ski != null)
+            if($skiid != null)
             {
-                $cekdataKinerja =  SkiDetail::where('ski_id', $ski->id)
+                $cekdataKinerja =  SkiDetail::where('ski_id', $skiid)
                     ->where('klp', "Kinerja")
                     ->get()
                     ->count();    
@@ -256,8 +256,8 @@ class SecretaryController extends Controller
                     Session::flash("flash_notification", [
                         "level" => "danger",
                         "message" => "Tidak input Sasaran Kinerja Individu karena tanggal pengajuan "
-                        . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
-                        . $ski->month."-".$ski->year. ").",
+                        . "sudah pernah diajukan sebelumnya (ID " . $dataski[0]->id . ": "
+                        . $dataski[0]->month."-".$dataski[0]->year. ").",
                     ]);
                     return redirect()->route('secretary.ski.create');
                 }
