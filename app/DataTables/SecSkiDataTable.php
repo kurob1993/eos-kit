@@ -82,7 +82,6 @@ class SecSkiDataTable extends DataTable
         return $this->builder()
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->addAction(['width' => '80px'])
                     ->parameters($this->getBuilderParameters());
     }
 
@@ -147,6 +146,14 @@ class SecSkiDataTable extends DataTable
                 'title' => 'Dibuat oleh', 
                 'searchable' => false, 
                 'orderable' => false,
+            ],
+            [ 
+                'data' => 'action', 
+                'name' => 'action', 
+                'title' => 'Action', 
+                'searchable' => false, 
+                'orderable' => false,
+                'class' => 'show',
             ],
         ];
     }
