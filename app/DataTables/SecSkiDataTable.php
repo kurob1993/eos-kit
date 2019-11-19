@@ -143,7 +143,8 @@ class SecSkiDataTable extends DataTable
             [ 
                 'data' => 'secretary.name', 
                 'name' => 'secretary.name', 
-                'title' => 'Dibuat oleh', 
+                'title' => 'Dibuat oleh',
+                'class' => 'none', 
                 'searchable' => false, 
                 'orderable' => false,
             ],
