@@ -17,3 +17,10 @@
         ->name('secretary.travels.create');
     Route::post('travels', 'SecretaryController@storeTravels')
         ->name('secretary.travels.store');
+    
+    Route::get('ski', 'SecretaryController@ski')
+        ->name('secretary.ski.index');
+    Route::get('ski/create', 'SecretaryController@createSki')
+        ->name('secretary.ski.create');
+    Route::post('ski', 'SecretaryController@storeSki')
+        ->name('secretary.ski.store');

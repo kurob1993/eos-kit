@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\StoreAbsenceRequest;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\AttendanceQuota;
+use App\Models\Ski;
 use App\Models\SAP\Zhrom0013;
 use App\Models\AbsenceApproval;
 use App\Models\InternalActivity;

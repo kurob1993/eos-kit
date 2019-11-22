@@ -7,6 +7,7 @@ use App\Models\AbsenceApproval;
 use App\Models\AttendanceApproval;
 use App\Models\AttendanceQuotaApproval;
 use App\Models\TimeEventApproval;
+use App\Models\SkiApproval;
 use App\Models\Stage;
 
 class EmployeeApprovalComposer
@@ -36,6 +37,11 @@ class EmployeeApprovalComposer
         $countOvertimeApprovals = AttendanceQuotaApproval::ofLoggedUser()
             ->waitedForApproval()->get();
         $view->with('countOvertimeApprovals', count($countOvertimeApprovals));
+
+        // Jumlah item notifikasi untuk Sasaran Kinerja Individu
+        $countSki = SkiApproval::ofLoggedUser()
+            ->waitedForApproval()->get();
+        $view->with('countSki', count($countSki));
 
         // Jumlah item notifikasi untuk time_event
         $countTimeEventApprovals = TimeEventApproval::ofLoggedUser()
@@ -353,6 +359,69 @@ class EmployeeApprovalComposer
             ],
         ];
 
+        $skiFields = [
+            [ 
+                'data' => 'ski.id', 
+                'name' => 'ski.id', 
+                'title' => 'ID',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'ski.personnel_no', 
+                'name' => 'ski.personnel_no', 
+                'title' => 'NIK',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'ski.user.name', 
+                'name' => 'ski.user.name', 
+                'title' => 'Nama',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'ski.month', 
+                'name' => 'ski.month', 
+                'title' => 'Periode',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'ski.perilaku', 
+                'name' => 'ski.perilaku', 
+                'title' => 'Perilaku',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'ski.kinerja', 
+                'name' => 'ski.kinerja', 
+                'title' => 'Kinerja',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'ski.ski_approval', 
+                'name' => 'ski.ski_approval', 
+                'title' => 'Approval', 
+                'searchable' => false, 
+                'class' => 'none',
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'action', 
+                'name' => 'action', 
+                'title' => 'Aksi', 
+                'class' => 'text-center',
+                'searchable' => false,
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'detail', 
+                'name' => 'detail', 
+                'title' => 'Detail', 
+                'class' => 'text-center',
+                'searchable' => false,
+                'orderable' => false,
+            ],
+        ];
+
         // table builder untuk AbsenceApproval
         $leaveTableBuilder = app('datatables.html.leaveTable');
         $leaveTable = $leaveTableBuilder
@@ -401,10 +470,23 @@ class EmployeeApprovalComposer
         $overtimeTable->parameters($tableParameters);
         $view->with('overtimeTable', $overtimeTable);
 
+        // table builder untuk SkiApproval
+        $skiTableBuilder = app('datatables.html.skiTable');
+        $skiTable = $skiTableBuilder
+            ->setTableAttribute('id', 'skiTable')
+            ->columns($skiFields)
+            ->minifiedAjax(
+                route('dashboards.ski_approval'),
+                'data.stage_id = $("#filter-skiTable option:selected").val();', [ ]
+            );
+        $skiTable->parameters($tableParameters);
+        $view->with('skiTable', $skiTable);
+
         $tableNames = collect([
             [ 'tableName' => 'leaveTable', 'approval' => 'leave' ],
             [ 'tableName' => 'permitTable', 'approval' => 'permit' ],
             [ 'tableName' => 'overtimeTable', 'approval' => 'overtime' ],
+            [ 'tableName' => 'skiTable', 'approval' => 'ski' ],
             [ 'tableName' => 'timeEventTable', 'approval' => 'time_event' ]
         ]);
         $view->with(compact('tableNames'));

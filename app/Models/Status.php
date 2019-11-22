@@ -25,6 +25,11 @@ class Status extends Model
         return $this->hasMany(\App\Models\AttendanceApproval::class);
     }
 
+    public function skiApprovals()
+    {
+        return $this->hasMany(\App\Models\SkiApproval::class);
+    }
+
     public function scopeFirstStatus($query)
     {
         // NEED TO IMPLEMENT CONFIGURATION

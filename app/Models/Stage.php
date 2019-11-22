@@ -35,6 +35,11 @@ class Stage extends Model
     {
         return $this->hasMany('App\Models\Activity');
     }
+    
+    public function ski()
+    {
+        return $this->hasMany('App\Models\Ski');
+    }
 
     public function flows()
     {

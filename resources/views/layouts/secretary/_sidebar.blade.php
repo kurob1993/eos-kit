@@ -22,20 +22,39 @@
                 <li class="nav-header">Secretary</li>
     
                 @role('secretary')
-                <li class="has-sub"{{ 
-                    ( (Request::segment(1) == 'travels')
-                    || (Request::segment(1) == 'overtimes')
-                    )  ? 'active' : '' 
-                    }}>
+                <li class="has-sub {{ (
+                    (Request::segment(2) == 'ski')
+                ) ? 'active' : ''
+                }}">
                     <a href="javascript:;">
                             <b class="caret pull-right"></b>
                             <i class="icon-user"></i>
+                            <span>Personnel Admin</span>
+                        </a>
+                    <ul class="sub-menu">
+                        <li class="{{ Request::segment(2)=='ski' ? 'active' : '' }}">
+                            <a href="{{ route('secretary.ski.index') }}">Sasaran Kinerja Individu</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-sub {{ 
+                    ( 
+                        (Request::segment(2) == 'travels') || 
+                        (Request::segment(2) == 'overtimes')
+                    )  ? 'active' : '' 
+                    }}">
+                    <a href="javascript:;">
+                            <b class="caret pull-right"></b>
+                            <i class="fa fa-inbox"></i>
                             <span>Time Management</span>
                         </a>
                     <ul class="sub-menu">
                         {{-- <li> <a href="{{ route('secretary.travels.index') }}">Perjalanan Dinas</a> </li> --}}
-                        <li> <a href="{{ route('secretary.overtimes.index') }}">Lembur</a> </li>
+                        <li class="{{ Request::segment(2)=='overtimes' ? 'active' : '' }}"> 
+                            <a href="{{ route('secretary.overtimes.index') }}">Lembur</a> 
+                        </li>
                     </ul>
+                    
                 </li>
                 @endrole 
     

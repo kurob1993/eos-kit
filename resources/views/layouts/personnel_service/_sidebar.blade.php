@@ -11,9 +11,10 @@
             @role('personnel_service')
             <li class="has-sub {{ 
                     (
-                        (Request::segment(2) == 'internal-activity')||
+                        (Request::segment(2) == 'internal-activity') ||
                         (Request::segment(2) == 'external-activity') ||
-                        (Request::segment(2) == 'other-activity')
+                        (Request::segment(2) == 'other-activity') ||
+                        (Request::segment(2) == 'ski')
                     ) 
                     ? 'active' : '' 
                     }}">
@@ -31,6 +32,9 @@
                     </li>
                     <li class="{{ Request::segment(2)=='other-activity' ? 'active' : '' }}">
                         <a href="{{ route('personnel_service.other-activity.index') }}">Other Activity</a>
+                    </li>
+                    <li class="{{ Request::segment(2)=='ski' ? 'active' : '' }}">
+                        <a href="{{ route('personnel_service.ski.index') }}">Sasaran Kinerja Individu</a>
                     </li>
                 </ul>
             </li>

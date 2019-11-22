@@ -8,6 +8,7 @@ use App\Models\AbsenceApproval;
 use App\Models\AttendanceApproval;
 use App\Models\TimeEventApproval;
 use App\Models\AttendanceQuotaApproval;
+use App\Models\SkiApproval;
 use App\Models\Status;
 use App\Models\Absence;
 use App\Models\Attendance;
@@ -332,6 +333,105 @@ class ApprovalController extends Controller
         }
     }
 
+    public function skiApproval(Request $request)
+    {
+        // ambil data persetujuan attendanceQuota, WARNING nested relationship eager loading
+        $overtimeApprovals = SkiApproval::ofLoggedUser()
+            ->with([
+                'status:id,description',
+                'ski',
+                'ski.user',
+                'ski.stage',
+                'ski.employee:personnel_no,name',
+                'ski.skiApproval'
+            ]);
+
+        if (is_numeric($request->input('stage_id')))
+            $overtimeApprovals->whereStageId('ski', $request->input('stage_id'));
+
+        // response untuk datatables absences approval
+        if ($request->ajax()) {
+
+            return Datatables::of($overtimeApprovals)
+                ->editColumn('ski.id', function (SkiApproval $aa) {
+                    return $aa->ski->plain_id;
+                })
+                ->editColumn('ski.user.name', function (SkiApproval $aa) {
+                    return $aa->ski->user['name'];
+                })
+                ->editColumn('ski.month', function (SkiApproval $aa) {
+                    return '<span class="label label-warning">'.
+                            $aa->ski->month."/".$aa->ski->year
+                        .'</span> ';
+                })
+                ->editColumn('ski.perilaku', function (SkiApproval $aa) {
+                    $nilai = 0;            
+                    foreach($aa->ski->skiDetail as $klp)
+                    {
+                        if($klp->klp == "Perilaku")
+                        {
+                            $nilai +=$klp->nilai;
+                        }
+                    };
+                    return $nilai;
+                })
+                ->editColumn('ski.kinerja', function (SkiApproval $aa) {
+                    $nilai = 0;            
+                    foreach($aa->ski->skiDetail as $klp)
+                    {
+                        if($klp->klp == "Kinerja")
+                        {
+                            $nilai +=$klp->nilai;
+                        }
+                    };
+                    return $nilai;
+                })
+                ->editColumn('ski.ski_approval', function (SkiApproval $aa) {
+                    $approvals = $aa->ski->skiApproval;
+                    $a = '';
+                    foreach ($approvals as $approval) {
+                        if ($approval->is_waiting){
+                            $a = $a . '<i class="fa fa-clock-o"></i>&nbsp;';
+                        }
+                        else if ($approval->is_approved) {
+                            $a = $a . '<i class="fa fa-check text-success"></i>&nbsp;';
+                            $a = $a . $approval->updated_at . '&nbsp;';
+                        } else if ($approval->is_rejected){
+                            $a = $a . '<i class="fa fa-times text-danger"></i>&nbsp;';
+                        }
+
+                        $a = $a . view('layouts._personnel-no-with-name', [
+                            'personnel_no' => $approval->regno,
+                            'employee_name' => $approval->user['name']
+                        ]) . '<br />';
+                    }
+                    return $a;
+                })
+                ->addColumn('action', function (SkiApproval $aa) {
+                    if (
+                        $aa->ski->is_waiting_approval &&
+                        $aa->isWaiting
+                    ) {
+                        // apakah stage-nya: waiting approval
+                        return view('components._action-approval', [
+                            'model' => $aa,
+                            'approve_url' => route('dashboards.approve', [
+                                'id' => $aa->id, 'approval' => 'ski'
+                            ]),
+                            'reject_url' => route('dashboards.reject', [
+                                'id' => $aa->id, 'approval' => 'ski'
+                            ])
+                        ]);
+                    }
+                })
+                ->addColumn('detail', function (SkiApproval $aa) {
+                    return view('secretary.ski._action',['ski'=>$aa->ski,'edit'=>true] );
+                })
+                ->escapeColumns([])
+                ->make(true);
+        }
+    }
+
     public function approve(Request $request, $approval, $id)
     {
         // poor database design
@@ -361,6 +461,10 @@ class ApprovalController extends Controller
             case 'overtime':
                 $approved = AttendanceQuotaApproval::find($id);
                 $moduleText = config('emss.modules.overtimes.text');
+                break;
+            case 'ski':
+                $approved = SkiApproval::find($id);
+                $moduleText = 'Sasaran Kinerja Individu';
                 break;
         }
 
@@ -404,10 +508,12 @@ class ApprovalController extends Controller
                 $approved = AttendanceQuotaApproval::find($id);
                 $moduleText = config('emss.modules.overtimes.text');
                 break;
+            case 'ski':
+                $approved = SkiApproval::find($id);
+                $moduleText = 'Sasaran Kinerja Individu';
+                break;
         }
-
-        if (!$approved->update($request->all()
-            + ['status_id' => Status::rejectStatus()->id])) {
+        if (!$approved->update($request->all() + ['status_id' => Status::rejectStatus()->id])) {
             // kembali lagi jika gagal
             return redirect()->back();
         }
@@ -459,6 +565,12 @@ class ApprovalController extends Controller
                     ->whereStageIsWaitingApproval('attendanceQuota')
                     ->get();
                 $moduleText = config('emss.modules.overtimes.text');
+                break;
+            case 'ski':
+                $approvals = SkiApproval::ofLoggedUser()
+                    ->whereStageIsWaitingApproval('ski')
+                    ->get();
+                $moduleText = 'Sasaran Kinerja Individu';
                 break;
         }
 

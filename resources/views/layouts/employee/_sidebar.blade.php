@@ -28,7 +28,8 @@
                     (Request::segment(1) == 'administrations') ||
                     (Request::segment(1) == 'internal-activity') ||
                     (Request::segment(1) == 'external-activity') ||
-                    (Request::segment(1) == 'other-activity')
+                    (Request::segment(1) == 'other-activity') ||
+                    (Request::segment(1) == 'ski')
                 ) ? 'active' : '' 
                 }}">
                 <a href="javascript:;">
@@ -50,6 +51,9 @@
                     <li class="{{ Request::segment(1)=='other-activity' ? 'active' : '' }}"> 
                         <a href="{{ route('other-activity.index') }}">Other Activity</a> 
                     </li>
+                    <li class="{{ Request::segment(1)=='ski' ? 'active' : '' }}">
+                        <a href="{{ url('ski') }}">Sasaran Kinerja Individu</a>
+                    </li>
                     {{-- <li class="{{ Request::segment(1)=='organizations' ? 'active' : '' }}"> 
                         <a href="#">Organisasi</a> 
                     </li>
@@ -59,9 +63,12 @@
                 </ul>
             </li>
             <li class="has-sub {{ (
-            (Request::segment(1) == 'leaves') || (Request::segment(1) == 'permits') 
-                || (Request::segment(1) == 'time_events') || (Request::segment(1) == 'overtimes') 
-                || (Request::segment(1) == 'wakers') ) ? 'active' : '' 
+                    (Request::segment(1) == 'leaves') || 
+                    (Request::segment(1) == 'permits') || 
+                    (Request::segment(1) == 'time_events') || 
+                    (Request::segment(1) == 'overtimes') || 
+                    (Request::segment(1) == 'wakers')
+                ) ? 'active' : '' 
             }}">
                 <a href="javascript:;">
                         <b class="caret pull-right"></b>

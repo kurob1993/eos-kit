@@ -21,6 +21,12 @@ class User extends Authenticatable
 
   protected $casts = [ 'is_verified' => 'boolean', ];
 
+  public function skis()
+    {
+        // one-to-many relationship dengan ski
+        return $this->hasMany('App\Models\Ski', 'personnel_no', 'personnel_no');
+    }
+
   public function absences()
   {
     // one-to-many relationship dengan Absence
@@ -43,6 +49,12 @@ class User extends Authenticatable
   {
     // one-to-many relationship dengan AbsenceApproval
     return $this->hasMany('App\Models\AbsenceApproval', 'regno', 'personnel_no');
+  }
+
+  public function skiApprovals()
+  {
+    // one-to-many relationship dengan AbsenceApproval
+    return $this->hasMany('App\Models\Skipproval', 'regno', 'personnel_no');
   }
 
   public function employee()
