@@ -309,7 +309,7 @@ class SkiController extends Controller
                     ]);
 
                     // // kembali ke halaman index ski
-                    return redirect()->route('ski.create');
+                    return redirect()->route('ski.index');
                 }
             }
         }
