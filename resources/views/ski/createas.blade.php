@@ -11,6 +11,11 @@
       <div class="panel-heading">
         <h4 class="panel-title">Input Sasaran Kinerja Individu</h4>
       </div>
+<div class="alert alert-success fade in">
+          <i class="fa fa-book pull-left"></i>
+          <p> Untuk pertanyaan & petunjuk penggunaan hubungi <b> Divisi Human Capital Integration & Adm.</b> telepon <b> 72163</b> </p>
+          <br>          
+      </div>
       <div class="panel-body">
         {!! Form::open([
             'url' => $formRoute, 
