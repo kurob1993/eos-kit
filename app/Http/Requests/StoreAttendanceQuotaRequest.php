@@ -30,7 +30,7 @@ class StoreAttendanceQuotaRequest extends FormRequest
           'day_assignment' => 'required',
           'from' => 'required',
           'to' => 'required',
-          'overtime_reason_id' => 'required',
+          'overtime_reason_id' => 'required'
         ];
     }
 }

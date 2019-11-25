@@ -33,8 +33,8 @@ class LeaveApprovalMessage extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         // judul email
-        $subjectText = ($this->approved) ? 'Pengajuan cuti Anda telah disetujui' :
-            'Pengajuan cuti Anda telah ditolak';
+        $subjectText = ($this->approved) ? 'Perjlanan Dinas Anda telah disetujui' :
+            'Perjlanan Dinas Anda telah ditolak';
         $subject = sprintf('%s: %s oleh %s!',
             config('emss.modules.leaves.text'), $subjectText, $this->fromUser->name );
         

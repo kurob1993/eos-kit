@@ -32,7 +32,7 @@ class StoreTimeEventRequest extends FormRequest
             'check_date' => 'required',
             'check_time' => 'required',
             'time_event_type_id' => 'required',
-            'note' => 'required|max:100',
+            'note' => 'required|max:100'
         ];
     }
 }

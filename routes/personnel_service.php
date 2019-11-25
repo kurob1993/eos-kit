@@ -21,6 +21,8 @@
     Route::get('all_permits/absence', 'AllPermitController@absence')
         ->name('all_permits.absence');
 
+    
+
     // route untuk manage daftar semua izin jenis attendance
     Route::get('all_permits/attendance', 'AllPermitController@attendance')
         ->name('all_permits.attendance');

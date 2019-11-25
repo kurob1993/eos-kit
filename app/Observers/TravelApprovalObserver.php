@@ -27,9 +27,9 @@ class TravelApprovalObserver
       // menyimpan catatan pengiriman pesan
       $message = new Message;
       
+      
       // apakah data absence sudah disetujui
       if ($TravelApproval->isApproved) {
-        
         // NEED TO IMPLEMENT FLOW STAGE (send to SAP)
         $travel->stage_id = Stage::sentToSapStage()->id;
 
@@ -37,6 +37,15 @@ class TravelApprovalObserver
         $messageAttribute = sprintf('SPD approved from %s to %s',
         $from->personnelNoWithName, $to->personnelNoWithName);
       }
+    else {
+
+      // NEED TO IMPLEMENT FLOW STAGE (denied)
+      $travel->stage_id = 5;
+
+      // message history
+      $messageAttribute = sprintf('Time Event rejected from %s to %s',
+          $from->personnelNoWithName, $to->personnelNoWithName);
+  }
       
       // simpan data message history lainnya
       $message->setAttribute('from', $from->id);

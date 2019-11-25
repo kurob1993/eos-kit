@@ -32,6 +32,13 @@ class Travel extends Model
         return $this->hasMany('App\Models\TravelApproval');
     } 
 
+
+    public function travelFacilitiy()
+    {
+        // many-to-one relationship dengan Employee
+        return $this->hasMany('App\Models\TravelFacility');
+    } 
+
     public function stage()
     {
         // many-to-one relationship dengan Stage

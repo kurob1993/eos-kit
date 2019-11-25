@@ -137,7 +137,7 @@ class LeaveController extends Controller
         // tampilkan pesan bahwa telah berhasil mengajukan cuti
         Session::flash("flash_notification", [
             "level" => "success",
-            "message" => "Berhasil menyimpan pengajuan cuti.",
+            "message" => "Berhasil menyimpan Pengajuan Perjalanan Dinas.",
         ]);
 
         // membuat pengajuan cuti dengan menambahkan data personnel_no

@@ -2,25 +2,26 @@
 
 @section('content')
 <!-- begin #page-container -->
-@component('layouts.employee._page-container', ['page_header' => 'Pengajuan Cuti'])
+@component('layouts.employee._page-container', ['page_header' => 'Pengajuan Perjalanan Dinas'])
 <div class="row">
   <div class="col-lg-12 col-xl-9">
     <div class="panel panel-prussian">
       <div class="panel-heading">
-        <h4 class="panel-title">Mengajukan Cuti</h4>
+        <h4 class="panel-title">Mengajukan Perjalanan Dinas</h4>
       </div>
       @include('layouts._flash')
       <div class="alert alert-success fade in">
         <i class="fa fa-calendar pull-left"></i>
-        <p>Silahkan pilih tanggal mulai SPD dengan memilih kalender di sebelah kiri.</p>
+        <p>Mohon diisi dengan teliti tanggal mulai dan berakhir perjalanan dinas</p>
         <br />
-        <i class="fa fa-calendar pull-left"></i>
-        <p>Silahkan pilih tanggal berakhir SPD dengan memilih kalendear di sebelah kanan.</p>
+        <i class="fa fa-warning pull-left"></i>
+        <p>Lampiran perjalanan dinas harus diisi dengan tanda tangan basah, File lampiran berformat jpeg, png, dan pdf dengan maksimal ukuran 500kb</p>
       </div>
       <div class="panel-body">
         {!! Form::open([
         'url' => route('travels.store'),
         'method' => 'post',
+        'enctype' => 'multipart/form-data',
         'class'=>'form-horizontal',
         'data-parsley-validate' => 'true'
         ])
@@ -64,4 +65,5 @@
 @push('on-ready-scripts')
 DaterangePickerPlugins.init();
 @include('travels._script')
+SelectTravel.init();
 @endpush

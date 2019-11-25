@@ -1,4 +1,6 @@
-// fungsi untuk menampilkan input lampiran
+<script type="text/javascript">
+  (handleSelectpicker = function() {
+  // fungsi untuk menampilkan input lampiran
 // jika durasi cuti lebih dari atau sama dengan 2 hari
 function attachment() {
     var durasi = Number($('#deduction').val());
@@ -152,60 +154,16 @@ $('#kendaraan').change(function (data) {
 $('#tujuan').change(function (data) {
     boss();
 });
-
-@if (Auth::user()->employee()->first()->canDelegate())
-    
-    var subOptions = {
-      persist: false,
-      valueField: "personnel_no",
-      labelField: "personnel_no",
-      searchField: ["personnel_no", "name"],
-      options: [    ],
-      render: {
-        item: function(item, escape) {
-          return (
-            "<div>" +
-            (item.personnel_no
-              ? '<span class="label label-default">' + escape(item.personnel_no) + "</span>&nbsp;"
-              : "") +
-            (item.name
-              ? '<span class="name">' + escape(item.name) + "</span>"
-              : "") +
-            "</div>"
-          );
-        },
-        option: function(item, escape) {
-          var label = item.personnel_no || item.name;
-          var caption = item.personnel_no ? item.name : null;
-          return (
-            "<div>" +
-            '<span class="label label-default">' +
-            escape(label) +
-            "</span>&nbsp;" +
-            (caption
-              ? '<span class="caption">' + escape(caption) + "</span>"
-              : "") +
-            "</div>"
-          );
-        }
+  
+  }),
+  
+  (StructdispSelectPlugins = (function() {
+    "use strict";
+    return {
+      init: function() {
+        handleSelectpicker();
       }
     };
+  })());
   
-    $.ajax({
-    url: '{{ url('api/structdisp') }}/{{ Auth::user()->personnel_no}}/subordinates',
-        type: 'GET',
-        dataType: 'json',
-        error: function() {},
-        success: function(res) {
-          var newOptions = [];
-          for (var key in res) {
-            var o = {name: res[key].name, personnel_no: res[key].personnel_no};
-            newOptions.push(o);
-          }
-          subOptions.options = newOptions;
-          var subSelect = $(".sub-selectize").selectize(subOptions);
-          var selectize = subSelect[0].selectize;
-      }
-    });
-    
-    @endif
+  </script>

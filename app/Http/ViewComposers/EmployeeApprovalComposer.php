@@ -3,6 +3,7 @@
 namespace App\http\ViewComposers;
 
 use Illuminate\View\View;
+use Illuminate\Http\Request; 
 use App\Models\AbsenceApproval;
 use App\Models\AttendanceApproval;
 use App\Models\AttendanceQuotaApproval;
@@ -401,6 +402,13 @@ class EmployeeApprovalComposer
                 'orderable' => false,
             ],
             [ 
+                'data' => 'travel.kota', 
+                'name' => 'travel.kota', 
+                'title' => 'Kota', 
+                'searchable' => false,
+                'orderable' => false,
+            ],
+            [ 
                 'data' => 'travel.keperluan', 
                 'name' => 'travel.keperluan', 
                 'title' => 'Keperluan', 
@@ -414,6 +422,14 @@ class EmployeeApprovalComposer
                 'title' => 'Kendaraan',
                 'class' => 'none',
                 'searchable' => false,
+                'orderable' => false,
+            ],
+            [ 
+                'data' => 'travel.lampiran', 
+                'name' => 'travel.lampiran', 
+                'title' => 'Lampiran', 
+                'searchable' => false, 
+                'class' => 'none',
                 'orderable' => false,
             ],
             [ 
@@ -491,6 +507,7 @@ class EmployeeApprovalComposer
                 route('dashboards.travel_approval'),
                 'data.stage_id = $("#filter-travelTable option:selected").val();', [ ]
             );
+
         $travelTable->parameters($tableParameters);
         $view->with('travelTable', $travelTable);
 

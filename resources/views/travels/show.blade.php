@@ -14,13 +14,23 @@
             <td> {{ $travel->end_date }} </td>
         </tr>
         <tr>
+            <td>Tujuan</td>
+            <td>{{ $travel->kota }}</td>
+        </tr> 
+        <tr>
             <td>Durasi</td>
             <td>{{ $travel->duration }} hari</td>
         </tr>
-        {{-- <tr>
-            <td>Jenis Lembur</td>
-            <td>{{ $travel->overtimeReason->text }}</td>
-        </tr> --}}
+        <tr>
+            <td>Lampiran</td>
+            <td>
+                @if($travel->lampiran != null)
+                    <i class="fa fa-check-circle"></i>
+                @else
+                    <i class="fa fa-times-circle"></i>
+                @endif
+            </td>
+        </tr>
         <tr>
             <td>Atasan</td>
             <td>
@@ -29,13 +39,12 @@
                     'personnel_no' => $item->employee->personnel_no,
                     'employee_name' => $item->employee->name])
                 @endcomponent
+                <!-- $travel->travelApproval->status_id -->
                 <br />
                 @endforeach
             </td>
         </tr>
         <tr>
-            <td>Tahap</td>
-            <td><span class="label label-default">{{ $travel->stage->description }}</span></td>
         </tr>
     </tbody>
 </table>

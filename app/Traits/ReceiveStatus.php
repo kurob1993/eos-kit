@@ -36,7 +36,7 @@ trait ReceiveStatus
             true : false;
     }
 
-    public function scopeWaitedForApproval($query)
+    public function scopewaitedForApproval($query)
     {
         return $query->where('status_id', Status::firstStatus()->id);
     }

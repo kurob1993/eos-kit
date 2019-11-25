@@ -9,12 +9,13 @@
                 <li class="nav-header">Personnel Service</li>
     
                 @role('personnel_service')
-                <li class="has-sub"{{ (
+                <li class="has-sub{{ (
                     (Request::segment(1) == 'all_leaves') || (Request::segment(1) == 'all_absence_quotas') 
                         || (Request::segment(1) == 'all_permits/absence') || (Request::segment(1) == 'all_permits/attendance') 
-                        || (Request::segment(1) == 'all_time_events') || (Request::segment(1) == 'all_overtimes') 
-                        ) ? 'active' : '' 
-                    }}>
+                        || (Request::segment(1) == 'all_time_events') || (Request::segment(1) == 'all_overtimes'))? 'active' : ''  }}">
+
+
+
                     <a href="javascript:;">
                             <b class="caret pull-right"></b>
                             <i class="icon-user"></i>
@@ -32,7 +33,9 @@
                     </ul>
                 </li>
                 @endrole 
-    
+
+
+
                 <li class="">
                     <a href="{{ route('home') }}" >
                         <i class="fa fa-sign-out"></i>

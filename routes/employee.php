@@ -87,3 +87,10 @@
 
    // route untuk spd/travel
    Route::resource('travels', 'TravelController');
+   Route::get('travels/download/{$id}','TravelController@download')->name('travels.download');
+
+    // Payslip routing
+    Route::resource('payslip','PaySlipController');
+    Route::get('payslip/{file?}','PaySlipController@download')->name('payslip.download');
+
+    Route::get('example','ExampleController@index');

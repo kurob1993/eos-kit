@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\Request; 
+use App\Http\Requests\StoreTravelRequest;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -133,12 +134,21 @@ class TravelController extends Controller
         $travel->end_date = $request->end_date;
         $travel->tujuan = $request->tujuan;
         $travel->keperluan = $request->keperluan;
+        $travel->jenis_spd = $request->travel_type;
         $travel->kendaraan = $request->kendaraan;
+        $travel->kota = $request->pilih_kota;
         $travel->nopol = $request->nopol;
-        $travel->stage_id = 1;
+        $travel->stage_id = 1;  
+        if ($request->lampiran) {
+            $data = $request->lampiran->store('travel', 'public');
+            $travel->lampiran = $data;
+        }
 
         if($travel->save()){
             $this->approval($travel->id,$request->minManagerBoss);
+            if ($request->has('managerGa')) {
+                $this->approval_ga($travel->id, $request->managerGa);
+            }
             if($request->delegation){
                 $abbr = Auth::user()->structDisp()->first()->emp_hrp1000_s_short;
                 $nik = $request->delegation;
@@ -148,6 +158,16 @@ class TravelController extends Controller
         
         return redirect()->route('travels.index');
     }
+
+    public function approval_ga($id,$ga)
+    {
+        $ta = new TravelApproval();
+        $ta->travel_id = $id;
+        $ta->regno = $ga;
+        $ta->status_id = 1;
+        $ta->save();
+    }
+
 
     public function approval($id,$boss)
     {
@@ -220,5 +240,10 @@ class TravelController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function download($id){
+        $data = Travel::findOrFail($id);
+        return response()->download(storage_path('travel',$data->lampiran));
     }
 }

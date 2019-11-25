@@ -80,7 +80,7 @@
 
   <div class="form-group">
     <label for="nohp">Jenis SPD</label>
-    <select name="travel-type" id="travel-type" class="form-control" required>
+    <select name="travel_type" id="travel-type" class="form-control" required>
       <option value="">.:: Pilih Jenis SPD ::.</option>
       @foreach ($travelType as $item)
         <option value="{{$item->subtype}}">{{$item->text}}</option>
@@ -163,7 +163,7 @@
 
   <!-- begin submit button -->
   <div class="form-group pull-right">
-    {!! Form::submit('Kirim Pengajuan Cuti', ['class'=>'btn btn-primary']) !!}
+    {!! Form::submit('Kirim Pengajuan Dinas', ['class'=>'btn btn-primary']) !!}
   </div>
   <!-- end submit button -->
 </div>

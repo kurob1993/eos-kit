@@ -357,6 +357,10 @@ class ApprovalController extends Controller
                 ->editColumn('personnel_no', function ($TravelApproval) {
                     return $TravelApproval->employee->name;
                 })
+                ->editColumn('travel.lampiran', function($TravelApproval){
+                    // return $TravelApproval->lampiran;
+                    return '<a class="btn btn-primary" href="' . route('travels.download', $TravelApproval->lampiran) .'"><i class="fa fa-download"></i>&nbsp;&nbsp;download</a>';
+                })
                 ->editColumn('personnel_no', function ($TravelApproval) {
                     $name = $TravelApproval->employee->name;
                     $code = '<label class="label label-info">' .
@@ -484,7 +488,13 @@ class ApprovalController extends Controller
                 $approved = AttendanceQuotaApproval::find($id);
                 $moduleText = config('emss.modules.overtimes.text');
                 break;
+            case 'travel':
+                $approved = TravelApproval::find($id);
+                $moduleText = 'SPD';
+                // $moduleText = config('emss.modules.overtimes.text');
+                break;
         }
+
 
         if (!$approved->update($request->all()
             + ['status_id' => Status::rejectStatus()->id])) {

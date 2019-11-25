@@ -10,6 +10,7 @@ use App\Traits\OfLoggedUserApproval;
 class TravelApproval extends Model
 {
     use ReceiveStatus, ParentStage, OfLoggedUserApproval;
+    protected $fillable = ['status_id'];
 
     public function travel()
     {
@@ -27,5 +28,9 @@ class TravelApproval extends Model
     {
         // many-to-one relationship dengan User
         return $this->belongsTo('App\User', 'regno', 'personnel_no');
+    }
+
+    public function scopeSelectTravel($query, $travel_id){
+        return $query::where('travel_id',$travel_id);
     }
 }
