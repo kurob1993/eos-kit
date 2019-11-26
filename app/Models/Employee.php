@@ -31,6 +31,7 @@ class Employee extends Model
            ->first();
        return $s['emp_hrp1000_s_short'];
    }
+   
 
     public function getEmpHrp1000SShortAttribute()
     {

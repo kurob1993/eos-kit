@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StructDispSap extends Model
 {
+    
     protected $table = 'structdisp_sap';
     protected $primaryKey = null;
     public $incrementing = false;
