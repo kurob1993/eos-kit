@@ -17,7 +17,8 @@ class TimeEventApprovalObserver
           ->first()
           ->user;
 
-      // sistem mengirim email notifikasi
+        // sistem mengirim email notifikasi
+        if ($to->user->hasValidEmail())
       $to->notify(new TimeEventApprovalCreatedMessage($timeEventApproval));
   }
 
@@ -68,8 +69,9 @@ class TimeEventApprovalObserver
       // update data timeEvent
       $timeEvent->save();
 
-      // sistem mengirim email notifikasi dari atasan ke
-      // karyawan yang mengajukan
+        // sistem mengirim email notifikasi dari atasan ke
+        // karyawan yang mengajukan
+        if ($to->user->hasValidEmail())
       $to->notify(new TimeEventApprovalMessage($from, $timeEventApproval));
   }
 }

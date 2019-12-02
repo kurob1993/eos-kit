@@ -17,7 +17,8 @@ class AttendanceApprovalObserver
             ->first()
             ->user;
 
-        // sistem mengirim email notifikasi
+    // sistem mengirim email notifikasi
+    if ($to->user->hasValidEmail())
         $to->notify(new AttendanceApprovalCreatedMessage($attendanceApproval));
     }
     
@@ -68,8 +69,9 @@ class AttendanceApprovalObserver
       // update data attendance
       $attendance->save();
 
-      // sistem mengirim email notifikasi dari atasan ke
-      // karyawan yang mengajukan         
+    // sistem mengirim email notifikasi dari atasan ke
+    // karyawan yang mengajukan   
+    if ($to->user->hasValidEmail())      
       $to->notify(new PermitApprovalMessage($from, $attendanceApproval));
     }
 }

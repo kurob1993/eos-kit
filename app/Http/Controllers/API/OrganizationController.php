@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\SAP\OrgText;
+use App\Models\SAP\StructDisp;
 
 class OrganizationController extends Controller
 {
@@ -53,6 +54,11 @@ class OrganizationController extends Controller
     public function unitkerjaold($unitkerja = null)
     {
        return OrgText::oldDiv($unitkerja)->get();       
+    }
+
+    public function boss($emporid = null)
+    {
+       return StructDisp::orgBoss($emporid)->get();       
     }
 
 }

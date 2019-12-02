@@ -57,6 +57,7 @@ Route::group(['prefix' => 'organization', 'middleware' => 'api'], function() {
     Route::get('Objectabbr/{Objectabbr?}/{date?}', 'OrganizationController@showAbbr');
     Route::get('level/{unitkerja?}/{date?}', 'OrganizationController@unitkerja');
     Route::get('old/{unitkerjaold?}/{date?}', 'OrganizationController@unitkerjaold');
+    Route::get('Bosses/{emporid}', 'OrganizationController@boss');
 });
 
 Route::group(['prefix' => 'zhrom0007', 'middleware' => 'api'], function() {

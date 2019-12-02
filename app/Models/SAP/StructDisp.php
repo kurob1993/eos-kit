@@ -309,4 +309,11 @@ class StructDisp extends Model
          }
          return $org;
      }
+
+    public function scopeOrgBoss($query, $emporid)
+    {
+        $query->where('emporid', $emporid)
+            ->where('emppersk','BS')->first();
+            
+    }
 }
