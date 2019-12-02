@@ -114,7 +114,7 @@ class TimeEventObserver
             $to = $timeEvent->user()->first();
 
             // sistem mengirim email notifikasi
-            if ($to->user->hasValidEmail())
+            if ($to->hasValidEmail)
             $to->notify(new TimeEventSentToSapMessage($timeEvent));
         }
     }
@@ -129,7 +129,7 @@ class TimeEventObserver
 
         // // sistem mengirim notifikasi
         $to = $timeEvent->user;
-        if ($to->user->hasValidEmail())
+        if ($to->hasValidEmail)
         $to->notify(new TimeEventDeletedMessage($timeEvent));    
     }
 }

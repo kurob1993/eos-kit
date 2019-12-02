@@ -22,7 +22,7 @@ class AbsenceApprovalObserver
             ->user;
 
     // sistem mengirim email notifikasi
-    if ($to->user->hasValidEmail())
+    if ($to->hasValidEmail)
         $to->notify(new AbsenceApprovalCreatedMessage($absenceApproval));
     }
 
@@ -77,7 +77,7 @@ class AbsenceApprovalObserver
 
     // sistem mengirim email notifikasi dari atasan ke
     // karyawan yang mengajukan 
-    if ($to->user->hasValidEmail())        
+    if ($to->hasValidEmail)        
       $to->notify(new LeaveApprovalMessage($from, $absenceApproval));
     }
 }
