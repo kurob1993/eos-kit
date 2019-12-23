@@ -169,6 +169,36 @@
       $('#kirim').addClass('hidden');
     }
   }
+
+  function checkSkorPerilaku(value, iddata) {
+    if(value > 10) {
+      alert('Nilai tidak boleh lebih dari 10 ');
+      $('#skorp'+iddata).val(0);
+      $('#nilaip'+iddata).val(0);
+      setNilaiPerilaku(iddata);
+    }
+  }
+
+  function setNilaiPerilaku(id) {
+    var count = Number( $('#idp').val() );
+    var bobot = $('#bobotp'+id).val();
+    var skor  = $('#skorp'+id).val();
+    var sum_perilaku = 0;
+    var sum_nilai_perilaku1 = 0;
+    console.log(bobot +' - '+ skor);
+    
+    $('#nilaip'+id).val(bobot*skor);
+
+    for (let index = 0; index < count; index++) {
+      var klpp  = $('#klpp'+index).val();
+      var bobot = Number( $('#bobotp'+index).val() );
+      var skor  = Number( $('#skorp'+index).val() );
+
+      sum_nilai_perilaku1 += bobot*skor;
+      $('#sum_nilai_perilaku1').val(sum_nilai_perilaku1);
+    }
+  }
+
   function add_column() {
     var id = Number( $('#id').val() );
     var kolom = '<tr>'+

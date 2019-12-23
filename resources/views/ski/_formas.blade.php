@@ -154,23 +154,14 @@ to, overtime_reason, delegation (if have subordinates)
             </thead>
             <tbody id="tbodyPerilaku">
               @php($u = 1)
-              @foreach($perilakus as $perilaku) 
+              @foreach($perilakus as $key => $perilaku) 
                 @php($required = '')
                 @php($required = 'required')
                
                 <tr>
                   <td class="text-center">{{ $u++ }}</td>
-                  {{-- <td>
-                    <select {{ $required }} name="klp[]" id="klp{{$i}}" style="width: 100%; height: 26px">
-                      <option value=""></option>
-                      <option value="Perilaku">Perilaku</option>
-                      <option value="Kinerja">Kinerja</option>
-                    </select>
-                  </td> --}}
                   <td>
-                      <select {{ $required }} name="klpp[]" id="klpp{{ $perilaku->id }}" style="width: 100%; height: 26px; display:none">
-                        <option value="Perilaku">Perilaku</option>
-                      </select>
+                      <input type="hidden" name="klpp[]" id="klpp{{ $key }}" style="width: 100%" value="Perilaku">
                       <input type="text" {{ $required }} name="sasaranp[]" style="width: 100%" value="{{ $perilaku->name }}">
                   </td>
                   <td><input type="text" name="kodep[]" style="width: 100%" value=""></td>
@@ -178,25 +169,25 @@ to, overtime_reason, delegation (if have subordinates)
                   <td>
                     <input type="text" {{ $required }} 
                       name="bobotp[]" 
-                      id="bobot{{$perilaku->id}}"
+                      id="bobotp{{$key}}"
                       value="10"
                       style="width: 100%; text-align: right"
-                      onkeyup="setNilai({{$perilaku->id}})"
+                      onkeyup="setNilaiPerilaku({{$key}})"
                       readonly
                     >
                   </td>
                   <td>
                     <input type="text" 
                       name="skorp[]" 
-                      id="skor{{$perilaku->id}}" 
+                      id="skorp{{$key}}" 
                       style="width: 100%; text-align: right"
-                      onkeyup="setNilai({{$perilaku->id}});checkSkor(this.value, '{{$perilaku->id}}')"
+                      onkeyup="setNilaiPerilaku({{$key}});checkSkorPerilaku(this.value, '{{$key}}')"
                     >
                   </td>
                   <td>
                     <input type="text" 
                       name="nilaip[]" 
-                      id="nilai{{$perilaku->id}}"
+                      id="nilaip{{$key}}"
                       style="width: 100%; text-align: right"
                       readonly
                     >
@@ -213,9 +204,7 @@ to, overtime_reason, delegation (if have subordinates)
                 </tr>
             </tfoot>
           </table>
-          <input type="hidden" id="id" value="{{$perilaku->id}}">
-          {{-- <input type="hidden" id="sum_perilaku"> --}}
-          {{-- <input type="hidden" id="sum_kinerja"> --}}
+          <input type="hidden" id="idp" value="{{$key+1}}">
         </div>
         <div class="modal-footer">
           <div class="pull-left">
