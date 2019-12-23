@@ -34,7 +34,7 @@ class StoreTravelRequest extends FormRequest
             "nopol" => "max:30",
             "jenis_spd" => "required",
             "stage_id" => "required",
-            "kota" => "required',
+            "kota" => "required",
             'lampiran' => 'required'|
                 'mimetypes:image/jpeg,image/png,application/pdf', 
                 'max:500'

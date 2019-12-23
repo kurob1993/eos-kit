@@ -107,7 +107,7 @@ class TravelController extends Controller
         $gol = Auth::user()->employee->esgrp;
         $cc = Auth::user()->employee->cost_ctr;
         $travelType = TravelType::all();
-        $city = City::all();
+        $city = City::orderBy('text','ASC')->get();
 
         return view('travels.create', 
             [
