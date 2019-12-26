@@ -82,6 +82,9 @@ table, th, td {
   'end_date' =>  config('emss.modules.time_events.end_date')
 ])
 <script>
+  function numberOnly(params) {
+    this.value = this.value.replace(/[^1-9\.]/g,'');
+  }
   function checkSkorPerilaku(value, iddata) {
     // if(value > 10) {
     //   alert('Nilai tidak boleh lebih dari 10 ');
