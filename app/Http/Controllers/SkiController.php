@@ -237,6 +237,7 @@ class SkiController extends Controller
         $dataski = Ski::where('personnel_no', $request->personnel_no)
             ->where('year', $request->tahun)
             ->where('month', $request->bulan)
+            ->whereNotIn('stage_id',[4,5,6])
             ->get();
 
         $cekski = $dataski->count();           
@@ -269,16 +270,16 @@ class SkiController extends Controller
         {
             if($ski != null)
             {
-                $cekdataPerilaku =  SkiDetail::where('ski_id', $ski->id)
-                    ->where('klp', "Perilaku")
-                    ->get()
-                    ->count();    
+                // $cekdataPerilaku =  SkiDetail::where('ski_id', $ski->id)
+                //     ->where('klp', "Perilaku")
+                //     ->whereNotIn('stage_id',[4,5,6])
+                //     ->get()
+                //     ->count();    
     
-                if($cekdataPerilaku > 0)
-                {
+                if($cekski > 0){
                     Session::flash("flash_notification", [
                         "level" => "danger",
-                        "message" => "Tidak input perilaku Kerja Karyawan karena tanggal pengajuan "
+                        "message" => "Tidak dapat input perilaku Kerja Karyawan karena tanggal pengajuan "
                         . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
                         . $ski->month."-".$ski->year. ").",
                     ]);

@@ -24,12 +24,13 @@ class SkiApprovalObserver
 
         // menyimpan catatan pengiriman pesan
         $message = new Message;
+
+        // hitung jumlah persetujuan
+        $count_of_aqa = $aq->skiApproval->count();
+
         switch ($currentAqa->sequence) {
             case 1:
                 if ($currentAqa->is_approved) {
-                    
-                    // hitung jumlah persetujuan
-                    $count_of_aqa = $aq->skiApproval->count();
 
                     // jika jumlah persetujuan hanya 1 maka langsung ubah stage
                     if ($count_of_aqa == 1) {
@@ -54,10 +55,12 @@ class SkiApprovalObserver
                     // simpan perubahan Stage untuk ski
                     $aq->save();
 
-                    // reject status pada second approval
-                    $secondAqa = $aq->second_approval;
-                    $secondAqa->status_id = Status::rejectStatus()->id;
-                    $secondAqa->save();
+                    if ($count_of_aqa == 2) {
+                        // reject status pada second approval
+                        $secondAqa = $aq->second_approval;
+                        $secondAqa->status_id = Status::rejectStatus()->id;
+                        $secondAqa->save();
+                    }
 
                     // message history
                     $messageAttribute = sprintf('Sasaran Kinerja Individu rejected at first sequence from %s to %s',
