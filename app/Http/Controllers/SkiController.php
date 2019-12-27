@@ -239,7 +239,7 @@ class SkiController extends Controller
             ->where('month', $request->bulan)
             ->whereNotIn('stage_id',[4,5,6])
             ->get();
-
+        
         $cekski = $dataski->count();           
 
         if($cekski < 1) {
@@ -270,17 +270,16 @@ class SkiController extends Controller
         {
             if($ski != null)
             {
-                // $cekdataPerilaku =  SkiDetail::where('ski_id', $ski->id)
-                //     ->where('klp', "Perilaku")
-                //     ->whereNotIn('stage_id',[4,5,6])
-                //     ->get()
-                //     ->count();    
+                $cekdataPerilaku =  SkiDetail::where('ski_id', $skiid)
+                ->where('klp', "Perilaku")
+                ->get()
+                ->count();    
     
-                if($cekski > 0){
+                if($cekski > 0 && $cekdataPerilaku > 0){
                     Session::flash("flash_notification", [
                         "level" => "danger",
                         "message" => "Tidak dapat input perilaku Kerja Karyawan karena tanggal pengajuan "
-                        . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
+                        . "sudah pernah diajukan sebelumnya (ID " . $skiid . ": "
                         . $ski->month."-".$ski->year. ").",
                     ]);
                     return redirect()->route('ski.create');
@@ -318,17 +317,16 @@ class SkiController extends Controller
         {
             if($ski != null)
             {
-                $cekdataKinerja =  SkiDetail::where('ski_id', $ski->id)
+                $cekdataKinerja =  SkiDetail::where('ski_id', $skiid)
                     ->where('klp', "Kinerja")
                     ->get()
                     ->count();    
-    
-                if($cekdataKinerja > 0)
+                if($cekski > 0 && $cekdataKinerja > 0)
                 {
                     Session::flash("flash_notification", [
                         "level" => "danger",
                         "message" => "Tidak input Sasaran Kinerja Individu karena tanggal pengajuan "
-                        . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
+                        . "sudah pernah diajukan sebelumnya (ID " . $skiid . ": "
                         . $ski->month."-".$ski->year. ").",
                     ]);
                     return redirect()->route('ski.create');
