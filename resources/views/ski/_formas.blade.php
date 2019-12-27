@@ -64,7 +64,7 @@
         data-toggle="modal" 
         data-target="#modalPrilaku"
         style="display: none"
-        onclick="return ceking(1)">
+        onclick="">
         INPUT SKI
       </button>
     </div>
