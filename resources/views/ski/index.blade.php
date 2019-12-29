@@ -14,7 +14,10 @@
     </div>
   @include('layouts._flash')
   <div class="panel-body">
-    <p> <a class="btn btn-primary" href="{{ route('ski.create') }}">Tambah</a> </p>
+    <a class="btn btn-primary" href="{{ route('ski.create') }}">Tambah</a>
+    @if ($allowed)
+    <a class="btn btn-primary" href="{{ route('ski.create','subordinate=1') }}">Tambah Ski Bawahan</a>
+    @endif
     <div class="table-responsive">
       {!! $html->table(['class'=>'table table-striped', 'width' => '100%']) !!}
     </div>

@@ -20,7 +20,7 @@ class SkiController extends Controller
 {
     public function index(Request $request, Builder $htmlBuilder)
     {
-        $allowed = Auth::user()->employee->allowedToSubmitSubordinateOvertime();
+        $allowed = Auth::user()->employee->allowedToSubmitSubordinateSki();
 
         if ($allowed) {
             $lembur = "Daftar Sasaran Kerja";
@@ -167,11 +167,13 @@ class SkiController extends Controller
             ]);
 
         // tampilkan view index dengan tambahan script html DataTables
-        return view('ski.index')->with(compact('html', 'overtimes', 'lembur'));
+        return view('ski.index')->with(compact('html', 'overtimes', 'lembur','allowed'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $subordinate = $request->subordinate;
+        
         // user yang dapat melakukan pengajuan lembur
         $user = Auth::user()->personnel_no;
 
@@ -181,28 +183,28 @@ class SkiController extends Controller
         // mengecek apakah boleh mengajukan overtime untuk bawahan
         $allowed = Auth::user()
             ->employee
-            ->allowedToSubmitSubordinateOvertime();
+            ->allowedToSubmitSubordinateSki();
 
-        if ($allowed) {
+        if ($allowed && $subordinate) {
             // route untuk menyimpan from employee
             $formRoute = route('ski.store');
             $pageContainer = 'layouts.employee._page-container';
 
             // menampilkan view create overtime secretary
             return view(
-                'ski.createas',
+                'ski.subordinate.create',
                 compact('user', 'formRoute', 'pageContainer', 'perilakus')
             );
         } else {
+            // route untuk menyimpan from employee
+            $formRoute = route('ski.store');
+            $pageContainer = 'layouts.employee._page-container';
 
-            Session::flash("flash_notification", [
-                "level" => "danger",
-                "message" => "Mohon maaf, Anda tidak dapat input Sasaran Kerja. " .
-                    "Silahkan hubungi Supervisor/Superintendent/Sekretaris Divisi " .
-                    "untuk mengajukan Sasaran Kerja Anda."
-            ]);
-            // batalkan view create dan kembali ke parent
-            return redirect()->route('ski.index');
+            // menampilkan view create overtime secretary
+            return view(
+                'ski.create',
+                compact('user', 'formRoute', 'pageContainer', 'perilakus')
+            );
         }
     }
 

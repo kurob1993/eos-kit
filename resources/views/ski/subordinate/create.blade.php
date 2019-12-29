@@ -25,8 +25,7 @@
             'data-parsley-validate' => 'true'
             ])
         !!}
-        <input type="hidden" name="aksi" value="" id="aksi" />
-        @include('ski._formas')
+        @include('ski.subordinate._formas')
         {!! Form::close() !!}
       </div>
     </div>
@@ -81,88 +80,7 @@ table, th, td {
   'start_date' =>  config('emss.modules.time_events.start_date'),
   'end_date' =>  config('emss.modules.time_events.end_date')
 ])
-<script>
-  function keyPress() {
-    $(document).keydown(function(e){
-        e = e || window.event;
-        var keyCode = e.keyCode || e.which;
-        if(keyCode=='13' || e.which == 40){ //arrow key
-            var id = e.target.id;            
-            id = id.split("_");
-            
-            id = id[0]+'_'+ (Number(id[1])+1);
-
-            $('#'+id).focus();
-            
-            e.preventDefault();
-            return false;
-        }    
-
-        if(e.which == 38){ //arrow key
-            var id = e.target.id;
-            id = id.split("_");
-            
-            id = id[0]+'_'+ (Number(id[1])-1);
-
-            $('#'+id).focus();
-            
-            e.preventDefault();
-            return false;
-        }
-
-    });
-
-  }
-  
-  function setAutoComplete() {
-    $('input').attr('autocomplete','off');
-  }
-
-  function numberOnly(value, id) {
-    value = value.replace(/[^0-9\.]/g,'');
-    $('#'+id).val(value);
-  }
-
-  // share kpi
-  function setNilaiShareKpi() {
-    var bobot = $('#bobotShareKpi').val();
-    var skor = $('#skorShareKpi').val();
-    var nilai = (skor*bobot)/10;
-    $('#nilaiShareKpi').val(nilai);
-  }
-
-  // kpi hasil
-  function CekBobotKpiHasil(id) {
-    var count = Number( $('#last_id_kpi_hasil').val() );
-    var sum = 0;
-    for (let index = 0; index <= count; index++) {
-      var bobot = Number( $('#bobotKpiHasil_'+index).val() );
-      sum +=bobot;
-    }
-    if(sum > 65){
-      alert('Bobot tidak boleh lebih dari 65%');
-      bobot = Number( $('#'+id).val() );
-      sum = sum - bobot;
-      $('#'+id).val('');
-      // console.log(id);
-    }
-    $('#totalBobotKpiHasil').val(sum);
-  }
-
-  function setNilaiKpiHasil(id) {
-    var count = Number( $('#last_id_kpi_hasil').val() );
-    var sum = 0;
-    for (let index = 0; index <= count; index++) {
-      var capaian = Number( $('#capaianKpiHasil_'+index).val() );
-      var bobot = Number( $('#bobotKpiHasil_'+index).val() );
-      var nilai = (bobot*capaian)/10;
-      $('#nilaiKpiHasil_'+index).val(nilai)
-      sum +=nilai;
-    }
-    
-    $('#totalNilaiKpiHasil').val(sum);
-  }
-</script>
+<script> @include('ski.subordinate.js') </script>
 @endpush
 
 @push('on-ready-scripts') 

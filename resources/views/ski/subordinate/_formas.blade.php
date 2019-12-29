@@ -104,9 +104,9 @@
             </div>
           </div>
           
-          @include('ski._tableShareKpi')
+          @include('ski.subordinate.kpi_share._table')
           <div class="m-10"></div>
-          @include('ski._tableKpiHasil')
+          @include('ski.subordinate.kpi_hasil._table')
           
         </div>
         <div class="modal-footer">

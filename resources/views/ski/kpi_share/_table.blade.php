@@ -8,8 +8,6 @@
             <th class="text-center" style="width: 10%">Ukuran Prestasi Kerja</th>
             <th class="text-center" style="width: 6%">Bobot</th>
             <th class="text-center" style="width: 6%">Keterangan</th>
-            <th class="text-center" style="width: 6%">Skor</th>
-            <th class="text-center" style="width: 8%">Nilai</th>
         </tr>
     </thead>
     <tbody id="tbodyPerilaku">
@@ -24,16 +22,6 @@
                 onkeyup="setNilaiPerilaku();">
             </td>
             <td><input type="text" name="keterangan[]" style="width: 100%" autocomplete="off" value="Capaian"></td>
-            <td>
-                <input type="text" name="skor[]" id="skorShareKpi" style="width: 100%; text-align: right" required
-                onkeyup="
-                    setNilaiPerilaku();
-                    checkSkorPerilaku(this.value, '');
-                    numberOnly(this.value,this.id);
-                    setNilaiShareKpi();
-                ">
-            </td>
-            <td><input type="text" name="nilai[]" id="nilaiShareKpi" style="width: 100%; text-align: right" readonly ></td>
         </tr>
     </tbody>
 </table>

@@ -299,6 +299,12 @@ class Employee extends Model
         return (($this->esgrp != 'ES') && ($this->esgrp != 'EF') && ($this->esgrp != 'F')) ? true : false;
     }
 
+    public function allowedToSubmitSubordinateSki()
+    {
+        // apakah boleh mengajukan lembur untuk bawahan?
+        return (($this->esgrp == 'AS') || ($this->esgrp == 'BS') || ($this->esgrp == 'CS')) ? true : false;
+    }
+
     public function director()
     {
         // mencari record structdisp untuk employee ini
