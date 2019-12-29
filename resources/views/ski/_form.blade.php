@@ -27,13 +27,13 @@
         </select>
       </div>
     </div>
-    
+
     <!-- begin superintendent_approver field -->
     <!-- This field is not sent via form -->
     <div class="p-l-5 p-r-5 form-group{{ $errors->has('superintendent_approver') ? ' has-error' : '' }}">
       {!! Form::label('superintendent_approver', 'Superintendent') !!}
-      <select class="form-control superintendent-selectize" name="superintendent">
-        <option value="" selected>Pilih Superintendent</option>
+      <select name="superintendent" id="superintendent_approver" class="form-control">
+        <option value="{{ Auth::user()->employee->minSptBossWithDelegation()->personnel_no }}" selected>{{ Auth::user()->employee->minSptBossWithDelegation()->name}}</option>
       </select>
     </div>
     <!-- end superintendent_approver field -->
@@ -42,8 +42,8 @@
     <!-- This field is not sent via form -->
     <div class="p-l-5 p-r-5 form-group{{ $errors->has('manager_approver') ? ' has-error' : '' }}">
       {!! Form::label('manager_approver', 'Manager') !!}
-      <select class="form-control manager-selectize" name="manager">
-        <option value="" selected>Pilih Manager</option>
+      <select name="manager" id="manager_approver" class="form-control">
+        <option value="{{ Auth::user()->employee->minManagerBossWithDelegation()->personnel_no }}" selected>{{ Auth::user()->employee->minManagerBossWithDelegation()->name}}</option>
       </select>
     </div>
   
@@ -54,7 +54,6 @@
         data-backdrop="static" 
         data-toggle="modal" 
         data-target="#modalPrilaku"
-        style="display: none"
         onclick="">
         INPUT SKI
       </button>
@@ -68,7 +67,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Perilaku</h4>
+          <h4 class="modal-title">INPUT SKI</h4>
         </div>
         <div class="modal-body">
 
@@ -94,13 +93,33 @@
               </div>
             </div>
           </div>
-          
-          @include('ski.kpi_share._table')
-          <div class="m-10"></div>
-          @include('ski.kpi_hasil._table')
-          <div class="m-10"></div>
-          @include('ski.kpi_proses._table')
-          
+
+          <table class="table-responsive" style="width: 100%">
+              <thead>
+                  <tr style="background-color: darkcyan; color: white">
+                      <th class="text-center" style="width: 2%">NO</th>
+                      <th class="text-center" style="width: 8%">Asepk Penilaian</th>
+                      <th class="text-center" style="width: 4%">Kode</th>
+                      <th class="text-center" style="width: 20%">Sasaran Prestasi Kerja</th>
+                      <th class="text-center" style="width: 10%">Ukuran Prestasi Kerja</th>
+                      <th class="text-center" style="width: 6%">Bobot</th>
+                      <th class="text-center" style="width: 6%">Keterangan</th>
+                      <th class="text-center" style="width: 6%">Skor</th>
+                      <th class="text-center" style="width: 8%">Nilai</th>
+                      <th class="text-center" style="width: 8%">Aksi</th>
+                  </tr>
+              </thead>
+              <tbody id="tbodyPerilaku">
+                  @include('ski.kpi_share._table')
+                  @include('ski.kpi_hasil._table')
+                  @include('ski.kpi_proses._table')
+                  @include('ski.kpi_perilaku._table')
+                  @include('ski.kpi_leadership._table')
+              </tbody>
+          </table>
+          <input type="hidden" id="last_id_kpi_hasil" value="0" style="width: 100%">
+          <input type="hidden" id="last_id_kpi_proses" value="0" style="width: 100%">
+
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary" id="kirimPerilaku" >

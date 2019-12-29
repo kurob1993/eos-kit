@@ -76,15 +76,10 @@ table, th, td {
 @endpush 
 
 @push('custom-scripts')
-@include('scripts._ski-script',[
-  'start_date' =>  config('emss.modules.time_events.start_date'),
-  'end_date' =>  config('emss.modules.time_events.end_date')
-])
 <script> @include('ski.js') </script>
 @endpush
 
-@push('on-ready-scripts') 
-SecretaryOvertimePlugins.init();
+@push('on-ready-scripts')
 setAutoComplete();
 keyPress();
 @endpush

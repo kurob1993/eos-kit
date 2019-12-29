@@ -177,6 +177,8 @@ class SkiController extends Controller
         // user yang dapat melakukan pengajuan lembur
         $user = Auth::user()->personnel_no;
 
+        $golongan = Auth::user()->employee->esgrp;
+
         // data master prilaku
         $perilakus = SkiPerilaku::all();
         
@@ -203,13 +205,15 @@ class SkiController extends Controller
             // menampilkan view create overtime secretary
             return view(
                 'ski.create',
-                compact('user', 'formRoute', 'pageContainer', 'perilakus')
+                compact('user', 'formRoute', 'pageContainer', 'perilakus','golongan')
             );
         }
     }
 
     public function store(Request $request)
     {  
+        dd($request->input());
+
         $disp = StructDisp::where('empnik',$request->personnel_no)
             ->selfStruct()
             ->get();

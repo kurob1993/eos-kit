@@ -68,21 +68,33 @@ function addColumnKpiHasil(){
     var index = Number( $('#last_id_kpi_hasil').val() );
     $('#last_id_kpi_hasil').val(index+1);
 
-    var kolom = '<tr id="kolom_'+(index+1)+'">'+
+    var kolom = '<tr style="background-color: wheat">'+
         '<td colspan="2"></td>'+
-        '<td><input type="text" name="kode[]" id="kodeKpiHasil_'+ (index+1) +'" value="" style="width: 100%"></td>'+
-        '<td><input type="text" name="sasran_prestasi_kerja[]" id="sasaranKpiHasil_'+ (index+1) +'" style="width: 100%"></td>'+
-        '<td><input type="text" name="ukuran_prestasi_kerja[]" id="ukuranKpiHasil_'+ (index+1) +'" style="width: 100%"></td>'+
+        '<td><input type="text" name="kpi_hasil_kode[]" id="kodeKpiHasil_'+(index+1)+'" style="width: 100%"></td>'+
+        '<td><input type="text" name="kpi_hasil_sasran_prestasi_kerja[]" id="sasaranKpiHasil_'+(index+1)+'" style="width: 100%"></td>'+
+        '<td><input type="text" name="kpi_hasil_ukuran_prestasi_kerja[]" id="ukuranKpiHasil_'+(index+1)+'" style="width: 100%"></td>'+
         '<td>'+
-            '<input type="text" name="bobot[]" id="bobotKpiHasil_'+ (index+1) +'" style="width: 100%; text-align: right" required onkeyup="'+
-                'numberOnly(this.value, this.id);'+
-                'CekBobotKpiHasil(this.id);'+
-                'setNilaiKpiHasil(this.id);'+
-            '">'+
+            '<input type="text" name="kpi_hasil_bobot[]" id="bobotKpiHasil_'+(index+1)+'" style="width: 100%; text-align: right" '+
+            'onkeyup="numberOnly(this.value, this.id); CekBobotKpiHasil(this.id);" autocomplete="off">'+
         '</td>'+
-        '<td><input type="text" style="width: 100%" id="targetKpiHasil_'+ (index+1) +'" onkeyup="numberOnly(this.value, this.id);"></td>'+
-        '<td style="text-align: center">'+
-        '</td>'+
+        '<td><input type="text" style="width: 100%" id="targetKpiHasil_'+(index+1)+'" value="Target" readonly></td>'+
+        '<td><input type="text" name="kpi_hasil_target[]" style="width: 100%" id="skorTargetKpiHasil_'+(index+1)+'"></td>'+
+        '<td></td>'+
+        '<td style="text-align: center"></td>'+
+    '</tr>'+
+    '<tr style="background-color: wheat">'+
+        '<td colspan="6"></td>'+
+        '<td><input type="text" style="width: 100%" id="realisasiKpiHasil_'+(index+1)+'" value="Realisasi" readonly></td>'+
+        '<td></td>'+
+        '<td></td>'+
+        '<td style="text-align: center"></td>'+
+    '</tr>'+
+    '<tr id="kolom_'+(index+1)+'" style="background-color: wheat">'+
+        '<td colspan="6"></td>'+
+        '<td><input type="text" style="width: 100%" id="capaianKpiHasil_'+(index+1)+'" value="Capaian" readonly></td>'+
+        '<td></td>'+
+        '<td></td>'+
+        '<td style="text-align: center"></td>'+
     '</tr>';
 
     $('#lastColumnKpiHasil').before(kolom);
@@ -130,21 +142,33 @@ function addColumnKpiProses(){
     var index = Number( $('#last_id_kpi_proses').val() );
     $('#last_id_kpi_proses').val(index+1);
 
-    var kolom = '<tr id="kolom_'+(index+1)+'">'+
+    var kolom = '<tr style="background-color: wheat">'+
         '<td colspan="2"></td>'+
-        '<td><input type="text" name="kode[]" id="kodeKpiProses_'+ (index+1) +'" value="" style="width: 100%"></td>'+
-        '<td><input type="text" name="sasran_prestasi_kerja[]" id="sasaranKpiProses_'+ (index+1) +'" style="width: 100%"></td>'+
-        '<td><input type="text" name="ukuran_prestasi_kerja[]" id="ukuranKpiProses_'+ (index+1) +'" style="width: 100%"></td>'+
+        '<td><input type="text" name="kpi_proses_kode[]" id="kodeKpiProses_'+(index+1)+'" style="width: 100%"></td>'+
+        '<td><input type="text" name="kpi_proses_sasran_prestasi_kerja[]" id="sasaranKpiProses_'+(index+1)+'" style="width: 100%"></td>'+
+        '<td><input type="text" name="kpi_proses_ukuran_prestasi_kerja[]" id="ukuranKpiProses_'+(index+1)+'" style="width: 100%"></td>'+
         '<td>'+
-            '<input type="text" name="bobot[]" id="bobotKpiProses_'+ (index+1) +'" style="width: 100%; text-align: right" required onkeyup="'+
-                'numberOnly(this.value, this.id);'+
-                'CekBobotKpiProses(this.id);'+
-                'setNilaiKpiProses(this.id);'+
-            '">'+
+            '<input type="text" name="kpi_proses_bobot[]" id="bobotKpiProses_'+(index+1)+'" style="width: 100%; text-align: right" '+
+            'onkeyup="numberOnly(this.value, this.id); CekBobotKpiProses(this.id);" autocomplete="off">'+
         '</td>'+
-        '<td><input type="text" style="width: 100%" id="targetKpiProses_'+ (index+1) +'" onkeyup="numberOnly(this.value, this.id);"></td>'+
-        '<td style="text-align: center">'+
-        '</td>'+
+        '<td><input type="text" style="width: 100%" id="targetKpiProses_'+(index+1)+'" value="Target" readonly></td>'+
+        '<td><input type="text" name="kpi_proses_target[]" style="width: 100%" id="skorTargetKpiProses_'+(index+1)+'"></td>'+
+        '<td></td>'+
+        '<td style="text-align: center"></td>'+
+    '</tr>'+
+    '<tr style="background-color: wheat">'+
+        '<td colspan="6"></td>'+
+        '<td><input type="text" style="width: 100%" id="realisasiKpiProses_'+(index+1)+'" value="Realisasi" readonly></td>'+
+        '<td></td>'+
+        '<td></td>'+
+        '<td style="text-align: center"></td>'+
+    '</tr>'+
+    '<tr id="kolom_'+(index+1)+'" style="background-color: wheat">'+
+        '<td colspan="6"></td>'+
+        '<td><input type="text" style="width: 100%" id="capaianKpiProses_'+(index+1)+'" value="Capaian" readonly></td>'+
+        '<td></td>'+
+        '<td></td>'+
+        '<td style="text-align: center"></td>'+
     '</tr>';
 
     $('#lastColumnKpiProses').before(kolom);
