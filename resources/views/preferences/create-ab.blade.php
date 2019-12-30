@@ -19,17 +19,18 @@
         <i class="fa fa-paper-plane pull-left"></i>
         <p>Ketiga untuk menyimpan data jabatan klik tombol Kirim Data.</p> --}}
         <i class="fa fa-paper-plane pull-left"></i>
-        <p>Aturan pengisian.</p>
+        <p>Aturan pengisian preference & dislike:</p>
+        <p>Maksimal jabatan yang dapat dipilih masing – masing adalah 6 jabatan dengan ketentuan:</p>
         <ul>
-          <li>Pilih 3 jabatan yang sama dengan level anda saat ini.</li>
-          <li>Pilih 3 jabatan diatas  level anda saat ini.</li>
-          <li>Anda dapat memilih jabatan diluar organisasi saat ini.</li>
+          <li>Pilih 3 jabatan yang sama dengan golongan anda saat ini.</li>
+          <li>Pilih 3 jabatan diatas golongan anda saat ini.</li>
+          <li>Diwajibkan untuk mengisi preference dan dislike.</li>
         </ul>
         <i class="fa fa-paper-plane pull-left"></i>
-        <p>Langkah pengisian.</p>
+        <p>Langkah pengisian:</p>
         <ol>
-          <li>Pilih organisasi sesuai urutan dari atas kebawah (Direktorat, Subdit, Divisi, Dinas, Seksi)</li>
-          <li>Pilih jabatan yang diinginkan sesuai aturan diatas.</li>
+          <li>Pilih organisasi sesuai urutan unit level organisasi dari paling tinggi ke bawah.</li>
+          <li>Pilih jabatan yang diinginkan sesuai aturan pegisian di atas.</li>
           <li>Klik tombol Kirim Data untuk menyimpan data jabatan.</li>
         </ol>
       </div>
