@@ -114,7 +114,9 @@
                   @include('ski.kpi_hasil._table')
                   @include('ski.kpi_proses._table')
                   @include('ski.kpi_perilaku._table')
+                  @if ($golongan[0] == 'A' || $golongan[0] == 'B' || $golongan[0] == 'C')
                   @include('ski.kpi_leadership._table')
+                  @endif
               </tbody>
           </table>
           <input type="hidden" id="last_id_kpi_hasil" value="0" style="width: 100%">

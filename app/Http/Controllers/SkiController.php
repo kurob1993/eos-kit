@@ -212,6 +212,77 @@ class SkiController extends Controller
 
     public function store(Request $request)
     {  
+        $ski = new Ski();
+        $ski->personnel_no = $request->personnel_no;
+        $ski->month = $request->bulan;
+        $ski->year = $request->tahun;
+        $ski->stage_id = 1;
+        $ski->dirnik = Auth::user()->personnel_no;
+
+        if($ski->save()){
+
+            
+            foreach ($request->kpi_share_aspek_penilaian as $key => $value) {
+                if( $request->kpi_share_kode[$key] && $request->kpi_share_sasran_prestasi_kerja[$key] &&
+                    $request->kpi_share_bobot[$key] ){
+
+                    $skid = new SkiDetail();
+                    $skid->ski_id = $ski->id;
+                    $skid->aspek_penilaian = $value;
+                    $skid->kode = $request->kpi_share_kode[$key];
+                    $skid->sasaran = $request->kpi_share_sasran_prestasi_kerja[$key];
+                    $skid->ukuran = $request->kpi_share_ukuran_prestasi_kerja[$key];
+                    $skid->bobot = $request->kpi_share_bobot[$key];
+                    $skid->skor = $request->kpi_share_skor[$key];
+                    $skid->nilai = $request->kpi_share_nilai[$key];
+                    $skid->save();
+
+                }
+            }
+
+            foreach ($request->kpi_hasil_aspek_penilaian as $key => $value) {
+                if( $request->kpi_hasil_kode[$key] && $request->kpi_hasil_sasran_prestasi_kerja[$key] &&
+                    $request->kpi_hasil_bobot[$key] && $request->kpi_hasil_target[$key] ){
+
+                    $skid = new SkiDetail();
+                    $skid->ski_id           = $ski->id;
+                    $skid->aspek_penilaian  = $value;
+                    $skid->kode             = $request->kpi_hasil_kode[$key];
+                    $skid->sasaran          = $request->kpi_hasil_sasran_prestasi_kerja[$key];
+                    $skid->ukuran           = $request->kpi_hasil_ukuran_prestasi_kerja[$key];
+                    $skid->bobot            = $request->kpi_hasil_bobot[$key];
+                    $skid->target           = $request->kpi_hasil_target[$key];
+                    $skid->realisasi        = $request->kpi_hasil_realisasi[$key];
+                    $skid->capaian          = $request->kpi_hasil_capaian[$key];
+                    $skid->nilai            = ($request->kpi_hasil_bobot[$key] * $request->kpi_hasil_capaian[$key])/10;
+                    $skid->save();
+
+                }
+
+            }
+
+            foreach ($request->kpi_proses_aspek_penilaian as $key => $value) {
+                if( $request->kpi_proses_kode[$key] && $request->kpi_proses_sasran_prestasi_kerja[$key] &&
+                    $request->kpi_proses_bobot[$key] && $request->kpi_proses_target[$key] ){
+
+                    $skid = new SkiDetail();
+                    $skid->ski_id           = $ski->id;
+                    $skid->aspek_penilaian  = $value;
+                    $skid->kode             = $request->kpi_proses_kode[$key];
+                    $skid->sasaran          = $request->kpi_proses_sasran_prestasi_kerja[$key];
+                    $skid->ukuran           = $request->kpi_proses_ukuran_prestasi_kerja[$key];
+                    $skid->bobot            = $request->kpi_proses_bobot[$key];
+                    $skid->target           = $request->kpi_proses_target[$key];
+                    $skid->realisasi        = $request->kpi_proses_realisasi[$key];
+                    $skid->capaian          = $request->kpi_proses_capaian[$key];
+                    $skid->nilai            = ($request->kpi_proses_bobot[$key] * $request->kpi_proses_capaian[$key])/10;
+                    $skid->save();
+
+                }
+            }
+
+        }
+
         dd($request->input());
 
         $disp = StructDisp::where('empnik',$request->personnel_no)
