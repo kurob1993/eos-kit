@@ -5,7 +5,7 @@
 @component('layouts.employee._page-container', ['page_header' => 'Sasaran Kinerja Individu'])
 <div class="panel panel-prussian">
   <div class="panel-heading">
-    <h4 class="panel-title">{{ $lembur }}</h4>
+    <h4 class="panel-title">Daftar Sasaran Kerja Individu</h4>
   </div>
   <div class="alert alert-success fade in">
      <i class="fa fa-book pull-left"></i>
@@ -15,16 +15,20 @@
   @include('layouts._flash')
   <div class="panel-body">
     <a class="btn btn-primary" href="{{ route('ski.create') }}">Tambah</a>
-    @if ($allowed)
-    <a class="btn btn-primary" href="{{ route('ski.create','subordinate=1') }}">Tambah Ski Bawahan</a>
-    @endif
-    <div class="table-responsive">
-      {!! $html->table(['class'=>'table table-striped', 'width' => '100%']) !!}
+    <select name="stage" id="stage" class="form-control" onchange="cari()" style="width: 200px; display: inline">
+      <option value=""> -- Semua Tahapan --</option>
+      @foreach ($stage as $item)
+          <option value="{{$item->id}}">{{$item->description}}</option>
+      @endforeach
+    </select>
+    <div class="table-responsive m-t-10">
+      {!! $html->table(['id'=>'table','class'=>'table table-striped', 'width' => '100%']) !!}
     </div>
   </div>
 </div>
+
 <div class="modal fade" id="modal-dialog">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog" style="width: 85%">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -44,6 +48,15 @@
 <!-- DataTables -->
 <link href={{ url("/plugins/DataTables/css/jquery.dataTables.min.css") }} rel="stylesheet" />
 <link href={{ url("/plugins/DataTables/Responsive/css/responsive.dataTables.min.css") }} rel="stylesheet" />
+<style>
+table {
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+</style>
 <!-- Pace -->    
 <script src={{ url("/plugins/pace/pace.min.js") }}></script>
 @endpush
@@ -54,6 +67,28 @@
 <script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
 <!-- Generated scripts from DataTables -->
 {!! $html->scripts() !!}
+<script>
+  
+function cari() {
+  oTable = $('.table').DataTable();
+  var stage = $('#stage').val();  
+  var cari  = stage;
+  oTable.search(cari).draw();
+}
+
+function numberOnly(value, id) {
+    value = value.replace(/[^0-9\.]/g, '');
+    $('#' + id).val(value);
+    $('#' + id).css('text-align','right');
+}
+function setNilai(id) {
+    var bobot = Number($('#bobot_'+id).val());
+    var skor = Number($('#capaian_'+id).val());
+
+    $('#nilai_'+id).val( (skor*bobot)/10 );
+}
+</script>
+
 @endpush
 
 @push('custom-scripts')

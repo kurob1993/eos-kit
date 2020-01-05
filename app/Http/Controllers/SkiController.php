@@ -9,40 +9,34 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Datatables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\Ski;
+use App\Models\Stage;
 use App\Models\SkiDetail;
 use App\Models\SkiApproval;
-use App\Models\OvertimeReason;
-use App\Models\SkiPerilaku;
 use App\Models\SAP\StructDisp;
-use App\Models\SAP\OrgText;
 
 class SkiController extends Controller
 {
     public function index(Request $request, Builder $htmlBuilder)
     {
-        $allowed = Auth::user()->employee->allowedToSubmitSubordinateSki();
+        
+        $skiApproval = SkiApproval::where('regno',Auth::user()->employee->personnel_no)->get();
+        $idSki = $skiApproval->map(function($item,$key){
+            return $item->ski_id;
+        });
 
-        if ($allowed) {
-            $lembur = "Daftar Sasaran Kerja";
-            $subordinates = Auth::user()->employee->subordinates();
-
-            $personal_no = [];
-            foreach ($subordinates as $subordinate) {
-                array_push($personal_no,$subordinate->personnel_no);
-            }
-            array_push($personal_no, Auth::user()->personnel_no);
-            $overtimes = Ski::whereIn('personnel_no',$personal_no)->get();
-        } else {
-            // ambil data cuti untuk user tersebut
-            $lembur = "Daftar Sasaran Kerja Saya";
-            $personal_no = Auth::user()->personnel_no;
-            $overtimes = Ski::where('personnel_no',$personal_no)->get();
-        }
-
+        $stage = isset($request->search['value']) ? $request->search['value'] : '';
+        $skiBawahan = Ski::whereIn('id',$idSki)->where('stage_id','like','%'.$stage.'%')->with(['skiApproval'])->get();
+        
+        $personal_no = Auth::user()->personnel_no;
+        $ski = Ski::where('personnel_no',$personal_no)->where('stage_id','like','%'.$stage.'%')->with(['skiApproval'])->get();
+        
+        $ski = $ski->merge($skiBawahan);
+        $ski = $ski->values()->all();
+        // return $ski;
         // response untuk datatables attendanceQuota
         if ($request->ajax()) {
 
-            return Datatables::of($overtimes)
+            return Datatables::of($ski)
             ->editColumn('id', function($ski){
                 return $ski->plain_id;
             })
@@ -59,54 +53,28 @@ class SkiController extends Controller
                 return '<span class="label label-'.$Ski->stage->classDescription.'">'.
                             $Ski->stage->description
                         .'</span> ';
+            })->editColumn('approver', function ($ski) {
+                // personnel_no dan name atasan
+                $views = '';
+                foreach ($ski->skiApproval as $item) {
+                    $views =  $views . view('layouts._personnel-no-with-name', [
+                        'personnel_no' => $item->employee['personnel_no'],
+                        'employee_name' => $item->employee['name'],
+                    ]) . '<br />';
+                }
+                return $views;
             })
-            ->editColumn('perilaku', function (Ski $Ski) {        
-                $nilai = 0;            
-                foreach($Ski->skiDetail as $klp)
-                {
-                    if($klp->klp == "Perilaku")
-                    {
-                        $nilai +=$klp->nilai;
-                    }
-                };
-                return $nilai;
+            ->editColumn('aksi', function ($ski) {
+                return view('ski._aksi',$ski);
             })
-            ->editColumn('kinerja', function (Ski $Ski) {        
-                $nilai = 0;            
-                foreach($Ski->skiDetail as $klp)
-                {
-                    if($klp->klp == "Kinerja")
-                    {
-                        $nilai +=$klp->nilai;
-                    }
-                };
-                return $nilai;
-            })
-                ->editColumn('approver', function ($overtime) {
-                    // personnel_no dan name atasan
-                    $views = '';
-                    foreach ($overtime->skiApproval as $item) {
-                        $views =  $views . view('layouts._personnel-no-with-name', [
-                            'personnel_no' => $item->employee['personnel_no'],
-                            'employee_name' => $item->employee['name'],
-                        ]) . '<br />';
-                    }
-                    return $views;
-                })
-                ->setRowAttr([
-                    // href untuk dipasang di setiap tr
-                    'data-href' => function ($ski) {
-                        return route('ski.show', ['ski' => $ski->id]);
-                    }
-                ])
-                ->escapeColumns([0, 1])
-                ->make(true);
+            ->escapeColumns([0, 1])
+            ->make(true);
         }
 
         // disable paging, searching, details button but enable responsive
         $htmlBuilder->parameters([
+            'serverSide' => true,
             'paging' => true,
-            'searching' => false,
             'sDom' => 'tpi',
             'responsive' => ['details' => false],
             "columnDefs" => [["width" => "10%", "targets" => 0]]
@@ -118,7 +86,6 @@ class SkiController extends Controller
                 'name' => 'id',
                 'title' => 'ID',
                 'class' => 'desktop',
-                'searchable' => false,
                 'orderable' => false,
                 ])
             ->addColumn([
@@ -126,7 +93,6 @@ class SkiController extends Controller
                 'name' => 'personnel_no',
                 'title' => 'Nama',
                 'class' => 'desktop',
-                'searchable' => false,
                 'orderable' => false,
             ])
             ->addColumn([
@@ -134,80 +100,58 @@ class SkiController extends Controller
                 'name' => 'month',
                 'title' => 'Periode',
                 'class' => 'desktop',
-                'searchable' => false,
                 'orderable' => false,
-            ])->addColumn([
+            ])
+            ->addColumn([
                 'data' => 'stage',
                 'name' => 'stage',
                 'title' => 'Tahapan',
                 'class' => 'desktop',
-                'searchable' => false,
                 'orderable' => false,
-            ])->addColumn([
-                'data' => 'perilaku',
-                'name' => 'perilaku',
-                'title' => 'Perilaku',
-                'class' => 'desktop',
-                'searchable' => false,
-                'orderable' => false,
-            ])->addColumn([
-                'data' => 'kinerja',
-                'name' => 'kinerja',
-                'title' => 'Kinerja',
-                'class' => 'desktop',
-                'searchable' => false,
-                'orderable' => false,
-            ])->addColumn([
+            ])
+            ->addColumn([
                 'data' => 'approver',
                 'name' => 'approver',
                 'title' => 'Approver',
                 'class' => 'desktop',
-                'searchable' => false,
+                'orderable' => false,
+            ])
+            ->addColumn([
+                'data' => 'aksi',
+                'name' => 'aksi',
+                'title' => 'Aksi',
+                'class' => 'desktop',
                 'orderable' => false,
             ]);
-
+        
+        $stage = Stage::all();
         // tampilkan view index dengan tambahan script html DataTables
-        return view('ski.index')->with(compact('html', 'overtimes', 'lembur','allowed'));
+        return view('ski.index')->with(compact('html', 'overtimes','stage'));
     }
 
     public function create(Request $request)
-    {
-        $subordinate = $request->subordinate;
-        
-        // user yang dapat melakukan pengajuan lembur
-        $user = Auth::user()->personnel_no;
+    {        
+        $user       = Auth::user()->personnel_no;
+        $golongan   = Auth::user()->employee->esgrp;
 
-        $golongan = Auth::user()->employee->esgrp;
+        $sturctDisp = Auth::user()->structDisp->where('no',1);
+        $setingkat = $sturctDisp->map(function($item, $key){
+            return StructDisp::where('empkostl',$item->empkostl)
+                ->where('no',1)
+                ->where('empnik','<>',$item->empnik)
+                ->where('emppersk','like','%'.$item->emppersk[0].'%')
+                ->get();
+        })->first();
 
-        // data master prilaku
-        $perilakus = SkiPerilaku::all();
-        
         // mengecek apakah boleh mengajukan overtime untuk bawahan
-        $allowed = Auth::user()
-            ->employee
-            ->allowedToSubmitSubordinateSki();
+        $allowed = Auth::user()->employee->allowedToSubmitSubordinateSki();
 
-        if ($allowed && $subordinate) {
-            // route untuk menyimpan from employee
-            $formRoute = route('ski.store');
-            $pageContainer = 'layouts.employee._page-container';
-
-            // menampilkan view create overtime secretary
-            return view(
-                'ski.subordinate.create',
-                compact('user', 'formRoute', 'pageContainer', 'perilakus')
-            );
-        } else {
-            // route untuk menyimpan from employee
-            $formRoute = route('ski.store');
-            $pageContainer = 'layouts.employee._page-container';
-
-            // menampilkan view create overtime secretary
-            return view(
-                'ski.create',
-                compact('user', 'formRoute', 'pageContainer', 'perilakus','golongan')
-            );
-        }
+        $formRoute      = route('ski.store');
+        $pageContainer  = 'layouts.employee._page-container';
+        return view(
+            'ski.create',
+            compact('user', 'formRoute', 'pageContainer', 'golongan','setingkat')
+        );
     }
 
     public function store(Request $request)
@@ -220,235 +164,154 @@ class SkiController extends Controller
         $ski->dirnik = Auth::user()->personnel_no;
 
         if($ski->save()){
+            // $this->storeKpiShare($request,$ski);
+            $this->storeKpiHasil($request,$ski);
+            $this->storeKpiProses($request,$ski);
+            $this->storeKpiPrilaku($request,$ski);
+            $this->storeKpileadership($request,$ski);
+        }
+        // dd($request->input());
+        return redirect()->route('ski.index');
+    }
 
-            
-            foreach ($request->kpi_share_aspek_penilaian as $key => $value) {
-                if( $request->kpi_share_kode[$key] && $request->kpi_share_sasran_prestasi_kerja[$key] &&
-                    $request->kpi_share_bobot[$key] ){
+    private function storeKpiShare($request,$ski)
+    {
+        foreach ($request->kpi_share_aspek_penilaian as $key => $value) {
+            if( $request->kpi_share_kode[$key] && $request->kpi_share_sasran_prestasi_kerja[$key] &&
+                $request->kpi_share_bobot[$key] ){
 
-                    $skid = new SkiDetail();
-                    $skid->ski_id = $ski->id;
-                    $skid->aspek_penilaian = $value;
-                    $skid->kode = $request->kpi_share_kode[$key];
-                    $skid->sasaran = $request->kpi_share_sasran_prestasi_kerja[$key];
-                    $skid->ukuran = $request->kpi_share_ukuran_prestasi_kerja[$key];
-                    $skid->bobot = $request->kpi_share_bobot[$key];
-                    $skid->skor = $request->kpi_share_skor[$key];
-                    $skid->nilai = $request->kpi_share_nilai[$key];
-                    $skid->save();
+                $skid = new SkiDetail();
+                $skid->ski_id           = $ski->id;
+                $skid->aspek_penilaian  = 'Share Capaian';
+                $skid->kode             = $request->kpi_share_kode[$key];
+                $skid->sasaran          = $request->kpi_share_sasran_prestasi_kerja[$key];
+                $skid->ukuran           = $request->kpi_share_ukuran_prestasi_kerja[$key];
+                $skid->bobot            = $request->kpi_share_bobot[$key];
+                $skid->capaian          = $request->kpi_share_skor[$key];
+                $skid->nilai            = $request->kpi_share_nilai[$key];
+                $skid->keterangan       = 'Capaian';
+                $skid->save();
 
-                }
             }
+        }
+    }
 
-            foreach ($request->kpi_hasil_aspek_penilaian as $key => $value) {
-                if( $request->kpi_hasil_kode[$key] && $request->kpi_hasil_sasran_prestasi_kerja[$key] &&
-                    $request->kpi_hasil_bobot[$key] && $request->kpi_hasil_target[$key] ){
+    private function storeKpiHasil($request,$ski)
+    {
+        foreach ($request->kpi_hasil_aspek_penilaian as $key => $value) {
+            if( $request->kpi_hasil_kode[$key] && $request->kpi_hasil_sasran_prestasi_kerja[$key] &&
+                $request->kpi_hasil_bobot[$key] && $request->kpi_hasil_target[$key] ){
 
+                $skid = new SkiDetail();
+                $skid->ski_id           = $ski->id;
+                $skid->aspek_penilaian  = 'KPI Hasil';
+                $skid->kode             = $request->kpi_hasil_kode[$key];
+                $skid->sasaran          = $request->kpi_hasil_sasran_prestasi_kerja[$key];
+                $skid->ukuran           = $request->kpi_hasil_ukuran_prestasi_kerja[$key];
+                $skid->bobot            = $request->kpi_hasil_bobot[$key];
+                $skid->target           = $request->kpi_hasil_target[$key];
+                $skid->realisasi        = $request->kpi_hasil_realisasi[$key];
+                $skid->capaian          = $request->kpi_hasil_capaian[$key];
+                $skid->nilai            = ($request->kpi_hasil_bobot[$key] * $request->kpi_hasil_capaian[$key])/10;
+                $skid->save();
+            }
+        }
+    }
+
+    private function storeKpiProses($request,$ski)
+    {
+        foreach ($request->kpi_proses_aspek_penilaian as $key => $value) {
+            if( $request->kpi_proses_kode[$key] && $request->kpi_proses_sasran_prestasi_kerja[$key] &&
+                $request->kpi_proses_bobot[$key] && $request->kpi_proses_target[$key] ){
+
+                $skid = new SkiDetail();
+                $skid->ski_id           = $ski->id;
+                $skid->aspek_penilaian  = 'KPI Proses';
+                $skid->kode             = $request->kpi_proses_kode[$key];
+                $skid->sasaran          = $request->kpi_proses_sasran_prestasi_kerja[$key];
+                $skid->ukuran           = $request->kpi_proses_ukuran_prestasi_kerja[$key];
+                $skid->bobot            = $request->kpi_proses_bobot[$key];
+                $skid->target           = $request->kpi_proses_target[$key];
+                $skid->realisasi        = $request->kpi_proses_realisasi[$key];
+                $skid->capaian          = $request->kpi_proses_capaian[$key];
+                $skid->nilai            = ($request->kpi_proses_bobot[$key] * $request->kpi_proses_capaian[$key])/10;
+                $skid->save();
+            }
+        }
+    }
+
+    private function storeKpiPrilaku($request,$ski)
+    {
+        foreach ($request->kpi_perilaku_bobot as $key => $value) {
+            if( $value ){
+
+                $skid = new SkiDetail();
+                $skid->ski_id           = $ski->id;
+                $skid->aspek_penilaian  = 'KPI Prilaku';
+                $skid->kode             = $request->kpi_perilaku_kode[$key];
+                $skid->sasaran          = $request->kpi_perilaku_sasran_prestasi_kerja[$key];
+                $skid->ukuran           = $request->kpi_perilaku_ukuran_prestasi_kerja[$key];
+                $skid->bobot            = $request->kpi_perilaku_bobot[$key];
+                $skid->capaian          = $request->kpi_perilaku_skor[$key];
+                $skid->nilai            = $request->kpi_perilaku_nilai[$key];
+                $skid->keterangan       = 'Capaian';
+                $skid->save();
+
+            }
+        }
+    }
+
+    private function storeKpileadership($request,$ski)
+    {
+        if(isset($request->kpi_leadership_aspek_penilaian)){
+            foreach ($request->kpi_leadership_kode as $key => $value) {
+                if( $request->kpi_leadership_kode[$key] && $request->kpi_leadership_sasran_prestasi_kerja[$key] &&
+                    $request->kpi_leadership_bobot[$key] ){
+    
                     $skid = new SkiDetail();
                     $skid->ski_id           = $ski->id;
-                    $skid->aspek_penilaian  = $value;
-                    $skid->kode             = $request->kpi_hasil_kode[$key];
-                    $skid->sasaran          = $request->kpi_hasil_sasran_prestasi_kerja[$key];
-                    $skid->ukuran           = $request->kpi_hasil_ukuran_prestasi_kerja[$key];
-                    $skid->bobot            = $request->kpi_hasil_bobot[$key];
-                    $skid->target           = $request->kpi_hasil_target[$key];
-                    $skid->realisasi        = $request->kpi_hasil_realisasi[$key];
-                    $skid->capaian          = $request->kpi_hasil_capaian[$key];
-                    $skid->nilai            = ($request->kpi_hasil_bobot[$key] * $request->kpi_hasil_capaian[$key])/10;
+                    $skid->aspek_penilaian  = 'KPI Leadership (NSP)';
+                    $skid->kode             = $request->kpi_leadership_kode[$key];
+                    $skid->sasaran          = $request->kpi_leadership_sasran_prestasi_kerja[$key];
+                    $skid->ukuran           = $request->kpi_leadership_ukuran_prestasi_kerja[$key];
+                    $skid->bobot            = $request->kpi_leadership_bobot[$key];
+                    $skid->capaian          = $request->kpi_leadership_skor[$key];
+                    $skid->nilai            = $request->kpi_leadership_nilai[$key];
+                    $skid->keterangan       = 'Capaian';
                     $skid->save();
-
-                }
-
-            }
-
-            foreach ($request->kpi_proses_aspek_penilaian as $key => $value) {
-                if( $request->kpi_proses_kode[$key] && $request->kpi_proses_sasran_prestasi_kerja[$key] &&
-                    $request->kpi_proses_bobot[$key] && $request->kpi_proses_target[$key] ){
-
-                    $skid = new SkiDetail();
-                    $skid->ski_id           = $ski->id;
-                    $skid->aspek_penilaian  = $value;
-                    $skid->kode             = $request->kpi_proses_kode[$key];
-                    $skid->sasaran          = $request->kpi_proses_sasran_prestasi_kerja[$key];
-                    $skid->ukuran           = $request->kpi_proses_ukuran_prestasi_kerja[$key];
-                    $skid->bobot            = $request->kpi_proses_bobot[$key];
-                    $skid->target           = $request->kpi_proses_target[$key];
-                    $skid->realisasi        = $request->kpi_proses_realisasi[$key];
-                    $skid->capaian          = $request->kpi_proses_capaian[$key];
-                    $skid->nilai            = ($request->kpi_proses_bobot[$key] * $request->kpi_proses_capaian[$key])/10;
-                    $skid->save();
-
-                }
-            }
-
-        }
-
-        dd($request->input());
-
-        $disp = StructDisp::where('empnik',$request->personnel_no)
-            ->selfStruct()
-            ->get();
-
-        $dispdata = $disp->transform(function ($item, $key) {
-            return $item->minDivisiData();
-        });
-
-        if(isset($dispdata[0]['ObjectID'])){
-            $objectid = $dispdata[0]['ObjectID'];
-        }else {
-            $objectid = 0;
-        }
-
-        if(isset($dispdata[0]['EndDate'])){
-            $enddate = $dispdata[0]['EndDate'];
-        }else {
-            $enddate = 0;
-        }
-
-        if(isset($dispdata[0]['Objectname'])){
-            $divisi = $dispdata[0]['Objectname'];
-        }else {
-            $divisi = $dispdata[0];
-        }
-
-        $dataski = Ski::where('personnel_no', $request->personnel_no)
-            ->where('year', $request->tahun)
-            ->where('month', $request->bulan)
-            ->get();
-
-        $cekski = $dataski->count();           
-
-        if($cekski < 1) {
-            $ski = new Ski();
-            $ski->personnel_no = $request->personnel_no;
-            $ski->month = $request->bulan;
-            $ski->year = $request->tahun;
-            $ski->object_id = $objectid;
-            $ski->end_date = $enddate;
-            $ski->divisi = $divisi;
-            $ski->stage_id = 1;
-            $ski->dirnik = Auth::user()->personnel_no;
-            $ski->save();
-
-            $skiid = $ski->id;
-        }
-        else {
-            $skiid = $dataski[0]->id;
-        }
-
-        $ski = Ski::where('personnel_no', $request->personnel_no)
-            ->where('year', $request->tahun)
-            ->where('month', $request->bulan)
-            ->first();
-
-        // perilaku
-        if($request->input('aksi') ==  1)
-        {
-            if($ski != null)
-            {
-                $cekdataPerilaku =  SkiDetail::where('ski_id', $ski->id)
-                    ->where('klp', "Perilaku")
-                    ->get()
-                    ->count();    
     
-                if($cekdataPerilaku > 0)
-                {
-                    Session::flash("flash_notification", [
-                        "level" => "danger",
-                        "message" => "Tidak input perilaku Kerja Karyawan karena tanggal pengajuan "
-                        . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
-                        . $ski->month."-".$ski->year. ").",
-                    ]);
-                    return redirect()->route('ski.create');
-                }
-                else 
-                {
-                    // dd($request->klpp);
-                    foreach ($request->klpp as $key => $value) {
-                        //dd($request->all());
-                        if ($value !== null) {
-                            $skid = new SkiDetail();
-                            $skid->ski_id = $skiid;
-                            $skid->klp = $value;
-                            $skid->sasaran = $request->sasaranp[$key];
-                            $skid->kode = $request->kodep[$key];
-                            $skid->ukuran = $request->ukuranp[$key];
-                            $skid->bobot = $request->bobotp[$key];
-                            $skid->skor = $request->skorp[$key];
-                            $skid->nilai = $request->nilaip[$key];
-                            $skid->save();
-                        }
-                    }
-
-                    Session::flash("flash_notification", [
-                        "level" => "success",
-                        "message" => "Berhasil Input perilaku Kerja Karyawan.",
-                    ]);
-
-                    // // kembali ke halaman index ski
-                    return redirect()->route('ski.index');
                 }
             }
         }
-        else 
-        {
-            if($ski != null)
-            {
-                $cekdataKinerja =  SkiDetail::where('ski_id', $ski->id)
-                    ->where('klp', "Kinerja")
-                    ->get()
-                    ->count();    
-    
-                if($cekdataKinerja > 0)
-                {
-                    Session::flash("flash_notification", [
-                        "level" => "danger",
-                        "message" => "Tidak input Sasaran Kinerja Individu karena tanggal pengajuan "
-                        . "sudah pernah diajukan sebelumnya (ID " . $ski->id . ": "
-                        . $ski->month."-".$ski->year. ").",
-                    ]);
-                    return redirect()->route('ski.create');
-                }
-                else 
-                {
-                    // kinerja
-                    foreach ($request->klp as $key => $value) {
-                        if ($request->sasaran[$key] !== null) {
-                            $skid = new SkiDetail();
-                            $skid->ski_id = $skiid;
-                            $skid->klp = $value;
-                            $skid->sasaran = $request->sasaran[$key];
-                            $skid->kode = $request->kode[$key];
-                            $skid->ukuran = $request->ukuran[$key];
-                            $skid->bobot = $request->bobot[$key];
-                            $skid->skor = $request->skor[$key];
-                            $skid->nilai = $request->nilai[$key];
-                            $skid->save();
-                        }
-                    }
-                    
-                    Session::flash("flash_notification", [
-                        "level" => "success",
-                        "message" => "Berhasil Input Sasaran Kinerja Individu.",
-                    ]);
-
-                    // // kembali ke halaman index ski
-                    return redirect()->route('ski.index');
-                }
-                
-            }
-        }
-
+        
     }
 
     public function show($id)
     {
-        $ski = Ski::find($id)
-            ->load(['stage', 'skiApproval','skiDetail']);
+        // $ski = Ski::find($id)->load(['stage', 'skiApproval','skiDetail']);
+        $ski    = Ski::find($id);
+        $personnel_no  = $ski->personnel_no;
+        $skiId  = $ski->id;
+        $month  = $ski->month;
+        $year   = $ski->year;
+        $leadership = Ski::where('month', $month)->where('year',$year)->with(['skiDetail','employee'])->get();
+        $leadership = $leadership->map(function($item, $key) use($personnel_no) {
+            $L = $item->skiDetail()
+                ->where('aspek_penilaian','KPI Leadership (NSP)')
+                ->where('kode',$personnel_no)
+                ->where('ski_id',$item->id)
+                ->first();
+            $L = isset($L) ? $L->toArray() : [];
+            return array_merge($L,$item->employee->toArray());
+        });
+        return view('ski.show', compact('ski', 'skiId','leadership'));
+    }
 
-        $skiId = $ski->id;
-
-        return view('ski.show', compact('ski', 'skiId'));
+    public function penilaian($id)
+    {
+        $ski    = Ski::find($id)->load(['stage', 'skiApproval','skiDetail']);
+        $skiId  = $ski->id;
+        return view('ski.penilaian', compact('ski', 'skiId'));
     }
 
     public function edit($id)
@@ -460,80 +323,29 @@ class SkiController extends Controller
 
     public function update(Request $request, $id)
     {
-        $SkiApproval = ski::find($id)->skiApproval->pluck('regno')->toArray();
-        if( !in_array(Auth::user()->personnel_no,$SkiApproval) ){
-            Session::flash("flash_notification", [
-                "level" => "danger",
-                "message" => "Mohon Maaf anda tidak memiliki aksess untuk merubah data (ID: SKI-".$id.")"
-            ]);
-            return redirect()->route('dashboards.approval');
-        }
-        
-        // dd($request->all());
-        if(isset($request->klp)){
-            foreach ($request->klp as $key => $value) {
-                $SkiDetail = SkiDetail::find($key);
-                $SkiDetail->klp = $value;
-                $SkiDetail->save();
+        $ski = Ski::find($id);
+        $ski->stage_id = 2;
+        if($ski->save()){
+            foreach ($request->ski_detail_id as $key => $value) {
+                $skiDetail            = SkiDetail::find($value);
+                $skiDetail->kode      = $request->kode[$key];
+                $skiDetail->sasaran   = $request->sasaran[$key];
+                $skiDetail->ukuran    = $request->ukuran[$key];
+                $skiDetail->bobot     = $request->bobot[$key];
+                $skiDetail->target    = $request->target[$key];
+                $skiDetail->realisasi = $request->realisasi[$key];
+                $skiDetail->capaian   = $request->capaian[$key];
+                $skiDetail->kode      = $request->kode[$key];
+                $skiDetail->save();
             }
-            foreach ($request->sasaran as $key => $value) {
-                $SkiDetail = SkiDetail::find($key);
-                $SkiDetail->sasaran = $value;
-                $SkiDetail->save();
-            }
-            foreach ($request->kode as $key => $value) {
-                $SkiDetail = SkiDetail::find($key);
-                $SkiDetail->kode = $value;
-                $SkiDetail->save();
-            }
-            foreach ($request->ukuran as $key => $value) {
-                $SkiDetail = SkiDetail::find($key);
-                $SkiDetail->ukuran = $value;
-                $SkiDetail->save();
-            }
-            foreach ($request->bobot as $key => $value) {
-                $SkiDetail = SkiDetail::find($key);
-                $SkiDetail->bobot = $value;
-                $SkiDetail->save();
-            }
-            foreach ($request->skor as $key => $value) {
-                $SkiDetail = SkiDetail::find($key);
-                $SkiDetail->skor = $value;
-                $SkiDetail->save();
-            }
-            foreach ($request->nilai as $key => $value) {
-                $SkiDetail = SkiDetail::find($key);
-                $SkiDetail->nilai = $value;
-                $SkiDetail->save();
-            }
-
-            //hapus
-            foreach ($request->klp as $key => $value) {
-                if($value == null){
-                    $SkiDetail = SkiDetail::destroy($key);
-                }
-            }
+            
         }
 
-        //add
-        if(isset($request->add_klp)){
-            foreach ($request->add_klp as $key => $value) {
-                if ($value !== null) {
-                    $SkiDetail = new SkiDetail();
-                    $SkiDetail->ski_id = $id;
-                    $SkiDetail->klp = $value;
-                    $SkiDetail->sasaran = $request->add_sasaran[$key];
-                    $SkiDetail->kode = $request->add_kode[$key];
-                    $SkiDetail->ukuran = $request->add_ukuran[$key];
-                    $SkiDetail->bobot = $request->add_bobot[$key];
-                    $SkiDetail->skor = $request->add_skor[$key];
-                    $SkiDetail->nilai = $request->add_nilai[$key];
-                    $SkiDetail->save();
-                }
-            }
-        }
-        
-        return redirect()->route('dashboards.approval');
+        $skiApproval = SkiApproval::where('ski_id',$id)->first();
+        $skiApproval->status_id = 2;
+        $skiApproval->save();
+
+        return redirect()->back();
     }
 
     public function destroy($id)

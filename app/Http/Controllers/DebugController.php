@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\AttendanceQuota;
 use App\Models\Ski;
 use App\Models\SAP\Zhrom0013;
+use App\Models\SAP\StructDisp;
 use App\Models\AbsenceApproval;
 use App\Models\InternalActivity;
 
@@ -28,9 +29,15 @@ class DebugController extends Controller
     public function debug()
     {   
 
-        // return url('/images/default.png');
+        $sturctDisp = Auth::user()->structDisp->where('no',1);
+        $sturctDisp = $sturctDisp->map(function($item, $key){
+            return StructDisp::where('empkostl',$item->empkostl)
+                ->where('no',1)
+                ->where('empnik','<>',$item->empnik)
+                ->where('emppersk','like','%'.$item->emppersk[0].'%')
+                ->get();
+        })->first();
         
-        // $activity = InternalActivity::all();
-        return InternalActivity::where('id',3);
+        return $sturctDisp;
     }
 }

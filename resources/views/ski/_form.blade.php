@@ -62,7 +62,7 @@
   
   <!-- Modal perilaku -->
   <div id="modalPrilaku" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg" style="width: 85%">
+    <div class="modal-dialog modal-lg" style="width: 90%">
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -98,7 +98,7 @@
               <thead>
                   <tr style="background-color: darkcyan; color: white">
                       <th class="text-center" style="width: 2%">NO</th>
-                      <th class="text-center" style="width: 8%">Asepk Penilaian</th>
+                      <th class="text-center" style="width: 13%">Asepk Penilaian</th>
                       <th class="text-center" style="width: 4%">Kode</th>
                       <th class="text-center" style="width: 20%">Sasaran Prestasi Kerja</th>
                       <th class="text-center" style="width: 10%">Ukuran Prestasi Kerja</th>

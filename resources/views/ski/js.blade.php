@@ -108,15 +108,15 @@ function addColumnKpiHasil(){
     '<tr style="background-color: #d4d7dd">'+
         '<td colspan="6"></td>'+
         '<td><input type="text" style="width: 100%" id="realisasiKpiHasil_'+(index+1)+'" value="Realisasi" readonly></td>'+
-        '<td><input type="text" name="kpi_hasil_realisasi[]" style="width: 100%; text-align: right" id="skorRealisasiKpiHasil_'+(index+1)+'" onkeyup="numberOnly(this.value, this.id);"></td>'+
+        '<td><input type="text" name="kpi_hasil_realisasi[]" style="width: 100%; text-align: right; " id="skorRealisasiKpiHasil_'+(index+1)+'" onkeyup="numberOnly(this.value, this.id);"></td>'+
         '<td></td>'+
         '<td style="text-align: center"></td>'+
     '</tr>'+
     '<tr id="kolom_'+(index+1)+'" style="background-color: #d4d7dd">'+
         '<td colspan="6"></td>'+
         '<td><input type="text" style="width: 100%" id="capaianKpiHasil_'+(index+1)+'" value="Capaian" readonly></td>'+
-        '<td><input type="text" name="kpi_hasil_capaian[]" style="width: 100%; text-align: right" id="skorCapaianKpiHasil_'+(index+1)+'" onkeyup="setNilaiKpiHasil(this.id); numberOnly(this.value, this.id);"></td>'+
-        '<td><input type="text" name="kpi_hasil_nilai[]" style="width: 100%; text-align: right" id="nilaiKpiHasil_'+(index+1)+'" readonly></td>'+
+        '<td><input type="text" name="kpi_hasil_capaian[]" style="width: 100%; text-align: right; " id="skorCapaianKpiHasil_'+(index+1)+'" onkeyup="setNilaiKpiHasil(this.id); numberOnly(this.value, this.id);"></td>'+
+        '<td><input type="text" name="kpi_hasil_nilai[]" style="width: 100%; text-align: right; " id="nilaiKpiHasil_'+(index+1)+'" readonly></td>'+
         '<td style="text-align: center"></td>'+
     '</tr>';
 
@@ -182,15 +182,15 @@ function addColumnKpiProses(){
     '<tr style="background-color: #d4d7dd">'+
         '<td colspan="6"></td>'+
         '<td><input type="text" style="width: 100%" id="realisasiKpiProses_'+(index+1)+'" value="Realisasi" readonly></td>'+
-        '<td><input type="text" name="kpi_proses_realisasi[]" style="width: 100%; text-align: right" id="skorRealisasiKpiProses_'+(index+1)+'" onkeyup="numberOnly(this.value, this.id);"></td>'+
+        '<td><input type="text" name="kpi_proses_realisasi[]" style="width: 100%; text-align: right; " id="skorRealisasiKpiProses_'+(index+1)+'" onkeyup="numberOnly(this.value, this.id);"></td>'+
         '<td></td>'+
         '<td style="text-align: center"></td>'+
     '</tr>'+
     '<tr id="kolom_'+(index+1)+'" style="background-color: #d4d7dd">'+
         '<td colspan="6"></td>'+
         '<td><input type="text" style="width: 100%" id="capaianKpiProses_'+(index+1)+'" value="Capaian" readonly></td>'+
-        '<td><input type="text" name="kpi_proses_capaian[]" style="width: 100%; text-align: right" id="skorCapaianKpiProses_'+(index+1)+'" onkeyup="numberOnly(this.value, this.id); setNilaiKpiProses();" ></td>'+
-        '<td><input type="text" name="kpi_proses_nilai[]" style="width: 100%; text-align: right" id="nilaiKpiProses_'+(index+1)+'" readonly></td>'+
+        '<td><input type="text" name="kpi_proses_capaian[]" style="width: 100%; text-align: right; " id="skorCapaianKpiProses_'+(index+1)+'" onkeyup="numberOnly(this.value, this.id); setNilaiKpiProses();" ></td>'+
+        '<td><input type="text" name="kpi_proses_nilai[]" style="width: 100%; text-align: right; " id="nilaiKpiProses_'+(index+1)+'" readonly></td>'+
         '<td style="text-align: center"></td>'+
     '</tr>';
 
@@ -206,7 +206,10 @@ function setNilaiKpiPerilaku() {
 
 // kpi leadership
 function setNilaiKpiLeadership() {
-    var bobot = Number( $('#bobotLeadershipKpi').val() );
-    var skor = Number( $('#skorLeadershipKpi').val() );
-    $('#nilaiLeadershipKpi').val((bobot*skor)/10);
+    var count = '{{count($setingkat)}}';
+    for (let index = 0; index <= count; index++) {
+        var bobot = Number( $('#bobotLeadershipKpi_'+index).val() );
+        var skor = Number( $('#skorLeadershipKpi_'+index).val() );
+        $('#nilaiLeadershipKpi_'+index).val((bobot*skor)/10);
+    }
 }

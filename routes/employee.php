@@ -73,6 +73,7 @@
     Route::resource('overtimes', 'OvertimeController', ['except' => [
         'destroy', 'update', 'edit']]);
 
+    Route::get('ski/penilaian/{id?}', 'SkiController@penilaian')->name('ski.penilaian');
     Route::resource('ski', 'SkiController', ['except' => [ 'destroy']]);
 
     // route untuk curriculum vitae

@@ -21,15 +21,15 @@
 <tr style="background-color: #d4d7dd">
     <td colspan="6"></td>
     <td><input type="text" style="width: 100%" id="realisasiKpiProses_0" value="Realisasi" readonly></td>
-    <td><input type="text" name="kpi_proses_realisasi[]" style="width: 100%; text-align: right" id="skorRealisasiKpiProses_0" onkeyup="numberOnly(this.value, this.id);"></td>
+    <td><input type="text" name="kpi_proses_realisasi[]" style="width: 100%; text-align: right;" id="skorRealisasiKpiProses_0" onkeyup="numberOnly(this.value, this.id);"></td>
     <td></td>
     <td style="text-align: center"></td>
 </tr>
 <tr id='kolom_0' style="background-color: #d4d7dd">
     <td colspan="6"></td>
     <td><input type="text" style="width: 100%" id="capaianKpiProses_0" value="Capaian" readonly></td>
-    <td><input type="text" name="kpi_proses_capaian[]" style="width: 100%; text-align: right" id="skorCapaianKpiProses_0" onkeyup="setNilaiKpiProses(); numberOnly(this.value, this.id);" ></td>
-    <td><input type="text" name="kpi_proses_nilai[]" style="width: 100%; text-align: right" id="nilaiKpiProses_0" readonly></td>
+    <td><input type="text" name="kpi_proses_capaian[]" style="width: 100%; text-align: right;" id="skorCapaianKpiProses_0" onkeyup="setNilaiKpiProses(); numberOnly(this.value, this.id);" ></td>
+    <td><input type="text" name="kpi_proses_nilai[]" style="width: 100%; text-align: right;" id="nilaiKpiProses_0" readonly></td>
     <td style="text-align: center"></td>
 </tr>
 

@@ -45,7 +45,7 @@
                     @endif
                 </a>
             </li>
-            <li class="">
+            {{-- <li class="">
                 <a href="#tab-ski" data-toggle="tab" aria-expanded="true"> Sasaran Kinerja Individu
                     @if ($countSki > 0)
                     <span class="badge pull-right m-l-5">
@@ -53,7 +53,7 @@
                     </span>
                     @endif
                 </a>
-            </li>
+            </li> --}}
         </ul>
         <!-- end of dashboard nav-tabs  -->
 
@@ -102,11 +102,11 @@
             <!-- end of overtimes tab  -->
 
             <!-- begin of ski tab  -->
-            <div class="tab-pane fade" id="tab-ski">
+            {{-- <div class="tab-pane fade" id="tab-ski">
                 <div class="panel-body p-0">
                     {!! $skiTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
                 </div>
-            </div>
+            </div> --}}
             <!-- end of ski tab  -->
 
             <!-- Begin Modal pengumuman-->
@@ -164,7 +164,7 @@
 {!! $leaveTable->scripts() !!}
 {!! $permitTable->scripts() !!}
 {!! $overtimeTable->scripts() !!}
-{!! $skiTable->scripts() !!}
+{{-- {!! $skiTable->scripts() !!} --}}
 {!! $timeEventTable->scripts() !!}
 @endpush
 

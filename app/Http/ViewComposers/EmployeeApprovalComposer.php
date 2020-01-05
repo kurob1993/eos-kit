@@ -471,22 +471,22 @@ class EmployeeApprovalComposer
         $view->with('overtimeTable', $overtimeTable);
 
         // table builder untuk SkiApproval
-        $skiTableBuilder = app('datatables.html.skiTable');
-        $skiTable = $skiTableBuilder
-            ->setTableAttribute('id', 'skiTable')
-            ->columns($skiFields)
-            ->minifiedAjax(
-                route('dashboards.ski_approval'),
-                'data.stage_id = $("#filter-skiTable option:selected").val();', [ ]
-            );
-        $skiTable->parameters($tableParameters);
-        $view->with('skiTable', $skiTable);
+        // $skiTableBuilder = app('datatables.html.skiTable');
+        // $skiTable = $skiTableBuilder
+        //     ->setTableAttribute('id', 'skiTable')
+        //     ->columns($skiFields)
+        //     ->minifiedAjax(
+        //         route('dashboards.ski_approval'),
+        //         'data.stage_id = $("#filter-skiTable option:selected").val();', [ ]
+        //     );
+        // $skiTable->parameters($tableParameters);
+        // $view->with('skiTable', $skiTable);
 
         $tableNames = collect([
             [ 'tableName' => 'leaveTable', 'approval' => 'leave' ],
             [ 'tableName' => 'permitTable', 'approval' => 'permit' ],
             [ 'tableName' => 'overtimeTable', 'approval' => 'overtime' ],
-            [ 'tableName' => 'skiTable', 'approval' => 'ski' ],
+            // [ 'tableName' => 'skiTable', 'approval' => 'ski' ],
             [ 'tableName' => 'timeEventTable', 'approval' => 'time_event' ]
         ]);
         $view->with(compact('tableNames'));
