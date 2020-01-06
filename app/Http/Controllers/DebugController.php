@@ -28,16 +28,32 @@ class DebugController extends Controller
     }
     public function debug()
     {   
-
-        $sturctDisp = Auth::user()->employee->minSptBossWithDelegation()->personnel_no;
-        // $sturctDisp = $sturctDisp->map(function($item, $key){
-        //     return StructDisp::where('empkostl',$item->empkostl)
-        //         ->where('no',1)
-        //         ->where('empnik','<>',$item->empnik)
-        //         ->where('emppersk','like','%'.$item->emppersk[0].'%')
-        //         ->get();
-        // })->first();
+        $sturctDisp = Auth::user()->structDisp->where('no',1);
+        $setingkat = $sturctDisp->map(function($item, $key){
+            
+            $abbre = '';
+            switch ($item->emppersk[0]) {
+                case 'A':
+                    $abbre = substr($item->emp_hrp1000_o_short,0,1);
+                    break;
+                case 'B':
+                    $abbre = substr($item->emp_hrp1000_o_short,0,2);
+                    break;
+                case 'C':
+                    $abbre = substr($item->emp_hrp1000_o_short,0,3);
+                    break;
+                
+                default:
+                    $abbre = '-';
+                    break;
+            }
+            return StructDisp::where('emp_hrp1000_o_short','like',$abbre.'%')
+                    ->where('no',1)
+                    ->where('empnik','<>',$item->empnik)
+                    ->where('emppersk','like','%'.$item->emppersk[0].'%')
+                    ->get();
+        })->first();
         
-        return $sturctDisp;
+        return $setingkat;
     }
 }
