@@ -57,78 +57,126 @@
         onclick="">
         INPUT SKI
       </button>
+      <button type="button" class="btn btn-primary btn-success" data-toggle="modal" data-target="#skiAtasan"
+        onclick="
+            $('#modal-skiAtasan').load('{{route('ski.atasan')}}/'+$('#bulan').val()+'/'+$('#tahun').val(), function(){
+                $('#skiAtasan').modal({show:true});
+            });
+        "
+      >
+        SKI Atasan
+      </button>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Job Description
+      </button>
     </div>
 </div>
   
-  <!-- Modal perilaku -->
-  <div id="modalPrilaku" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg" style="width: 90%">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">INPUT SKI</h4>
-        </div>
-        <div class="modal-body">
+<!-- Modal perilaku -->
+<div id="modalPrilaku" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg" style="width: 90%">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">INPUT SKI</h4>
+      </div>
+      <div class="modal-body">
 
-          <div class="alert alert-success fade in">
-            <div class="row">
-              <div class="col-md-3">
-                <p>Di bawah TARGET</p>
-                <p>SKOR (0 - 4.5)</p>
-                <p>Pencapaian 0% - < 70%</p>
-              </div>
-              <div class="col-md-3">
-                <p>Mendekati TARGET</p>
-                <p>SKOR 4.6 - 6.5</p>
-                <P>Pencapaian 70% - < 90% </p>
-              </div>
-              <div class="col-md-3">
-                <p>Memenuhi TARGET</p>
-                <p>SKOR 6.6 - 8.0</p>
-              </div>
-              <div class="col-md-3">
-                <p>Melebihi TARGET</p>
-                <p>SKOR 8.1-10</P>
-              </div>
+        <div class="alert alert-success fade in">
+          <div class="row">
+            <div class="col-md-3">
+              <p>Di bawah TARGET</p>
+              <p>SKOR (0 - 4.5)</p>
+              <p>Pencapaian 0% - < 70%</p>
+            </div>
+            <div class="col-md-3">
+              <p>Mendekati TARGET</p>
+              <p>SKOR 4.6 - 6.5</p>
+              <P>Pencapaian 70% - < 90% </p>
+            </div>
+            <div class="col-md-3">
+              <p>Memenuhi TARGET</p>
+              <p>SKOR 6.6 - 8.0</p>
+            </div>
+            <div class="col-md-3">
+              <p>Melebihi TARGET</p>
+              <p>SKOR 8.1-10</P>
             </div>
           </div>
-
-          <table class="table-responsive" style="width: 100%">
-              <thead>
-                  <tr style="background-color: darkcyan; color: white">
-                      <th class="text-center" style="width: 2%">NO</th>
-                      <th class="text-center" style="width: 13%">Asepk Penilaian</th>
-                      <th class="text-center" style="width: 4%">Kode</th>
-                      <th class="text-center" style="width: 20%">Sasaran Prestasi Kerja</th>
-                      <th class="text-center" style="width: 10%">Ukuran Prestasi Kerja</th>
-                      <th class="text-center" style="width: 6%">Bobot</th>
-                      <th class="text-center" style="width: 6%">Keterangan</th>
-                      <th class="text-center" style="width: 6%">Skor</th>
-                      <th class="text-center" style="width: 8%">Nilai</th>
-                      <th class="text-center" style="width: 8%">Aksi</th>
-                  </tr>
-              </thead>
-              <tbody id="tbodyPerilaku">
-                  @include('ski.kpi_share._table')
-                  @include('ski.kpi_hasil._table')
-                  @include('ski.kpi_proses._table')
-                  @include('ski.kpi_perilaku._table')
-                  @if ($golongan[0] == 'A' || $golongan[0] == 'B' || $golongan[0] == 'C')
-                  @include('ski.kpi_leadership._table')
-                  @endif
-              </tbody>
-          </table>
-          <input type="hidden" id="last_id_kpi_hasil" value="0" style="width: 100%">
-          <input type="hidden" id="last_id_kpi_proses" value="0" style="width: 100%">
-
         </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" id="kirimPerilaku" >
-            Kirim
-          </button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-        </div>
+
+        <table class="table-responsive" style="width: 100%">
+            <thead>
+                <tr style="background-color: darkcyan; color: white">
+                    <th class="text-center" style="width: 2%">NO</th>
+                    <th class="text-center" style="width: 13%">Asepk Penilaian</th>
+                    <th class="text-center" style="width: 4%">Kode</th>
+                    <th class="text-center" style="width: 20%">Sasaran Prestasi Kerja</th>
+                    <th class="text-center" style="width: 10%">Ukuran Prestasi Kerja</th>
+                    <th class="text-center" style="width: 6%">Bobot</th>
+                    <th class="text-center" style="width: 6%">Keterangan</th>
+                    <th class="text-center" style="width: 6%">Skor</th>
+                    <th class="text-center" style="width: 8%">Nilai</th>
+                    <th class="text-center" style="width: 8%">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyPerilaku">
+                @include('ski.kpi_share._table')
+                @include('ski.kpi_hasil._table')
+                @include('ski.kpi_proses._table')
+                @include('ski.kpi_perilaku._table')
+                @if ($golongan[0] == 'A' || $golongan[0] == 'B' || $golongan[0] == 'C')
+                @include('ski.kpi_leadership._table')
+                @endif
+            </tbody>
+        </table>
+        <input type="hidden" id="last_id_kpi_hasil" value="0" style="width: 100%">
+        <input type="hidden" id="last_id_kpi_proses" value="0" style="width: 100%">
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="kirimPerilaku" >
+          Kirim
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      {{-- <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+      </div> --}}
+      <div class="modal-body" style="height: 95vh">
+        <iframe src="https://sso.krakatausteel.com/hci/dokumen/jobdesc/{{$abree}}.pdf" width="100%" height="100%"></iframe>
+      </div>
+      {{-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div> --}}
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="skiAtasan" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+  <div class="modal-dialog" role="document" style="width: 90%">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h5 class="modal-title">SKI Atasan</h5>
+      </div>
+      <div class="modal-body" id="modal-skiAtasan">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

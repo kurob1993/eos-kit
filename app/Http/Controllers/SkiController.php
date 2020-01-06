@@ -57,10 +57,10 @@ class SkiController extends Controller
                 // personnel_no dan name atasan
                 $views = '';
                 foreach ($ski->skiApproval as $item) {
-                    $views =  $views . view('layouts._personnel-no-with-name', [
-                        'personnel_no' => $item->employee['personnel_no'],
-                        'employee_name' => $item->employee['name'],
-                    ]) . '<br />';
+                    $approve = $item->status_id;
+                    $approve = $approve == 1 ? 'default' : 'primary';
+                    $html = '<span class="label label-'.$approve.'">'.$item->employee['personnel_no'].'</span> '.$item->employee['name'];
+                    $views =  $views . $html . '<br />';
                 }
                 return $views;
             })
@@ -133,6 +133,8 @@ class SkiController extends Controller
     {        
         $user       = Auth::user()->personnel_no;
         $golongan   = Auth::user()->employee->esgrp;
+        $golongan   = Auth::user()->employee->esgrp;
+        
 
         $sturctDisp = Auth::user()->structDisp->where('no',1);
         $setingkat = $sturctDisp->map(function($item, $key){
@@ -143,6 +145,7 @@ class SkiController extends Controller
                 ->get();
         })->first();
 
+        $abree      = Auth::user()->employee->old_abbr;
         // mengecek apakah boleh mengajukan overtime untuk bawahan
         $allowed = Auth::user()->employee->allowedToSubmitSubordinateSki();
 
@@ -150,7 +153,7 @@ class SkiController extends Controller
         $pageContainer  = 'layouts.employee._page-container';
         return view(
             'ski.create',
-            compact('user', 'formRoute', 'pageContainer', 'golongan','setingkat')
+            compact('user', 'formRoute', 'pageContainer', 'golongan','setingkat','abree')
         );
     }
 
@@ -314,6 +317,20 @@ class SkiController extends Controller
         return view('ski.penilaian', compact('ski', 'skiId'));
     }
 
+    public function skiAtasan($bulan, $tahun)
+    {
+        $spt    = Auth::user()->employee->minSptBossWithDelegation()->personnel_no;
+        $ski    = Ski::where('personnel_no',$spt)
+                    ->where('month',$bulan)
+                    ->where('year',$tahun)
+                    ->with(['stage', 'skiApproval','skiDetail'])
+                    ->first();
+        if ($ski) {
+            return view('ski.atasan', compact('ski'));
+        }
+        
+    }
+
     public function edit($id)
     {
         $ski = Ski::find($id);
@@ -323,9 +340,12 @@ class SkiController extends Controller
 
     public function update(Request $request, $id)
     {
-        $ski = Ski::find($id);
-        $ski->stage_id = 2;
-        if($ski->save()){
+        $personnel_no = Auth::User()->personnel_no;
+        $skiApproval  = SkiApproval::where('ski_id',$id)->where('regno',$personnel_no)->first();
+        $skiApproval->status_id = 2;
+        $skiApproval->save();
+
+        if( $skiApproval->save() ){
             foreach ($request->ski_detail_id as $key => $value) {
                 $skiDetail            = SkiDetail::find($value);
                 $skiDetail->kode      = $request->kode[$key];
@@ -338,13 +358,15 @@ class SkiController extends Controller
                 $skiDetail->kode      = $request->kode[$key];
                 $skiDetail->save();
             }
-            
+
+            $ski = Ski::find($id);
+            Session::flash("flash_notification", [
+                "level" => "success",
+                "message" => "Data SKI berhasil di Approve ( ID : ".$ski->id.", NIK : ".$ski->personnel_no.
+                ", NAMA : ".$ski->employee->name.", BULAN : ".$ski->month.", TAHUN : ".$ski->year." )"
+            ]);
+
         }
-
-        $skiApproval = SkiApproval::where('ski_id',$id)->first();
-        $skiApproval->status_id = 2;
-        $skiApproval->save();
-
         return redirect()->back();
     }
 

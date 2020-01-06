@@ -29,14 +29,14 @@ class DebugController extends Controller
     public function debug()
     {   
 
-        $sturctDisp = Auth::user()->structDisp->where('no',1);
-        $sturctDisp = $sturctDisp->map(function($item, $key){
-            return StructDisp::where('empkostl',$item->empkostl)
-                ->where('no',1)
-                ->where('empnik','<>',$item->empnik)
-                ->where('emppersk','like','%'.$item->emppersk[0].'%')
-                ->get();
-        })->first();
+        $sturctDisp = Auth::user()->employee->minSptBossWithDelegation()->personnel_no;
+        // $sturctDisp = $sturctDisp->map(function($item, $key){
+        //     return StructDisp::where('empkostl',$item->empkostl)
+        //         ->where('no',1)
+        //         ->where('empnik','<>',$item->empnik)
+        //         ->where('emppersk','like','%'.$item->emppersk[0].'%')
+        //         ->get();
+        // })->first();
         
         return $sturctDisp;
     }

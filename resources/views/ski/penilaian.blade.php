@@ -51,6 +51,11 @@
     </table>
 
     <div class="row">
-        <button type="submit" class="btn btn-primary m-t-5 m-r-10 pull-right">Simpan & Approve</button>
+        @foreach ($ski->skiApproval as $key => $item)
+            @if ( $item->status_id == 1 && $item->regno == Auth::User()->personnel_no)
+            <button type="submit" class="btn btn-primary m-t-5 m-r-10 pull-right">Simpan & Approve</button>
+            @endif
+        @endforeach
+        
     </div>
 </form>

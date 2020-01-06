@@ -74,6 +74,7 @@
         'destroy', 'update', 'edit']]);
 
     Route::get('ski/penilaian/{id?}', 'SkiController@penilaian')->name('ski.penilaian');
+    Route::get('ski/atasan/{bulan?}/{tahun?}', 'SkiController@skiAtasan')->name('ski.atasan');
     Route::resource('ski', 'SkiController', ['except' => [ 'destroy']]);
 
     // route untuk curriculum vitae
