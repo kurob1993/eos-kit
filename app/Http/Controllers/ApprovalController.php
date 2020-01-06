@@ -373,7 +373,7 @@ class ApprovalController extends Controller
                             $nilai +=$klp->nilai;
                         }
                     };
-                    return $nilai;
+                     return rtrim($nilai, "0");
                 })
                 ->editColumn('ski.kinerja', function (SkiApproval $aa) {
                     $nilai = 0;            

@@ -87,7 +87,7 @@ class AllSkiController extends Controller
                             $nilai +=$klp->nilai;
                         }
                     };
-                    return $nilai;
+                    return rtrim($nilai, "0");
                 })
                 ->editColumn('kinerja', function (Ski $Ski) {       
                     $nilai = 0;            
