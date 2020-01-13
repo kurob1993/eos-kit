@@ -373,7 +373,7 @@ class ApprovalController extends Controller
                             $nilai +=$klp->nilai;
                         }
                     };
-                     return rtrim($nilai, "0");
+                    return number_format((float)$nilai, 2,'.', '');
                 })
                 ->editColumn('ski.kinerja', function (SkiApproval $aa) {
                     $nilai = 0;            
@@ -384,7 +384,7 @@ class ApprovalController extends Controller
                             $nilai +=$klp->nilai;
                         }
                     };
-                    return $nilai;
+                    return number_format((float)$nilai, 2,'.', '');
                 })
                 ->editColumn('ski.ski_approval', function (SkiApproval $aa) {
                     $approvals = $aa->ski->skiApproval;

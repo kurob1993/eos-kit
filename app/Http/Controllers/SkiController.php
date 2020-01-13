@@ -69,7 +69,7 @@ class SkiController extends Controller
                         $nilai +=$klp->nilai;
                     }
                 };
-                return rtrim($nilai, "0");
+                return number_format((float)$nilai, 2,'.', '');
             })
             ->editColumn('kinerja', function (Ski $Ski) {        
                 $nilai = 0;            
@@ -80,7 +80,7 @@ class SkiController extends Controller
                         $nilai +=$klp->nilai;
                     }
                 };
-                return $nilai;
+                return number_format((float)$nilai, 2,'.', '');
             })
                 ->editColumn('approver', function ($overtime) {
                     // personnel_no dan name atasan
