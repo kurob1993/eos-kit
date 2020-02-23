@@ -82,7 +82,19 @@ class LoginController extends Controller
 
             if (is_null($user)) {    
                 // create the new user
+                if ($user->hasValidEmail) {
+                    
+                }
+
                 $user = new User();
+                $user->email = $email;
+                $user->personnel_no = $structDisp->empnik;
+                $user->name = $structDisp->empname;
+                $user->password = Hash::make($structDisp->empnik.'@'.$email);
+                $user->save();
+            }
+
+            if ($user && !$user->hasValidEmail) {    
                 $user->email = $email;
                 $user->personnel_no = $structDisp->empnik;
                 $user->name = $structDisp->empname;
