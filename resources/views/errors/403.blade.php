@@ -39,8 +39,28 @@
     <div class="container"> 
         <div class="content"> 
             <div class="title">403 Forbidden.</div> 
-            <h5>Silahkan kembali ke <a href="http://sso.krakatausteel.com">SSO</a></h5>
+            <h5>Halaman Akan kembali ke Route (/) dalam <span id="detik">5</span> detik</h5>
         </div> 
     </div> 
 </body> 
+
+<script src={{ url("/plugins/jquery/jquery-1.9.1.min.js") }}></script>
+<script>
+
+   $(document).ready(function() {
+
+      setInterval(() => {
+         var detik = Number( $('#detik').html() );
+         if (detik == 0 ) {
+            window.location.href = "/";
+         }
+
+         if (detik > 0) {
+            $('#detik').html( detik-1 );   
+         }
+      }, 1000);
+
+   });
+
+</script>
 </html>
