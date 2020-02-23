@@ -19,8 +19,10 @@ class SidebarUserComposer
             // menyimpan global variable view ini
             $view->with('employee', $employee->toArray());
 
-            if (Storage::disk('public')->exists( 'pic/' . $employee['personnel_no'] . '.jpg'))
-                $view->with('picture', asset('storage/pic/' . $employee['personnel_no'] . '.jpg' ));
+            $url = 'http://simpro.krakatau-it.co.id/epmfoto/'.$employee['personnel_no'].'.jpg';
+            $headers = get_headers($url);
+            if ( stripos($headers[0], "200 OK") )
+                $view->with('picture', $url);
             else
                 $view->with('picture', 'default');
 
