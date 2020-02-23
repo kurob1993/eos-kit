@@ -63,7 +63,8 @@ class LoginController extends Controller
         $this->performLogout($request);
         
         // redirecto to sso
-        return redirect()->away('https://sso.krakatausteel.com');
+        // return redirect()->away('https://sso.krakatausteel.com');
+        return redirect()->route('login');
     }
         
     public function programaticallyEmployeeLogin(Request $request, $personnel_no, $email)
@@ -77,9 +78,7 @@ class LoginController extends Controller
             $employee = Employee::where('personnel_no', $personnel_no)->first();
 
             // find the employee details
-            $structDisp = StructDisp::structOf($personnel_no)
-                ->selfStruct()
-                ->firstOrFail();
+            $structDisp = StructDisp::structOf($personnel_no)->selfStruct()->firstOrFail();
 
             if (is_null($user)) {    
                 // create the new user
@@ -87,7 +86,7 @@ class LoginController extends Controller
                 $user->email = $email;
                 $user->personnel_no = $structDisp->empnik;
                 $user->name = $structDisp->empname;
-                $user->password = Hash::make(str_random(32));
+                $user->password = Hash::make($structDisp->empnik.'@'.$email);
                 $user->save();
             }
 
