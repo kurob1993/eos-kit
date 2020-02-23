@@ -22,7 +22,7 @@ class SidebarUserComposer
             if (Storage::disk('public')->exists( 'pic/' . $employee['personnel_no'] . '.jpg'))
                 $view->with('picture', asset('storage/pic/' . $employee['personnel_no'] . '.jpg' ));
             else
-                $view->with('picture', Storage::url( 'default.png' ));
+                $view->with('picture', 'default');
 
         } catch(ModelNotFoundException $e) {
             // tampilkan pesan bahwa tidak ada absence quota

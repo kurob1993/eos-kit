@@ -19,7 +19,7 @@
 	<link href={{ url("/plugins/bootstrap/css/bootstrap.min.css") }} rel="stylesheet" />
 	<link href={{ url("/plugins/bootstrap/css/BootstrapXL.css") }} rel="stylesheet" />
 	<!-- FontAwesome -->
-	<link href={{ url("/plugins/font-awesome/css/font-awesome.min.css") }} rel="stylesheet" />
+	<link href={{ url("/plugins/font-awesome-4.7.0/css/font-awesome.min.css") }} rel="stylesheet"/>
 	<!-- Simple line icons -->
 	<link href={{ url("/plugins/simple-line-icons/simple-line-icons.css") }} rel="stylesheet">
 	

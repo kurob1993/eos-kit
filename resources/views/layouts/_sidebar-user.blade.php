@@ -2,7 +2,12 @@
             <ul class="nav">
                     <li class="nav-profile text-center">
                         <div class="nav-profile-image ">
-                            <img class="img-circle" src={{ $picture }}> 
+                            @if ($picture == 'default')
+                                <i class="fa fa-user-circle-o fa-4x" aria-hidden="true"></i>
+                            @else
+                                <img class="img-circle" src={{ $picture }}>
+                            @endif
+                             
                         </div>
                         <div class="nav-profile-info">
                             <small>{{ $employee['personnel_no'] }}</small>
