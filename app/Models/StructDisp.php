@@ -11,7 +11,7 @@ class StructDisp extends Model
     public $incrementing = false;
     public $timestamps = false;
 
-    protected $casts = ['empnik' => 'integer', 'dirnik' => 'integer'];
+    protected $casts = ['empnik' => 'string', 'dirnik' => 'integer'];
 
     public function user()
     {
