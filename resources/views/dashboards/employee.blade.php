@@ -57,7 +57,7 @@
                         {{-- <a class="btn btn-primary" href="{{ route('dashboards.approve_all', ['approval' => 'leaves']) }}"> Setujui Semua </a>
                         <a class="btn btn-danger" href="{{ route('dashboards.reject_all', ['approval' => 'leaves']) }}"> Tolak Semua </a> --}}
                     </p>
-                    <div id="leave-chart" class="m-t-5 m-b-5">Fusionchart for leaves will be rendered here.</div>
+                    {{-- <div id="leave-chart" class="m-t-5 m-b-5">Fusionchart for leaves will be rendered here.</div> --}}
                     <div class="table-responsive">
                         {!! $leaveTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
                     </div>
@@ -68,7 +68,7 @@
             <!-- begin of permits tab  -->
             <div class="tab-pane fade" id="tab-permits">
                 <div class="panel-body p-0">
-                    <div id="permit-chart" class="m-t-5 m-b-5">Fusionchart for permits will be rendered here.</div>
+                    {{-- <div id="permit-chart" class="m-t-5 m-b-5">Fusionchart for permits will be rendered here.</div> --}}
                     <div class="table-responsive">
                         {!! $permitTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
                     </div>
@@ -79,7 +79,7 @@
             <!-- begin of time-events tab  -->
             <div class="tab-pane fade" id="tab-time-events">
                 <div class="panel-body p-0">
-                    <div id="time-event-chart" class="m-t-5 m-b-5">Fusionchart for time events will be rendered here.</div>
+                    {{-- <div id="time-event-chart" class="m-t-5 m-b-5">Fusionchart for time events will be rendered here.</div> --}}
                     <div class="table-responsive">
                         {!! $timeEventTable->table(['class'=>'table table-striped', 'width' => '100%']) !!}
                     </div>
@@ -109,7 +109,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="text-center">
-                                <img src="{{ url('/images/pengumuman.jpg') }}" alt="" width="100%">
+                                {{-- <img src="{{ url('/images/pengumuman.jpg') }}" alt="" width="100%"> --}}
                             </div>
                         </div>
                         <div class="modal-footer">
