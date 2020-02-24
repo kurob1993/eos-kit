@@ -4,14 +4,14 @@
     'class' => 'js-confirm',
     'style' => 'display:inline-block',
     'data-confirm' => 'Yakin akan menyetujui data pengajuan ini?',
-    'id' => 'approve-' . $model->id
+    'id' => $approval.'-approve-' . $model->id
 ])
 !!}
 
 {!! Form::button('<i class="fa fa-check js-button-submit"></i>', [
     'type' => 'submit',
     'class' => 'btn btn-xs btn-primary m-b-5',
-    'data-actiontype' => 'approve-' . $model->id
+    'data-actiontype' => $approval.'-approve-' . $model->id
 ])
 !!}
 
@@ -23,14 +23,14 @@
     'class' => 'js-confirm',
     'style' => 'display:inline-block',
     'data-confirm' => 'Yakin akan menolak data pengajuan ini?',
-    'id' => 'delete-' . $model->id
+    'id' => $approval.'-delete-' . $model->id
 ])
 !!}
 
 {!! Form::button('<i class="fa fa-times js-button-submit"></i>', [
     'type' => 'submit',
     'class' => 'btn btn-xs btn-danger m-b-5',
-    'data-actiontype' => 'delete-' . $model->id
+    'data-actiontype' => $approval.'-delete-' . $model->id
 ])
 !!}
 

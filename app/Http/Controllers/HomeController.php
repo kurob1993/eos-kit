@@ -222,6 +222,7 @@ class HomeController extends Controller
                         // apakah stage-nya: waiting approval
                         return view('components._action-approval', [
                             'model' => $aa,
+                            'approval' => 'leave',
                             'approve_url' => route('dashboards.approve', [
                                 'id' => $aa->id, 'approval' => 'leave' ] ),
                             'reject_url' => route('dashboards.reject', [
@@ -315,6 +316,7 @@ class HomeController extends Controller
                     // apakah stage-nya: waiting approval
                     return view('components._action-approval', [
                         'model' => $aa,
+                        'approval' => $approval,
                         'approve_url' => route('dashboards.approve', [
                             'id' => $aa->id, 'approval' => $approval ] ),
                         'reject_url' => route('dashboards.reject', [
@@ -373,6 +375,7 @@ class HomeController extends Controller
                         // apakah stage-nya: waiting approval
                         return view('components._action-approval', [
                             'model' => $aa,
+                            'approval' => 'time_event',
                             'approve_url' => route('dashboards.approve', [
                                 'id' => $aa->id, 'approval' => 'time_event' ] ),
                             'reject_url' => route('dashboards.reject', [
@@ -445,6 +448,7 @@ class HomeController extends Controller
                         // apakah stage-nya: waiting approval
                         return view('components._action-approval', [
                             'model' => $aa,
+                            'approval' => 'overtime',
                             'approve_url' => route('dashboards.approve', [
                                 'id' => $aa->id, 'approval' => 'overtime' ] ),
                             'reject_url' => route('dashboards.reject', [
