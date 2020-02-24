@@ -39,7 +39,7 @@
     <div class="container"> 
         <div class="content"> 
             <div class="title">Silahkan login melalui SSO</div> 
-            <h5>Silahkan kembali ke <a href="http://sso.krakatausteel.com">SSO</a></h5>
+            <h5>Silahkan kembali ke <a href="http://sso.krakatau-it.co.id/">SSO</a></h5>
         </div> 
     </div> 
 </body> 
