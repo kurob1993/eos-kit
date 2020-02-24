@@ -8,7 +8,6 @@
                             <img width="26px" src={{ url("/images", ['krakatausteel-logo.png'])  }}>
                         </span>
                         <b>Krakatau Information Technology</b>
-                        {{-- <b>{{ config('app.name') }}</b> --}}
                     </a>
                 <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
                         <span class="icon-bar"></span>
@@ -22,7 +21,7 @@
             <ul class="nav navbar-nav navbar-right text-center">
                 <li class="dropdown">
                     <a href={{ route('dashboards.employee') }}>
-                        <strong>Employe Online Service</strong>
+                        <strong>{{ config('app.name') }}</strong>
                     </a>
                 </li>
             </ul>
