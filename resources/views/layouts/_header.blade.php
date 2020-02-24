@@ -2,12 +2,13 @@
         <!-- begin container-fluid -->
         <div class="container-fluid">
             <!-- begin mobile sidebar expand / collapse button -->
-            <div class="navbar-header navbar-header-without-bg">
+            <div class="navbar-header navbar-header-without-bg" style="white-space: nowrap">
                 <a href={{ url("/") }} class="navbar-brand">
                         <span>
                             <img width="26px" src={{ url("/images", ['krakatausteel-logo.png'])  }}>
                         </span>
-                        <span>&nbsp; {{ config('app.name') }}</span>
+                        <b>Krakatau Information Technology</b>
+                        {{-- <b>{{ config('app.name') }}</b> --}}
                     </a>
                 <button type="button" class="navbar-toggle" data-click="sidebar-toggled">
                         <span class="icon-bar"></span>
@@ -20,8 +21,8 @@
             <!-- begin header navigation right -->
             <ul class="nav navbar-nav navbar-right text-center">
                 <li class="dropdown">
-                    <a href={{ route('help.index') }}>
-                        <strong>Bantuan</strong>&nbsp;&nbsp;<i class="fa fa-question-circle"></i>
+                    <a href={{ route('dashboards.employee') }}>
+                        <strong>Employe Online Service</strong>
                     </a>
                 </li>
             </ul>
