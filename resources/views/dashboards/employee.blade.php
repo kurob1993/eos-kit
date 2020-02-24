@@ -158,9 +158,9 @@
 <script src="{{ url("/plugins/fusioncharts/js/fusioncharts.charts.js") }}"></script>
 <script src="{{ url("/plugins/fusioncharts/js/fusioncharts.overlappedbar2d.js") }}"></script>
 <script src="{{ url("/plugins/fusioncharts/js/themes/fusioncharts.theme.fusion.js") }}"></script>
-{!! $leaveChart->render() !!}
+{{-- {!! $leaveChart->render() !!}
 {!! $permitChart->render() !!}
-{!! $timeEventChart->render() !!}
+{!! $timeEventChart->render() !!} --}}
 <!-- Selectize -->
 <script src={{ url("/plugins/selectize/selectize.min.js") }}></script>
 <!-- DataTables -->
