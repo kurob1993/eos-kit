@@ -25,7 +25,7 @@ class TimeEventObserver
             ->first();
         
         // apakah tanggal tidak slash sudah pernah dilakukan sebelumnya (intersection)
-        if ((sizeof($intersected) > 0) && !$intersected->is_denied) {
+        if ( $intersected && !$intersected->is_denied) {
 
             // apakah timeEventType yang akan disimpan sama dengan intersected
             if ($intersected->time_event_type_id == $timeEvent->time_event_type_id) {

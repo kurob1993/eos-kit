@@ -53,7 +53,7 @@ class AbsenceObserver
             ->intersectWith($absence->start_date, $absence->end_date)
             ->first();
             
-        if ((sizeof($intersected) > 0) && !$intersected->is_denied ) {
+        if ( $intersected && !$intersected->is_denied ) {
             Session::flash("flash_notification", [
                 "level" => "danger",
                 "message" => "Tidak dapat melakukan pengajuan pada tanggal tersebut "
