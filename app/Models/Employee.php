@@ -47,6 +47,13 @@ class Employee extends Model
         // one-to-many relationship dengan Absence exclude leave
         return $this->hasMany('App\Models\Absence', 'personnel_no', 'personnel_no')
         ->excludeLeaves();
+    
+    }
+    
+    public function costCenters()
+    {
+        // one-to-many relationship dengan AttendanceQuota
+        return $this->hasMany('App\Models\CostCenter', 'boss', 'personnel_no');
     }
 
     public function currentPeriodNonLeaveAbsences()

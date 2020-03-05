@@ -64,3 +64,8 @@ Route::group(['prefix' => 'zhrom0012', 'middleware' => 'api'], function() {
 Route::group(['prefix' => 'zhrom0013', 'middleware' => 'api'], function() {
     Route::get('nojabatan/{nojabatan?}', 'Zhrom0013Controller@nojabatan');
 });
+
+Route::group(['prefix' => 'costcenter', 'middleware' => 'api'], function() {
+    Route::get('/{id?}', 'Api\CostCenterController@index');
+    Route::get('/{id}/boss', 'Api\CostCenterController@show');
+});
