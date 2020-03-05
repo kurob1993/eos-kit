@@ -14,7 +14,9 @@ class AddSecretaryIdToAttendanceQuotas extends Migration
     public function up()
     {
         Schema::table('attendance_quotas', function (Blueprint $table) {
-            $table->unsignedInteger('secretary_id')->nullable();
+            if ( !Schema::hasColumn('attendance_quotas','secretary_id') ) {
+                $table->unsignedInteger('secretary_id')->nullable();
+            }
         });
     }
 
@@ -26,7 +28,9 @@ class AddSecretaryIdToAttendanceQuotas extends Migration
     public function down()
     {
         Schema::table('attendance_quotas', function (Blueprint $table) {
-            $table->dropColumn('secretary_id');
+            if ( Schema::hasColumn('attendance_quotas','secretary_id') ) {
+                $table->dropColumn('secretary_id');
+            }
         });
     }
 }
