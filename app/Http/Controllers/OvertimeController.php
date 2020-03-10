@@ -187,6 +187,7 @@ class OvertimeController extends Controller
         $overtime->attendance_quota_type_id = AttendanceQuotaType::suratPerintahLembur()->id;
         $overtime->overtime_reason_id = $request->input('overtime_reason_id');
         $overtime->dirnik = Auth::user()->personnel_no;
+        $overtime->cost_center_id = $request->input('cost_center');
         $overtime->save();
 
         // kembali ke halaman index overtime

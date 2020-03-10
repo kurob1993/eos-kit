@@ -132,11 +132,11 @@ to, overtime_reason, delegation (if have subordinates)
     </div>
     <!-- end overtime_reason_id field -->
   
-    <!-- begin superintendent_approver field -->
+    <!-- begin cost center field -->
     <!-- This field is not sent via form -->
     <div class="form-group{{ $errors->has('superintendent_approver') ? ' has-error' : '' }}">
       {!! Form::label('superintendent_approver', 'Cost Center') !!}
-      <select class="form-control superintendent-selectize">
+      <select class="form-control superintendent-selectize" name="cost_center">
         <option value="" selected>Cost Center</option>
       </select>
     </div>
