@@ -135,9 +135,9 @@ to, overtime_reason, delegation (if have subordinates)
     <!-- begin superintendent_approver field -->
     <!-- This field is not sent via form -->
     <div class="form-group{{ $errors->has('superintendent_approver') ? ' has-error' : '' }}">
-      {!! Form::label('superintendent_approver', 'Superintendent') !!}
+      {!! Form::label('superintendent_approver', 'Cost Center') !!}
       <select class="form-control superintendent-selectize">
-        <option value="" selected>Pilih Superintendent</option>
+        <option value="" selected>Cost Center</option>
       </select>
     </div>
     <!-- end superintendent_approver field -->
@@ -145,9 +145,9 @@ to, overtime_reason, delegation (if have subordinates)
     <!-- begin manager_approver field -->
     <!-- This field is not sent via form -->
     <div class="form-group{{ $errors->has('manager_approver') ? ' has-error' : '' }}">
-      {!! Form::label('manager_approver', 'Manager') !!}
+      {!! Form::label('manager_approver', 'Approver') !!}
       <select class="form-control manager-selectize">
-        <option value="" selected>Pilih Manager</option>
+        <option value="" selected>Approval</option>
       </select>
     </div>
     <!-- end manager_approver field -->

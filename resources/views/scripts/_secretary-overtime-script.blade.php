@@ -1,5 +1,5 @@
 <script>
-    (handleInlineDatePicker = function () {
+  (handleInlineDatePicker = function () {
       "use strict";
       $("#datepicker-inline").datepicker({
         format: 'yyyy-mm-dd',
@@ -22,80 +22,83 @@
 
     (handleSelectpicker = function() {
 
-      var subOptions = {
-        onChange: function(value) {
-
-          var minManagerOptions = {
-            persist: false,
-            valueField: "personnel_no",
-            labelField: "name",
-            searchField: ["name", "personnel_no"],
-            options: [ ],
-            render: {
-              item: function(item, escape) {
-                return ( "<div>" + (item.personnel_no ? '<span class="label label-default">' + escape(item.personnel_no) + "</span>&nbsp;" : "") + (item.name ? '<span class="name">' + escape(item.name) + "</span>" : "") + "</div>" );
-              },
-              option: function(item, escape) {
-                var label = item.personnel_no || item.name;
-                var caption = item.personnel_no ? item.name : null;
-                return ( "<div>" + '<span class="label label-default">' + escape(label) + "</span>&nbsp;" + (caption ? '<span class="caption">' + escape(caption) + "</span>" : "") + "</div>" );
-              }
+      // ==== select option min manager boss
+      var bossCostCenter = function(value){
+        var bossCostCenter = {
+          persist: false,
+          valueField: "personnel_no",
+          labelField: "name",
+          searchField: ["name", "personnel_no"],
+          options: [ ],
+          render: {
+            item: function(item, escape) {
+              return ( "<div>" + (item.personnel_no ? '<span class="label label-primary">' + escape(item.personnel_no) + "</span>&nbsp;" : "") + (item.name ? '<span class="name">' + escape(item.name) + "</span>" : "") + "</div>" );
             },
-          };
+            option: function(item, escape) {
+              var label = item.personnel_no || item.name;
+              var caption = item.personnel_no ? item.name : null;
+              return ( "<div>" + '<span class="label label-primary">' + escape(label) + "</span>&nbsp;" + (caption ? '<span class="caption">' + escape(caption) + "</span>" : "") + "</div>" );
+            }
+          },
+        };
 
-          var minSuperintendentOptions = {
-            persist: false,
-            valueField: "personnel_no",
-            labelField: "name",
-            searchField: ["name", "personnel_no"],
-            options: [ ],
-            render: {
-              item: function(item, escape) {
-                return ( "<div>" + (item.personnel_no ? '<span class="label label-default">' + escape(item.personnel_no) + "</span>&nbsp;" : "") + (item.name ? '<span class="name">' + escape(item.name) + "</span>" : "") + "</div>" );
-              },
-              option: function(item, escape) {
-                var label = item.personnel_no || item.name;
-                var caption = item.personnel_no ? item.name : null;
-                return ( "<div>" + '<span class="label label-default">' + escape(label) + "</span>&nbsp;" + (caption ? '<span class="caption">' + escape(caption) + "</span>" : "") + "</div>" );
+        $.ajax({
+        url: '{{ url('api/costcenter') }}/' + value + '/boss',
+            type: 'GET',
+            dataType: 'json',
+            error: function() {},
+            success: function(res) {
+              if ( window["managerSelectize"] === undefined ) {
+                var bossSelect = $(".manager-selectize").selectize(bossCostCenter);
+                window["managerSelectize"] = bossSelect[0].selectize;
               }
-            },
-          };
+              window["managerSelectize"].clearOptions();
+              var o = {name: res.name, personnel_no: res.personnel_no};
+              window["managerSelectize"].addOption(o);
+              window["managerSelectize"].setValue(res.personnel_no, false);
+          }
+        });
 
-          $.ajax({
-          url: '{{ url('api/structdisp') }}/' + value + '/minManagerBoss',
-              type: 'GET',
-              dataType: 'json',
-              error: function() {},
-              success: function(res) {
-                if ( window["managerSelectize"] === undefined ) {
-                  var bossSelect = $(".manager-selectize").selectize(minManagerOptions);
-                  window["managerSelectize"] = bossSelect[0].selectize;
-                }
-                window["managerSelectize"].clearOptions();
-                var o = {name: res.name, personnel_no: res.personnel_no};
-                window["managerSelectize"].addOption(o);
-                window["managerSelectize"].setValue(res.personnel_no, false);
-            }
-          });
+      }
 
-          $.ajax({
-          url: '{{ url('api/structdisp') }}/' + value + '/minSuperintendentBoss',
-              type: 'GET',
-              dataType: 'json',
-              error: function() {},
-              success: function(res) {
-                if ( window["superintendentSelectize"] === undefined ) {
-                  var bossSelect = $(".superintendent-selectize").selectize(minSuperintendentOptions);
-                  window["superintendentSelectize"] = bossSelect[0].selectize;
-                }
-                window["superintendentSelectize"].clearOptions();
-                var o = {name: res.name, personnel_no: res.personnel_no};
-                window["superintendentSelectize"].addOption(o);
-                window["superintendentSelectize"].setValue(res.personnel_no, false);
-            }
-          });
-
+      // ==== select option cost center
+      var costCenterOptions = {
+        onChange: bossCostCenter,
+        persist: false,
+        valueField: "id",
+        labelField: "description",
+        searchField: ["code", "description"],
+        options: [ ],
+        render: {
+          item: function(item, escape) {
+            return ( "<div>" + (item.code ? '<span class="label label-primary">' + escape(item.code) + "</span>&nbsp;" : "") + (item.description ? '<span class="name">' + escape(item.description) + "</span>" : "") + "</div>" );
+          },
+          option: function(item, escape) {
+            var label = item.code || item.description;
+            var caption = item.code ? item.description : null;
+            return ( "<div>" + '<span class="label label-primary">' + escape(label) + "</span>&nbsp;" + (caption ? '<span class="caption">' + escape(caption) + "</span>" : "") + "</div>" );
+          }
         },
+      };
+
+      $.ajax({
+      url: '{{ url('api/costcenter') }}',
+        type: 'GET',
+        dataType: 'json',
+        error: function() {},
+        success: function(res) {
+          var newOptions = [];
+          for (var key in res) {
+            var o = {id: res[key].id, code: res[key].code, description: res[key].description};
+            newOptions.push(o);
+          }
+          costCenterOptions.options = newOptions;
+          var bossSelect = $(".superintendent-selectize").selectize(costCenterOptions);
+        }
+      });
+
+      // ==== select option list karyawan yang bisa mendapatkan lembur
+      var subOptions = {
         persist: false,
         valueField: "personnel_no",
         labelField: "name",
@@ -105,7 +108,7 @@
           item: function(item, escape) {
             return (
               "<div>" +
-              (item.personnel_no ? '<span class="label label-default">' + escape(item.personnel_no) + "</span>&nbsp;" : "") +
+              (item.personnel_no ? '<span class="label label-primary">' + escape(item.personnel_no) + "</span>&nbsp;" : "") +
               (item.name ? '<span class="name">' + escape(item.name) + "</span>" : "") +
               "</div>"
             );
@@ -115,14 +118,14 @@
             ;
             var caption = item.personnel_no ? item.name : null;
             return (
-              "<div>" + '<span class="label label-default">' + escape(label) + "</span>&nbsp;" +
+              "<div>" + '<span class="label label-primary">' + escape(label) + "</span>&nbsp;" +
               (caption ? '<span class="caption">' + escape(caption) + "</span>" : "") +
               "</div>"
             );
           }
         }
       };
-      
+
       $.ajax({
       url: '{{ url('api/structdisp') }}/{{ $user }}/foremanAndOperatorSubordinates',
           type: 'GET',
@@ -139,6 +142,7 @@
             var selectize = subSelect[0].selectize;
         }
       });
+
     }),
 
     (SecretaryOvertimePlugins = (function() {
@@ -150,4 +154,4 @@
       };
     })());
 
-    </script>
+</script>
