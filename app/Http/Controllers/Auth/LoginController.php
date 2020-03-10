@@ -82,10 +82,6 @@ class LoginController extends Controller
 
             if (is_null($user)) {    
                 // create the new user
-                if ($user->hasValidEmail) {
-                    
-                }
-
                 $user = new User();
                 $user->email = $email;
                 $user->personnel_no = $structDisp->empnik;
