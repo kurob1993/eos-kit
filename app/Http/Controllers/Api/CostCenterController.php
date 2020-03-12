@@ -50,7 +50,9 @@ class CostCenterController extends Controller
     public function show($id)
     {
         $cc = CostCenter::find($id);
-        return isset($cc->employee) ? $cc->employee : [];
+
+        return isset($cc->employee) ? 
+            $cc->employee : Employee::findByPersonnel($cc->boss)->first();
     }
 
     /**
