@@ -25,12 +25,6 @@ class AllAbsenceQuotaDataTable extends DataTable
             ->editColumn('end_date', function (AbsenceQuota $absenceQuota) {
                 return $absenceQuota->formatted_end_date;
             })
-            ->editColumn('start_deduction', function (AbsenceQuota $absenceQuota) {
-                return $absenceQuota->formatted_start_deduction;
-            })
-            ->editColumn('end_deduction', function (AbsenceQuota $absenceQuota) {
-                return $absenceQuota->formatted_end_deduction;
-            })
             ->editColumn('user.name', function (AbsenceQuota $absenceQuota) {
                 $nama = $absenceQuota->user()->first();
                 return $nama['name'];
@@ -70,11 +64,13 @@ class AllAbsenceQuotaDataTable extends DataTable
     public function getBuilderParameters()
     {
         return [
-            'dom' => 'frtip',
-            'pageLength' => 50,
+            'dom' =>    "<'row'<'col-sm-1 pull-left'l> <'col-sm-2'<'button'>> <'col-sm-3 pull-right'f>>",
+            'pageLength' => config('emss.personnel_service.page_length'),
             'responsive' => true,
             "language" => [
-                'processing' => '<i class="fa fa-spinner fa-spin fa-fw"></i><span class="sr-only">Loading...</span> '
+                'processing' => '<i class="fa fa-spinner fa-spin fa-fw"></i><span class="sr-only">Loading...</span> ',
+                'lengthMenu' => '_MENU_',
+                'search' => '<i class="fa fa-search"></i>',
             ],
             // 'buttons' => [ 'extend' => 'excel', 'exportOptions' => [ 'columns' => [ 'id', ] ] ], 'paging' => false, 'searching' => false, 'responsive' => [ 'details' => 'false' ], 
         ];
@@ -127,22 +123,6 @@ class AllAbsenceQuotaDataTable extends DataTable
                 'title' => 'Jenis Cuti', 
                 'searchable' => false,
                 'orderable' => false,
-            ],
-            [ 
-                'data' => 'start_deduction', 
-                'name' => 'start_deduction', 
-                'title' => 'Start Deduction',
-                'searchable' => false,
-                'orderable' => false,
-                'class' => 'none',
-            ],
-            [ 
-                'data' => 'end_deduction', 
-                'name' => 'end_deduction', 
-                'title' => 'End Deduction',
-                'searchable' => false,
-                'orderable' => false,
-                'class' => 'none',
             ],
             [ 
                 'data' => 'number', 

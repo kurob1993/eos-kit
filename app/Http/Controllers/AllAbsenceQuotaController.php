@@ -13,7 +13,7 @@ class AllAbsenceQuotaController extends Controller
 
     public function create()
     {
-
+        return view('all_absence_quotas.create');
     }
 
     public function store(StoreAbsenceRequest $request)

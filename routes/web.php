@@ -107,7 +107,7 @@ Route::group([
     Route::resource('all_leaves', 'AllLeaveController', ['only' => ['index']]);
 
     // route untuk manage daftar semua kuota cuti
-    Route::resource('all_absence_quotas', 'AllAbsenceQuotaController', ['only' => ['index']]);
+    Route::resource('all_absence_quotas', 'AllAbsenceQuotaController');
 
     // route untuk manage daftar semua izin jenis absence
     Route::get('all_permits/absence', 'AllPermitController@absence')

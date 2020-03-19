@@ -38,6 +38,11 @@ return [
       'start_date'=> env('MODULES_TIME_EVENTS_STARTDATE', 'new Date(new Date().getFullYear(), new Date().getMonth(), 1)'),
       'end_date' => env('MODULES_TIME_EVENTS_ENDDATE', 'new Date(new Date().getFullYear(), new Date().getMonth() + 4, 5)'),     
     ],
+    'absence_quotas' => [
+      'text' => 'Kuota Cuti', 
+      'start_date'=> env('MODULES_TIME_EVENTS_STARTDATE', 'new Date(new Date().getFullYear(), new Date().getMonth(), 1)'),
+      'end_date' => env('MODULES_TIME_EVENTS_ENDDATE', 'new Date(new Date().getFullYear() +2, new Date().getMonth(), 0)'),     
+    ],
   ],
 
   // config di module personnel services

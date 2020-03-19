@@ -33,4 +33,9 @@
 <script src={{ url("/plugins/DataTables/Responsive/js/dataTables.responsive.min.js") }}></script>
 <!-- Generated scripts from DataTables -->
 {!! $dataTable->scripts() !!}
+<script>
+  var add_button = '<a href="{{ route('all_absence_quotas.create') }}" class="btn btn-sm btn-primary m-t-3"> <i class="fa fa-plus" aria-hidden="true"></i> Tambah</a>';
+  $('.button').append(add_button);
+
+</script>
 @endpush
